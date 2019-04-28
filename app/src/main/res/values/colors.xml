@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">@color/blue_drak</color>
+    <color name="colorPrimaryDark">@color/blue_drak</color>
+    <color name="colorAccent">@color/blue_drak</color>
+
+    <!--The main color-->
+    <color name="blue_drak">#FF1C8CEA</color>
+    <color name="blue_mid">#FF32A7FF</color>
+    <color name="blue_light">#FFBDE0FE</color>
+    <color name="blue_bg">#FFE9F5FF</color>
+
+    <!--The text color-->
+    <color name="text_drak">#FF242831</color>
+    <color name="text_mid">#FF656565</color>
+    <color name="text_light">#FF8F8F8F</color>
+    
+    <!--border and background color-->
+    <color name="border">#FFD2D0D1</color>
+    <color name="background">#FFF7F8FA</color>
+
+    <!--The ornament color-->
+    <color name="white">#FFFFFF</color>
+    <color name="orange">#FFF5B83A</color>
+
 </resources>

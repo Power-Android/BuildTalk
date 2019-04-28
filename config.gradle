@@ -34,7 +34,8 @@ ext {
             "SmartRefreshHeader"                    : "com.scwang.smartrefresh:SmartRefreshHeader:${version["smartrefreshVersion"]}",
             "banner"                                : "com.youth.banner:banner:1.4.10",
             "agentweb"                              : "com.just.agentweb:agentweb:4.0.2",
-            "statusbar"                             : "com.gyf.immersionbar:immersionbar:2.3.3",
+            "statusbar"                             : "com.gyf.immersionbar:immersionbar:3.0.0-beta01",
+            "statusbar—fragment"                    : "com.gyf.immersionbar:immersionbar-components:3.0.0-beta01",
 
             //net
             "gson"                                  : "com.google.code.gson:gson:2.8.2",
@@ -73,6 +74,7 @@ ext {
             //tools
             "BaseRecyclerViewAdapterHelper"         : "com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.46",
             "eventbus"                              : "org.greenrobot:eventbus:3.1.1",
+            "PersistentCookieJar"                   : "com.github.franmontiel:PersistentCookieJar:v1.0.1",
 
             //ui test
             "espresso-core"                         : "com.android.support.test.espresso:espresso-core:3.0.2",

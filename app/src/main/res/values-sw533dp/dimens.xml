@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
 	<dimen name="common_margin">@dimen/dp_15</dimen>
+	<dimen name="design_bottom_navigation_active_text_size">@dimen/sp_11</dimen>
+	<dimen name="design_bottom_navigation_text_size">@dimen/sp_11</dimen>
 	<dimen name="dp_0">0.0000dp</dimen>
 	<dimen name="dp_0_1">0.1421dp</dimen>
 	<dimen name="dp_0_5">0.7107dp</dimen>

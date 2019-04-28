@@ -45,7 +45,7 @@ android {
 greendao {
     schemaVersion 1
     targetGenDir 'src/main/java'
-    daoPackage 'com.power.powermvpdemo.core.greendao'
+    daoPackage 'com.bjjy.buildtalk.core.greendao'
 }
 
 
@@ -66,6 +66,7 @@ dependencies {
     implementation rootProject.ext.dependencies["banner"]
     implementation rootProject.ext.dependencies["agentweb"]
     implementation rootProject.ext.dependencies["statusbar"]
+    implementation rootProject.ext.dependencies["statusbar—fragment"]
 
     //net
     implementation rootProject.ext.dependencies["gson"]
@@ -103,4 +104,5 @@ dependencies {
     //other
     implementation rootProject.ext.dependencies["eventbus"]
     implementation rootProject.ext.dependencies["BaseRecyclerViewAdapterHelper"]
+    implementation rootProject.ext.dependencies["PersistentCookieJar"]
 }

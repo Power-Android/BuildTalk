@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/tab_discover"
+        android:enabled="true"
+        android:icon="@drawable/selector_discover"
+        android:title="@string/discover"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/tab_circle"
+        android:enabled="true"
+        android:icon="@drawable/selector_circle"
+        android:title="@string/circle"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/tab_talk"
+        android:enabled="true"
+        android:icon="@drawable/selector_talk"
+        android:title="@string/talk"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/tab_mine"
+        android:enabled="true"
+        android:icon="@drawable/selector_mine"
+        android:title="@string/mine"
+        app:showAsAction="ifRoom" />
+
+</menu>
