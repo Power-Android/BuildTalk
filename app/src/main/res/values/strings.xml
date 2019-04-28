@@ -7,4 +7,10 @@
     <string name="circle">圈子</string>
     <string name="talk">谈主</string>
     <string name="mine">我的</string>
+    <string name="look_at_all">查看全部</string>
+    <string name="top_tic">热门话题圈</string>
+    <string name="change">换一换</string>
+    <string name="course">精品课程</string>
+    <string name="good_project">精彩专题</string>
+    <string name="search_circle">搜索圈子</string>
 </resources>

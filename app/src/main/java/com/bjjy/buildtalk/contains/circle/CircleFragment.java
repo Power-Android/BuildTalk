@@ -1,15 +1,44 @@
 package com.bjjy.buildtalk.contains.circle;
 
+import android.support.annotation.NonNull;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.widget.TextView;
+
 import com.bjjy.buildtalk.R;
+import com.bjjy.buildtalk.adapter.CircleAdapter;
 import com.bjjy.buildtalk.base.fragment.BaseFragment;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
 
 /**
  * @author power
  * @date 2019/4/26 4:33 PM
  * @project BuildTalk
- * @description:
+ * @description: 圈子 模块
  */
-public class CircleFragment extends BaseFragment<CirclePresenter> implements CircleContract.View{
+public class CircleFragment extends BaseFragment<CirclePresenter> implements CircleContract.View, OnRefreshListener {
+
+    @BindView(R.id.toolbar_title)
+    TextView mToolbarTitle;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.search_tv)
+    TextView mSearchTv;
+    @BindView(R.id.circle_recyclerView)
+    RecyclerView mCircleRecyclerView;
+    @BindView(R.id.refresh_Layout)
+    SmartRefreshLayout mRefreshLayout;
+
+    private List<String> circle_list = new ArrayList<>();
+    private CircleAdapter mCircleAdapter;
 
     public static CircleFragment newInstance() {
         return new CircleFragment();
@@ -22,11 +51,28 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
 
     @Override
     protected void initView() {
+        mToolbarTitle.setText(R.string.circle);
+        mRefreshLayout.setOnRefreshListener(this);
+        mSearchTv.setOnClickListener(v -> {
 
+        });
+        mCircleRecyclerView.setLayoutManager(new GridLayoutManager(mContext,2));
+        mCircleAdapter = new CircleAdapter(R.layout.adapter_circle_layout,circle_list);
+        mCircleRecyclerView.setAdapter(mCircleAdapter);
     }
 
     @Override
     protected void initEventAndData() {
+        mPresenter.circleList(circle_list);
+    }
 
+    @Override
+    public void handlerCircleList(List<String> circle_list) {
+        mCircleAdapter.setNewData(circle_list);
+    }
+
+    @Override
+    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+        refreshLayout.finishRefresh(2000);
     }
 }

@@ -67,6 +67,7 @@ dependencies {
     implementation rootProject.ext.dependencies["agentweb"]
     implementation rootProject.ext.dependencies["statusbar"]
     implementation rootProject.ext.dependencies["statusbar—fragment"]
+    implementation rootProject.ext.dependencies["roundedImageview"]
 
     //net
     implementation rootProject.ext.dependencies["gson"]

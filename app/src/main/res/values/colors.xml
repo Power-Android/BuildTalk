@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">@color/blue_drak</color>
-    <color name="colorPrimaryDark">@color/blue_drak</color>
-    <color name="colorAccent">@color/blue_drak</color>
+    <color name="colorPrimary">@color/white</color>
+    <color name="colorPrimaryDark">@color/white</color>
+    <color name="colorAccent">@color/white</color>
 
     <!--The main color-->
     <color name="blue_drak">#FF1C8CEA</color>
@@ -16,7 +16,8 @@
     <color name="text_light">#FF8F8F8F</color>
     
     <!--border and background color-->
-    <color name="border">#FFD2D0D1</color>
+    <color name="border1">#FFD2D0D1</color>
+    <color name="border2">#FFEBEBEB</color>
     <color name="background">#FFF7F8FA</color>
 
     <!--The ornament color-->

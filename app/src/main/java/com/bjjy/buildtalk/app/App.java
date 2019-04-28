@@ -4,10 +4,19 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
+import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.di.component.DaggerAppComponent;
 import com.bjjy.buildtalk.di.module.AppModule;
 import com.bjjy.buildtalk.di.module.HttpModule;
 import com.bjjy.buildtalk.utils.LogUtils;
+import com.scwang.smartrefresh.header.MaterialHeader;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreator;
+import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreator;
+import com.scwang.smartrefresh.layout.api.RefreshFooter;
+import com.scwang.smartrefresh.layout.api.RefreshHeader;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 
 import java.util.ArrayList;
 
@@ -52,6 +61,7 @@ public class App extends Application implements HasActivityInjector {
                 .build().inject(this);
 
         initLog();
+        initRefresh();
     }
 
     public void initLog() {
@@ -80,5 +90,22 @@ public class App extends Application implements HasActivityInjector {
                     }
                 });
         LogUtils.d(config.toString());
+    }
+
+    /**
+     * 刷新控件全局初始化
+     */
+    private void initRefresh() {
+        //设置全局的Header构建器
+        SmartRefreshLayout.setDefaultRefreshHeaderCreator((context, layout) -> {
+            MaterialHeader materialHeader = new MaterialHeader(context);
+            materialHeader.setColorSchemeColors(getResources().getColor(R.color.blue_drak));
+            return materialHeader;
+        });
+        //设置全局的Footer构建器
+        SmartRefreshLayout.setDefaultRefreshFooterCreator((context, layout) -> {
+            //指定为经典Footer，默认是 BallPulseFooter
+            return new ClassicsFooter(context).setDrawableSize(20);
+        });
     }
 }

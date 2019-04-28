@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/dp_8"
+    android:paddingLeft="@dimen/dp_7_5"
+    android:paddingRight="@dimen/dp_7_5"
+    android:paddingTop="@dimen/dp_8">
+
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/project_iv"
+        android:layout_width="@dimen/dp_165"
+        android:layout_height="@dimen/dp_64"
+        android:src="@drawable/test_project"
+        app:riv_corner_radius="@dimen/dp_5" />
+    <TextView
+        android:id="@+id/course_title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/project_iv"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dp_10"
+        android:includeFontPadding="false"
+        android:maxLength="15"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:text="2019年中国数字产业峰会"
+        android:textColor="@color/text_drak"
+        android:textSize="@dimen/sp_12" />
+
+</RelativeLayout>

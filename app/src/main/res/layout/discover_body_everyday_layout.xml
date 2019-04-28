@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/icon1"
+        android:layout_width="@dimen/dp_68"
+        android:layout_height="@dimen/dp_20"
+        android:layout_marginLeft="@dimen/common_margin"
+        android:layout_marginTop="@dimen/dp_20"
+        android:src="@drawable/every_talk_icon" />
+
+    <TextView
+        android:id="@+id/et_all_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:includeFontPadding="false"
+        android:layout_alignBottom="@+id/icon1"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/common_margin"
+        android:text="@string/look_at_all"
+        android:textSize="@dimen/sp_11"
+        android:textColor="@color/text_mid" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/et_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/icon1"
+        android:layout_marginBottom="@dimen/dp_8"
+        android:layout_marginTop="@dimen/dp_8"
+        android:overScrollMode="never" />
+
+</RelativeLayout>

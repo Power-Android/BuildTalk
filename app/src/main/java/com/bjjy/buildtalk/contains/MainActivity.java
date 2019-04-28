@@ -14,6 +14,7 @@ import com.bjjy.buildtalk.contains.circle.CircleFragment;
 import com.bjjy.buildtalk.contains.discover.DiscoverFragment;
 import com.bjjy.buildtalk.contains.mine.MineFragment;
 import com.bjjy.buildtalk.contains.talk.TalkFragment;
+import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
 
 import butterknife.BindView;
@@ -155,7 +156,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
 
     @Override
     public void handleSuccess() {
-        ToastUtils.showShort("成功！！！");
+        LogUtils.e("handleSuccess");
     }
 
 }

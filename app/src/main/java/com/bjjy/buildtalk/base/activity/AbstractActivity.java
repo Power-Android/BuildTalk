@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import com.bjjy.buildtalk.R;
+import com.gyf.immersionbar.ImmersionBar;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -20,6 +23,13 @@ public abstract class AbstractActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
+        ImmersionBar.with(this)
+                .fitsSystemWindows(true)
+                .statusBarColor(R.color.white)
+                .statusBarColorTransform(R.color.blue_mid)
+                .autoStatusBarDarkModeEnable(true,0.5f)
+                .keyboardEnable(true)
+                .init();
         unBinder = ButterKnife.bind(this);
         onViewCreated();
         initToolbar();

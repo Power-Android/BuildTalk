@@ -36,6 +36,7 @@ ext {
             "agentweb"                              : "com.just.agentweb:agentweb:4.0.2",
             "statusbar"                             : "com.gyf.immersionbar:immersionbar:3.0.0-beta01",
             "statusbar—fragment"                    : "com.gyf.immersionbar:immersionbar-components:3.0.0-beta01",
+            "roundedImageview"                      : "com.makeramen:roundedimageview:2.3.0",
 
             //net
             "gson"                                  : "com.google.code.gson:gson:2.8.2",

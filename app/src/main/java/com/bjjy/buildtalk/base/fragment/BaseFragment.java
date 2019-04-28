@@ -28,10 +28,11 @@ import static com.bjjy.buildtalk.app.Constants.NORMAL_STATE;
  * @description: BaseFragment 默认使用状态布局，根布局的id必须为normalView，且必须是Viewgroup
  */
 public abstract class BaseFragment<T extends IPresenter> extends AbstractFragment implements IView {
+
     @Inject
     protected T mPresenter;
 
-    private Context mContext;
+    protected Context mContext;
     private ViewGroup mNormalView;
     private View mErrorView;
     private View mLoadingView;
@@ -49,6 +50,7 @@ public abstract class BaseFragment<T extends IPresenter> extends AbstractFragmen
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         if (mPresenter != null) {
             mPresenter.attachView(this);
         }
