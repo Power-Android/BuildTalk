@@ -2,6 +2,10 @@ package com.bjjy.buildtalk.core.http.helper;
 
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.contains.ArticleListData;
+import com.bjjy.buildtalk.entity.TestEntity;
+
+import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 
@@ -14,14 +18,15 @@ import io.reactivex.Observable;
  */
 public interface HttpHelper {
 
-
-//    /**
+    //    /**
 //     * 获取文章列表
 //     *
 //     * @param pageNum 页数
 //     * @return 文章列表数据
 //     */
     Observable<BaseResponse<ArticleListData>> getArticleList(int pageNum);
+
+    Observable<BaseResponse<List<TestEntity>>> signTest(Map<String,String> headers, Map<String,String> paramas);
 //
 //    Observable<BaseResponse<List<BannerData>>> getBannerData();
 //

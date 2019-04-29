@@ -12,6 +12,7 @@ import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
@@ -20,7 +21,10 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.Cache;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -62,6 +66,19 @@ public class HttpModule {
             loggingInterceptor.setColorLevel(Level.SEVERE);
             builder.addInterceptor(loggingInterceptor);
         }
+
+//        builder.addInterceptor(new Interceptor() {
+//            @Override
+//            public Response intercept(Chain chain) throws IOException {
+//                Request original = chain.request();
+//                Request.Builder requestBuilder = original.newBuilder()
+//                        .header("token", "xxx")
+//                        .header("token", "yyy");
+//                Request request = requestBuilder.build();
+//                return chain.proceed(request);
+//            }
+//        });
+
         //设置缓存
         File cacheFile = new File(App.getContext().getCacheDir(), "cache");
         Cache cache = new Cache(cacheFile, 1024 * 1024 * 50); //50MxQ

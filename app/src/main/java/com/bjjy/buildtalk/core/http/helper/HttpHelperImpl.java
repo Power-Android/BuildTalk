@@ -5,6 +5,10 @@ package com.bjjy.buildtalk.core.http.helper;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.core.http.api.ApiService;
 import com.bjjy.buildtalk.contains.ArticleListData;
+import com.bjjy.buildtalk.entity.TestEntity;
+
+import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -30,7 +34,13 @@ public class HttpHelperImpl implements HttpHelper {
     public Observable<BaseResponse<ArticleListData>> getArticleList(int pageNum) {
         return mApiService.getArticleList(pageNum);
     }
-//
+
+    @Override
+    public Observable<BaseResponse<List<TestEntity>>> signTest(Map<String,String> headers, Map<String,String> paramas) {
+        return mApiService.signTest(headers, paramas);
+    }
+
+    //
 //    @Override
 //    public Observable<BaseResponse<List<BannerData>>> getBannerData() {
 //        return mApiService.getBannerData();

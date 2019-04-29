@@ -5,6 +5,10 @@ import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.core.http.helper.HttpHelper;
 import com.bjjy.buildtalk.core.preference.PreferenceHelper;
 import com.bjjy.buildtalk.contains.ArticleListData;
+import com.bjjy.buildtalk.entity.TestEntity;
+
+import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 
@@ -51,4 +55,8 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
         return null;
     }
 
+    @Override
+    public Observable<BaseResponse<List<TestEntity>>> signTest(Map<String, String> headers, Map<String,String> paramas) {
+        return mHttpHelper.signTest(headers,paramas);
+    }
 }

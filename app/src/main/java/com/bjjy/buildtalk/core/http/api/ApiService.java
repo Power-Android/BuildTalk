@@ -1,12 +1,27 @@
 package com.bjjy.buildtalk.core.http.api;
 
 
+import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.contains.ArticleListData;
+import com.bjjy.buildtalk.entity.TestEntity;
 
+import java.util.List;
+import java.util.Map;
+
+import dagger.MapKey;
 import io.reactivex.Observable;
+import retrofit2.http.Field;
+import retrofit2.http.FieldMap;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.HeaderMap;
+import retrofit2.http.Headers;
+import retrofit2.http.POST;
+import retrofit2.http.PartMap;
 import retrofit2.http.Path;
+import retrofit2.http.QueryMap;
 
 public interface ApiService {
 
@@ -19,6 +34,11 @@ public interface ApiService {
 //     */
     @GET("article/list/{pageNum}/json")
     Observable<BaseResponse<ArticleListData>> getArticleList(@Path("pageNum") int pageNum);
+
+    @Headers(Constants.HEADER_PASSID)
+    @POST("test")
+    @FormUrlEncoded
+    Observable<BaseResponse<List<TestEntity>>> signTest(@HeaderMap Map<String,String> headers, @FieldMap Map<String,String> paramas);
 //
 //    /**
 //     * 广告栏

@@ -5,6 +5,8 @@ import android.support.annotation.IntDef;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+import retrofit2.http.PUT;
+
 /**
  * @author power
  * @date 2019/4/25 9:00 AM
@@ -13,11 +15,15 @@ import java.lang.annotation.RetentionPolicy;
  */
 public class Constants {
 
-    //Test base_url https://jt.chinabim.com
-    public static final String BASE_URL = "https://www.wanandroid.com/";
+    //Test base_url
+    public static final String BASE_URL = "https://jt.chinabim.com/";
 
     //base_url
 //    public static final String BASE_URL = "https://www.51jiantan.com";
+
+    public static final String PASS_ID = "pass_id";
+
+    public static final String HEADER_PASSID = "passid:z7gcawmtu4g1blzgnzftns5435638tdl";
 
     //db_name
     public static final String DB_NAME = "build_talk.db";

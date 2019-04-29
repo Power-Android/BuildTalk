@@ -8,15 +8,15 @@ package com.bjjy.buildtalk.core.http.response;
  */
 public class BaseResponse<T> {
 
-    public static final int SUCCESS = 0;
-    public static final int FAIL = 1;
+    public static final int SUCCESS = 1;
+    public static final int FAIL = 0;
 
     /**
      * 0：成功，1：失败
      */
     private int errorCode;
 
-    private String errorMsg;
+    private String msg;
 
     private T data;
 
@@ -29,11 +29,11 @@ public class BaseResponse<T> {
     }
 
     public String getErrorMsg() {
-        return errorMsg;
+        return msg;
     }
 
     public void setErrorMsg(String errorMsg) {
-        this.errorMsg = errorMsg;
+        this.msg = errorMsg;
     }
 
     public T getData() {

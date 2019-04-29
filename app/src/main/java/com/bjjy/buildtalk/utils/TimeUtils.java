@@ -388,6 +388,14 @@ public class TimeUtils {
     }
 
     /**
+     * 获取精确到秒的时间戳
+     */
+    public static int getNowSeconds(){
+        String timestamp = String.valueOf(getNowDate().getTime()/1000);
+        return Integer.valueOf(timestamp);
+    }
+
+    /**
      * 获取当前时间字符串
      * Return the current formatted time string.
      * <p>The pattern is {@code yyyy-MM-dd HH:mm:ss}.</p>

@@ -13,4 +13,6 @@
     <string name="course">精品课程</string>
     <string name="good_project">精彩专题</string>
     <string name="search_circle">搜索圈子</string>
+    <string name="TIMESTAMP">timestamp</string>
+    <string name="SIGN">sign</string>
 </resources>
