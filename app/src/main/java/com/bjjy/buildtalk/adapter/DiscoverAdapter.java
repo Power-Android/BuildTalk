@@ -8,9 +8,12 @@ import android.view.View;
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.entity.DiscoverEntity;
 import com.bjjy.buildtalk.utils.GlideUtils;
+import com.bjjy.buildtalk.utils.ToastUtils;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.youth.banner.Banner;
+import com.youth.banner.listener.OnBannerListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +48,7 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
 
     @Override
     protected void convert(BaseViewHolder helper, DiscoverEntity item) {
-        switch (item.getItemType()){
+        switch (item.getItemType()) {
             case BODY_BANNER:
                 List<Integer> banner_list = new ArrayList<>();
                 banner_list.add(R.drawable.test_banner);
@@ -53,6 +56,9 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
                 banner_list.add(R.drawable.test_banner);
                 Banner banner = helper.getView(R.id.banner);
                 banner.setImages(banner_list).setImageLoader(new GlideUtils()).start();
+                banner.setOnBannerListener(position -> {
+                    ToastUtils.showShort("轮播图" + position);
+                });
                 break;
             case BODY_EVERYDAY_TALK:
                 List<String> et_list = new ArrayList<>();
@@ -61,8 +67,12 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
                 et_list.add("");
                 RecyclerView et_RecyclerView = helper.getView(R.id.et_recyclerView);
                 et_RecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-                EveryTalkAdapter everyTalkAdapter = new EveryTalkAdapter(R.layout.adapter_every_talk,et_list);
+                EveryTalkAdapter everyTalkAdapter = new EveryTalkAdapter(R.layout.adapter_every_talk, et_list);
                 et_RecyclerView.setAdapter(everyTalkAdapter);
+                helper.addOnClickListener(R.id.et_all_tv);
+                everyTalkAdapter.setOnItemClickListener((adapter, view, position) -> {
+                    ToastUtils.showShort("每日一谈：" + position);
+                });
                 break;
             case BODY_HOT_TOPTIC:
                 List<String> toptic_list = new ArrayList<>();
@@ -70,9 +80,14 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
                 toptic_list.add("");
                 toptic_list.add("");
                 RecyclerView toptic_RecyclerView = helper.getView(R.id.toptic_recyclerView);
-                toptic_RecyclerView.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false));
-                TopticAdapter topticAdapter = new TopticAdapter(R.layout.adapter_hot_toptic,toptic_list);
+                toptic_RecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+                TopticAdapter topticAdapter = new TopticAdapter(R.layout.adapter_hot_toptic, toptic_list);
                 toptic_RecyclerView.setAdapter(topticAdapter);
+                helper.addOnClickListener(R.id.toptic_all_tv)
+                        .addOnClickListener(R.id.toptic_change_ll);
+                topticAdapter.setOnItemClickListener((adapter, view, position) -> {
+                    ToastUtils.showShort("热门话题圈：" + position);
+                });
                 break;
             case BODY_COURSE:
                 List<String> course_list = new ArrayList<>();
@@ -81,18 +96,26 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
                 course_list.add("");
                 course_list.add("");
                 RecyclerView course_RecyclerView = helper.getView(R.id.course_recyclerView);
-                course_RecyclerView.setLayoutManager(new GridLayoutManager(mContext,2));
-                CourseAdapter courseAdapter = new CourseAdapter(R.layout.adapter_quality_course,course_list);
+                course_RecyclerView.setLayoutManager(new GridLayoutManager(mContext, 2));
+                CourseAdapter courseAdapter = new CourseAdapter(R.layout.adapter_quality_course, course_list);
                 course_RecyclerView.setAdapter(courseAdapter);
+                helper.addOnClickListener(R.id.course_all_tv)
+                        .addOnClickListener(R.id.course_change_ll);
+                courseAdapter.setOnItemClickListener((adapter, view, position) -> {
+                    ToastUtils.showShort("精品课程：" + position);
+                });
                 break;
             case BODY_PROJECT:
                 List<String> project_list = new ArrayList<>();
                 project_list.add("");
                 project_list.add("");
                 RecyclerView project_RecyclerView = helper.getView(R.id.project_recyclerView);
-                project_RecyclerView.setLayoutManager(new GridLayoutManager(mContext,2));
-                ProjectAdapter projectAdapter = new ProjectAdapter(R.layout.adapter_good_project,project_list);
+                project_RecyclerView.setLayoutManager(new GridLayoutManager(mContext, 2));
+                ProjectAdapter projectAdapter = new ProjectAdapter(R.layout.adapter_good_project, project_list);
                 project_RecyclerView.setAdapter(projectAdapter);
+                projectAdapter.setOnItemClickListener((adapter, view, position) -> {
+                    ToastUtils.showShort("精彩专题：" + position);
+                });
                 break;
         }
     }
@@ -104,7 +127,7 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
 
     @Override
     public int getItemViewType(int position) {
-        switch (position){
+        switch (position) {
             case 0:
                 return BODY_BANNER;
             case 1:

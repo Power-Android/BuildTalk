@@ -1,6 +1,10 @@
 package com.bjjy.buildtalk.contains.talk;
 
+import com.bjjy.buildtalk.adapter.TalkAdapter;
 import com.bjjy.buildtalk.base.presenter.BasePresenter;
+import com.bjjy.buildtalk.entity.TalkEntity;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -14,5 +18,11 @@ public class TalkPresnter extends BasePresenter<TalkContract.View> implements Ta
     @Inject
     public TalkPresnter() {
 
+    }
+
+    public void talkType(List<TalkEntity> talkEntityList) {
+        talkEntityList.add(new TalkEntity(TalkAdapter.BODY_MASTER));
+        talkEntityList.add(new TalkEntity(TalkAdapter.BODY_CIRCLE_MAN));
+        mView.handlerTalkType(talkEntityList);
     }
 }

@@ -14,11 +14,13 @@
     <color name="text_drak">#FF242831</color>
     <color name="text_mid">#FF656565</color>
     <color name="text_light">#FF8F8F8F</color>
-    
+    <color name="text_mine">#FF252424</color>
+
     <!--border and background color-->
     <color name="border1">#FFD2D0D1</color>
     <color name="border2">#FFEBEBEB</color>
     <color name="background">#FFF7F8FA</color>
+    <color name="item_click">#E2E2E2</color>
 
     <!--The ornament color-->
     <color name="white">#FFFFFF</color>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/dp_20"
+    android:paddingBottom="@dimen/dp_20">
+
+    <RelativeLayout
+        android:id="@+id/view1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/icon1"
+            android:layout_width="@dimen/dp_3"
+            android:layout_height="@dimen/dp_17"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/common_margin"
+            android:background="@color/blue_mid" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp_11"
+            android:layout_toRightOf="@+id/icon1"
+            android:includeFontPadding="false"
+            android:text="@string/sentiment_ring_main"
+            android:textColor="@color/text_drak"
+            android:textSize="@dimen/sp_17"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/circle_all_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/icon1"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/common_margin"
+            android:includeFontPadding="false"
+            android:text="@string/look_at_all"
+            android:textColor="@color/text_mid"
+            android:textSize="@dimen/sp_11" />
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/circle_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view1"
+        android:layout_marginBottom="@dimen/dp_8"
+        android:layout_marginLeft="@dimen/dp_7_5"
+        android:layout_marginRight="@dimen/dp_7_5"
+        android:layout_marginTop="@dimen/dp_8"
+        android:overScrollMode="never" />
+
+</RelativeLayout>

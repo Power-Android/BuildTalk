@@ -1,4 +1,4 @@
-package com.bjjy.buildtalk.contains;
+package com.bjjy.buildtalk.app;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;

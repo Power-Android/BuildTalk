@@ -13,4 +13,6 @@ public interface PreferenceHelper {
     void setLoginAccount(String account);
     String getLoginAccount();
 
+    void setIsGuide(boolean isGuide);
+    boolean getIsGuide();
 }

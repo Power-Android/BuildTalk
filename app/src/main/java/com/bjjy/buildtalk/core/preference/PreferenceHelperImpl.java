@@ -41,4 +41,14 @@ public class PreferenceHelperImpl implements PreferenceHelper {
         return mPreferences.getString(Constants.ACCOUNT, "");
     }
 
+    @Override
+    public void setIsGuide(boolean isGuide) {
+        mPreferences.edit().putBoolean(Constants.ISGUIDE, isGuide).apply();
+    }
+
+    @Override
+    public boolean getIsGuide() {
+        return mPreferences.getBoolean(Constants.ISGUIDE,false);
+    }
+
 }

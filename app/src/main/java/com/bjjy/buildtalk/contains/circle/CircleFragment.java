@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
@@ -30,8 +32,6 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
     TextView mToolbarTitle;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @BindView(R.id.search_tv)
-    TextView mSearchTv;
     @BindView(R.id.circle_recyclerView)
     RecyclerView mCircleRecyclerView;
     @BindView(R.id.refresh_Layout)
@@ -53,12 +53,13 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
     protected void initView() {
         mToolbarTitle.setText(R.string.circle);
         mRefreshLayout.setOnRefreshListener(this);
-        mSearchTv.setOnClickListener(v -> {
-
-        });
         mCircleRecyclerView.setLayoutManager(new GridLayoutManager(mContext,2));
         mCircleAdapter = new CircleAdapter(R.layout.adapter_circle_layout,circle_list);
         mCircleRecyclerView.setAdapter(mCircleAdapter);
+        View headerView = LayoutInflater.from(mContext).inflate(R.layout.circle_header_view,null);
+        View footerView = LayoutInflater.from(mContext).inflate(R.layout.circle_footer_view,null);
+        mCircleAdapter.addHeaderView(headerView);
+        mCircleAdapter.addFooterView(footerView);
     }
 
     @Override

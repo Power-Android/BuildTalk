@@ -4,7 +4,6 @@ import com.bjjy.buildtalk.core.db.DbHelper;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.core.http.helper.HttpHelper;
 import com.bjjy.buildtalk.core.preference.PreferenceHelper;
-import com.bjjy.buildtalk.contains.ArticleListData;
 import com.bjjy.buildtalk.entity.TestEntity;
 
 import java.util.List;
@@ -31,11 +30,6 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     }
 
     @Override
-    public Observable<BaseResponse<ArticleListData>> getArticleList(int pageNum) {
-        return mHttpHelper.getArticleList(pageNum);
-    }
-
-    @Override
     public void setLoginStatus(boolean isLogin) {
 
     }
@@ -53,6 +47,16 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     @Override
     public String getLoginAccount() {
         return null;
+    }
+
+    @Override
+    public void setIsGuide(boolean isGuide) {
+        mPreferenceHelper.setIsGuide(isGuide);
+    }
+
+    @Override
+    public boolean getIsGuide() {
+        return mPreferenceHelper.getIsGuide();
     }
 
     @Override

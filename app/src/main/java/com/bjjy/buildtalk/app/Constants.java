@@ -59,10 +59,10 @@ public class Constants {
      * Shared Preference key
      */
     public static final String ACCOUNT = "account";
-
     public static final String PASSWORD = "password";
-
     public static final String LOGIN_STATUS = "login_status";
+    public static final String ISGUIDE = "isGuide";
+
 
 
     /**

@@ -4,7 +4,6 @@ package com.bjjy.buildtalk.core.http.helper;
 
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.core.http.api.ApiService;
-import com.bjjy.buildtalk.contains.ArticleListData;
 import com.bjjy.buildtalk.entity.TestEntity;
 
 import java.util.List;
@@ -27,12 +26,6 @@ public class HttpHelperImpl implements HttpHelper {
     @Inject
     HttpHelperImpl(ApiService apiService) {
         mApiService = apiService;
-    }
-//
-//
-    @Override
-    public Observable<BaseResponse<ArticleListData>> getArticleList(int pageNum) {
-        return mApiService.getArticleList(pageNum);
     }
 
     @Override

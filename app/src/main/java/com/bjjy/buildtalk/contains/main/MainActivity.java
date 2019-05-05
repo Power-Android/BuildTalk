@@ -1,11 +1,10 @@
-package com.bjjy.buildtalk.contains;
+package com.bjjy.buildtalk.contains.main;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.Constants;
@@ -15,7 +14,6 @@ import com.bjjy.buildtalk.contains.discover.DiscoverFragment;
 import com.bjjy.buildtalk.contains.mine.MineFragment;
 import com.bjjy.buildtalk.contains.talk.TalkFragment;
 import com.bjjy.buildtalk.utils.LogUtils;
-import com.bjjy.buildtalk.utils.ToastUtils;
 
 import butterknife.BindView;
 
@@ -25,8 +23,6 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     FrameLayout mFragmentGroup;
     @BindView(R.id.bottom_navigation_view)
     BottomNavigationView mBottomNavigationView;
-    @BindView(R.id.normalView)
-    RelativeLayout mNormalView;
 
     private int mLastFgIndex = -1;
     private int mCurrentFgIndex = 0;

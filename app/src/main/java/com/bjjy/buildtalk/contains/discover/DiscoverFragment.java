@@ -15,6 +15,8 @@ import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.DiscoverAdapter;
 import com.bjjy.buildtalk.base.fragment.BaseFragment;
 import com.bjjy.buildtalk.entity.DiscoverEntity;
+import com.bjjy.buildtalk.utils.ToastUtils;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -33,7 +35,7 @@ import butterknife.Unbinder;
  * @project BuildTalk
  * @description: 发现 模块
  */
-public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements DiscoverContract.View, OnRefreshListener {
+public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements DiscoverContract.View, OnRefreshListener, BaseQuickAdapter.OnItemChildClickListener {
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
@@ -65,6 +67,7 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
         mDiscoverRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mDiscoverAdapter = new DiscoverAdapter(discoverEntityList);
         mDiscoverRecyclerView.setAdapter(mDiscoverAdapter);
+        mDiscoverAdapter.setOnItemChildClickListener(this);
     }
 
     @Override
@@ -80,5 +83,26 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         refreshLayout.finishRefresh(2000);
+    }
+
+    @Override
+    public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+        switch (view.getId()){
+            case R.id.et_all_tv:
+                ToastUtils.showShort("每日一谈：查看全部");
+                break;
+            case R.id.toptic_all_tv:
+                ToastUtils.showShort("热门话题圈：查看全部");
+                break;
+            case R.id.toptic_change_ll:
+                ToastUtils.showShort("热门话题圈：换一换");
+                break;
+            case R.id.course_all_tv:
+                ToastUtils.showShort("精品课程：查看全部");
+                break;
+            case R.id.course_change_ll:
+                ToastUtils.showShort("精品课程：换一换");
+                break;
+        }
     }
 }

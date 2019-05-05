@@ -26,8 +26,7 @@ public abstract class AbstractActivity extends AppCompatActivity {
         ImmersionBar.with(this)
                 .fitsSystemWindows(true)
                 .statusBarColor(R.color.white)
-                .statusBarColorTransform(R.color.blue_mid)
-                .autoStatusBarDarkModeEnable(true,0.5f)
+                .statusBarDarkFont(true, 0.2f)
                 .keyboardEnable(true)
                 .init();
         unBinder = ButterKnife.bind(this);

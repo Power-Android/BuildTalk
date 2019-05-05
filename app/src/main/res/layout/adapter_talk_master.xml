@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/item_selector"
+    android:layout_marginTop="@dimen/dp_7_5"
+    android:layout_marginBottom="@dimen/dp_7_5">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_117"
+        android:background="@drawable/test_talk_master"
+        android:scaleType="centerCrop"/>
+</RelativeLayout>

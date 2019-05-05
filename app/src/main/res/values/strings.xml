@@ -15,4 +15,11 @@
     <string name="search_circle">搜索圈子</string>
     <string name="TIMESTAMP">timestamp</string>
     <string name="SIGN">sign</string>
+    <string name="wallet">我的钱包</string>
+    <string name="online_service">在线客服</string>
+    <string name="problem_feedback">问题反馈</string>
+    <string name="setting">设置</string>
+    <string name="search_talk">搜索名字</string>
+    <string name="industry_higher_ups">行业大咖</string>
+    <string name="sentiment_ring_main">人气圈主</string>
 </resources>
