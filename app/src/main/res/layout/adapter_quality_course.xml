@@ -20,6 +20,7 @@
             android:layout_width="@dimen/dp_165"
             android:layout_height="@dimen/dp_93"
             android:src="@drawable/test_course"
+            android:scaleType="centerCrop"
             app:riv_corner_radius_top_left="@dimen/dp_5"
             app:riv_corner_radius_top_right="@dimen/dp_5" />
 
@@ -42,28 +43,41 @@
                 android:text="ArchCAD建筑模型"
                 android:textColor="@color/text_drak"
                 android:textSize="@dimen/sp_14" />
-
-            <TextView
-                android:id="@+id/course_name_tv"
+            <LinearLayout
+                android:id="@+id/view1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/course_title_tv"
                 android:layout_marginLeft="@dimen/dp_10"
                 android:layout_marginTop="@dimen/dp_5"
-                android:drawablePadding="@dimen/dp_4"
-                android:drawableRight="@drawable/tag_icon"
-                android:includeFontPadding="false"
-                android:maxLength="6"
-                android:singleLine="true"
-                android:text="顾雍陶"
-                android:textColor="@color/text_mid"
-                android:textSize="@dimen/sp_11" />
+                android:gravity="center"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/course_name_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:includeFontPadding="false"
+                    android:maxLength="6"
+                    android:singleLine="true"
+                    android:text="顾雍陶"
+                    android:textColor="@color/text_mid"
+                    android:textSize="@dimen/sp_11" />
+
+                <ImageView
+                    android:id="@+id/course_tag_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/tag_icon"
+                    android:layout_marginLeft="@dimen/dp_4"
+                    />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/course_job_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/course_name_tv"
+                android:layout_toRightOf="@+id/view1"
                 android:layout_below="@+id/course_title_tv"
                 android:layout_marginLeft="@dimen/dp_10"
                 android:layout_marginTop="@dimen/dp_5"

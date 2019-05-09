@@ -7,7 +7,6 @@ import android.view.animation.Animation;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
-import com.bjjy.buildtalk.utils.LogUtils;
 
 public class SplashActivity extends BaseActivity<SplashPresenter> implements SplashContract.View {
 
@@ -15,11 +14,6 @@ public class SplashActivity extends BaseActivity<SplashPresenter> implements Spl
     protected int getLayoutId() {
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         return R.layout.activity_splash;
-    }
-
-    @Override
-    protected void initToolbar() {
-
     }
 
     @Override
@@ -38,7 +32,6 @@ public class SplashActivity extends BaseActivity<SplashPresenter> implements Spl
             @Override
             public void onAnimationEnd(Animation animation) {
                 boolean isGuide = mPresenter.mDataManager.getIsGuide();
-                LogUtils.e(isGuide);
                 if (isGuide) {
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
                 } else {

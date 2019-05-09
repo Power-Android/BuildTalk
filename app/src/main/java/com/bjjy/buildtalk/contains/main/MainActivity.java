@@ -14,6 +14,7 @@ import com.bjjy.buildtalk.contains.discover.DiscoverFragment;
 import com.bjjy.buildtalk.contains.mine.MineFragment;
 import com.bjjy.buildtalk.contains.talk.TalkFragment;
 import com.bjjy.buildtalk.utils.LogUtils;
+import com.bjjy.buildtalk.utils.ToastUtils;
 
 import butterknife.BindView;
 
@@ -30,6 +31,8 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     private CircleFragment mCircleFragment;
     private TalkFragment mTalkFragment;
     private MineFragment mMineFragment;
+
+    private long clickTime;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,11 +54,6 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     }
 
     @Override
-    protected void initToolbar() {
-
-    }
-
-    @Override
     protected void initView() {
         showFragment(mCurrentFgIndex);
         initNavigationView();
@@ -64,7 +62,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     private void initNavigationView() {
         mBottomNavigationView.setItemIconTintList(null);
         mBottomNavigationView.setOnNavigationItemSelectedListener(menuItem -> {
-            switch (menuItem.getItemId()){
+            switch (menuItem.getItemId()) {
                 case R.id.tab_discover:
                     showFragment(Constants.TYPE_DISCOVER);
                     break;
@@ -147,12 +145,26 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
 
     @Override
     protected void initEventAndData() {
-        mPresenter.test();
+//        mPresenter.test();
     }
 
     @Override
     public void handleSuccess() {
         LogUtils.e("handleSuccess");
+    }
+
+    /**
+     * 处理回退事件
+     */
+    @Override
+    public void onBackPressed() {
+        long currentTime = System.currentTimeMillis();
+        if ((currentTime - clickTime) > Constants.DOUBLE_INTERVAL_TIME) {
+            ToastUtils.showShort(getString(R.string.double_click_exit_toast));
+            clickTime = System.currentTimeMillis();
+        } else {
+            finish();
+        }
     }
 
 }

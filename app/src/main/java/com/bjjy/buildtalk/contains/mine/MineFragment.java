@@ -1,19 +1,15 @@
 package com.bjjy.buildtalk.contains.mine;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.base.fragment.BaseFragment;
-import com.gyf.immersionbar.ImmersionBar;
+import com.bjjy.buildtalk.utils.StatusBarUtils;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -61,40 +57,22 @@ public class MineFragment extends BaseFragment<MinePresenter> implements MineCon
 
     @Override
     protected void initView() {
-        changeStatusBar(true);
+        StatusBarUtils.changeStatusBar(this,true,false);
     }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
-            changeStatusBar(true);
+            StatusBarUtils.changeStatusBar(this,true,false);
         } else {
-            changeStatusBar(false);
+            StatusBarUtils.changeStatusBar(this,false,true);
         }
     }
 
     @Override
     protected void initEventAndData() {
 
-    }
-
-    private void changeStatusBar(boolean isTransparent) {
-        if (isTransparent) {
-            ImmersionBar.with(this)
-                    .fitsSystemWindows(false)
-                    .transparentStatusBar()
-                    .statusBarDarkFont(false, 0.2f)
-                    .keyboardEnable(true)
-                    .init();
-        } else {
-            ImmersionBar.with(this)
-                    .fitsSystemWindows(true)
-                    .statusBarColor(R.color.white)
-                    .statusBarDarkFont(true, 0.2f)
-                    .keyboardEnable(true)
-                    .init();
-        }
     }
 
     @OnClick({R.id.info_iv, R.id.wallet_rl, R.id.set_rl, R.id.help_rl, R.id.service_rl})

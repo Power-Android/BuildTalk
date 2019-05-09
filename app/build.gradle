@@ -4,7 +4,7 @@ apply plugin: 'org.greenrobot.greendao'
 android {
     compileSdkVersion rootProject.ext.android["compileSdkVersion"]
     defaultConfig {
-        applicationId "com.power.powermvpdemo"
+        applicationId "com.bjjy.buildtalk"
         minSdkVersion rootProject.ext.android["minSdkVersion"]
         targetSdkVersion rootProject.ext.android["targetSdkVersion"]
         versionCode rootProject.ext.android["versionCode"]
@@ -64,11 +64,14 @@ dependencies {
     implementation rootProject.ext.dependencies["SmartRefreshLayout"]
     implementation rootProject.ext.dependencies["SmartRefreshHeader"]
     implementation rootProject.ext.dependencies["banner"]
+    implementation rootProject.ext.dependencies["flowlayout-lib"]
     implementation rootProject.ext.dependencies["agentweb"]
     implementation rootProject.ext.dependencies["statusbar"]
     implementation rootProject.ext.dependencies["statusbar—fragment"]
     implementation rootProject.ext.dependencies["roundedImageview"]
     implementation rootProject.ext.dependencies["circleimageview"]
+    implementation rootProject.ext.dependencies["JZvideoplayer"]
+    implementation rootProject.ext.dependencies["ExoPlayer"]
 
     //net
     implementation rootProject.ext.dependencies["gson"]
@@ -78,6 +81,7 @@ dependencies {
     implementation rootProject.ext.dependencies["converter-gson"]
     implementation rootProject.ext.dependencies["adapter-rxjava2"]
     implementation rootProject.ext.dependencies["glide"]
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     annotationProcessor rootProject.ext.dependencies["glide_compiler"]
     implementation rootProject.ext.dependencies["transformations"]
 

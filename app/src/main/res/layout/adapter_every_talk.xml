@@ -10,23 +10,13 @@
 
     <TextView
         android:id="@+id/period_tv"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/play_gray_icon"
         android:drawablePadding="@dimen/dp_6"
-        android:text="第105期"
-        android:textColor="@color/text_mid"
-        android:textSize="@dimen/sp_14" />
-
-    <TextView
-        android:id="@+id/content_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dp_10"
-        android:layout_toRightOf="@+id/period_tv"
+        android:textColor="@color/text_drak"
+        android:textSize="@dimen/sp_14"
         android:ellipsize="end"
-        android:singleLine="true"
-        android:text="各地重点工程最新进展来了"
-        android:textColor="@color/text_drak" />
+        android:singleLine="true"/>
 
 </RelativeLayout>

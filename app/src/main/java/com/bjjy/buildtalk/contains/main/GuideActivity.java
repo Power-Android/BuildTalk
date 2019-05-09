@@ -22,11 +22,6 @@ public class GuideActivity extends BaseActivity<GuidePresenter> implements Guide
     }
 
     @Override
-    protected void initToolbar() {
-
-    }
-
-    @Override
     protected void initView() {
         int[] images = {R.drawable.guide01, R.drawable.guide02, R.drawable.guide03};
         ViewPager viewPager = findViewById(R.id.view_pager);

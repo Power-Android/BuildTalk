@@ -31,7 +31,6 @@ public abstract class AbstractActivity extends AppCompatActivity {
                 .init();
         unBinder = ButterKnife.bind(this);
         onViewCreated();
-        initToolbar();
         initView();
         initEventAndData();
     }
@@ -57,11 +56,6 @@ public abstract class AbstractActivity extends AppCompatActivity {
      * @return 布局id
      */
     protected abstract int getLayoutId();
-
-    /**
-     * 初始化ToolBar
-     */
-    protected abstract void initToolbar();
 
     /**
      * 初始化view

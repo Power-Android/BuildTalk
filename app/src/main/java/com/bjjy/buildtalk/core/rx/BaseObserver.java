@@ -7,8 +7,8 @@ import android.util.Log;
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.App;
 import com.bjjy.buildtalk.base.view.IView;
-import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.core.http.exception.ServerException;
+import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.utils.NetworkUtils;
 
 import io.reactivex.observers.ResourceObserver;
@@ -25,7 +25,7 @@ public abstract class BaseObserver<T> extends ResourceObserver<BaseResponse<T>> 
 
     private IView mView;
     private String mErrorMsg;
-    private boolean isShowStatusView = true;
+    private boolean isShowStatusView = false;
 
     protected BaseObserver(IView view) {
         this.mView = view;

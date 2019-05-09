@@ -1,19 +1,22 @@
 package com.bjjy.buildtalk.adapter;
 
+import android.content.Intent;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
 import com.bjjy.buildtalk.R;
+import com.bjjy.buildtalk.contains.discover.EveryTalkDetailActivity;
+import com.bjjy.buildtalk.contains.discover.EveryTalkListActivity;
+import com.bjjy.buildtalk.entity.BannerEntity;
+import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.DiscoverEntity;
+import com.bjjy.buildtalk.entity.EveryTalkEntity;
 import com.bjjy.buildtalk.utils.GlideUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.youth.banner.Banner;
-import com.youth.banner.listener.OnBannerListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +33,14 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
     public static final int BODY_HOT_TOPTIC = 2;        //热门话题
     public static final int BODY_COURSE = 3;            //精品课程
     public static final int BODY_PROJECT = 4;           //精彩专题
+
+    private List<BannerEntity> mBannerEntities = new ArrayList<>();
+    private List<String> mBannerImageList = new ArrayList<>();
+    private List<EveryTalkEntity> mEveryTalkEntities = new ArrayList<>();
+    private CourseEntity mTopticEntity;
+    private List<CourseEntity.CircleInfoBean> mTopticEntities = new ArrayList<>();
+    private CourseEntity mCourseEntity;
+    private List<CourseEntity.CircleInfoBean> mCourseEntities = new ArrayList<>();
 
     /**
      * Same as QuickAdapter#QuickAdapter(Context,int) but with
@@ -50,38 +61,28 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
     protected void convert(BaseViewHolder helper, DiscoverEntity item) {
         switch (item.getItemType()) {
             case BODY_BANNER:
-                List<Integer> banner_list = new ArrayList<>();
-                banner_list.add(R.drawable.test_banner);
-                banner_list.add(R.drawable.test_banner);
-                banner_list.add(R.drawable.test_banner);
                 Banner banner = helper.getView(R.id.banner);
-                banner.setImages(banner_list).setImageLoader(new GlideUtils()).start();
                 banner.setOnBannerListener(position -> {
                     ToastUtils.showShort("轮播图" + position);
                 });
+                banner.setImages(mBannerImageList).setImageLoader(new GlideUtils()).start();
                 break;
             case BODY_EVERYDAY_TALK:
-                List<String> et_list = new ArrayList<>();
-                et_list.add("");
-                et_list.add("");
-                et_list.add("");
                 RecyclerView et_RecyclerView = helper.getView(R.id.et_recyclerView);
                 et_RecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-                EveryTalkAdapter everyTalkAdapter = new EveryTalkAdapter(R.layout.adapter_every_talk, et_list);
+                EveryTalkAdapter everyTalkAdapter = new EveryTalkAdapter(R.layout.adapter_every_talk, mEveryTalkEntities);
                 et_RecyclerView.setAdapter(everyTalkAdapter);
                 helper.addOnClickListener(R.id.et_all_tv);
                 everyTalkAdapter.setOnItemClickListener((adapter, view, position) -> {
-                    ToastUtils.showShort("每日一谈：" + position);
+                    Intent intent = new Intent(mContext, EveryTalkDetailActivity.class);
+                    intent.putExtra("article_id",mEveryTalkEntities.get(position).getArticle_id()+"");
+                    mContext.startActivity(intent);
                 });
                 break;
             case BODY_HOT_TOPTIC:
-                List<String> toptic_list = new ArrayList<>();
-                toptic_list.add("");
-                toptic_list.add("");
-                toptic_list.add("");
                 RecyclerView toptic_RecyclerView = helper.getView(R.id.toptic_recyclerView);
                 toptic_RecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
-                TopticAdapter topticAdapter = new TopticAdapter(R.layout.adapter_hot_toptic, toptic_list);
+                TopticAdapter topticAdapter = new TopticAdapter(R.layout.adapter_hot_toptic, mTopticEntities);
                 toptic_RecyclerView.setAdapter(topticAdapter);
                 helper.addOnClickListener(R.id.toptic_all_tv)
                         .addOnClickListener(R.id.toptic_change_ll);
@@ -97,7 +98,7 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
                 course_list.add("");
                 RecyclerView course_RecyclerView = helper.getView(R.id.course_recyclerView);
                 course_RecyclerView.setLayoutManager(new GridLayoutManager(mContext, 2));
-                CourseAdapter courseAdapter = new CourseAdapter(R.layout.adapter_quality_course, course_list);
+                CourseAdapter courseAdapter = new CourseAdapter(R.layout.adapter_quality_course, mCourseEntities);
                 course_RecyclerView.setAdapter(courseAdapter);
                 helper.addOnClickListener(R.id.course_all_tv)
                         .addOnClickListener(R.id.course_change_ll);
@@ -118,6 +119,31 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
                 });
                 break;
         }
+    }
+
+    public void setBannerEntities(List<BannerEntity> bannerEntities, List<String> bannerImageList) {
+        this.mBannerEntities = bannerEntities;
+        this.mBannerImageList = bannerImageList;
+        notifyDataSetChanged();
+    }
+
+    public void setEveryTalkEntities(List<EveryTalkEntity> everyTalkEntities) {
+        this.mEveryTalkEntities = everyTalkEntities;
+        notifyDataSetChanged();
+    }
+
+    public void setTopticEntities(CourseEntity topticEntities) {
+        this.mTopticEntity = topticEntities;
+        List<CourseEntity.CircleInfoBean> topticList = topticEntities.getCircleInfo();
+        this.mTopticEntities = topticList;
+        notifyDataSetChanged();
+    }
+
+    public void setCourseEntities(CourseEntity courseEntities) {
+        this.mCourseEntity = courseEntities;
+        List<CourseEntity.CircleInfoBean> courseList = courseEntities.getCircleInfo();
+        this.mCourseEntities = courseList;
+        notifyDataSetChanged();
     }
 
     @Override

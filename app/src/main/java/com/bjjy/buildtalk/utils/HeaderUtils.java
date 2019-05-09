@@ -2,7 +2,6 @@ package com.bjjy.buildtalk.utils;
 
 import android.text.TextUtils;
 
-import java.util.Comparator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;

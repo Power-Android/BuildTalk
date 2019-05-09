@@ -1,7 +1,7 @@
 package com.bjjy.buildtalk.base.presenter;
 
-import com.bjjy.buildtalk.base.view.IView;
 import com.bjjy.buildtalk.app.DataManager;
+import com.bjjy.buildtalk.base.view.IView;
 
 import javax.inject.Inject;
 

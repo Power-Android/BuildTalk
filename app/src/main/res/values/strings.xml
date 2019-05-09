@@ -22,4 +22,7 @@
     <string name="search_talk">搜索名字</string>
     <string name="industry_higher_ups">行业大咖</string>
     <string name="sentiment_ring_main">人气圈主</string>
+    <string name="double_click_exit_toast">再按一次退出</string>
+    <string name="PAGE">page</string>
+    <string name="PAGE_SIZE">page_size</string>
 </resources>

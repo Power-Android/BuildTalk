@@ -27,7 +27,6 @@ public class GlideUtils extends ImageLoader {
         Glide.with(context)
                 .load(path)
                 .apply(new RequestOptions()
-                .placeholder(R.drawable.test_banner)
                 .error(R.drawable.test_banner))
                 .into(imageView);
     }

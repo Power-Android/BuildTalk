@@ -5,8 +5,6 @@ import android.support.annotation.IntDef;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import retrofit2.http.PUT;
-
 /**
  * @author power
  * @date 2019/4/25 9:00 AM
@@ -36,6 +34,8 @@ public class Constants {
     public static final int LOADING_STATE = 1;
     public static final int EMPTY_STATE = 2;
     public static final int ERROR_STATE = 3;
+
+    public static final long DOUBLE_INTERVAL_TIME = 2000;
 
     //fragment
     public static final String CURRENT_FRAGMENT_KEY = "current_fragment";

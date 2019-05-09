@@ -2,7 +2,10 @@ package com.bjjy.buildtalk.contains.discover;
 
 import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.base.view.IView;
+import com.bjjy.buildtalk.entity.BannerEntity;
+import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.DiscoverEntity;
+import com.bjjy.buildtalk.entity.EveryTalkEntity;
 
 import java.util.List;
 
@@ -15,6 +18,14 @@ import java.util.List;
 public class DiscoverContract {
     interface View extends IView{
         void handlerDiscoverType(List<DiscoverEntity> discoverEntityList);
+
+        void handlerBanner(List<BannerEntity> bannerEntities);
+
+        void handlerEveryTalk(List<EveryTalkEntity> everyTalkEntities);
+
+        void handlerToptic(CourseEntity courseEntities);
+
+        void handlerCourse(CourseEntity courseEntities);
     }
 
     interface Presenter extends IPresenter<View>{

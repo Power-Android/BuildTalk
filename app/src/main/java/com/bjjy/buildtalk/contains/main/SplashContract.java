@@ -1,6 +1,5 @@
 package com.bjjy.buildtalk.contains.main;
 
-import com.bjjy.buildtalk.base.presenter.BasePresenter;
 import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.base.view.IView;
 

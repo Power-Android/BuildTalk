@@ -1,6 +1,12 @@
 package com.bjjy.buildtalk.core.http.helper;
 
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
+import com.bjjy.buildtalk.entity.BannerEntity;
+import com.bjjy.buildtalk.entity.CourseEntity;
+import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
+import com.bjjy.buildtalk.entity.EveryTalkEntity;
+import com.bjjy.buildtalk.entity.EveryTalkListEntity;
+import com.bjjy.buildtalk.entity.SaveRecordEntity;
 import com.bjjy.buildtalk.entity.TestEntity;
 
 import java.util.List;
@@ -18,57 +24,21 @@ import io.reactivex.Observable;
 public interface HttpHelper {
 
     Observable<BaseResponse<List<TestEntity>>> signTest(Map<String,String> headers, Map<String,String> paramas);
-//
-//    Observable<BaseResponse<List<BannerData>>> getBannerData();
-//
-//    Observable<BaseResponse<List<ArticleItemData>>> getTopArticles();
-//
-//    Observable<BaseResponse<List<UsefulSiteData>>> getUsefulSites();
-//
-//    Observable<BaseResponse<List<TopSearchData>>> getTopSearchData();
-//
-//    Observable<BaseResponse<ArticleListData>> getSearchResultList(int pageNum, String k);
-//
-//    Observable<BaseResponse<LoginData>> login(String username, String password);
-//
-//    Observable<BaseResponse<LoginData>> register(String username, String password, String repassword);
-//
-//    Observable<BaseResponse<LoginData>> logout();
-//
-//    Observable<BaseResponse<ArticleListData>> addCollectArticle(int id);
-//
-//    Observable<BaseResponse<ArticleListData>> addCollectOutsideArticle(String title, String author, String link);
-//
-//    Observable<BaseResponse<ArticleListData>> getCollectList(int page);
-//
-//    Observable<BaseResponse<ArticleListData>> cancelCollectArticle(int id);
-//
-//    Observable<BaseResponse<ArticleListData>> cancelCollectInCollectPage(int id, int originId);
-//
-//    Observable<BaseResponse<List<NavigationListData>>> getNavigationListData();
-//
-//    Observable<BaseResponse<List<ProjectTreeData>>> getProjectTreeData();
-//
-//    Observable<BaseResponse<ArticleListData>> getProjectListData(int page, int cid);
-//
-//    Observable<BaseResponse<List<WxChapterData>>> getWxChapterListData();
-//
-//    Observable<BaseResponse<ArticleListData>> getWxArticlesData(int id, int page);
-//
-//    Observable<BaseResponse<ArticleListData>> getWxSearchData(int id, int page, String k);
-//
-//    Observable<BaseResponse<List<KnowledgeTreeData>>> getKnowledgeTreeData();
-//
-//    Observable<BaseResponse<ArticleListData>> getKnowledgeListData(int page, int cid);
-//
-//    Observable<BaseResponse<TodoListData>> getTodoListData(int page, Map<String, Object> map);
-//
-//    Observable<BaseResponse<TodoItemData>> addTodo(Map<String, Object> map);
-//
-//    Observable<BaseResponse<TodoItemData>> updateTodo(int id, Map<String, Object> map);
-//
-//    Observable<BaseResponse<TodoItemData>> deleteTodo(int id);
-//
-//    Observable<BaseResponse<TodoItemData>> updateTodoStatus(int id, int status);
+
+    Observable<BaseResponse<List<BannerEntity>>> discoverBanner(Map<String,String> headers, Map<String,String> paramas);
+
+    Observable<BaseResponse<List<EveryTalkEntity>>> everyDayTalk(Map<String,String> headers, Map<String,String> paramas);
+
+    Observable<BaseResponse<CourseEntity>> courseInfo(Map<String,String> headers, Map<String,String> paramas);
+
+    Observable<BaseResponse<EveryTalkListEntity>> everyDayTalkList(Map<String,String> headers, Map<String,String> paramas);
+
+    Observable<BaseResponse<EveryTalkDetailEntity>> everyTalkDetail(Map<String, String> headers, Map<String, String> params);
+
+    Observable<BaseResponse<List<SaveRecordEntity>>> saveRecord(Map<String, String> headers, Map<String, String> params);
+
+    Observable<BaseResponse<TestEntity>> praiseRecord(Map<String, String> headers, Map<String, String> params);
+
+    Observable<BaseResponse<TestEntity>> collectArticle(Map<String, String> headers, Map<String, String> params);
 
 }
