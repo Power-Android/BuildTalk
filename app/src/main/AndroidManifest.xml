@@ -38,9 +38,16 @@
         <activity android:name=".contains.discover.EveryTalkListActivity" />
         <activity android:name=".contains.discover.TopticListActivity" />
         <activity android:name=".contains.discover.CourseListActivity" />
-        <activity android:name=".contains.discover.EveryTalkDetailActivity"
+        <activity
+            android:name=".contains.discover.EveryTalkDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".contains.main.SearchActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+        <activity android:name=".contains.talk.MasterListActivity" />
+        <activity android:name=".contains.talk.CircleListActivity"></activity>
     </application>
 
 </manifest>

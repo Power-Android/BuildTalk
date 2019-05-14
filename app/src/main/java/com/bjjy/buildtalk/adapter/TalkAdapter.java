@@ -46,6 +46,8 @@ public class TalkAdapter extends BaseMultiItemQuickAdapter<TalkEntity, BaseViewH
                 master_recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
                 TalkMasterAdapter masterAdapter = new TalkMasterAdapter(R.layout.adapter_talk_master,master_list);
                 master_recyclerView.setAdapter(masterAdapter);
+                helper.addOnClickListener(R.id.master_all_tv)
+                        .addOnClickListener(R.id.master_change_ll);
                 break;
             case BODY_CIRCLE_MAN:
                 List<String> circle_list = new ArrayList<>();
@@ -56,6 +58,7 @@ public class TalkAdapter extends BaseMultiItemQuickAdapter<TalkEntity, BaseViewH
                 circle_recyclerView.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false));
                 TalkCircleAdapter circleAdapter = new TalkCircleAdapter(R.layout.adapter_talk_circle,circle_list);
                 circle_recyclerView.setAdapter(circleAdapter);
+                helper.addOnClickListener(R.id.circle_all_tv);
                 break;
         }
     }

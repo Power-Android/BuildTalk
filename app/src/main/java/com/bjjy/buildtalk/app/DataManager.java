@@ -1,6 +1,7 @@
 package com.bjjy.buildtalk.app;
 
 import com.bjjy.buildtalk.core.db.DbHelper;
+import com.bjjy.buildtalk.core.greendao.HistoryData;
 import com.bjjy.buildtalk.core.http.helper.HttpHelper;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.core.preference.PreferenceHelper;
@@ -34,6 +35,7 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
         mDbHelper = dbHelper;
         mPreferenceHelper = preferenceHelper;
     }
+    //==========================================>PreferenceHelper<==========================================================
 
     @Override
     public void setLoginStatus(boolean isLogin) {
@@ -64,6 +66,30 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     public boolean getIsGuide() {
         return mPreferenceHelper.getIsGuide();
     }
+
+    //==========================================>DbHelper<==================================================================
+
+    @Override
+    public List<HistoryData> addHistoryData(String data) {
+        return mDbHelper.addHistoryData(data);
+    }
+
+    @Override
+    public void clearAllHistoryData() {
+        mDbHelper.clearAllHistoryData();
+    }
+
+    @Override
+    public void deleteHistoryDataById(Long id) {
+        mDbHelper.deleteHistoryDataById(id);
+    }
+
+    @Override
+    public List<HistoryData> loadAllHistoryData() {
+        return mDbHelper.loadAllHistoryData();
+    }
+
+    //==========================================>HttpHelper<==================================================================
 
     @Override
     public Observable<BaseResponse<List<TestEntity>>> signTest(Map<String, String> headers, Map<String,String> paramas) {

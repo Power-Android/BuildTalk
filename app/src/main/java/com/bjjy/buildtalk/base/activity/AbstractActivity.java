@@ -27,7 +27,6 @@ public abstract class AbstractActivity extends AppCompatActivity {
                 .fitsSystemWindows(true)
                 .statusBarColor(R.color.white)
                 .statusBarDarkFont(true, 0.2f)
-                .keyboardEnable(true)
                 .init();
         unBinder = ButterKnife.bind(this);
         onViewCreated();

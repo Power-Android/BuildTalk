@@ -21,6 +21,7 @@ import com.bjjy.buildtalk.entity.BannerEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.DiscoverEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
+import com.bjjy.buildtalk.utils.AnimatorUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -130,20 +131,20 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
                 break;
             case R.id.toptic_change_ll:
                 ImageView topticChangeIv = view.findViewById(R.id.toptic_change_iv);
-                setRotateAnimation(topticChangeIv);
+                AnimatorUtils.setRotateAnimation(topticChangeIv);
                 view.setClickable(false);
                 new Handler().postDelayed(() -> {
                     HOT_TOPTIC_PAGE++;
                     mPresenter.discoverToptic();
                     view.setClickable(true);
-                }, 1000);
+                }, 2000);
                 break;
             case R.id.course_all_tv:
                 startActivity(new Intent(mContext, CourseListActivity.class));
                 break;
             case R.id.course_change_ll:
                 ImageView courseChangeIv = view.findViewById(R.id.course_change_iv);
-                setRotateAnimation(courseChangeIv);
+                AnimatorUtils.setRotateAnimation(courseChangeIv);
                 view.setClickable(false);
                 new Handler().postDelayed(() -> {
                     COURSE_PAGE++;
@@ -154,17 +155,4 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
         }
     }
 
-    /**
-     * @param imageView
-     * 换一换旋转动画
-     */
-    public void setRotateAnimation(ImageView imageView) {
-        RotateAnimation rotate = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        LinearInterpolator lin = new LinearInterpolator();
-        rotate.setInterpolator(lin);
-        rotate.setDuration(1000);//设置动画持续周期
-        rotate.setRepeatCount(-1);//设置重复次数
-        rotate.setFillAfter(true);//动画执行完后是否停留在执行完的状态
-        imageView.startAnimation(rotate);
-    }
 }
