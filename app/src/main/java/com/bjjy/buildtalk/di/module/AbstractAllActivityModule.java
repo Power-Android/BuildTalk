@@ -11,14 +11,22 @@ import com.bjjy.buildtalk.contains.main.MainActivity;
 import com.bjjy.buildtalk.contains.main.SearchActivity;
 import com.bjjy.buildtalk.contains.main.SplashActivity;
 import com.bjjy.buildtalk.contains.talk.CircleListActivity;
+import com.bjjy.buildtalk.contains.talk.FansFocusActivity;
+import com.bjjy.buildtalk.contains.talk.MasterCircleActivity;
+import com.bjjy.buildtalk.contains.talk.MasterCollectActivity;
+import com.bjjy.buildtalk.contains.talk.MasterDetailActivity;
 import com.bjjy.buildtalk.contains.talk.MasterListActivity;
 import com.bjjy.buildtalk.di.component.BaseActivityComponent;
 import com.bjjy.buildtalk.di.module.activity.CircleListActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CourseListActivityModule;
 import com.bjjy.buildtalk.di.module.activity.EverTalkListActivityModule;
 import com.bjjy.buildtalk.di.module.activity.EveryTalkDetailModule;
+import com.bjjy.buildtalk.di.module.activity.FansFocusActivityModule;
 import com.bjjy.buildtalk.di.module.activity.GuideActivityModule;
 import com.bjjy.buildtalk.di.module.activity.MainActivityModule;
+import com.bjjy.buildtalk.di.module.activity.MasterCircleActivityModule;
+import com.bjjy.buildtalk.di.module.activity.MasterCollectActivityModule;
+import com.bjjy.buildtalk.di.module.activity.MasterDetailActivityModule;
 import com.bjjy.buildtalk.di.module.activity.MasterListActivityModule;
 import com.bjjy.buildtalk.di.module.activity.SearchActivityModule;
 import com.bjjy.buildtalk.di.module.activity.SplashActivtyModule;
@@ -59,4 +67,17 @@ public abstract class AbstractAllActivityModule {
 
     @ContributesAndroidInjector(modules = CircleListActivityModule.class)
     abstract CircleListActivity mCircleListActivity();
+
+    @ContributesAndroidInjector(modules = MasterDetailActivityModule.class)
+    abstract MasterDetailActivity mMasterDetailActivity();
+
+    @ContributesAndroidInjector(modules = MasterCircleActivityModule.class)
+    abstract MasterCircleActivity mMasterCircleActivity();
+
+    @ContributesAndroidInjector(modules = FansFocusActivityModule.class)
+    abstract FansFocusActivity mFansFocusActivity();
+
+    @ContributesAndroidInjector(modules = MasterCollectActivityModule.class)
+    abstract MasterCollectActivity mMasterCollectActivity();
+
 }

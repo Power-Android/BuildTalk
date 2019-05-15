@@ -47,7 +47,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity android:name=".contains.talk.MasterListActivity" />
-        <activity android:name=".contains.talk.CircleListActivity"></activity>
+        <activity android:name=".contains.talk.CircleListActivity" />
+        <activity android:name=".contains.talk.MasterDetailActivity" />
+        <activity android:name=".contains.talk.MasterCircleActivity" />
+        <activity android:name=".contains.talk.FansFocusActivity" />
+        <activity android:name=".contains.talk.MasterCollectActivity"></activity>
     </application>
 
 </manifest>

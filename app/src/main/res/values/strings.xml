@@ -25,4 +25,6 @@
     <string name="double_click_exit_toast">再按一次退出</string>
     <string name="PAGE">page</string>
     <string name="PAGE_SIZE">page_size</string>
+    <string name="exquisite_article">精品文章</string>
+    <string name="personal_introduction">个人介绍</string>
 </resources>

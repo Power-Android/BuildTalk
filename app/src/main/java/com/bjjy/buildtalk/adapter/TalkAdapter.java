@@ -1,11 +1,15 @@
 package com.bjjy.buildtalk.adapter;
 
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.bjjy.buildtalk.R;
+import com.bjjy.buildtalk.contains.talk.MasterDetailActivity;
 import com.bjjy.buildtalk.entity.TalkEntity;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
 import java.util.ArrayList;
@@ -46,6 +50,7 @@ public class TalkAdapter extends BaseMultiItemQuickAdapter<TalkEntity, BaseViewH
                 master_recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
                 TalkMasterAdapter masterAdapter = new TalkMasterAdapter(R.layout.adapter_talk_master,master_list);
                 master_recyclerView.setAdapter(masterAdapter);
+                masterAdapter.setOnItemClickListener((baseQuickAdapter, view, position) -> mContext.startActivity(new Intent(mContext,MasterDetailActivity.class)));
                 helper.addOnClickListener(R.id.master_all_tv)
                         .addOnClickListener(R.id.master_change_ll);
                 break;
@@ -58,6 +63,12 @@ public class TalkAdapter extends BaseMultiItemQuickAdapter<TalkEntity, BaseViewH
                 circle_recyclerView.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false));
                 TalkCircleAdapter circleAdapter = new TalkCircleAdapter(R.layout.adapter_talk_circle,circle_list);
                 circle_recyclerView.setAdapter(circleAdapter);
+                circleAdapter.setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int position) {
+
+                    }
+                });
                 helper.addOnClickListener(R.id.circle_all_tv);
                 break;
         }

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="@dimen/dp_20"
+    android:paddingBottom="@dimen/dp_10"
+    android:paddingLeft="@dimen/dp_25"
+    android:paddingRight="@dimen/dp_25">
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/item_img_iv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_126"
+        app:riv_corner_radius_top_left="@dimen/dp_5"
+        app:riv_corner_radius_top_right="@dimen/dp_5"
+        android:src="@drawable/test_course"
+        android:scaleType="centerCrop"/>
+    <TextView
+        android:id="@+id/item_title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="科技宅 新生活"
+        android:textSize="@dimen/sp_15"
+        android:textColor="@color/text_drak"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:layout_below="@+id/item_img_iv"
+        android:layout_marginTop="@dimen/dp_10"/>
+    <TextView
+        android:id="@+id/item_content_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="建筑工业互联网峰会建筑工业互联网峰会建筑工业互联网峰会-浦小强建筑工业互联网峰会建筑工业互联网峰会建筑工业互联网峰会"
+        android:textSize="@dimen/sp_12"
+        android:textColor="@color/text_mid"
+        android:layout_below="@+id/item_title_tv"
+        android:layout_marginTop="@dimen/dp_5"
+        android:maxLines="2"
+        android:ellipsize="end"/>
+</RelativeLayout>

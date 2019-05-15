@@ -105,4 +105,16 @@ public class StatusBarUtils {
             }
         }
     }
+
+    public static void changeFontColor(Activity activity, boolean isDarkFont){
+        if (isDarkFont){
+            ImmersionBar.with(activity)
+                    .statusBarDarkFont(true, 0.2f)
+                    .init();
+        }else {
+            ImmersionBar.with(activity)
+                    .statusBarDarkFont(false, 0.2f)
+                    .init();
+        }
+    }
 }
