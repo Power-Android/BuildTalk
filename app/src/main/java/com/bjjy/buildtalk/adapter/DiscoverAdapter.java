@@ -6,8 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.bjjy.buildtalk.R;
-import com.bjjy.buildtalk.contains.discover.EveryTalkDetailActivity;
-import com.bjjy.buildtalk.contains.discover.EveryTalkListActivity;
+import com.bjjy.buildtalk.ui.discover.EveryTalkDetailActivity;
 import com.bjjy.buildtalk.entity.BannerEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.DiscoverEntity;

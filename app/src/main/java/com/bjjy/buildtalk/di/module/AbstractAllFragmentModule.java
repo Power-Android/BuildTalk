@@ -1,10 +1,10 @@
 
 package com.bjjy.buildtalk.di.module;
 
-import com.bjjy.buildtalk.contains.circle.CircleFragment;
-import com.bjjy.buildtalk.contains.discover.DiscoverFragment;
-import com.bjjy.buildtalk.contains.mine.MineFragment;
-import com.bjjy.buildtalk.contains.talk.TalkFragment;
+import com.bjjy.buildtalk.ui.circle.CircleFragment;
+import com.bjjy.buildtalk.ui.discover.DiscoverFragment;
+import com.bjjy.buildtalk.ui.mine.MineFragment;
+import com.bjjy.buildtalk.ui.talk.TalkFragment;
 import com.bjjy.buildtalk.di.component.BaseFragmentComponent;
 import com.bjjy.buildtalk.di.module.fragment.CircleFragmentModule;
 import com.bjjy.buildtalk.di.module.fragment.DiscoverFragmentmodule;

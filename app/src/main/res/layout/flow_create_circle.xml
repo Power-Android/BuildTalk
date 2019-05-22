@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tag_bg"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/dp_7_5"
+    android:layout_marginRight="@dimen/dp_7_5"
+    android:layout_marginBottom="@dimen/dp_10">
+    <TextView
+        android:id="@+id/tag_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/selector_create_circle"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:paddingBottom="@dimen/dp_10"
+        android:paddingLeft="@dimen/dp_30"
+        android:paddingRight="@dimen/dp_30"
+        android:paddingTop="@dimen/dp_10"
+        android:textColor="@color/text_mid"
+        android:textSize="@dimen/sp_14"
+        tools:text="@string/app_name" />
+    <ImageView
+        android:id="@+id/tag_delete"
+        android:layout_width="@dimen/dp_20"
+        android:layout_height="@dimen/dp_20"
+        android:visibility="gone"
+        android:src="@drawable/close_blue_icon"
+        android:padding="@dimen/dp_5"
+        android:layout_centerVertical="true"
+        android:layout_alignRight="@+id/tag_tv"
+        android:layout_marginRight="@dimen/dp_5"/>
+</RelativeLayout>

@@ -11,8 +11,8 @@ import android.view.View.OnFocusChangeListener;
 import android.view.animation.Animation;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
+
 import com.bjjy.buildtalk.R;
-import com.bjjy.buildtalk.utils.SizeUtils;
 
 /**
  * @author power

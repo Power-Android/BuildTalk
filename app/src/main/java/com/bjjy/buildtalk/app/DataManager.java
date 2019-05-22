@@ -1,6 +1,7 @@
 package com.bjjy.buildtalk.app;
 
 import com.bjjy.buildtalk.core.db.DbHelper;
+import com.bjjy.buildtalk.core.greendao.CircleHistoryData;
 import com.bjjy.buildtalk.core.greendao.HistoryData;
 import com.bjjy.buildtalk.core.http.helper.HttpHelper;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
@@ -87,6 +88,26 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     @Override
     public List<HistoryData> loadAllHistoryData() {
         return mDbHelper.loadAllHistoryData();
+    }
+
+    @Override
+    public List<CircleHistoryData> addCircleHistoryData(String data) {
+        return mDbHelper.addCircleHistoryData(data);
+    }
+
+    @Override
+    public void clearAllCircleHistoryData() {
+        mDbHelper.clearAllCircleHistoryData();
+    }
+
+    @Override
+    public void deleteCircleHistoryDataById(Long id) {
+        mDbHelper.deleteCircleHistoryDataById(id);
+    }
+
+    @Override
+    public List<CircleHistoryData> loadAllCircleHistoryData() {
+        return mDbHelper.loadAllCircleHistoryData();
     }
 
     //==========================================>HttpHelper<==================================================================

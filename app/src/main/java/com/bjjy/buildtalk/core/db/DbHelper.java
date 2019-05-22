@@ -1,5 +1,6 @@
 package com.bjjy.buildtalk.core.db;
 
+import com.bjjy.buildtalk.core.greendao.CircleHistoryData;
 import com.bjjy.buildtalk.core.greendao.HistoryData;
 
 import java.util.List;
@@ -35,4 +36,29 @@ public interface DbHelper {
      * @return List<HistoryData>
      */
     List<HistoryData> loadAllHistoryData();
+
+    /**
+     * Add search history data
+     *
+     * @param data  added string
+     * @return  List<CircleHistoryData>
+     */
+    List<CircleHistoryData> addCircleHistoryData(String data);
+
+    /**
+     * Clear all search history data
+     */
+    void clearAllCircleHistoryData();
+
+    /**
+     * Clear all search history data
+     */
+    void deleteCircleHistoryDataById(Long id);
+
+    /**
+     * Load all history data
+     *
+     * @return List<CircleHistoryData>
+     */
+    List<CircleHistoryData> loadAllCircleHistoryData();
 }

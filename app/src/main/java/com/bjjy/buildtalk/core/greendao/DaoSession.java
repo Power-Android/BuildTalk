@@ -8,9 +8,11 @@ import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.identityscope.IdentityScopeType;
 import org.greenrobot.greendao.internal.DaoConfig;
 
+import com.bjjy.buildtalk.core.greendao.CircleHistoryData;
 import com.bjjy.buildtalk.core.greendao.HistoryData;
 import com.bjjy.buildtalk.app.User;
 
+import com.bjjy.buildtalk.core.greendao.CircleHistoryDataDao;
 import com.bjjy.buildtalk.core.greendao.HistoryDataDao;
 import com.bjjy.buildtalk.core.greendao.UserDao;
 
@@ -23,9 +25,11 @@ import com.bjjy.buildtalk.core.greendao.UserDao;
  */
 public class DaoSession extends AbstractDaoSession {
 
+    private final DaoConfig circleHistoryDataDaoConfig;
     private final DaoConfig historyDataDaoConfig;
     private final DaoConfig userDaoConfig;
 
+    private final CircleHistoryDataDao circleHistoryDataDao;
     private final HistoryDataDao historyDataDao;
     private final UserDao userDao;
 
@@ -33,22 +37,32 @@ public class DaoSession extends AbstractDaoSession {
             daoConfigMap) {
         super(db);
 
+        circleHistoryDataDaoConfig = daoConfigMap.get(CircleHistoryDataDao.class).clone();
+        circleHistoryDataDaoConfig.initIdentityScope(type);
+
         historyDataDaoConfig = daoConfigMap.get(HistoryDataDao.class).clone();
         historyDataDaoConfig.initIdentityScope(type);
 
         userDaoConfig = daoConfigMap.get(UserDao.class).clone();
         userDaoConfig.initIdentityScope(type);
 
+        circleHistoryDataDao = new CircleHistoryDataDao(circleHistoryDataDaoConfig, this);
         historyDataDao = new HistoryDataDao(historyDataDaoConfig, this);
         userDao = new UserDao(userDaoConfig, this);
 
+        registerDao(CircleHistoryData.class, circleHistoryDataDao);
         registerDao(HistoryData.class, historyDataDao);
         registerDao(User.class, userDao);
     }
     
     public void clear() {
+        circleHistoryDataDaoConfig.clearIdentityScope();
         historyDataDaoConfig.clearIdentityScope();
         userDaoConfig.clearIdentityScope();
+    }
+
+    public CircleHistoryDataDao getCircleHistoryDataDao() {
+        return circleHistoryDataDao;
     }
 
     public HistoryDataDao getHistoryDataDao() {

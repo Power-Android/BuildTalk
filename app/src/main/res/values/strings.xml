@@ -12,7 +12,6 @@
     <string name="change">换一换</string>
     <string name="course">精品课程</string>
     <string name="good_project">精彩专题</string>
-    <string name="search_circle">搜索圈子</string>
     <string name="TIMESTAMP">timestamp</string>
     <string name="SIGN">sign</string>
     <string name="wallet">我的钱包</string>
@@ -27,4 +26,9 @@
     <string name="PAGE_SIZE">page_size</string>
     <string name="exquisite_article">精品文章</string>
     <string name="personal_introduction">个人介绍</string>
+    <string name="search_history">搜索历史</string>
+    <string name="search_name">搜索名字</string>
+    <string name="search_circle">搜索圈子</string>
+    <string name="circle_dialog_content">包含时政、低俗、色情、暴力引诱等敏感或违禁内容的圈子，将会被封停圈子和账号!</string>
+    <string name="circle_rules">圈主规则</string>
 </resources>
