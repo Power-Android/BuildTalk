@@ -1,5 +1,6 @@
 package com.bjjy.buildtalk.ui.mine;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -7,6 +8,7 @@ import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.base.fragment.BaseFragment;
+import com.bjjy.buildtalk.ui.main.LoginActivity;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
 
 import butterknife.BindView;
@@ -79,6 +81,7 @@ public class MineFragment extends BaseFragment<MinePresenter> implements MineCon
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.info_iv:
+                startActivity(new Intent(mContext, LoginActivity.class));
                 break;
             case R.id.wallet_rl:
                 break;

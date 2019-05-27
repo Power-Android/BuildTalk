@@ -13,11 +13,13 @@ import com.bjjy.buildtalk.di.module.activity.EverTalkListActivityModule;
 import com.bjjy.buildtalk.di.module.activity.EveryTalkDetailModule;
 import com.bjjy.buildtalk.di.module.activity.FansFocusActivityModule;
 import com.bjjy.buildtalk.di.module.activity.GuideActivityModule;
+import com.bjjy.buildtalk.di.module.activity.LoginActivityModule;
 import com.bjjy.buildtalk.di.module.activity.MainActivityModule;
 import com.bjjy.buildtalk.di.module.activity.MasterCircleActivityModule;
 import com.bjjy.buildtalk.di.module.activity.MasterCollectActivityModule;
 import com.bjjy.buildtalk.di.module.activity.MasterDetailActivityModule;
 import com.bjjy.buildtalk.di.module.activity.MasterListActivityModule;
+import com.bjjy.buildtalk.di.module.activity.PhoneLoginActivityModule;
 import com.bjjy.buildtalk.di.module.activity.SplashActivtyModule;
 import com.bjjy.buildtalk.di.module.activity.TalkSearchActivityModule;
 import com.bjjy.buildtalk.di.module.activity.TopticCircleActivityModule;
@@ -32,7 +34,9 @@ import com.bjjy.buildtalk.ui.discover.EveryTalkDetailActivity;
 import com.bjjy.buildtalk.ui.discover.EveryTalkListActivity;
 import com.bjjy.buildtalk.ui.discover.TopticListActivity;
 import com.bjjy.buildtalk.ui.main.GuideActivity;
+import com.bjjy.buildtalk.ui.main.LoginActivity;
 import com.bjjy.buildtalk.ui.main.MainActivity;
+import com.bjjy.buildtalk.ui.main.PhoneLoginActivity;
 import com.bjjy.buildtalk.ui.main.SplashActivity;
 import com.bjjy.buildtalk.ui.talk.CircleListActivity;
 import com.bjjy.buildtalk.ui.talk.FansFocusActivity;
@@ -105,4 +109,9 @@ public abstract class AbstractAllActivityModule {
     @ContributesAndroidInjector(modules = CourseCircleActivityModule.class)
     abstract CourseCircleActivity mCourseCircleActivity();
 
+    @ContributesAndroidInjector(modules = LoginActivityModule.class)
+    abstract LoginActivity mLoginActivity();
+
+    @ContributesAndroidInjector(modules = PhoneLoginActivityModule.class)
+    abstract PhoneLoginActivity mPhoneLoginActivity();
 }

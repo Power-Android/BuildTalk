@@ -3,6 +3,7 @@ package com.bjjy.buildtalk.app;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.di.component.DaggerAppComponent;
@@ -102,5 +103,11 @@ public class App extends Application implements HasActivityInjector {
             //指定为经典Footer，默认是 BallPulseFooter
             return new ClassicsFooter(context).setDrawableSize(20);
         });
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 }

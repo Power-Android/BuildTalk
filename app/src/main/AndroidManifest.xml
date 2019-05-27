@@ -57,7 +57,9 @@
         <activity android:name=".ui.circle.CircleAgreementActvity" />
         <activity android:name=".ui.circle.CreateCircleActivity" />
         <activity android:name=".ui.circle.TopticCircleActivity" />
-        <activity android:name=".ui.circle.CourseCircleActivity"></activity>
+        <activity android:name=".ui.circle.CourseCircleActivity" />
+        <activity android:name=".ui.main.LoginActivity" />
+        <activity android:name=".ui.main.PhoneLoginActivity"></activity>
     </application>
 
 </manifest>

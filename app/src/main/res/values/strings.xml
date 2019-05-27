@@ -35,4 +35,9 @@
     <string name="theme">主题</string>
     <string name="essence">精华</string>
     <string name="footer_circle_text">加入圈子可以浏览更多内容</string>
+    <string name="login_phone">手机号登陆</string>
+    <string name="login_wechat">微信登录</string>
+    <string name="phone_tv">手机号</string>
+    <string name="verify_str">验证码</string>
+    <string name="getcode_str">获取验证码</string>
 </resources>
