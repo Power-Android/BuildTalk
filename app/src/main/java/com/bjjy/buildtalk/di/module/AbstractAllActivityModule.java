@@ -2,11 +2,31 @@
 package com.bjjy.buildtalk.di.module;
 
 
+import com.bjjy.buildtalk.di.component.BaseActivityComponent;
 import com.bjjy.buildtalk.di.module.activity.CircleAgreementActivityModule;
+import com.bjjy.buildtalk.di.module.activity.CircleListActivityModule;
+import com.bjjy.buildtalk.di.module.activity.CircleSearchActivityModule;
+import com.bjjy.buildtalk.di.module.activity.CourseCircleActivityModule;
+import com.bjjy.buildtalk.di.module.activity.CourseListActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CreateCircleActivityModule;
+import com.bjjy.buildtalk.di.module.activity.EverTalkListActivityModule;
+import com.bjjy.buildtalk.di.module.activity.EveryTalkDetailModule;
+import com.bjjy.buildtalk.di.module.activity.FansFocusActivityModule;
+import com.bjjy.buildtalk.di.module.activity.GuideActivityModule;
+import com.bjjy.buildtalk.di.module.activity.MainActivityModule;
+import com.bjjy.buildtalk.di.module.activity.MasterCircleActivityModule;
+import com.bjjy.buildtalk.di.module.activity.MasterCollectActivityModule;
+import com.bjjy.buildtalk.di.module.activity.MasterDetailActivityModule;
+import com.bjjy.buildtalk.di.module.activity.MasterListActivityModule;
+import com.bjjy.buildtalk.di.module.activity.SplashActivtyModule;
+import com.bjjy.buildtalk.di.module.activity.TalkSearchActivityModule;
+import com.bjjy.buildtalk.di.module.activity.TopticCircleActivityModule;
+import com.bjjy.buildtalk.di.module.activity.TopticListActivityModule;
 import com.bjjy.buildtalk.ui.circle.CircleAgreementActvity;
 import com.bjjy.buildtalk.ui.circle.CircleSearchActivity;
+import com.bjjy.buildtalk.ui.circle.CourseCircleActivity;
 import com.bjjy.buildtalk.ui.circle.CreateCircleActivity;
+import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
 import com.bjjy.buildtalk.ui.discover.CourseListActivity;
 import com.bjjy.buildtalk.ui.discover.EveryTalkDetailActivity;
 import com.bjjy.buildtalk.ui.discover.EveryTalkListActivity;
@@ -21,22 +41,6 @@ import com.bjjy.buildtalk.ui.talk.MasterCollectActivity;
 import com.bjjy.buildtalk.ui.talk.MasterDetailActivity;
 import com.bjjy.buildtalk.ui.talk.MasterListActivity;
 import com.bjjy.buildtalk.ui.talk.TalkSearchActivity;
-import com.bjjy.buildtalk.di.component.BaseActivityComponent;
-import com.bjjy.buildtalk.di.module.activity.CircleListActivityModule;
-import com.bjjy.buildtalk.di.module.activity.CircleSearchActivityModule;
-import com.bjjy.buildtalk.di.module.activity.CourseListActivityModule;
-import com.bjjy.buildtalk.di.module.activity.EverTalkListActivityModule;
-import com.bjjy.buildtalk.di.module.activity.EveryTalkDetailModule;
-import com.bjjy.buildtalk.di.module.activity.FansFocusActivityModule;
-import com.bjjy.buildtalk.di.module.activity.GuideActivityModule;
-import com.bjjy.buildtalk.di.module.activity.MainActivityModule;
-import com.bjjy.buildtalk.di.module.activity.MasterCircleActivityModule;
-import com.bjjy.buildtalk.di.module.activity.MasterCollectActivityModule;
-import com.bjjy.buildtalk.di.module.activity.MasterDetailActivityModule;
-import com.bjjy.buildtalk.di.module.activity.MasterListActivityModule;
-import com.bjjy.buildtalk.di.module.activity.SplashActivtyModule;
-import com.bjjy.buildtalk.di.module.activity.TalkSearchActivityModule;
-import com.bjjy.buildtalk.di.module.activity.TopticListActivityModule;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
@@ -94,5 +98,11 @@ public abstract class AbstractAllActivityModule {
 
     @ContributesAndroidInjector(modules = CreateCircleActivityModule.class)
     abstract CreateCircleActivity mCreateCircleActivity();
+
+    @ContributesAndroidInjector(modules = TopticCircleActivityModule.class)
+    abstract TopticCircleActivity mTopticCircleActivity();
+
+    @ContributesAndroidInjector(modules = CourseCircleActivityModule.class)
+    abstract CourseCircleActivity mCourseCircleActivity();
 
 }

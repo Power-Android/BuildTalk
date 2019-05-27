@@ -55,7 +55,9 @@
         <activity android:name=".ui.talk.MasterCollectActivity" />
         <activity android:name=".ui.circle.CircleSearchActivity" />
         <activity android:name=".ui.circle.CircleAgreementActvity" />
-        <activity android:name=".ui.circle.CreateCircleActivity"></activity>
+        <activity android:name=".ui.circle.CreateCircleActivity" />
+        <activity android:name=".ui.circle.TopticCircleActivity" />
+        <activity android:name=".ui.circle.CourseCircleActivity"></activity>
     </application>
 
 </manifest>

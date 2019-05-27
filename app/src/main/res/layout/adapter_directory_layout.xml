@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_gray_5radius">
+    <ImageView
+        android:id="@+id/view1"
+        android:layout_width="@dimen/dp_21"
+        android:layout_height="@dimen/dp_21"
+        android:src="@drawable/video_tag_icon"
+        android:layout_margin="@dimen/dp_10"/>
+    <TextView
+        android:id="@+id/item_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="01讲  ArchCAD简介"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/view1"
+        android:textColor="@color/text_drak"
+        android:textSize="@dimen/sp_14" />
+    <ImageView
+        android:layout_width="@dimen/dp_30"
+        android:layout_height="@dimen/dp_30"
+        android:src="@drawable/shikan_icon"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/dp_10"/>
+</RelativeLayout>

@@ -129,6 +129,10 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
     public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int position) {
         if (position == circle_list.size() - 1) {
             createCircle();
+        }else if (position == 1){
+            startActivity(new Intent(mContext, CourseCircleActivity.class));
+        }else {
+            startActivity(new Intent(mContext, TopticCircleActivity.class));
         }
     }
 }

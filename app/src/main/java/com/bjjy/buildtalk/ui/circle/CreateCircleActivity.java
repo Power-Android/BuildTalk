@@ -1,11 +1,9 @@
 package com.bjjy.buildtalk.ui.circle;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -31,10 +29,8 @@ import com.zhy.view.flowlayout.TagFlowLayout;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> implements CreateCircleContract.View {
 
@@ -92,12 +88,12 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
                 .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
                 .sizeMultiplier(0.5f)// glide 加载图片大小 0~1之间 如设置 .glideOverride()无效
                 .setOutputCameraPath("/CustomPath")// 自定义拍照保存路径,可不填
-                .enableCrop(false)// 是否裁剪 true or false
+                .enableCrop(true)// 是否裁剪 true or false
                 .compress(true)// 是否压缩 true or false
                 .isGif(false)// 是否显示gif图片 true or false
                 .circleDimmedLayer(false)// 是否圆形裁剪 true or false
                 .showCropFrame(false)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false   true or false
-                .showCropGrid(false)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false    true or false
+                .showCropGrid(true)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false    true or false
                 .openClickSound(false)// 是否开启点击声音 true or false
                 .previewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中) true or false
                 .minimumCompressSize(100)// 小于100kb的图片不压缩
@@ -127,7 +123,7 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
                     tv.setBackground(getResources().getDrawable(R.drawable.shape_create_circle_def));
                     tv.setTextColor(getResources().getColor(R.color.text_mid));
                 }
-                if (list.get(position).isCustom() && list.get(position).isSelected()){
+                if (list.get(position).isCustom()){
                     delete.setVisibility(View.VISIBLE);
                 }else {
                     delete.setVisibility(View.GONE);

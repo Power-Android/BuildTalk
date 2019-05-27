@@ -2109,9 +2109,18 @@ public class TabLayout extends HorizontalScrollView {
                     }
                 } else {
                     int maxWidth = mIndicatorRight - mIndicatorLeft;
-                    if (maxWidth > mSelectedTab.getTextWidth()) {
-                        mIndicatorLeft += (maxWidth - mSelectedTab.getTextWidth()) / 2;
-                        mIndicatorRight -= (maxWidth - mSelectedTab.getTextWidth()) / 2;
+                    //自定义四item的时候测量宽度
+                    if (mSelectedTab.getCustomView() != null){
+                        LinearLayout custom = mSelectedTab.getCustomView().findViewById(R.id.custom);
+                        if (maxWidth > custom.getWidth()) {
+                            mIndicatorLeft += (maxWidth - custom.getWidth()) / 2;
+                            mIndicatorRight -= (maxWidth - custom.getWidth()) / 2;
+                        }
+                    }else {
+                        if (maxWidth > mSelectedTab.getTextWidth()) {
+                            mIndicatorLeft += (maxWidth - mSelectedTab.getTextWidth()) / 2;
+                            mIndicatorRight -= (maxWidth - mSelectedTab.getTextWidth()) / 2;
+                        }
                     }
                 }
 

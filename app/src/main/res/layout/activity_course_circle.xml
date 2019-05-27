@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.bjjy.buildtalk.ui.talk.MasterDetailActivity">
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:elevation="@dimen/dp_0">
+            <RelativeLayout
+                android:id="@+id/min_rl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                <include
+                    layout="@layout/include_course_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/tab_rl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_1"
+                    android:background="@color/border3"
+                    android:layout_alignParentBottom="true"/>
+                <com.bjjy.buildtalk.weight.tablayout.TabLayout
+                    android:id="@+id/tablayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_44"
+                    app:tabBackground="@android:color/transparent"
+                    app:tabDividerWidthWidthText="true"
+                    app:tabGravity="fill"
+                    app:tabIndicatorColor="@color/orange"
+                    app:tabIndicatorHeight="@dimen/dp_2"
+                    app:tabMode="fixed"
+                    app:tabSelectedTextColor="@color/text_drak"
+                    app:tabTextAppearance="@style/TabLayoutTextStyle"
+                    app:tabTextColor="@color/text_mid" />
+                <RelativeLayout
+                    android:id="@+id/screen_rl"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_30"
+                    android:visibility="gone"
+                    android:layout_below="@+id/tablayout">
+                    <TextView
+                        android:id="@+id/screen_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        android:paddingLeft="@dimen/dp_30"
+                        android:paddingRight="@dimen/dp_30"
+                        android:text="全部主题"
+                        android:gravity="center"
+                        android:textSize="@dimen/sp_10"
+                        android:textColor="@color/text_light"
+                        android:drawableRight="@drawable/sanjiao_icon"
+                        android:drawablePadding="@dimen/dp_5"/>
+                </RelativeLayout>
+
+            </RelativeLayout>
+        </android.support.design.widget.AppBarLayout>
+
+        <RelativeLayout
+            android:id="@+id/viewpager_rl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/background"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never" />
+        </RelativeLayout>
+
+    </android.support.design.widget.CoordinatorLayout>
+    <RelativeLayout
+        android:id="@+id/top_title_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_44">
+
+            <ImageView
+                android:id="@+id/back_iv"
+                android:layout_width="@dimen/dp_50"
+                android:layout_height="@dimen/dp_44"
+                android:src="@drawable/arrow_left_white_icon"
+                android:paddingLeft="@dimen/dp_15"
+                android:paddingRight="@dimen/dp_15"
+                android:paddingTop="@dimen/dp_12"
+                android:paddingBottom="@dimen/dp_12"/>
+
+            <TextView
+                android:id="@+id/title_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textSize="17sp" />
+            <ImageView
+                android:id="@+id/pre_share_iv"
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="@dimen/dp_40"
+                android:padding="@dimen/dp_10"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/share_icon_white"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_5"/>
+            <ImageView
+                android:id="@+id/share_iv"
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="@dimen/dp_40"
+                android:visibility="gone"
+                android:padding="@dimen/dp_10"
+                android:layout_toLeftOf="@+id/more_iv"
+                android:src="@drawable/share_icon_white"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_5"/>
+            <ImageView
+                android:id="@+id/more_iv"
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="@dimen/dp_40"
+                android:visibility="gone"
+                android:layout_alignParentRight="true"
+                android:padding="@dimen/dp_10"
+                android:src="@drawable/toolbar_right_more_icon"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_5"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/join_tv"
+        android:layout_width="@dimen/dp_245"
+        android:layout_height="@dimen/dp_44"
+        android:background="@drawable/shape_blue_25button"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="加入圈子￥10.00"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_16"
+        android:layout_marginBottom="@dimen/dp_5"/>
+    <RelativeLayout
+        android:id="@+id/publis_rl"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_44"
+        android:visibility="gone"
+        android:background="@color/white"
+        android:layout_alignParentBottom="true">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_33"
+            android:layout_centerInParent="true"
+            android:background="@drawable/shape_search_15radius"
+            android:text="发表..."
+            android:textColor="@color/blue_mid"
+            android:gravity="center_vertical"
+            android:drawableLeft="@drawable/fabiao_icon"
+            android:drawablePadding="@dimen/dp_10"
+            android:paddingLeft="@dimen/dp_15"
+            android:paddingRight="@dimen/dp_15"
+            android:layout_marginLeft="@dimen/common_margin"
+            android:layout_marginRight="@dimen/common_margin"/>
+    </RelativeLayout>
+</RelativeLayout>

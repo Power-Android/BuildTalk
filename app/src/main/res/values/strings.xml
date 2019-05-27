@@ -8,6 +8,7 @@
     <string name="talk">谈主</string>
     <string name="mine">我的</string>
     <string name="look_at_all">查看全部</string>
+    <string name="look_more">查看更多</string>
     <string name="top_tic">热门话题圈</string>
     <string name="change">换一换</string>
     <string name="course">精品课程</string>
@@ -31,4 +32,7 @@
     <string name="search_circle">搜索圈子</string>
     <string name="circle_dialog_content">包含时政、低俗、色情、暴力引诱等敏感或违禁内容的圈子，将会被封停圈子和账号!</string>
     <string name="circle_rules">圈主规则</string>
+    <string name="theme">主题</string>
+    <string name="essence">精华</string>
+    <string name="footer_circle_text">加入圈子可以浏览更多内容</string>
 </resources>

@@ -1,13 +1,9 @@
 package com.bjjy.buildtalk.adapter;
 
-import android.support.annotation.Nullable;
-
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.entity.CircleEntity;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.chad.library.adapter.base.MultipleItemRvAdapter;
 
 import java.util.List;
 
