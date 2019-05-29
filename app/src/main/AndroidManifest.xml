@@ -59,7 +59,11 @@
         <activity android:name=".ui.circle.TopticCircleActivity" />
         <activity android:name=".ui.circle.CourseCircleActivity" />
         <activity android:name=".ui.main.LoginActivity" />
-        <activity android:name=".ui.main.PhoneLoginActivity"></activity>
+        <activity android:name=".ui.main.PhoneLoginActivity" />
+        <activity android:name=".ui.mine.WalletActivity" />
+        <activity android:name=".ui.mine.SettingActivity" />
+        <activity android:name=".ui.mine.PersonInfoActivity" />
+        <activity android:name=".ui.mine.FeedBackActivity"></activity>
     </application>
 
 </manifest>

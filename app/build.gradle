@@ -10,6 +10,7 @@ android {
         versionCode rootProject.ext.android["versionCode"]
         versionName rootProject.ext.android["versionName"]
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
 
     signingConfigs {
@@ -33,7 +34,6 @@ android {
                 }
             }
         }
-
     }
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
@@ -72,6 +72,7 @@ dependencies {
     implementation rootProject.ext.dependencies["circleimageview"]
     implementation rootProject.ext.dependencies["JZvideoplayer"]
     implementation rootProject.ext.dependencies["ExoPlayer"]
+    implementation rootProject.ext.dependencies["PictureSelector"]
 
     //net
     implementation rootProject.ext.dependencies["gson"]

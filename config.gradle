@@ -41,6 +41,7 @@ ext {
             "circleimageview"                       : "de.hdodenhof:circleimageview:2.2.0",
             "JZvideoplayer"                         : "cn.jzvd:jiaozivideoplayer:6.4.3",
             "ExoPlayer"                             : "com.google.android.exoplayer:exoplayer:2.9.3",
+            "PictureSelector"                       : "com.github.LuckSiege.PictureSelector:picture_library:v2.2.3",
 
             //net
             "gson"                                  : "com.google.code.gson:gson:2.8.2",
@@ -74,7 +75,7 @@ ext {
             "butterknife-compiler"                  : "com.jakewharton:butterknife-compiler:8.8.1",
 
             //multidex
-            "multidex"                              : "com.android.support:multidex:1.0.3",
+            "multidex"                              : "com.android.support:multidex:1.0.1",
 
             //tools
             "BaseRecyclerViewAdapterHelper"         : "com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.46",

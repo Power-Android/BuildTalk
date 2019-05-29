@@ -40,4 +40,10 @@
     <string name="phone_tv">手机号</string>
     <string name="verify_str">验证码</string>
     <string name="getcode_str">获取验证码</string>
+    <string name="bind_wechat">绑定微信</string>
+    <string name="about_us">关于我们</string>
+    <string name="version_info">版本信息</string>
+    <string name="person_page">个人主页</string>
+    <string name="person_info">个人信息</string>
+    <string name="higher_ups_certification">大咖认证</string>
 </resources>

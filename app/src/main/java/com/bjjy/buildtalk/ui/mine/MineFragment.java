@@ -81,13 +81,16 @@ public class MineFragment extends BaseFragment<MinePresenter> implements MineCon
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.info_iv:
-                startActivity(new Intent(mContext, LoginActivity.class));
+                startActivity(new Intent(mContext, PersonInfoActivity.class));
                 break;
             case R.id.wallet_rl:
+                startActivity(new Intent(mContext, WalletActivity.class));
                 break;
             case R.id.set_rl:
+                startActivity(new Intent(mContext, SettingActivity.class));
                 break;
             case R.id.help_rl:
+                startActivity(new Intent(mContext, FeedBackActivity.class));
                 break;
             case R.id.service_rl:
                 break;
