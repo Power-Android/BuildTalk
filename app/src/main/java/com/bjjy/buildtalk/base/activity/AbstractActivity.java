@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.bjjy.buildtalk.R;
 import com.gyf.immersionbar.ImmersionBar;
+import com.umeng.analytics.MobclickAgent;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -41,6 +42,18 @@ public abstract class AbstractActivity extends AppCompatActivity {
             unBinder.unbind();
             unBinder = null;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
 

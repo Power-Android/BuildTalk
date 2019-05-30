@@ -81,6 +81,7 @@ ext {
             "BaseRecyclerViewAdapterHelper"         : "com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.46",
             "eventbus"                              : "org.greenrobot:eventbus:3.1.1",
             "PersistentCookieJar"                   : "com.github.franmontiel:PersistentCookieJar:v1.0.1",
+            "wechatPay"                             : "com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+",
 
             //ui test
             "espresso-core"                         : "com.android.support.test.espresso:espresso-core:3.0.2",

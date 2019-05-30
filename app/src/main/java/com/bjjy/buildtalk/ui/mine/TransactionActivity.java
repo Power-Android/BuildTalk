@@ -1,0 +1,91 @@
+package com.bjjy.buildtalk.ui.mine;
+
+import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.TextView;
+
+import com.bjjy.buildtalk.R;
+import com.bjjy.buildtalk.adapter.TransactionAdapter;
+import com.bjjy.buildtalk.adapter.TransactionTabAdapter;
+import com.bjjy.buildtalk.base.activity.BaseActivity;
+import com.bjjy.buildtalk.entity.TransactionTabEntity;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class TransactionActivity extends BaseActivity<TransactionPresenter> implements TransactionContract.View, BaseQuickAdapter.OnItemClickListener {
+
+    @BindView(R.id.toolbar_title)
+    TextView mToolbarTitle;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.tab_recycler)
+    RecyclerView mTabRecycler;
+    @BindView(R.id.recycler_view)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.refresh_Layout)
+    SmartRefreshLayout mRefreshLayout;
+
+    private List<TransactionTabEntity> mTabList = new ArrayList<>();
+    private TransactionTabAdapter mTabAdapter;
+
+    private List<String> mList = new ArrayList<>();
+    private TransactionAdapter mTransactionAdapter;
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_transaction;
+    }
+
+    @Override
+    protected void initView() {
+        mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
+        mToolbar.setNavigationOnClickListener(v -> finish());
+        mToolbarTitle.setText(R.string.transaction_list);
+
+        mTabRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        mTabAdapter = new TransactionTabAdapter(R.layout.adapter_transaction_tab, mTabList);
+        mTabRecycler.setAdapter(mTabAdapter);
+
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mTransactionAdapter = new TransactionAdapter(R.layout.adapter_transaction_layout, mList);
+        mRecyclerView.setAdapter(mTransactionAdapter);
+        mTransactionAdapter.setOnItemClickListener(this);
+    }
+
+    @Override
+    protected void initEventAndData() {
+        mPresenter.setTab();
+        mPresenter.setRecord();
+    }
+
+    @Override
+    public void handlerTab(List<TransactionTabEntity> list) {
+        mTabAdapter.setNewData(list);
+        mTabAdapter.setOnItemClickListener((baseQuickAdapter, view, position) -> {
+            for (int i = 0; i < list.size(); i++) {
+                list.get(i).setSelected(false);
+            }
+            list.get(position).setSelected(true);
+            mTabAdapter.notifyDataSetChanged();
+        });
+    }
+
+    @Override
+    public void handlerRecord(List<String> list) {
+        mTransactionAdapter.setNewData(list);
+    }
+
+    @Override
+    public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int position) {
+
+    }
+}

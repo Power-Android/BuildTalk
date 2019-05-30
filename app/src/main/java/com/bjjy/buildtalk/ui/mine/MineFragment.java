@@ -84,7 +84,8 @@ public class MineFragment extends BaseFragment<MinePresenter> implements MineCon
                 startActivity(new Intent(mContext, PersonInfoActivity.class));
                 break;
             case R.id.wallet_rl:
-                startActivity(new Intent(mContext, WalletActivity.class));
+//                startActivity(new Intent(mContext, WalletActivity.class));
+                startActivity(new Intent(mContext, TransactionActivity.class));
                 break;
             case R.id.set_rl:
                 startActivity(new Intent(mContext, SettingActivity.class));

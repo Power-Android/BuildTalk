@@ -3,6 +3,7 @@ package com.bjjy.buildtalk.di.module;
 
 
 import com.bjjy.buildtalk.di.component.BaseActivityComponent;
+import com.bjjy.buildtalk.di.module.activity.AboutUsActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CircleAgreementActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CircleListActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CircleSearchActivityModule;
@@ -21,12 +22,14 @@ import com.bjjy.buildtalk.di.module.activity.MasterCollectActivityModule;
 import com.bjjy.buildtalk.di.module.activity.MasterDetailActivityModule;
 import com.bjjy.buildtalk.di.module.activity.MasterListActivityModule;
 import com.bjjy.buildtalk.di.module.activity.PersonInfoActivityModule;
+import com.bjjy.buildtalk.di.module.activity.PersonPageActivityModule;
 import com.bjjy.buildtalk.di.module.activity.PhoneLoginActivityModule;
 import com.bjjy.buildtalk.di.module.activity.SettingActivityModule;
 import com.bjjy.buildtalk.di.module.activity.SplashActivtyModule;
 import com.bjjy.buildtalk.di.module.activity.TalkSearchActivityModule;
 import com.bjjy.buildtalk.di.module.activity.TopticCircleActivityModule;
 import com.bjjy.buildtalk.di.module.activity.TopticListActivityModule;
+import com.bjjy.buildtalk.di.module.activity.TransactionActivityModule;
 import com.bjjy.buildtalk.di.module.activity.WalletActivityModule;
 import com.bjjy.buildtalk.ui.circle.CircleAgreementActvity;
 import com.bjjy.buildtalk.ui.circle.CircleSearchActivity;
@@ -42,9 +45,12 @@ import com.bjjy.buildtalk.ui.main.LoginActivity;
 import com.bjjy.buildtalk.ui.main.MainActivity;
 import com.bjjy.buildtalk.ui.main.PhoneLoginActivity;
 import com.bjjy.buildtalk.ui.main.SplashActivity;
+import com.bjjy.buildtalk.ui.mine.AboutUsActivity;
 import com.bjjy.buildtalk.ui.mine.FeedBackActivity;
 import com.bjjy.buildtalk.ui.mine.PersonInfoActivity;
+import com.bjjy.buildtalk.ui.mine.PersonPageActivity;
 import com.bjjy.buildtalk.ui.mine.SettingActivity;
+import com.bjjy.buildtalk.ui.mine.TransactionActivity;
 import com.bjjy.buildtalk.ui.mine.WalletActivity;
 import com.bjjy.buildtalk.ui.talk.CircleListActivity;
 import com.bjjy.buildtalk.ui.talk.FansFocusActivity;
@@ -134,5 +140,14 @@ public abstract class AbstractAllActivityModule {
 
     @ContributesAndroidInjector(modules = FeedBackActivityModule.class)
     abstract FeedBackActivity mFeedBackActivity();
+
+    @ContributesAndroidInjector(modules = AboutUsActivityModule.class)
+    abstract AboutUsActivity mAboutUsActivity();
+
+    @ContributesAndroidInjector(modules = TransactionActivityModule.class)
+    abstract TransactionActivity mTransactionActivity();
+
+    @ContributesAndroidInjector(modules = PersonPageActivityModule.class)
+    abstract PersonPageActivity mPersonPageActivity();
 
 }

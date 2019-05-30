@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <application
         android:name=".app.App"
@@ -34,6 +36,31 @@
             android:name="notch.config"
             android:value="portrait|landscape" />
 
+        <!--友盟配置-->
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tencent100424468" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
+
+        <!--Activity配置-->
         <activity android:name=".ui.main.MainActivity" />
         <activity android:name=".ui.main.GuideActivity" />
         <activity android:name=".ui.discover.EveryTalkListActivity" />
@@ -63,7 +90,10 @@
         <activity android:name=".ui.mine.WalletActivity" />
         <activity android:name=".ui.mine.SettingActivity" />
         <activity android:name=".ui.mine.PersonInfoActivity" />
-        <activity android:name=".ui.mine.FeedBackActivity"></activity>
+        <activity android:name=".ui.mine.FeedBackActivity" />
+        <activity android:name=".ui.mine.AboutUsActivity" />
+        <activity android:name=".ui.mine.TransactionActivity" />
+        <activity android:name=".ui.mine.PersonPageActivity"></activity>
     </application>
 
 </manifest>
