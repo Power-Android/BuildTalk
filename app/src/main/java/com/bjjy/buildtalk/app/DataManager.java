@@ -11,8 +11,9 @@ import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
 import com.bjjy.buildtalk.entity.EveryTalkListEntity;
+import com.bjjy.buildtalk.entity.GuestBookEntity;
 import com.bjjy.buildtalk.entity.SaveRecordEntity;
-import com.bjjy.buildtalk.entity.TestEntity;
+import com.bjjy.buildtalk.entity.IEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -39,26 +40,6 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     //==========================================>PreferenceHelper<==========================================================
 
     @Override
-    public void setLoginStatus(boolean isLogin) {
-
-    }
-
-    @Override
-    public boolean getLoginStatus() {
-        return false;
-    }
-
-    @Override
-    public void setLoginAccount(String account) {
-
-    }
-
-    @Override
-    public String getLoginAccount() {
-        return null;
-    }
-
-    @Override
     public void setIsGuide(boolean isGuide) {
         mPreferenceHelper.setIsGuide(isGuide);
     }
@@ -69,6 +50,27 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     }
 
     //==========================================>DbHelper<==================================================================
+
+
+    @Override
+    public void addUser(User user) {
+        mDbHelper.addUser(user);
+    }
+
+    @Override
+    public User getUser() {
+        return mDbHelper.getUser();
+    }
+
+    @Override
+    public void setLoginStatus(boolean isLogin) {
+        mDbHelper.setLoginStatus(isLogin);
+    }
+
+    @Override
+    public boolean getLoginStatus() {
+        return mDbHelper.getLoginStatus();
+    }
 
     @Override
     public List<HistoryData> addHistoryData(String data) {
@@ -113,7 +115,7 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     //==========================================>HttpHelper<==================================================================
 
     @Override
-    public Observable<BaseResponse<List<TestEntity>>> signTest(Map<String, String> headers, Map<String,String> paramas) {
+    public Observable<BaseResponse<List<IEntity>>> signTest(Map<String, String> headers, Map<String,String> paramas) {
         return mHttpHelper.signTest(headers,paramas);
     }
 
@@ -143,17 +145,32 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     }
 
     @Override
+    public Observable<BaseResponse<GuestBookEntity>> guestBookList(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.guestBookList(headers, params);
+    }
+
+    @Override
     public Observable<BaseResponse<List<SaveRecordEntity>>> saveRecord(Map<String, String> headers, Map<String, String> params) {
         return mHttpHelper.saveRecord(headers, params);
     }
 
     @Override
-    public Observable<BaseResponse<TestEntity>> praiseRecord(Map<String, String> headers, Map<String, String> params) {
+    public Observable<BaseResponse<IEntity>> praiseRecord(Map<String, String> headers, Map<String, String> params) {
         return mHttpHelper.praiseRecord(headers, params);
     }
 
     @Override
-    public Observable<BaseResponse<TestEntity>> collectArticle(Map<String, String> headers, Map<String, String> params) {
+    public Observable<BaseResponse<IEntity>> collectArticle(Map<String, String> headers, Map<String, String> params) {
         return mHttpHelper.collectArticle(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> sendSms(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.sendSms(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<User>> mobileRegister(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.mobileRegister(headers, params);
     }
 }

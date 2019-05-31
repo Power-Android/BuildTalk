@@ -33,7 +33,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
         tv.setLayoutParams(params);
         setContentView(tv);
         //WeiXinConstants.APP_ID
-        api = WXAPIFactory.createWXAPI(this, "");
+        api = WXAPIFactory.createWXAPI(this, "wx24a51a57c203d22a");
         api.handleIntent(getIntent(), this);
     }
 

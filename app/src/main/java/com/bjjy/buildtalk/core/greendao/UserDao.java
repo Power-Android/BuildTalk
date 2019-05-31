@@ -25,7 +25,12 @@ public class UserDao extends AbstractDao<User, Long> {
      */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
+        public final static Property User_id = new Property(1, String.class, "user_id", false, "USER_ID");
+        public final static Property HeadImage = new Property(2, String.class, "headImage", false, "HEAD_IMAGE");
+        public final static Property NickName = new Property(3, String.class, "nickName", false, "NICK_NAME");
+        public final static Property Mobile = new Property(4, String.class, "mobile", false, "MOBILE");
+        public final static Property BindStatus = new Property(5, String.class, "bindStatus", false, "BIND_STATUS");
+        public final static Property LoginStatus = new Property(6, boolean.class, "loginStatus", false, "LOGIN_STATUS");
     }
 
 
@@ -42,7 +47,12 @@ public class UserDao extends AbstractDao<User, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"USER\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
-                "\"NAME\" TEXT);"); // 1: name
+                "\"USER_ID\" TEXT UNIQUE ," + // 1: user_id
+                "\"HEAD_IMAGE\" TEXT," + // 2: headImage
+                "\"NICK_NAME\" TEXT," + // 3: nickName
+                "\"MOBILE\" TEXT," + // 4: mobile
+                "\"BIND_STATUS\" TEXT," + // 5: bindStatus
+                "\"LOGIN_STATUS\" INTEGER NOT NULL );"); // 6: loginStatus
     }
 
     /** Drops the underlying database table. */
@@ -60,10 +70,31 @@ public class UserDao extends AbstractDao<User, Long> {
             stmt.bindLong(1, id);
         }
  
-        String name = entity.getName();
-        if (name != null) {
-            stmt.bindString(2, name);
+        String user_id = entity.getUser_id();
+        if (user_id != null) {
+            stmt.bindString(2, user_id);
         }
+ 
+        String headImage = entity.getHeadImage();
+        if (headImage != null) {
+            stmt.bindString(3, headImage);
+        }
+ 
+        String nickName = entity.getNickName();
+        if (nickName != null) {
+            stmt.bindString(4, nickName);
+        }
+ 
+        String mobile = entity.getMobile();
+        if (mobile != null) {
+            stmt.bindString(5, mobile);
+        }
+ 
+        String bindStatus = entity.getBindStatus();
+        if (bindStatus != null) {
+            stmt.bindString(6, bindStatus);
+        }
+        stmt.bindLong(7, entity.getLoginStatus() ? 1L: 0L);
     }
 
     @Override
@@ -75,10 +106,31 @@ public class UserDao extends AbstractDao<User, Long> {
             stmt.bindLong(1, id);
         }
  
-        String name = entity.getName();
-        if (name != null) {
-            stmt.bindString(2, name);
+        String user_id = entity.getUser_id();
+        if (user_id != null) {
+            stmt.bindString(2, user_id);
         }
+ 
+        String headImage = entity.getHeadImage();
+        if (headImage != null) {
+            stmt.bindString(3, headImage);
+        }
+ 
+        String nickName = entity.getNickName();
+        if (nickName != null) {
+            stmt.bindString(4, nickName);
+        }
+ 
+        String mobile = entity.getMobile();
+        if (mobile != null) {
+            stmt.bindString(5, mobile);
+        }
+ 
+        String bindStatus = entity.getBindStatus();
+        if (bindStatus != null) {
+            stmt.bindString(6, bindStatus);
+        }
+        stmt.bindLong(7, entity.getLoginStatus() ? 1L: 0L);
     }
 
     @Override
@@ -90,7 +142,12 @@ public class UserDao extends AbstractDao<User, Long> {
     public User readEntity(Cursor cursor, int offset) {
         User entity = new User( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1) // name
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // user_id
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // headImage
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // nickName
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // mobile
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // bindStatus
+            cursor.getShort(offset + 6) != 0 // loginStatus
         );
         return entity;
     }
@@ -98,7 +155,12 @@ public class UserDao extends AbstractDao<User, Long> {
     @Override
     public void readEntity(Cursor cursor, User entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setUser_id(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setHeadImage(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setNickName(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setMobile(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setBindStatus(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setLoginStatus(cursor.getShort(offset + 6) != 0);
      }
     
     @Override

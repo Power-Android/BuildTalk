@@ -2,6 +2,7 @@ package com.bjjy.buildtalk.ui.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
 
@@ -39,10 +40,26 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.phone_tv:
-                startActivity(new Intent(this, PhoneLoginActivity.class));
+                startActivityForResult(new Intent(this, PhoneLoginActivity.class),101);
                 break;
             case R.id.wechat_tv:
                 break;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK){
+            if (requestCode == 101){
+                finish();
+            }
+        }
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, 0);
     }
 }

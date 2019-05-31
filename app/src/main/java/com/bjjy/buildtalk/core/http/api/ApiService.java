@@ -2,14 +2,16 @@ package com.bjjy.buildtalk.core.http.api;
 
 
 import com.bjjy.buildtalk.app.Constants;
+import com.bjjy.buildtalk.app.User;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.entity.BannerEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
 import com.bjjy.buildtalk.entity.EveryTalkListEntity;
+import com.bjjy.buildtalk.entity.GuestBookEntity;
 import com.bjjy.buildtalk.entity.SaveRecordEntity;
-import com.bjjy.buildtalk.entity.TestEntity;
+import com.bjjy.buildtalk.entity.IEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -26,7 +28,7 @@ public interface ApiService {
     @Headers(Constants.HEADER_PASSID)
     @POST("test")
     @FormUrlEncoded
-    Observable<BaseResponse<List<TestEntity>>> signTest(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> paramas);
+    Observable<BaseResponse<List<IEntity>>> signTest(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> paramas);
 
     /**
      * @param headers
@@ -81,6 +83,16 @@ public interface ApiService {
     /**
      * @param headers
      * @param params
+     * @return 获取留言
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("serachManyGuestbook")
+    @FormUrlEncoded
+    Observable<BaseResponse<GuestBookEntity>> guestBookList(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @param headers
+     * @param params
      * @return 发表留言
      */
     @Headers(Constants.HEADER_PASSID)
@@ -96,7 +108,7 @@ public interface ApiService {
     @Headers(Constants.HEADER_PASSID)
     @POST("guestbookPraise")
     @FormUrlEncoded
-    Observable<BaseResponse<TestEntity>> praiseRecord(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+    Observable<BaseResponse<IEntity>> praiseRecord(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
     /**
      * @param headers
@@ -106,8 +118,27 @@ public interface ApiService {
     @Headers(Constants.HEADER_PASSID)
     @POST("collectarticle")
     @FormUrlEncoded
-    Observable<BaseResponse<TestEntity>> collectArticle(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+    Observable<BaseResponse<IEntity>> collectArticle(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
+    /**
+     * @param headers
+     * @param params
+     * @return 发送短信
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("sendSms")
+    @FormUrlEncoded
+    Observable<BaseResponse<IEntity>> sendSms(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @param headers
+     * @param params
+     * @return 手机号登录
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("mobileRegister")
+    @FormUrlEncoded
+    Observable<BaseResponse<User>> mobileRegister(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
 //
 //    /**

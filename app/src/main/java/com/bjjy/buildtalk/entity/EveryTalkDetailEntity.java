@@ -17,7 +17,6 @@ public class EveryTalkDetailEntity implements Serializable {
      */
 
     private NewsInfoBean newsInfo;
-    private List<GuestbookInfoBean> guestbookInfo;
 
     public NewsInfoBean getNewsInfo() {
         return newsInfo;
@@ -25,14 +24,6 @@ public class EveryTalkDetailEntity implements Serializable {
 
     public void setNewsInfo(NewsInfoBean newsInfo) {
         this.newsInfo = newsInfo;
-    }
-
-    public List<GuestbookInfoBean> getGuestbookInfo() {
-        return guestbookInfo;
-    }
-
-    public void setGuestbookInfo(List<GuestbookInfoBean> guestbookInfo) {
-        this.guestbookInfo = guestbookInfo;
     }
 
     public static class NewsInfoBean {
@@ -218,102 +209,6 @@ public class EveryTalkDetailEntity implements Serializable {
 
         public void setAuthor_pic(String author_pic) {
             this.author_pic = author_pic;
-        }
-    }
-
-    public static class GuestbookInfoBean {
-        /**
-         * guestbook_id : 100
-         * user_id : 24
-         * content : 智慧城市需要智能家居吧，方便洽谈一下合作吗
-         * article_id : 89
-         * guestbook_time : 2018-11-16 17:53:11
-         * headimage : https://wx.qlogo.cn/mmopen/vi_32/l9vY4SPbAKegKetuYRU9FDJu6W7Ac38Ngj5MSpJicHsKdxuniadLRnvV2KUnBhhbHfDVvpY8iaGgrMxiaws1X5G8Ag/132
-         * nickname : 就你最近的表现
-         * countpraise : 0
-         * isPraise : 0
-         */
-
-        private int guestbook_id;
-        private int user_id;
-        private String content;
-        private int article_id;
-        private String guestbook_time;
-        private String headimage;
-        private String nickname;
-        private int countpraise;
-        private int isPraise;
-
-        public int getGuestbook_id() {
-            return guestbook_id;
-        }
-
-        public void setGuestbook_id(int guestbook_id) {
-            this.guestbook_id = guestbook_id;
-        }
-
-        public int getUser_id() {
-            return user_id;
-        }
-
-        public void setUser_id(int user_id) {
-            this.user_id = user_id;
-        }
-
-        public String getContent() {
-            return content;
-        }
-
-        public void setContent(String content) {
-            this.content = content;
-        }
-
-        public int getArticle_id() {
-            return article_id;
-        }
-
-        public void setArticle_id(int article_id) {
-            this.article_id = article_id;
-        }
-
-        public String getGuestbook_time() {
-            return guestbook_time;
-        }
-
-        public void setGuestbook_time(String guestbook_time) {
-            this.guestbook_time = guestbook_time;
-        }
-
-        public String getHeadimage() {
-            return headimage;
-        }
-
-        public void setHeadimage(String headimage) {
-            this.headimage = headimage;
-        }
-
-        public String getNickname() {
-            return nickname;
-        }
-
-        public void setNickname(String nickname) {
-            this.nickname = nickname;
-        }
-
-        public int getCountpraise() {
-            return countpraise;
-        }
-
-        public void setCountpraise(int countpraise) {
-            this.countpraise = countpraise;
-        }
-
-        public int getIsPraise() {
-            return isPraise;
-        }
-
-        public void setIsPraise(int isPraise) {
-            this.isPraise = isPraise;
         }
     }
 }

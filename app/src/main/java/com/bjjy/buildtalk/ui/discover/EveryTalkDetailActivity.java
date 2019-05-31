@@ -1,6 +1,7 @@
 package com.bjjy.buildtalk.ui.discover;
 
 import android.net.Uri;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -19,6 +20,7 @@ import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.EveryTalkDetailAdapter;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
+import com.bjjy.buildtalk.entity.GuestBookEntity;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
 import com.bumptech.glide.Glide;
@@ -30,6 +32,7 @@ import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,13 +91,20 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     RelativeLayout mIncludeToolbar;
     @BindView(R.id.record_num_tv)
     TextView mRecordNumTv;
+    @BindView(R.id.refresh_Layout)
+    SmartRefreshLayout mRefreshLayout;
+    @BindView(R.id.loadmore_layout)
+    SmartRefreshLayout mLoadMoreLayout;
+    @BindView(R.id.appBarLayout)
+    AppBarLayout mAppBarLayout;
 
     private SimpleExoPlayer simpleExoPlayer;
     private EveryTalkDetailAdapter mEveryTalkDetailAdapter;
-    private List<EveryTalkDetailEntity.GuestbookInfoBean> mList = new ArrayList<>();
+    private List<GuestBookEntity.GuestbookInfoBean> mList = new ArrayList<>();
     private String mArticle_id;
     private EveryTalkDetailEntity.NewsInfoBean mMNewsInfo;
     private int mCountCollect = 0;
+    private int page = 1;
 
     @Override
     protected int getLayoutId() {
@@ -121,14 +131,12 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     protected void initEventAndData() {
         mArticle_id = getIntent().getStringExtra("article_id");
         mPresenter.everyTalkDetail(mArticle_id);
+        mPresenter.guestbook(mArticle_id, page);
     }
 
     @Override
     public void handlerTalkDetail(EveryTalkDetailEntity everyTalkDetailEntity) {
         mMNewsInfo = everyTalkDetailEntity.getNewsInfo();
-        mList = everyTalkDetailEntity.getGuestbookInfo();
-
-        mEveryTalkDetailAdapter.setNewData(mList);
 
         mTitleTv.setText(mMNewsInfo.getArticle_title());
         Glide.with(this).load(mMNewsInfo.getAuthor_pic()).into(mFaceIv);
@@ -179,8 +187,6 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
             mVideoplayer.setUp(new JZDataSource(mMNewsInfo.getVideo_url()), Jzvd.SCREEN_WINDOW_NORMAL);
         }
         mContentTv.setText(Html.fromHtml(mMNewsInfo.getContent()));
-        mRecordNumTv.setText(String.valueOf(mList.size()));
-        mRecordEt.setHint(mList.size()+"评论");
         if ("0".equals(String.valueOf(mMNewsInfo.getIsCollect()))){
             mPraiseIv.setImageResource(R.drawable.praise_def);
         }else {
@@ -197,6 +203,15 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
             }
             return false;
         });
+    }
+
+    @Override
+    public void handlerGuestBookList(GuestBookEntity guestBookEntity) {
+        mList = guestBookEntity.getGuestbookInfo();
+        mEveryTalkDetailAdapter.setNewData(mList);
+
+        mRecordNumTv.setText(String.valueOf(mList.size()));
+        mRecordEt.setHint(mList.size()+"评论");
     }
 
     @Override
@@ -256,19 +271,19 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     @Override
     public void onItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int position) {
         if (view.getId() == R.id.item_praise_iv){
-            boolean isPraise = "1".equals(mEveryTalkDetailAdapter.getData().get(position).getIsPraise()+"");
-            mPresenter.praiseRecord(mList.get(position).getGuestbook_id(),position,isPraise);
+//            boolean isPraise = "1".equals(mEveryTalkDetailAdapter.getData().get(position).getIsPraise()+"");
+//            mPresenter.praiseRecord(mList.get(position).getGuestbook_id(),position,isPraise);
         }
     }
 
     @Override
     public void praiseSuccess(boolean isSuccess, int position, boolean isPraise) {
         if (isPraise){
-            mEveryTalkDetailAdapter.getData().get(position).setIsPraise(0);
-            mEveryTalkDetailAdapter.setData(position,mEveryTalkDetailAdapter.getData().get(position));
+//            mEveryTalkDetailAdapter.getData().get(position).setIsPraise(0);
+//            mEveryTalkDetailAdapter.setData(position,mEveryTalkDetailAdapter.getData().get(position));
         }else {
-            mEveryTalkDetailAdapter.getData().get(position).setIsPraise(1);
-            mEveryTalkDetailAdapter.setData(position,mEveryTalkDetailAdapter.getData().get(position));
+//            mEveryTalkDetailAdapter.getData().get(position).setIsPraise(1);
+//            mEveryTalkDetailAdapter.setData(position,mEveryTalkDetailAdapter.getData().get(position));
         }
     }
 }

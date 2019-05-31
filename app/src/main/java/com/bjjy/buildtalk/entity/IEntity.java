@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @project BuildTalk
  * @description:
  */
-public class TestEntity implements Serializable{
+public class IEntity implements Serializable{
 
 
     /**

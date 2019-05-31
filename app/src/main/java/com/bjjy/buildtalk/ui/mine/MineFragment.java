@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.base.fragment.BaseFragment;
 import com.bjjy.buildtalk.ui.main.LoginActivity;
+import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
 
 import butterknife.BindView;
@@ -59,16 +60,16 @@ public class MineFragment extends BaseFragment<MinePresenter> implements MineCon
 
     @Override
     protected void initView() {
-        StatusBarUtils.changeStatusBar(this,true,false);
+        StatusBarUtils.changeStatusBar(this, true, false);
     }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
-            StatusBarUtils.changeStatusBar(this,true,false);
+            StatusBarUtils.changeStatusBar(this, true, false);
         } else {
-            StatusBarUtils.changeStatusBar(this,false,true);
+            StatusBarUtils.changeStatusBar(this, false, true);
         }
     }
 
@@ -81,7 +82,9 @@ public class MineFragment extends BaseFragment<MinePresenter> implements MineCon
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.info_iv:
-                startActivity(new Intent(mContext, PersonInfoActivity.class));
+                LoginHelper.login(mContext, mPresenter.mDataManager, () -> {
+                    startActivity(new Intent(mContext, PersonInfoActivity.class));
+                });
                 break;
             case R.id.wallet_rl:
 //                startActivity(new Intent(mContext, WalletActivity.class));

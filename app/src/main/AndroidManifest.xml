@@ -85,8 +85,10 @@
         <activity android:name=".ui.circle.CreateCircleActivity" />
         <activity android:name=".ui.circle.TopticCircleActivity" />
         <activity android:name=".ui.circle.CourseCircleActivity" />
-        <activity android:name=".ui.main.LoginActivity" />
-        <activity android:name=".ui.main.PhoneLoginActivity" />
+        <activity android:name=".ui.main.LoginActivity"
+            android:theme="@style/Anim_fade"/>
+        <activity android:name=".ui.main.PhoneLoginActivity"
+            android:theme="@style/Anim_fade"/>
         <activity android:name=".ui.mine.WalletActivity" />
         <activity android:name=".ui.mine.SettingActivity" />
         <activity android:name=".ui.mine.PersonInfoActivity" />

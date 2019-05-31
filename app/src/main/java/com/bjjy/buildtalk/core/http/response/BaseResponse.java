@@ -16,7 +16,7 @@ public class BaseResponse<T> {
      */
     private int errorCode;
 
-    private String msg;
+    private String errorMsg;
 
     private T data;
 
@@ -29,11 +29,11 @@ public class BaseResponse<T> {
     }
 
     public String getErrorMsg() {
-        return msg;
+        return errorMsg;
     }
 
     public void setErrorMsg(String errorMsg) {
-        this.msg = errorMsg;
+        this.errorMsg = errorMsg;
     }
 
     public T getData() {

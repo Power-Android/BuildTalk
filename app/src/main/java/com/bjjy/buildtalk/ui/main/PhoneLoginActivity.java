@@ -9,7 +9,9 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.bjjy.buildtalk.R;
+import com.bjjy.buildtalk.app.User;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
+import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
 
 import butterknife.BindView;
@@ -130,10 +132,19 @@ public class PhoneLoginActivity extends BaseActivity<PhoneLoginPresenter> implem
                         mCodeBtn.setText("获取验证码");
                     }
                 }.start();
+                mPresenter.senSms(mPhoneEt.getText().toString().trim());
                 break;
             case R.id.login_btn:
+                mPresenter.mobileRegister(mPhoneEt.getText().toString().trim(), mVerifyEt.getText().toString().trim());
                 break;
         }
+    }
+
+    @Override
+    public void handlerLoginSuccess(User user) {
+        LogUtils.e(user.toString());
+        setResult(RESULT_OK);
+        finish();
     }
 
     @Override

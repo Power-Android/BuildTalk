@@ -2,6 +2,7 @@ package com.bjjy.buildtalk.ui.discover;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.App;
+import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.presenter.BasePresenter;
 import com.bjjy.buildtalk.core.rx.BaseObserver;
 import com.bjjy.buildtalk.core.rx.RxUtils;
@@ -31,22 +32,22 @@ public class EveryTalkListPresenter extends BasePresenter<EveryTalkContract.View
     public void talkList(int page, boolean isRefresh) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
-        paramas.put("page",page+"");
-        paramas.put("page_size","10");
-        paramas.put(App.getContext().getString(R.string.TIMESTAMP), timestamp);
+        paramas.put(Constants.PAGE, page + "");
+        paramas.put(Constants.PAGE_SIZE, "10");
+        paramas.put(Constants.TIMESTAMP, timestamp);
         String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
 
         Map<String, String> headers = new HashMap<>();
-        headers.put(App.getContext().getString(R.string.TIMESTAMP), timestamp);
-        headers.put(App.getContext().getString(R.string.SIGN), sign);
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
 
-        addSubscribe(mDataManager.everyDayTalkList(headers,paramas)
+        addSubscribe(mDataManager.everyDayTalkList(headers, paramas)
                 .compose(RxUtils.SchedulerTransformer())
                 .filter(EveryTalkListEntity -> mView != null)
-                .subscribeWith(new BaseObserver<EveryTalkListEntity>(mView,false){
+                .subscribeWith(new BaseObserver<EveryTalkListEntity>(mView, false) {
                     @Override
                     public void onSuccess(EveryTalkListEntity everyTalkListEntity) {
-                        mView.handlerTalkList(everyTalkListEntity,isRefresh);
+                        mView.handlerTalkList(everyTalkListEntity, isRefresh);
                     }
                 }));
     }

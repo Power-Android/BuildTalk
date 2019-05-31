@@ -2,12 +2,14 @@ package com.bjjy.buildtalk.ui.discover;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.App;
+import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.presenter.BasePresenter;
 import com.bjjy.buildtalk.core.rx.BaseObserver;
 import com.bjjy.buildtalk.core.rx.RxUtils;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
+import com.bjjy.buildtalk.entity.GuestBookEntity;
 import com.bjjy.buildtalk.entity.SaveRecordEntity;
-import com.bjjy.buildtalk.entity.TestEntity;
+import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.utils.HeaderUtils;
 import com.bjjy.buildtalk.utils.TimeUtils;
 
@@ -35,12 +37,12 @@ public class EveryTalkDetailPresenter extends BasePresenter<EveryTalkDetailContr
         paramas.put("user_id", "47");
         paramas.put("article_id", article_id);
         paramas.put("source", "android");
-        paramas.put(App.getContext().getString(R.string.TIMESTAMP), timestamp);
+        paramas.put(Constants.TIMESTAMP, timestamp);
         String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
 
         Map<String, String> headers = new HashMap<>();
-        headers.put(App.getContext().getString(R.string.TIMESTAMP), timestamp);
-        headers.put(App.getContext().getString(R.string.SIGN), sign);
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
 
         addSubscribe(mDataManager.everyTalkDetail(headers, paramas)
                 .compose(RxUtils.SchedulerTransformer())
@@ -49,6 +51,30 @@ public class EveryTalkDetailPresenter extends BasePresenter<EveryTalkDetailContr
                     @Override
                     public void onSuccess(EveryTalkDetailEntity everyTalkDetailEntity) {
                         mView.handlerTalkDetail(everyTalkDetailEntity);
+                    }
+                }));
+    }
+
+    public void guestbook(String article_id, int page) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put("article_id", article_id);
+        paramas.put(Constants.PAGE, String.valueOf(page));
+        paramas.put(Constants.PAGE_SIZE, "20");
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.guestBookList(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(guestBookEntityBaseResponse -> mView != null)
+                .subscribeWith(new BaseObserver<GuestBookEntity>(mView, false) {
+                    @Override
+                    public void onSuccess(GuestBookEntity guestBookEntity) {
+                        mView.handlerGuestBookList(guestBookEntity);
                     }
                 }));
     }
@@ -94,9 +120,9 @@ public class EveryTalkDetailPresenter extends BasePresenter<EveryTalkDetailContr
         addSubscribe(mDataManager.praiseRecord(headers, paramas)
                 .compose(RxUtils.SchedulerTransformer())
                 .filter(testEntityBaseResponse -> mView != null)
-                .subscribeWith(new BaseObserver<TestEntity>(mView) {
+                .subscribeWith(new BaseObserver<IEntity>(mView) {
                     @Override
-                    public void onSuccess(TestEntity testEntity) {
+                    public void onSuccess(IEntity iEntity) {
                         mView.praiseSuccess(true, position, isPraise);
                     }
 
@@ -126,9 +152,9 @@ public class EveryTalkDetailPresenter extends BasePresenter<EveryTalkDetailContr
         addSubscribe(mDataManager.collectArticle(headers, paramas)
                 .compose(RxUtils.SchedulerTransformer())
                 .filter(testEntityBaseResponse -> mView != null)
-                .subscribeWith(new BaseObserver<TestEntity>(mView) {
+                .subscribeWith(new BaseObserver<IEntity>(mView) {
                     @Override
-                    public void onSuccess(TestEntity testEntity) {
+                    public void onSuccess(IEntity iEntity) {
                         mView.collectSuccess(true, isCollect);
                     }
 
@@ -141,4 +167,5 @@ public class EveryTalkDetailPresenter extends BasePresenter<EveryTalkDetailContr
                     }
                 }));
     }
+
 }

@@ -74,4 +74,17 @@ public class Constants {
     public static final String WX_PAGER = "wx_pager";
     public static final String TAG_DEFAULT = "tag_default";
 
+
+    /**
+     * constants
+     */
+    public static final String TIMESTAMP = "timestamp";
+    public static final String SIGN = "sign";
+    public static final String SOURCE = "source";
+    public static final String ANDROID = "android";
+    public static final String USER_ID = "user_id";
+    public static final String PAGE = "page";
+    public static final String PAGE_SIZE = "page_size";
+    public static final String MOBILE = "mobile";
+
 }

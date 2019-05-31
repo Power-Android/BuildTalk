@@ -3,6 +3,7 @@ package com.bjjy.buildtalk.ui.discover;
 import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.base.view.IView;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
+import com.bjjy.buildtalk.entity.GuestBookEntity;
 
 /**
  * @author power
@@ -21,6 +22,8 @@ public class EveryTalkDetailContract {
         void praiseSuccess(boolean isSuccess, int position, boolean isPraise);
 
         void collectSuccess(boolean isSuccess, boolean isCollect);
+
+        void handlerGuestBookList(GuestBookEntity guestBookEntity);
     }
 
     interface Presenter extends IPresenter<View>{

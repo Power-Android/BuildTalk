@@ -7,12 +7,6 @@ package com.bjjy.buildtalk.core.preference;
  * @description:
  */
 public interface PreferenceHelper {
-    void setLoginStatus(boolean isLogin);
-    boolean getLoginStatus();
-
-    void setLoginAccount(String account);
-    String getLoginAccount();
-
     void setIsGuide(boolean isGuide);
     boolean getIsGuide();
 }

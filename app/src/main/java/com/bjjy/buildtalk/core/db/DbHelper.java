@@ -1,5 +1,6 @@
 package com.bjjy.buildtalk.core.db;
 
+import com.bjjy.buildtalk.app.User;
 import com.bjjy.buildtalk.core.greendao.CircleHistoryData;
 import com.bjjy.buildtalk.core.greendao.HistoryData;
 
@@ -12,6 +13,15 @@ import java.util.List;
  * @description: 数据库
  */
 public interface DbHelper {
+
+    void addUser(User user);
+
+    User getUser();
+
+    void setLoginStatus(boolean isLogin);
+
+    boolean getLoginStatus();
+
     /**
      * Add search history data
      *

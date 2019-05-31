@@ -1,9 +1,11 @@
 package com.bjjy.buildtalk.ui.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.widget.FrameLayout;
 
 import com.bjjy.buildtalk.R;
@@ -14,6 +16,7 @@ import com.bjjy.buildtalk.ui.discover.DiscoverFragment;
 import com.bjjy.buildtalk.ui.mine.MineFragment;
 import com.bjjy.buildtalk.ui.talk.TalkFragment;
 import com.bjjy.buildtalk.utils.LogUtils;
+import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.ToastUtils;
 
 import butterknife.BindView;
@@ -73,7 +76,13 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                     showFragment(Constants.TYPE_TALK);
                     break;
                 case R.id.tab_mine:
-                    showFragment(Constants.TYPE_MINE);
+                    if (mPresenter.mDataManager.getLoginStatus()) {
+                        showFragment(Constants.TYPE_MINE);
+                    } else {
+                        Intent intent = new Intent(this, LoginActivity.class);
+                        startActivity(intent);
+                        return false;
+                    }
                     break;
             }
             return true;

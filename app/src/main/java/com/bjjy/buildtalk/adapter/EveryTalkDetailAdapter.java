@@ -5,6 +5,7 @@ import android.widget.ImageView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
+import com.bjjy.buildtalk.entity.GuestBookEntity;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -17,14 +18,14 @@ import java.util.List;
  * @project BuildTalk
  * @description:
  */
-public class EveryTalkDetailAdapter extends BaseQuickAdapter<EveryTalkDetailEntity.GuestbookInfoBean, BaseViewHolder> {
+public class EveryTalkDetailAdapter extends BaseQuickAdapter<GuestBookEntity.GuestbookInfoBean, BaseViewHolder> {
 
-    public EveryTalkDetailAdapter(int layoutResId, @Nullable List<EveryTalkDetailEntity.GuestbookInfoBean> data) {
+    public EveryTalkDetailAdapter(int layoutResId, @Nullable List<GuestBookEntity.GuestbookInfoBean> data) {
         super(layoutResId, data);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, EveryTalkDetailEntity.GuestbookInfoBean item) {
+    protected void convert(BaseViewHolder helper, GuestBookEntity.GuestbookInfoBean item) {
         Glide.with(mContext).load(item.getHeadimage()).into((ImageView) helper.getView(R.id.item_face_iv));
         helper.setText(R.id.item_name_tv, item.getNickname())
                 .setText(R.id.item_time_tv, item.getGuestbook_time())

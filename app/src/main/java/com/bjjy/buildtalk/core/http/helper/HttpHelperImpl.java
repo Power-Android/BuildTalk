@@ -2,6 +2,7 @@
 
 package com.bjjy.buildtalk.core.http.helper;
 
+import com.bjjy.buildtalk.app.User;
 import com.bjjy.buildtalk.core.http.api.ApiService;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.entity.BannerEntity;
@@ -9,8 +10,9 @@ import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
 import com.bjjy.buildtalk.entity.EveryTalkListEntity;
+import com.bjjy.buildtalk.entity.GuestBookEntity;
 import com.bjjy.buildtalk.entity.SaveRecordEntity;
-import com.bjjy.buildtalk.entity.TestEntity;
+import com.bjjy.buildtalk.entity.IEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -35,7 +37,7 @@ public class HttpHelperImpl implements HttpHelper {
     }
 
     @Override
-    public Observable<BaseResponse<List<TestEntity>>> signTest(Map<String,String> headers, Map<String,String> paramas) {
+    public Observable<BaseResponse<List<IEntity>>> signTest(Map<String,String> headers, Map<String,String> paramas) {
         return mApiService.signTest(headers, paramas);
     }
 
@@ -65,18 +67,33 @@ public class HttpHelperImpl implements HttpHelper {
     }
 
     @Override
+    public Observable<BaseResponse<GuestBookEntity>> guestBookList(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.guestBookList(headers, params);
+    }
+
+    @Override
     public Observable<BaseResponse<List<SaveRecordEntity>>> saveRecord(Map<String, String> headers, Map<String, String> params) {
         return mApiService.saveRecord(headers, params);
     }
 
     @Override
-    public Observable<BaseResponse<TestEntity>> praiseRecord(Map<String, String> headers, Map<String, String> params) {
+    public Observable<BaseResponse<IEntity>> praiseRecord(Map<String, String> headers, Map<String, String> params) {
         return mApiService.praiseRecord(headers, params);
     }
 
     @Override
-    public Observable<BaseResponse<TestEntity>> collectArticle(Map<String, String> headers, Map<String, String> params) {
+    public Observable<BaseResponse<IEntity>> collectArticle(Map<String, String> headers, Map<String, String> params) {
         return mApiService.collectArticle(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> sendSms(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.sendSms(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<User>> mobileRegister(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.mobileRegister(headers, params);
     }
 
     //

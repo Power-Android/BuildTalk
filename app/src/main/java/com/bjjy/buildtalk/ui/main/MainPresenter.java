@@ -5,7 +5,7 @@ import com.bjjy.buildtalk.app.App;
 import com.bjjy.buildtalk.base.presenter.BasePresenter;
 import com.bjjy.buildtalk.core.rx.BaseObserver;
 import com.bjjy.buildtalk.core.rx.RxUtils;
-import com.bjjy.buildtalk.entity.TestEntity;
+import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.utils.HeaderUtils;
 import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.TimeUtils;
@@ -45,9 +45,9 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
         addSubscribe(mDataManager.signTest(headers, paramas)
                 .compose(RxUtils.SchedulerTransformer())
                 .filter(listBaseResponse -> mView != null)
-                .subscribeWith(new BaseObserver<List<TestEntity>>(mView){
+                .subscribeWith(new BaseObserver<List<IEntity>>(mView){
                     @Override
-                    public void onSuccess(List<TestEntity> testEntities) {
+                    public void onSuccess(List<IEntity> testEntities) {
                         LogUtils.e(testEntities.get(0).getAuthor_name());
                     }
                 }));

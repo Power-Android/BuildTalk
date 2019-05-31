@@ -4,13 +4,16 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.bjjy.buildtalk.app.App;
 import com.bjjy.buildtalk.app.Constants;
+import com.bjjy.buildtalk.app.User;
 import com.bjjy.buildtalk.core.greendao.CircleHistoryData;
 import com.bjjy.buildtalk.core.greendao.CircleHistoryDataDao;
 import com.bjjy.buildtalk.core.greendao.DaoMaster;
 import com.bjjy.buildtalk.core.greendao.DaoSession;
 import com.bjjy.buildtalk.core.greendao.HistoryData;
 import com.bjjy.buildtalk.core.greendao.HistoryDataDao;
+import com.bjjy.buildtalk.core.greendao.UserDao;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,6 +39,8 @@ public class DbHelperImpl implements DbHelper {
     private List<CircleHistoryData> circleHistoryDataList;
     private CircleHistoryData circleHistoryData;
 
+    private List<User> mUserList;
+
     @Inject
     DbHelperImpl() {
         initGreenDao();
@@ -47,6 +52,42 @@ public class DbHelperImpl implements DbHelper {
         SQLiteDatabase database = devOpenHelper.getWritableDatabase();
         DaoMaster daoMaster = new DaoMaster(database);
         daoSession = daoMaster.newSession();
+    }
+
+    private UserDao getUserDao(){
+        return daoSession.getUserDao();
+    }
+
+    @Override
+    public void addUser(User user) {
+        if (getUserDao() != null){
+            getUserDao().deleteAll();
+        }
+        getUserDao().insert(user);
+    }
+
+    @Override
+    public User getUser() {
+        mUserList = getUserDao().loadAll();
+        if (mUserList.size() == 0){
+            return new User();
+        }
+        return mUserList.get(0);
+    }
+
+    @Override
+    public void setLoginStatus(boolean isLogin) {
+        if (isLogin){
+            getUser().setLoginStatus(isLogin);
+            getUserDao().update(getUser());
+        }else {
+            getUserDao().deleteAll();
+        }
+    }
+
+    @Override
+    public boolean getLoginStatus() {
+        return getUser().isLoginStatus();
     }
 
     @Override
