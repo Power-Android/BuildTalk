@@ -1,20 +1,18 @@
-package com.bjjy.buildtalk.ui.circle;
+package com.bjjy.buildtalk.ui.main;
 
 import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.base.view.IView;
-import com.bjjy.buildtalk.entity.CircleEntity;
-
-import java.util.List;
 
 /**
  * @author power
- * @date 2019/4/26 4:57 PM
+ * @date 2019/6/10 9:50 AM
  * @project BuildTalk
  * @description:
  */
-public class CircleContract {
+public class ViewPagerContract {
+
     interface View extends IView{
-        void handlerCircleList(CircleEntity circleEntity, boolean isRefresh);
+
     }
 
     interface Presenter extends IPresenter<View>{

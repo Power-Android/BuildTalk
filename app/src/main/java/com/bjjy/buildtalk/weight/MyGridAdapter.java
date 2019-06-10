@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.App;
+import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -22,10 +23,10 @@ import java.util.List;
  * @description:
  */
 public class MyGridAdapter extends BaseAdapter {
-    private List<Integer> list;
+    private List<ThemeInfoEntity.ThemeInfoBean.ThemeImageBean> list;
 //    int imageWidth;
 
-    public MyGridAdapter(List<Integer> imgList) {
+    public MyGridAdapter(List<ThemeInfoEntity.ThemeInfoBean.ThemeImageBean> imgList) {
         this.list = imgList;
 //        imageWidth = (UIUtil.getScreenWidth(mContext) - UIUtil.dip2px(mContext, 38)) / 3;
     }
@@ -61,7 +62,7 @@ public class MyGridAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
 
         holder.iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        Glide.with(App.getContext()).load(list.get(position)).into(holder.iv);
+        Glide.with(App.getContext()).load(list.get(position).getPic_url()).into(holder.iv);
 //        if (position >= 2 && list.size() > 3) {
 //            holder.tv.setVisibility(View.VISIBLE);
 //            holder.tv.setText("+" + (list.size() - 3));

@@ -10,6 +10,7 @@ import com.bjjy.buildtalk.entity.BannerEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.DiscoverEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
+import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
 import com.bjjy.buildtalk.ui.discover.EveryTalkDetailActivity;
 import com.bjjy.buildtalk.utils.GlideUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
@@ -86,7 +87,9 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
                 helper.addOnClickListener(R.id.toptic_all_tv)
                         .addOnClickListener(R.id.toptic_change_ll);
                 topticAdapter.setOnItemClickListener((adapter, view, position) -> {
-                    ToastUtils.showShort("热门话题圈：" + position);
+                    Intent intent = new Intent(mContext, TopticCircleActivity.class);
+                    intent.putExtra("circle_id", mTopticEntity.getCircleInfo().get(position).getCircle_id());
+                    mContext.startActivity(intent);
                 });
                 break;
             case BODY_COURSE:

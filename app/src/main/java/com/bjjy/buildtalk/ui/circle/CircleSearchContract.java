@@ -3,6 +3,7 @@ package com.bjjy.buildtalk.ui.circle;
 import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.base.view.IView;
 import com.bjjy.buildtalk.core.greendao.CircleHistoryData;
+import com.bjjy.buildtalk.entity.SearchResultEntity;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class CircleSearchContract {
 
         void showHistoryData(List<CircleHistoryData> historyDataList);
 
-        void handlerResultSearchList(List<String> list);
+        void handlerResultSearchList(SearchResultEntity searchResultEntity, boolean isRefresh);
     }
 
     interface Presenyer extends IPresenter<View>{

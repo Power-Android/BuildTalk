@@ -20,6 +20,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ import butterknife.BindView;
  * @project BuildTalk
  * @description: 圈子 模块
  */
-public class CircleFragment extends BaseFragment<CirclePresenter> implements CircleContract.View, OnRefreshListener, BaseQuickAdapter.OnItemClickListener {
+public class CircleFragment extends BaseFragment<CirclePresenter> implements CircleContract.View, OnRefreshListener, BaseQuickAdapter.OnItemClickListener, OnRefreshLoadMoreListener {
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
@@ -43,12 +44,15 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
     @BindView(R.id.refresh_Layout)
     SmartRefreshLayout mRefreshLayout;
 
-    private List<CircleEntity> circle_list = new ArrayList<>();
+    private List<CircleEntity.CircleInfoBean> circle_list = new ArrayList<>();
     private CircleAdapter mCircleAdapter;
 
     BottomSheetDialog mBottomSheetDialog;
     BottomSheetBehavior mBehavior;
     private View mView;
+    private int page = 1;
+    private int mPage_count = 1;
+    private View mFooterView;
 
     public static CircleFragment newInstance() {
         return new CircleFragment();
@@ -62,29 +66,54 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
     @Override
     protected void initView() {
         mToolbarTitle.setText(R.string.circle);
-        mRefreshLayout.setOnRefreshListener(this);
+        mRefreshLayout.setOnRefreshLoadMoreListener(this);
         mCircleRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 2));
         mCircleAdapter = new CircleAdapter(circle_list);
         mCircleRecyclerView.setAdapter(mCircleAdapter);
         View headerView = LayoutInflater.from(mContext).inflate(R.layout.circle_header_view, null);
         mCircleAdapter.addHeaderView(headerView);
         headerView.setOnClickListener(v -> startActivity(new Intent(mContext, CircleSearchActivity.class)));
+        mCircleAdapter.setFooterViewAsFlow(true);
         mCircleAdapter.setOnItemClickListener(this);
     }
 
     @Override
     protected void initEventAndData() {
-        mPresenter.circleList(circle_list);
+        mPresenter.circleList(page, false);
     }
 
     @Override
-    public void handlerCircleList(List<CircleEntity> circle_list) {
-        mCircleAdapter.setNewData(circle_list);
+    public void handlerCircleList(CircleEntity circleEntity, boolean isRefresh) {
+        mPage_count = circleEntity.getPage_count();
+        circle_list = circleEntity.getCircleInfo();
+        if (isRefresh) {
+            mCircleAdapter.setNewData(circle_list);
+        } else {
+            mCircleAdapter.addData(circle_list);
+        }
+        if (mFooterView == null){
+            mFooterView = LayoutInflater.from(mContext).inflate(R.layout.circle_footer_view, null);
+            mCircleAdapter.addFooterView(mFooterView);
+            mFooterView.setOnClickListener(v -> createCircle());
+        }
     }
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        refreshLayout.finishRefresh(2000);
+        page = 1;
+        mPresenter.circleList(page, true);
+        refreshLayout.finishRefresh();
+    }
+
+    @Override
+    public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+        if (page < mPage_count) {
+            page++;
+            mPresenter.circleList(page, false);
+            refreshLayout.finishLoadMore();
+        } else {
+            refreshLayout.finishLoadMoreWithNoMoreData();
+        }
     }
 
     private void createCircle() {
@@ -127,12 +156,13 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
 
     @Override
     public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int position) {
-        if (position == circle_list.size() - 1) {
-            createCircle();
-        }else if (position == 1){
+        List<CircleEntity.CircleInfoBean> list = baseQuickAdapter.getData();
+        if (2 == list.get(position).getType()){
             startActivity(new Intent(mContext, CourseCircleActivity.class));
         }else {
-            startActivity(new Intent(mContext, TopticCircleActivity.class));
+            Intent intent = new Intent(mContext, TopticCircleActivity.class);
+            intent.putExtra("circle_id", String.valueOf(list.get(position).getCircle_id()));
+            startActivity(intent);
         }
     }
 }

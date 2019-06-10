@@ -54,12 +54,17 @@
             android:layout_marginRight="@dimen/dp_10"
             app:max_select="0"/>
     </LinearLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refresh_Layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
-        android:layout_below="@+id/view1"
-        android:overScrollMode="never"/>
+        android:layout_below="@+id/view1">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"/>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
 </RelativeLayout>

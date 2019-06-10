@@ -1,22 +1,20 @@
 package com.bjjy.buildtalk.entity;
 
-import com.bjjy.buildtalk.adapter.CircleAdapter;
-import com.chad.library.adapter.base.entity.MultiItemEntity;
-
 import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author power
- * @date 2019/5/15 11:28 AM
+ * @date 2019/6/3 1:59 PM
  * @project BuildTalk
  * @description:
  */
-public class CircleEntity implements Serializable {
+public class SearchResultEntity implements Serializable {
+
     /**
+     * circleInfo : [{"circle_id":22,"user_id":138,"circle_image":{"pic_id":56,"pic_url":"https://jt.chinabim.com/static/image/155910952286724.png","savetime":1559109525},"circle_name":"我是圈子123","circle_tags":["BIM","装配式","钢结构"],"type":"话题","data_id":null,"name":"建谈新用户","is_author":0,"type_id":1},{"circle_id":21,"user_id":4,"circle_image":{"pic_id":55,"pic_url":"https://jt.chinabim.com/static/image/155910844551201.png","savetime":1559108445},"circle_name":"Lpn的圈子","circle_tags":["BIM","装配式","lpn"],"type":"话题","data_id":null,"name":"♞木有年輪","is_author":0,"type_id":1},{"circle_id":20,"user_id":138,"circle_image":{"pic_id":50,"pic_url":"https://jt.chinabim.com/static/image/155910381678235.png","savetime":1559103816},"circle_name":"我是圈子名称","circle_tags":["BIM",""],"type":"话题","data_id":null,"name":"建谈新用户","is_author":0,"type_id":1},{"circle_id":2,"user_id":12,"circle_image":{"pic_id":37,"pic_url":"https://www.51jiantan.com/static/image/activity.png","savetime":1553324666},"circle_name":"天的测试圈子","circle_tags":["BIM","钢结构","装配式","一体化质量体系","追风堂"],"type":"话题","data_id":null,"name":"小陀螺","is_author":0,"type_id":1},{"circle_id":1,"user_id":4,"circle_image":{"pic_id":20,"pic_url":"https://www.51jiantan.com/static/image/2.jpg","savetime":null},"circle_name":"朋友圈","circle_tags":["钢结构","装配式","BIM","建筑"],"type":"话题","data_id":null,"name":"♞木有年輪","is_author":0,"type_id":1}]
      * page : 1
      * page_count : 1
-     * circleInfo : [{"circle_id":26,"user_id":139,"circle_image":{"pic_id":60,"pic_url":"https://jt.chinabim.com/static/image/155953163633789.jpg","savetime":1559531636},"circle_name":"测试11111","type":1,"name":"建谈新用户","is_author":0}]
      */
 
     private String page;
@@ -47,41 +45,30 @@ public class CircleEntity implements Serializable {
         this.circleInfo = circleInfo;
     }
 
-
-    public static class CircleInfoBean implements Serializable, MultiItemEntity{
-
-        private int itemType = CircleAdapter.BODY_CONTENT;
-
-        @Override
-        public int getItemType() {
-            return itemType;
-        }
-
-        public void setItemType(int itemType) {
-            this.itemType = itemType;
-        }
-
-        public CircleInfoBean(int itemType) {
-            this.itemType = itemType;
-        }
-
+    public static class CircleInfoBean {
         /**
-         * circle_id : 26
-         * user_id : 139
-         * circle_image : {"pic_id":60,"pic_url":"https://jt.chinabim.com/static/image/155953163633789.jpg","savetime":1559531636}
-         * circle_name : 测试11111
-         * type : 1
+         * circle_id : 22
+         * user_id : 138
+         * circle_image : {"pic_id":56,"pic_url":"https://jt.chinabim.com/static/image/155910952286724.png","savetime":1559109525}
+         * circle_name : 我是圈子123
+         * circle_tags : ["BIM","装配式","钢结构"]
+         * type : 话题
+         * data_id : null
          * name : 建谈新用户
          * is_author : 0
+         * type_id : 1
          */
 
         private int circle_id;
         private int user_id;
         private CircleImageBean circle_image;
         private String circle_name;
-        private int type;
+        private String type;
+        private Object data_id;
         private String name;
         private int is_author;
+        private int type_id;
+        private List<String> circle_tags;
 
         public int getCircle_id() {
             return circle_id;
@@ -115,12 +102,20 @@ public class CircleEntity implements Serializable {
             this.circle_name = circle_name;
         }
 
-        public int getType() {
+        public String getType() {
             return type;
         }
 
-        public void setType(int type) {
+        public void setType(String type) {
             this.type = type;
+        }
+
+        public Object getData_id() {
+            return data_id;
+        }
+
+        public void setData_id(Object data_id) {
+            this.data_id = data_id;
         }
 
         public String getName() {
@@ -139,11 +134,27 @@ public class CircleEntity implements Serializable {
             this.is_author = is_author;
         }
 
+        public int getType_id() {
+            return type_id;
+        }
+
+        public void setType_id(int type_id) {
+            this.type_id = type_id;
+        }
+
+        public List<String> getCircle_tags() {
+            return circle_tags;
+        }
+
+        public void setCircle_tags(List<String> circle_tags) {
+            this.circle_tags = circle_tags;
+        }
+
         public static class CircleImageBean {
             /**
-             * pic_id : 60
-             * pic_url : https://jt.chinabim.com/static/image/155953163633789.jpg
-             * savetime : 1559531636
+             * pic_id : 56
+             * pic_url : https://jt.chinabim.com/static/image/155910952286724.png
+             * savetime : 1559109525
              */
 
             private int pic_id;

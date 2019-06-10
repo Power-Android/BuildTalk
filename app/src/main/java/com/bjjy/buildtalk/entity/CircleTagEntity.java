@@ -10,17 +10,9 @@ import java.io.Serializable;
  */
 public class CircleTagEntity implements Serializable {
 
-    private String content;
+    private String tag_name;
     private boolean isCustom = false;
     private boolean isSelected = false;
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
 
     public boolean isCustom() {
         return isCustom;
@@ -38,13 +30,21 @@ public class CircleTagEntity implements Serializable {
         isSelected = selected;
     }
 
-    public CircleTagEntity(String content, boolean isCustom) {
-        this.content = content;
+    public String getTag_name() {
+        return tag_name;
+    }
+
+    public void setTag_name(String tag_name) {
+        this.tag_name = tag_name;
+    }
+
+    public CircleTagEntity(String tag_name, boolean isCustom) {
+        this.tag_name = tag_name;
         this.isCustom = isCustom;
     }
 
-    public CircleTagEntity(String content, boolean isCustom, boolean isSelected) {
-        this.content = content;
+    public CircleTagEntity(String tag_name, boolean isCustom, boolean isSelected) {
+        this.tag_name = tag_name;
         this.isCustom = isCustom;
         this.isSelected = isSelected;
     }

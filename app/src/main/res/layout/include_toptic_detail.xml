@@ -9,115 +9,127 @@
         android:layout_height="@dimen/dp_210"
         android:src="@drawable/circle_bg_icon"
         android:scaleType="centerCrop" />
+
     <RelativeLayout
         android:id="@+id/pre_top_rl"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/formal_rl"
+        android:visibility="visible">
+
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/pre_face_iv"
             android:layout_width="@dimen/dp_90"
             android:layout_height="@dimen/dp_90"
+            android:layout_marginLeft="@dimen/common_margin"
             android:layout_marginTop="@dimen/dp_75"
-            android:src="@drawable/test_course"
-            app:riv_corner_radius="@dimen/dp_10"
             android:scaleType="centerCrop"
-            android:layout_marginLeft="@dimen/common_margin"/>
+            android:src="@drawable/test_course"
+            app:riv_corner_radius="@dimen/dp_10" />
+
         <TextView
             android:id="@+id/pre_title_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/sp_18"
-            android:textColor="@color/white"
-            android:text="建筑产业工业互联网"
-            android:includeFontPadding="false"
-            android:layout_toRightOf="@+id/pre_face_iv"
             android:layout_alignTop="@+id/pre_face_iv"
-            android:layout_marginLeft="@dimen/dp_20"/>
+            android:layout_marginLeft="@dimen/dp_20"
+            android:layout_toRightOf="@+id/pre_face_iv"
+            android:includeFontPadding="false"
+            android:text="建筑产业工业互联网"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_18" />
+
         <TextView
             android:id="@+id/pre_name_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/sp_10"
-            android:textColor="@color/white"
-            android:text="圈主：小地瓜"
-            android:layout_toRightOf="@+id/pre_face_iv"
             android:layout_below="@+id/pre_title_tv"
             android:layout_marginLeft="@dimen/dp_20"
-            android:layout_marginTop="@dimen/dp_10"/>
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_toRightOf="@+id/pre_face_iv"
+            android:text="圈主：小地瓜"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_10" />
+
         <TextView
             android:id="@+id/pre_date_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/sp_10"
-            android:textColor="@color/white"
-            android:text="创建 490天"
-            android:layout_toRightOf="@+id/pre_name_tv"
             android:layout_below="@+id/pre_title_tv"
+            android:layout_marginLeft="@dimen/dp_15"
             android:layout_marginTop="@dimen/dp_10"
-            android:layout_marginLeft="@dimen/dp_15"/>
+            android:layout_toRightOf="@+id/pre_name_tv"
+            android:text="创建 490天"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_10" />
+
         <com.zhy.view.flowlayout.TagFlowLayout
             android:id="@+id/flow_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/pre_name_tv"
-            android:layout_toRightOf="@+id/pre_face_iv"
-            android:layout_marginLeft="@dimen/dp_20"
-            android:layout_marginTop="@dimen/dp_15"/>
-    </RelativeLayout>
+            android:layout_marginLeft="@dimen/dp_17"
+            android:layout_marginTop="@dimen/dp_15"
+            android:layout_toRightOf="@+id/pre_face_iv" />
 
-    <RelativeLayout
-        android:id="@+id/pre_mid_rl"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="visible"
-        android:background="@drawable/shape_white_top_22raidus"
-        android:layout_below="@+id/pre_top_rl"
-        android:layout_marginTop="@dimen/dp_25"
-        android:paddingBottom="@dimen/dp_15">
-        <TextView
-            android:id="@+id/view1"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/pre_mid_rl"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="圈子介绍"
-            android:textColor="@color/text_drak"
-            android:textStyle="bold"
-            android:textSize="@dimen/sp_15"
-            android:layout_marginTop="@dimen/dp_20"
-            android:layout_marginLeft="@dimen/dp_15"/>
-        <ImageView
-            android:id="@+id/expand_iv"
-            android:layout_width="@dimen/dp_29"
-            android:layout_height="@dimen/dp_29"
-            android:src="@drawable/sanjiao_icon"
-            android:layout_alignParentRight="true"
-            android:padding="@dimen/dp_10"
-            android:layout_marginTop="@dimen/dp_10"
-            android:layout_marginRight="@dimen/dp_5"/>
-        <TextView
-            android:id="@+id/recommend_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="加快Bim技术的推广与应用，对建筑业每个项目的所有参建方用三维仿真的形式表现出来对建筑业每个项目的所有参建方用三维仿真的形式表现出来，加快所有资源的整合"
-            android:textSize="12sp"
-            android:textColor="@color/text_mid"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:layout_below="@+id/view1"
-            android:layout_marginLeft="@dimen/common_margin"
-            android:layout_marginRight="@dimen/common_margin"
-            android:layout_marginTop="@dimen/dp_10"/>
+            android:layout_below="@+id/pre_face_iv"
+            android:layout_marginTop="@dimen/dp_25"
+            android:background="@drawable/shape_white_top_22raidus"
+            android:paddingBottom="@dimen/dp_15"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/view1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_15"
+                android:layout_marginTop="@dimen/dp_20"
+                android:text="圈子介绍"
+                android:textColor="@color/text_drak"
+                android:textSize="@dimen/sp_15"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/expand_iv"
+                android:layout_width="@dimen/dp_29"
+                android:layout_height="@dimen/dp_29"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_10"
+                android:padding="@dimen/dp_10"
+                android:src="@drawable/sanjiao_icon" />
+
+            <TextView
+                android:id="@+id/recommend_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/view1"
+                android:layout_marginLeft="@dimen/common_margin"
+                android:layout_marginRight="@dimen/common_margin"
+                android:layout_marginTop="@dimen/dp_10"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="加快Bim技术的推广与应用，对建筑业每个项目的所有参建方用三维仿真的形式表现出来对建筑业每个项目的所有参建方用三维仿真的形式表现出来，加快所有资源的整合"
+                android:textColor="@color/text_mid"
+                android:textSize="12sp" />
+        </RelativeLayout>
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/formal_rl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        android:layout_below="@+id/pre_top_rl">
+        android:layout_marginTop="@dimen/dp_155">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_white_top_22raidus"
-            android:layout_marginTop="@dimen/dp_25"
+            android:layout_marginTop="@dimen/dp_35"
             android:paddingBottom="@dimen/dp_15">
             <TextView
                 android:id="@+id/formal_title_tv"
@@ -152,12 +164,12 @@
                 android:layout_marginLeft="@dimen/dp_15"/>
         </RelativeLayout>
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/formal_face_iv"
             android:layout_width="@dimen/dp_60"
             android:layout_height="@dimen/dp_60"
             android:src="@drawable/test_course"
             app:civ_border_color="@color/white"
             app:civ_border_width="@dimen/dp_1"
-            android:layout_marginTop="@dimen/dp_m_10"
             android:layout_marginLeft="@dimen/dp_15"/>
     </RelativeLayout>
 </RelativeLayout>

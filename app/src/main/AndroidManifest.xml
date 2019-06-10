@@ -8,8 +8,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:name=".app.App"
@@ -36,7 +36,7 @@
             android:name="notch.config"
             android:value="portrait|landscape" />
 
-        <!--友盟配置-->
+        <!-- 友盟配置 -->
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -45,7 +45,7 @@
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
-            android:noHistory="true" >
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -57,10 +57,10 @@
         </activity>
         <activity
             android:name="com.tencent.connect.common.AssistActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-        <!--Activity配置-->
+        <!-- Activity配置 -->
         <activity android:name=".ui.main.MainActivity" />
         <activity android:name=".ui.main.GuideActivity" />
         <activity android:name=".ui.discover.EveryTalkListActivity" />
@@ -85,17 +85,20 @@
         <activity android:name=".ui.circle.CreateCircleActivity" />
         <activity android:name=".ui.circle.TopticCircleActivity" />
         <activity android:name=".ui.circle.CourseCircleActivity" />
-        <activity android:name=".ui.main.LoginActivity"
-            android:theme="@style/Anim_fade"/>
-        <activity android:name=".ui.main.PhoneLoginActivity"
-            android:theme="@style/Anim_fade"/>
+        <activity
+            android:name=".ui.main.LoginActivity"
+            android:theme="@style/Anim_fade" />
+        <activity
+            android:name=".ui.main.PhoneLoginActivity"
+            android:theme="@style/Anim_fade" />
         <activity android:name=".ui.mine.WalletActivity" />
         <activity android:name=".ui.mine.SettingActivity" />
         <activity android:name=".ui.mine.PersonInfoActivity" />
         <activity android:name=".ui.mine.FeedBackActivity" />
         <activity android:name=".ui.mine.AboutUsActivity" />
         <activity android:name=".ui.mine.TransactionActivity" />
-        <activity android:name=".ui.mine.PersonPageActivity"></activity>
+        <activity android:name=".ui.mine.PersonPageActivity" />
+        <activity android:name=".ui.main.ViewPagerActivity"></activity>
     </application>
 
 </manifest>

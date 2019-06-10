@@ -3,8 +3,12 @@ package com.bjjy.buildtalk.core.http.api;
 
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.app.User;
+import com.bjjy.buildtalk.core.greendao.CircleHistoryData;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.entity.BannerEntity;
+import com.bjjy.buildtalk.entity.CircleEntity;
+import com.bjjy.buildtalk.entity.CircleInfoEntity;
+import com.bjjy.buildtalk.entity.CircleTagEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
@@ -12,16 +16,22 @@ import com.bjjy.buildtalk.entity.EveryTalkListEntity;
 import com.bjjy.buildtalk.entity.GuestBookEntity;
 import com.bjjy.buildtalk.entity.SaveRecordEntity;
 import com.bjjy.buildtalk.entity.IEntity;
+import com.bjjy.buildtalk.entity.SearchResultEntity;
+import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 
 import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
+import okhttp3.MultipartBody;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.HeaderMap;
 import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
+import retrofit2.http.Url;
 
 public interface ApiService {
 
@@ -140,94 +150,91 @@ public interface ApiService {
     @FormUrlEncoded
     Observable<BaseResponse<User>> mobileRegister(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
-//
-//    /**
-//     * 广告栏
-//     * https://www.wanandroid.com/banner/json
-//     *
-//     * @return 广告栏数据
-//     */
-//    @GET("banner/json")
-//    Observable<BaseResponse<List<BannerData>>> getBannerData();
-//
-//
-//    /**
-//     * 登录
-//     * https://www.wanandroid.com/user/login
-//     *
-//     * @param username user name
-//     * @param password password
-//     * @return 登录数据
-//     */
-//    @POST("user/login")
-//    @FormUrlEncoded
-//    Observable<BaseResponse<LoginData>> login(@Field("username") String username, @Field("password") String password);
-//
-//    /**
-//     * 注册
-//     * https://www.wanandroid.com/user/register
-//     *
-//     * @param username   user name
-//     * @param password   password
-//     * @param repassword re password
-//     * @return 注册数据
-//     */
-//    @POST("user/register")
-//    @FormUrlEncoded
-//    Observable<BaseResponse<LoginData>> register(@Field("username") String username, @Field("password") String password, @Field("repassword") String repassword);
-//
-//    /**
-//     * 获取收藏列表
-//     * https://www.wanandroid.com/lg/collect/list/0/json
-//     *
-//     * @param page page number
-//     * @return 收藏列表数据
-//     */
-//    @GET("lg/collect/list/{page}/json")
-//    Observable<BaseResponse<ArticleListData>> getCollectList(@Path("page") int page);
-//
-//    /**
-//     * 知识体系下的文章
-//     * https://www.wanandroid.com/article/list/0?cid=60
-//     *
-//     * @param page page num
-//     * @param cid  second page id
-//     * @return 知识体系文章数据
-//     */
-//    @GET("article/list/{page}/json")
-//    Observable<BaseResponse<ArticleListData>> getKnowledgeListData(@Path("page") int page, @Query("cid") int cid);
-//
-//
-//    /**
-//     * 获取TODO列表
-//     * https://www.wanandroid.com/lg/todo/v2/list/{page}/json
-//     * <p>
-//     * 页码从1开始，拼接在url 上
-//     * status 状态， 1-完成；0未完成; 默认全部展示；
-//     * type 创建时传入的类型, 默认全部展示
-//     * priority 创建时传入的优先级；默认全部展示
-//     * orderby 1:完成日期顺序；2.完成日期逆序；3.创建日期顺序；4.创建日期逆序(默认)；（1和2只能获取到已完成的TODO）
-//     *
-//     * @return
-//     */
-//    @GET("lg/todo/v2/list/{page}/json")
-//    Observable<BaseResponse<TodoListData>> getTodoListData(@Path("page") int page, @QueryMap Map<String, Object> map);
-//
-//    /**
-//     * 新增一条TODO
-//     * https://www.wanandroid.com/lg/todo/add/json
-//     * <p>
-//     * title: 新增标题（必须）
-//     * content: 新增详情（可选）
-//     * date: 2018-08-01 预定完成时间（不传默认当天，建议传）
-//     * type: 大于0的整数（可选）；
-//     * priority 大于0的整数（可选）；
-//     *
-//     * @return
-//     */
-//    @POST("lg/todo/add/json")
-//    @FormUrlEncoded
-//    Observable<BaseResponse<TodoItemData>> addTodo(@FieldMap Map<String, Object> map);
-//
+    /**
+     * @param headers
+     * @param params
+     * @return 我的圈子
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("myCircle")
+    @FormUrlEncoded
+    Observable<BaseResponse<CircleEntity>> myCircle(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * 使用@Multipart注解方法，并用@Part注解方法参数，类型是List<okhttp3.MultipartBody.Part>
+     * @return 上传图片
+     */
+    @Multipart
+    @POST("picuploadhandle")
+    Observable<BaseResponse<String>> uploadFiles(@Part MultipartBody.Part file);
+
+    /**
+     * 使用@Multipart注解方法，并用@Part注解方法参数，类型是List<okhttp3.MultipartBody.Part>
+     * @return 上传图片
+     */
+    @Multipart
+    @POST("manyPicUploadHandle")
+    Observable<BaseResponse<String>> uploadFiles(@Part List<MultipartBody.Part> files);
+
+
+    /**
+     * @param headers
+     * @param params
+     * @return 获取可用标签
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("searchCircleTags")
+    @FormUrlEncoded
+    Observable<BaseResponse<List<CircleTagEntity>>> searchCircleTags(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @param headers
+     * @param params
+     * @return 创建圈子
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("createCircle")
+    @FormUrlEncoded
+    Observable<BaseResponse<IEntity>> createCircle(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @param headers
+     * @param params
+     * @return 圈子搜索列表
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("searchCircleInfoBykeywords")
+    @FormUrlEncoded
+    Observable<BaseResponse<SearchResultEntity>> searchHistory(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @param headers
+     * @param params
+     * @return 话题圈、课程圈（话题圈课程圈的圈子信息）
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("searchAllCircleInfo")
+    @FormUrlEncoded
+    Observable<BaseResponse<CircleInfoEntity>> circleInfo(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @param headers
+     * @param params
+     * @return 主题分类查看(话题圈评论列表)
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("getThemeInfoByType")
+    @FormUrlEncoded
+    Observable<BaseResponse<ThemeInfoEntity>> themeInfo(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @param headers
+     * @param params
+     * @return 加入话题圈
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("joinCircle")
+    @FormUrlEncoded
+    Observable<BaseResponse<IEntity>> joinCircle(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
 }

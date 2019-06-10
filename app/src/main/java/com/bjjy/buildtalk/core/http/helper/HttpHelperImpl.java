@@ -3,9 +3,13 @@
 package com.bjjy.buildtalk.core.http.helper;
 
 import com.bjjy.buildtalk.app.User;
+import com.bjjy.buildtalk.core.greendao.CircleHistoryData;
 import com.bjjy.buildtalk.core.http.api.ApiService;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.entity.BannerEntity;
+import com.bjjy.buildtalk.entity.CircleEntity;
+import com.bjjy.buildtalk.entity.CircleInfoEntity;
+import com.bjjy.buildtalk.entity.CircleTagEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
@@ -13,6 +17,8 @@ import com.bjjy.buildtalk.entity.EveryTalkListEntity;
 import com.bjjy.buildtalk.entity.GuestBookEntity;
 import com.bjjy.buildtalk.entity.SaveRecordEntity;
 import com.bjjy.buildtalk.entity.IEntity;
+import com.bjjy.buildtalk.entity.SearchResultEntity;
+import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -20,6 +26,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
+import okhttp3.MultipartBody;
 
 /**
  * @author power
@@ -37,13 +44,13 @@ public class HttpHelperImpl implements HttpHelper {
     }
 
     @Override
-    public Observable<BaseResponse<List<IEntity>>> signTest(Map<String,String> headers, Map<String,String> paramas) {
+    public Observable<BaseResponse<List<IEntity>>> signTest(Map<String, String> headers, Map<String, String> paramas) {
         return mApiService.signTest(headers, paramas);
     }
 
     @Override
     public Observable<BaseResponse<List<BannerEntity>>> discoverBanner(Map<String, String> headers, Map<String, String> paramas) {
-        return mApiService.discoverBanner(headers,paramas);
+        return mApiService.discoverBanner(headers, paramas);
     }
 
     @Override
@@ -94,6 +101,51 @@ public class HttpHelperImpl implements HttpHelper {
     @Override
     public Observable<BaseResponse<User>> mobileRegister(Map<String, String> headers, Map<String, String> params) {
         return mApiService.mobileRegister(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<CircleEntity>> myCircle(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.myCircle(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<String>> uploadFiles(MultipartBody.Part file) {
+        return mApiService.uploadFiles(file);
+    }
+
+    @Override
+    public Observable<BaseResponse<List<CircleTagEntity>>> searchCircleTags(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.searchCircleTags(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> createCircle(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.createCircle(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<SearchResultEntity>> searchHistory(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.searchHistory(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<CircleInfoEntity>> circleInfo(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.circleInfo(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<ThemeInfoEntity>> themeInfo(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.themeInfo(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<String>> uploadFiles(List<MultipartBody.Part> files) {
+        return mApiService.uploadFiles(files);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> joinCircle(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.joinCircle(headers, params);
     }
 
     //

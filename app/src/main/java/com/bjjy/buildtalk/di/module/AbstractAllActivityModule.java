@@ -30,6 +30,7 @@ import com.bjjy.buildtalk.di.module.activity.TalkSearchActivityModule;
 import com.bjjy.buildtalk.di.module.activity.TopticCircleActivityModule;
 import com.bjjy.buildtalk.di.module.activity.TopticListActivityModule;
 import com.bjjy.buildtalk.di.module.activity.TransactionActivityModule;
+import com.bjjy.buildtalk.di.module.activity.ViewpagerActivityModule;
 import com.bjjy.buildtalk.di.module.activity.WalletActivityModule;
 import com.bjjy.buildtalk.ui.circle.CircleAgreementActvity;
 import com.bjjy.buildtalk.ui.circle.CircleSearchActivity;
@@ -45,6 +46,7 @@ import com.bjjy.buildtalk.ui.main.LoginActivity;
 import com.bjjy.buildtalk.ui.main.MainActivity;
 import com.bjjy.buildtalk.ui.main.PhoneLoginActivity;
 import com.bjjy.buildtalk.ui.main.SplashActivity;
+import com.bjjy.buildtalk.ui.main.ViewPagerActivity;
 import com.bjjy.buildtalk.ui.mine.AboutUsActivity;
 import com.bjjy.buildtalk.ui.mine.FeedBackActivity;
 import com.bjjy.buildtalk.ui.mine.PersonInfoActivity;
@@ -150,4 +152,6 @@ public abstract class AbstractAllActivityModule {
     @ContributesAndroidInjector(modules = PersonPageActivityModule.class)
     abstract PersonPageActivity mPersonPageActivity();
 
+    @ContributesAndroidInjector(modules = ViewpagerActivityModule.class)
+    abstract ViewPagerActivity mViewPagerActivity();
 }

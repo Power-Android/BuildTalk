@@ -47,21 +47,21 @@ public class CourseCirclePresenter extends BasePresenter<CourseCircleContract.Vi
 
         mView.handlerTab(mTitleList, mViews, mBadgeCountList);
 
-        setAdapter();
+//        setAdapter();
     }
 
-    private void setAdapter() {
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            list.add("");
-        }
-        RecyclerView recyclerView = mThemeView.findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(App.getContext()));
-        CircleTopticAdapter topticAdapter = new CircleTopticAdapter(R.layout.adapter_article_toptic, list);
-        View footerView = LayoutInflater.from(App.getContext()).inflate(R.layout.footer_circle_toptic,null,false);
-        topticAdapter.addFooterView(footerView);
-        recyclerView.setAdapter(topticAdapter);
-
-    }
+//    private void setAdapter() {
+//        List<String> list = new ArrayList<>();
+//        for (int i = 0; i < 5; i++) {
+//            list.add("");
+//        }
+//        RecyclerView recyclerView = mThemeView.findViewById(R.id.recycler_view);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(App.getContext()));
+//        CircleTopticAdapter topticAdapter = new CircleTopticAdapter(R.layout.adapter_article_toptic, list);
+//        View footerView = LayoutInflater.from(App.getContext()).inflate(R.layout.footer_circle_toptic,null,false);
+//        topticAdapter.addFooterView(footerView);
+//        recyclerView.setAdapter(topticAdapter);
+//
+//    }
 
 }

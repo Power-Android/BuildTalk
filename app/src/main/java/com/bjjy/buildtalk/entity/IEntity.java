@@ -17,6 +17,8 @@ public class IEntity implements Serializable{
 
     private String author_name;
 
+    private String pic_url;
+
     public String getAuthor_name() {
         return author_name;
     }
@@ -25,4 +27,11 @@ public class IEntity implements Serializable{
         this.author_name = author_name;
     }
 
+    public String getPic_url() {
+        return pic_url;
+    }
+
+    public void setPic_url(String pic_url) {
+        this.pic_url = pic_url;
+    }
 }

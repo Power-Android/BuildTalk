@@ -42,6 +42,7 @@ ext {
             "JZvideoplayer"                         : "cn.jzvd:jiaozivideoplayer:6.4.3",
             "ExoPlayer"                             : "com.google.android.exoplayer:exoplayer:2.9.3",
             "PictureSelector"                       : "com.github.LuckSiege.PictureSelector:picture_library:v2.2.3",
+            "photoView"                             : "com.github.chrisbanes:PhotoView:2.0.0",
 
             //net
             "gson"                                  : "com.google.code.gson:gson:2.8.2",

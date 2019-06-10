@@ -1,12 +1,21 @@
 package com.bjjy.buildtalk.ui.circle;
 
+import com.bjjy.buildtalk.adapter.CircleAdapter;
+import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.presenter.BasePresenter;
 import com.bjjy.buildtalk.core.greendao.CircleHistoryData;
+import com.bjjy.buildtalk.core.rx.BaseObserver;
 import com.bjjy.buildtalk.core.rx.RxUtils;
+import com.bjjy.buildtalk.entity.CircleEntity;
+import com.bjjy.buildtalk.entity.SearchResultEntity;
+import com.bjjy.buildtalk.utils.HeaderUtils;
+import com.bjjy.buildtalk.utils.TimeUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -39,26 +48,41 @@ public class CircleSearchPresenter extends BasePresenter<CircleSearchContract.Vi
                 ));
     }
 
-    public void addHistoryData(String content) {
+    public void addHistoryData(int page, String content, boolean isRefresh) {
         addSubscribe(Observable.create((ObservableOnSubscribe<List<CircleHistoryData>>) e -> {
             List<CircleHistoryData> historyDataList = mDataManager.addCircleHistoryData(content);
             e.onNext(historyDataList);
         }).compose(RxUtils.SchedulerTransformer())
                 .filter(articleListData -> mView != null)
                 .subscribe(historyDataList -> {
-                            searchResultList(content);
+                            searchResultList(page, content, isRefresh);
                         }
                 ));
     }
 
-    private void searchResultList(String content) {
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            list.add("");
-        }
-        List<CircleHistoryData> historyDataList = mDataManager.loadAllCircleHistoryData();
-        Collections.reverse(historyDataList);
-        mView.showHistoryData(historyDataList);
-        mView.handlerResultSearchList(list);
+    private void searchResultList(int page, String content, boolean isRefresh) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        paramas.put(Constants.PAGE, String.valueOf(page));
+        paramas.put(Constants.PAGE_SIZE, "10");
+        paramas.put(Constants.SOURCE, Constants.ANDROID);
+        paramas.put("searchKeyword", content);
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.searchHistory(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<SearchResultEntity>(mView, false) {
+                    @Override
+                    public void onSuccess(SearchResultEntity searchResultEntity) {
+                        mView.handlerResultSearchList(searchResultEntity, isRefresh);
+                    }
+                }));
     }
 }

@@ -7,6 +7,9 @@ import com.bjjy.buildtalk.core.http.helper.HttpHelper;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.core.preference.PreferenceHelper;
 import com.bjjy.buildtalk.entity.BannerEntity;
+import com.bjjy.buildtalk.entity.CircleEntity;
+import com.bjjy.buildtalk.entity.CircleInfoEntity;
+import com.bjjy.buildtalk.entity.CircleTagEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
@@ -14,11 +17,14 @@ import com.bjjy.buildtalk.entity.EveryTalkListEntity;
 import com.bjjy.buildtalk.entity.GuestBookEntity;
 import com.bjjy.buildtalk.entity.SaveRecordEntity;
 import com.bjjy.buildtalk.entity.IEntity;
+import com.bjjy.buildtalk.entity.SearchResultEntity;
+import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 
 import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
+import okhttp3.MultipartBody;
 
 
 /**
@@ -172,5 +178,50 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     @Override
     public Observable<BaseResponse<User>> mobileRegister(Map<String, String> headers, Map<String, String> params) {
         return mHttpHelper.mobileRegister(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<CircleEntity>> myCircle(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.myCircle(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<String>> uploadFiles(MultipartBody.Part file) {
+        return mHttpHelper.uploadFiles(file);
+    }
+
+    @Override
+    public Observable<BaseResponse<List<CircleTagEntity>>> searchCircleTags(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.searchCircleTags(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> createCircle(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.createCircle(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<SearchResultEntity>> searchHistory(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.searchHistory(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<CircleInfoEntity>> circleInfo(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.circleInfo(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<ThemeInfoEntity>> themeInfo(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.themeInfo(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<String>> uploadFiles(List<MultipartBody.Part> files) {
+        return mHttpHelper.uploadFiles(files);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> joinCircle(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.joinCircle(headers, params);
     }
 }
