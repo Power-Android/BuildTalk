@@ -5,7 +5,10 @@ package com.bjjy.buildtalk.di.module;
 import com.bjjy.buildtalk.di.component.BaseActivityComponent;
 import com.bjjy.buildtalk.di.module.activity.AboutUsActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CircleAgreementActivityModule;
+import com.bjjy.buildtalk.di.module.activity.CircleDataActivityModule;
+import com.bjjy.buildtalk.di.module.activity.CircleInfoActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CircleListActivityModule;
+import com.bjjy.buildtalk.di.module.activity.CircleMemberActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CircleSearchActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CourseCircleActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CourseListActivityModule;
@@ -21,22 +24,31 @@ import com.bjjy.buildtalk.di.module.activity.MasterCircleActivityModule;
 import com.bjjy.buildtalk.di.module.activity.MasterCollectActivityModule;
 import com.bjjy.buildtalk.di.module.activity.MasterDetailActivityModule;
 import com.bjjy.buildtalk.di.module.activity.MasterListActivityModule;
+import com.bjjy.buildtalk.di.module.activity.MyCardActivityModule;
 import com.bjjy.buildtalk.di.module.activity.PersonInfoActivityModule;
-import com.bjjy.buildtalk.di.module.activity.PersonPageActivityModule;
 import com.bjjy.buildtalk.di.module.activity.PhoneLoginActivityModule;
+import com.bjjy.buildtalk.di.module.activity.PublishActivityModule;
+import com.bjjy.buildtalk.di.module.activity.SetPictureActivityModule;
 import com.bjjy.buildtalk.di.module.activity.SettingActivityModule;
 import com.bjjy.buildtalk.di.module.activity.SplashActivtyModule;
 import com.bjjy.buildtalk.di.module.activity.TalkSearchActivityModule;
 import com.bjjy.buildtalk.di.module.activity.TopticCircleActivityModule;
+import com.bjjy.buildtalk.di.module.activity.TopticDetailActivityMudule;
 import com.bjjy.buildtalk.di.module.activity.TopticListActivityModule;
 import com.bjjy.buildtalk.di.module.activity.TransactionActivityModule;
 import com.bjjy.buildtalk.di.module.activity.ViewpagerActivityModule;
 import com.bjjy.buildtalk.di.module.activity.WalletActivityModule;
 import com.bjjy.buildtalk.ui.circle.CircleAgreementActvity;
+import com.bjjy.buildtalk.ui.circle.CircleDataActivity;
+import com.bjjy.buildtalk.ui.circle.CircleInfoActivity;
+import com.bjjy.buildtalk.ui.circle.CircleMemberActivity;
 import com.bjjy.buildtalk.ui.circle.CircleSearchActivity;
 import com.bjjy.buildtalk.ui.circle.CourseCircleActivity;
 import com.bjjy.buildtalk.ui.circle.CreateCircleActivity;
+import com.bjjy.buildtalk.ui.circle.MyCardActivity;
+import com.bjjy.buildtalk.ui.circle.PublishActivity;
 import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
+import com.bjjy.buildtalk.ui.circle.TopticDetailActivity;
 import com.bjjy.buildtalk.ui.discover.CourseListActivity;
 import com.bjjy.buildtalk.ui.discover.EveryTalkDetailActivity;
 import com.bjjy.buildtalk.ui.discover.EveryTalkListActivity;
@@ -50,7 +62,7 @@ import com.bjjy.buildtalk.ui.main.ViewPagerActivity;
 import com.bjjy.buildtalk.ui.mine.AboutUsActivity;
 import com.bjjy.buildtalk.ui.mine.FeedBackActivity;
 import com.bjjy.buildtalk.ui.mine.PersonInfoActivity;
-import com.bjjy.buildtalk.ui.mine.PersonPageActivity;
+import com.bjjy.buildtalk.ui.mine.SetPictureActivity;
 import com.bjjy.buildtalk.ui.mine.SettingActivity;
 import com.bjjy.buildtalk.ui.mine.TransactionActivity;
 import com.bjjy.buildtalk.ui.mine.WalletActivity;
@@ -149,9 +161,27 @@ public abstract class AbstractAllActivityModule {
     @ContributesAndroidInjector(modules = TransactionActivityModule.class)
     abstract TransactionActivity mTransactionActivity();
 
-    @ContributesAndroidInjector(modules = PersonPageActivityModule.class)
-    abstract PersonPageActivity mPersonPageActivity();
-
     @ContributesAndroidInjector(modules = ViewpagerActivityModule.class)
     abstract ViewPagerActivity mViewPagerActivity();
+
+    @ContributesAndroidInjector(modules = SetPictureActivityModule.class)
+    abstract SetPictureActivity mSetPictureActivity();
+
+    @ContributesAndroidInjector(modules = CircleInfoActivityModule.class)
+    abstract CircleInfoActivity mCircleInfoActivity();
+
+    @ContributesAndroidInjector(modules = CircleMemberActivityModule.class)
+    abstract CircleMemberActivity mCircleMemberActivity();
+
+    @ContributesAndroidInjector(modules = MyCardActivityModule.class)
+    abstract MyCardActivity mMyCardActivity();
+
+    @ContributesAndroidInjector(modules = PublishActivityModule.class)
+    abstract PublishActivity mPublishActivity();
+
+    @ContributesAndroidInjector(modules = CircleDataActivityModule.class)
+    abstract CircleDataActivity mCircleDataActivity();
+
+    @ContributesAndroidInjector(modules = TopticDetailActivityMudule.class)
+    abstract TopticDetailActivity mTopticDetailActivity();
 }

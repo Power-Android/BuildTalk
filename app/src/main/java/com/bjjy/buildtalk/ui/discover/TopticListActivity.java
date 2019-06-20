@@ -65,12 +65,11 @@ public class TopticListActivity extends BaseActivity<TopticListPresenter> implem
     @Override
     public void handlerTopticList(CourseEntity courseEntities, boolean isRefresh) {
         mPage_count = courseEntities.getPage_count();
+        mList = courseEntities.getCircleInfo();
         if (isRefresh) {
-            mList = courseEntities.getCircleInfo();
             mTopticListAdapter.setNewData(mList);
         } else {
-            mList.addAll(courseEntities.getCircleInfo());
-            mTopticListAdapter.addData(courseEntities.getCircleInfo());
+            mTopticListAdapter.addData(mList);
         }
     }
 
@@ -94,8 +93,9 @@ public class TopticListActivity extends BaseActivity<TopticListPresenter> implem
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        List<CourseEntity.CircleInfoBean> data = adapter.getData();
         Intent intent = new Intent(this, TopticCircleActivity.class);
-        intent.putExtra("circle_id", mList.get(position).getCircle_id()+"");
+        intent.putExtra("circle_id", data.get(position).getCircle_id()+"");
         startActivity(intent);
     }
 }

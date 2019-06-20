@@ -9,14 +9,20 @@ import com.bjjy.buildtalk.core.preference.PreferenceHelper;
 import com.bjjy.buildtalk.entity.BannerEntity;
 import com.bjjy.buildtalk.entity.CircleEntity;
 import com.bjjy.buildtalk.entity.CircleInfoEntity;
+import com.bjjy.buildtalk.entity.CircleMasterInfoEntity;
 import com.bjjy.buildtalk.entity.CircleTagEntity;
+import com.bjjy.buildtalk.entity.CommentSuccessEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
 import com.bjjy.buildtalk.entity.EveryTalkListEntity;
 import com.bjjy.buildtalk.entity.GuestBookEntity;
+import com.bjjy.buildtalk.entity.MemberEntity;
+import com.bjjy.buildtalk.entity.MyCardEntity;
+import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.SaveRecordEntity;
 import com.bjjy.buildtalk.entity.IEntity;
+import com.bjjy.buildtalk.entity.SearchCircleInfoEntity;
 import com.bjjy.buildtalk.entity.SearchResultEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 
@@ -223,5 +229,76 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     @Override
     public Observable<BaseResponse<IEntity>> joinCircle(Map<String, String> headers, Map<String, String> params) {
         return mHttpHelper.joinCircle(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<CommentSuccessEntity>> publishComment(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.publishComment(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<PraiseEntity>> themeParise(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.themeParise(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> publishTheme(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.publishTheme(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> updateTheme(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.updateTheme(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> collectTheme(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.collectTheme(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> deleteTheme(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.deleteTheme(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<CircleMasterInfoEntity>> circleMasterInfo(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.circleMasterInfo(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> quitCircle(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.quitCircle(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<MyCardEntity>> myCard(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.myCard(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<MemberEntity>> circleUser(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.circleUser(headers, params);
+    }
+
+
+    @Override
+    public Observable<BaseResponse<SearchCircleInfoEntity>> searchCircleInfo(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.searchCircleInfo(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<ThemeInfoEntity.ThemeInfoBean>> searchThemeDetail(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.searchThemeDetail(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<ThemeInfoEntity.ThemeInfoBean>> commentPageHandle(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.commentPageHandle(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> deleteGuestbook(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.deleteGuestbook(headers, params);
     }
 }

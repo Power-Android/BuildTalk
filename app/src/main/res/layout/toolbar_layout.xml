@@ -13,6 +13,15 @@
         android:background="?attr/colorPrimary"
         app:layout_scrollFlags="scroll|enterAlways|snap">
         <TextView
+            android:id="@+id/toolbar_left_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:singleLine="true"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:textColor="@color/text_drak"
+            android:textSize="15sp" />
+        <TextView
             android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

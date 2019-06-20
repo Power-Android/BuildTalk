@@ -4,11 +4,11 @@ import dagger.Module;
 
 /**
  * @author power
- * @date 2019/5/29 11:58 AM
+ * @date 2019/6/11 1:53 PM
  * @project BuildTalk
  * @description:
  */
 
 @Module
-public class PersonPageActivityModule {
+public class SetPictureActivityModule {
 }

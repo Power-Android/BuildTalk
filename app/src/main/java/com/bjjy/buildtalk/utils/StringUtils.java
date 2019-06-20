@@ -1,6 +1,7 @@
 package com.bjjy.buildtalk.utils;
 
 import com.bjjy.buildtalk.entity.CircleTagEntity;
+import com.bjjy.buildtalk.entity.PariseNickNameBean;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class StringUtils {
         return list.isEmpty() ? "" : sb.toString().substring(0, sb.toString().length() - 1);
     }
 
-    public static String listToString1(List<ThemeInfoEntity.ThemeInfoBean.PariseNickNameBean> list, char separator) {
+    public static String listToString1(List<PariseNickNameBean> list, char separator) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < list.size(); i++) {
             sb.append(list.get(i).getName()).append(separator);

@@ -8,6 +8,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
+import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 
 import butterknife.BindView;
@@ -29,6 +30,16 @@ public class PersonInfoActivity extends BaseActivity<PersonInfoPresenter> implem
     TextView mVerifyTv;
     @BindView(R.id.master_verify)
     RelativeLayout mMasterVerify;
+    @BindView(R.id.bg_rl)
+    RelativeLayout mBgRl;
+    @BindView(R.id.name_tv)
+    TextView mNameTv;
+    @BindView(R.id.name_rl)
+    RelativeLayout mNameRl;
+    @BindView(R.id.phone_tv)
+    TextView mPhoneTv;
+    @BindView(R.id.phone_rl)
+    RelativeLayout mPhoneRl;
 
     @Override
     protected int getLayoutId() {
@@ -54,13 +65,21 @@ public class PersonInfoActivity extends BaseActivity<PersonInfoPresenter> implem
         ButterKnife.bind(this);
     }
 
-    @OnClick({R.id.person_page, R.id.master_verify})
+    @OnClick({R.id.person_page, R.id.master_verify, R.id.bg_rl, R.id.name_rl, R.id.phone_rl})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.person_page:
-                startActivity(new Intent(this, PersonPageActivity.class));
+                Intent intent = new Intent(this, SetPictureActivity.class);
+                intent.putExtra(SetPictureActivity.TAG,SetPictureActivity.FACE);
+                startActivity(intent);
                 break;
             case R.id.master_verify:
+                break;
+            case R.id.bg_rl:
+                break;
+            case R.id.name_rl:
+                break;
+            case R.id.phone_rl:
                 break;
         }
     }

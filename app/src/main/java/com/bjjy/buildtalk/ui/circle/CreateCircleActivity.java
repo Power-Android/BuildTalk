@@ -64,7 +64,6 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
     private List<CircleTagEntity> mTagList = new ArrayList<>();
     private TagAdapter mTagAdapter;
     private List<CircleTagEntity> mSelList = new ArrayList<>();
-    private List<MultipartBody.Part> mParts;
 
     @Override
     protected int getLayoutId() {
@@ -259,13 +258,6 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
                     RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
                     mFile = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
                 }
-//                mParts = new ArrayList<>();
-//                for (int i = 0; i < localMedia.size(); i++) {
-//                    File file = new File(localMedia.get(i).getPath());
-//                    RequestBody body = RequestBody.create(MediaType.parse("image/*"),file);   //说明该文件为图片类型
-//                    MultipartBody.Part part = MultipartBody.Part.createFormData("file[]", file.getName(),body);
-//                    mParts.add(part);
-//                }
             }
         }
     }

@@ -45,7 +45,7 @@ public class ThemeInfoEntity implements Serializable {
         this.themeInfo = themeInfo;
     }
 
-    public static class ThemeInfoBean {
+    public static class ThemeInfoBean implements Serializable{
         /**
          * theme_id : 11
          * theme_content : 圈子[我是圈子名称]创建成功
@@ -67,18 +67,72 @@ public class ThemeInfoEntity implements Serializable {
         private int theme_id;
         private String theme_content;
         private String publish_time;
-        private int user_id;
+        private String user_id;
         private int circle_id;
         private String source;
         private int commentPage;
         private int commentPage_count;
         private String name;
         private String headImage;
-        private int is_circleMaster;
+        private String is_circleMaster;
         private int is_parise;
+        private int is_collect;
+        private String is_author;
         private List<ThemeImageBean> theme_image;
         private List<CommentContentBean> comment_content;
         private List<PariseNickNameBean> parise_nickName;
+        private int page;
+        private int page_count;
+        private int countCommentNum;
+        private int themeCountParise;
+
+        public int getThemeCountParise() {
+            return themeCountParise;
+        }
+
+        public void setThemeCountParise(int themeCountParise) {
+            this.themeCountParise = themeCountParise;
+        }
+
+        public int getPage() {
+            return page;
+        }
+
+        public void setPage(int page) {
+            this.page = page;
+        }
+
+        public int getPage_count() {
+            return page_count;
+        }
+
+        public void setPage_count(int page_count) {
+            this.page_count = page_count;
+        }
+
+        public int getCountCommentNum() {
+            return countCommentNum;
+        }
+
+        public void setCountCommentNum(int countCommentNum) {
+            this.countCommentNum = countCommentNum;
+        }
+
+        public String getIs_author() {
+            return is_author;
+        }
+
+        public void setIs_author(String is_author) {
+            this.is_author = is_author;
+        }
+
+        public int getIs_collect() {
+            return is_collect;
+        }
+
+        public void setIs_collect(int is_collect) {
+            this.is_collect = is_collect;
+        }
 
         public int getTheme_id() {
             return theme_id;
@@ -104,11 +158,11 @@ public class ThemeInfoEntity implements Serializable {
             this.publish_time = publish_time;
         }
 
-        public int getUser_id() {
+        public String getUser_id() {
             return user_id;
         }
 
-        public void setUser_id(int user_id) {
+        public void setUser_id(String user_id) {
             this.user_id = user_id;
         }
 
@@ -160,11 +214,11 @@ public class ThemeInfoEntity implements Serializable {
             this.headImage = headImage;
         }
 
-        public int getIs_circleMaster() {
+        public String getIs_circleMaster() {
             return is_circleMaster;
         }
 
-        public void setIs_circleMaster(int is_circleMaster) {
+        public void setIs_circleMaster(String is_circleMaster) {
             this.is_circleMaster = is_circleMaster;
         }
 
@@ -198,124 +252,6 @@ public class ThemeInfoEntity implements Serializable {
 
         public void setParise_nickName(List<PariseNickNameBean> parise_nickName) {
             this.parise_nickName = parise_nickName;
-        }
-
-        public static class ThemeImageBean {
-            /**
-             * pic_id : 45
-             * pic_url : https://www.51jiantan.com/static/image/activity.png
-             */
-
-            private String pic_id;
-            private String pic_url;
-
-            public String getPic_id() {
-                return pic_id;
-            }
-
-            public void setPic_id(String pic_id) {
-                this.pic_id = pic_id;
-            }
-
-            public String getPic_url() {
-                return pic_url;
-            }
-
-            public void setPic_url(String pic_url) {
-                this.pic_url = pic_url;
-            }
-        }
-
-        public static class CommentContentBean {
-            /**
-             * comment_id : 168
-             * user_id : 138
-             * content : 1
-             * name : 建谈新用户
-             * is_author : 0
-             */
-
-            private int comment_id;
-            private int user_id;
-            private String content;
-            private String name;
-            private int is_author;
-
-            public int getComment_id() {
-                return comment_id;
-            }
-
-            public void setComment_id(int comment_id) {
-                this.comment_id = comment_id;
-            }
-
-            public int getUser_id() {
-                return user_id;
-            }
-
-            public void setUser_id(int user_id) {
-                this.user_id = user_id;
-            }
-
-            public String getContent() {
-                return content;
-            }
-
-            public void setContent(String content) {
-                this.content = content;
-            }
-
-            public String getName() {
-                return name;
-            }
-
-            public void setName(String name) {
-                this.name = name;
-            }
-
-            public int getIs_author() {
-                return is_author;
-            }
-
-            public void setIs_author(int is_author) {
-                this.is_author = is_author;
-            }
-        }
-
-        public static class PariseNickNameBean {
-            /**
-             * name : 建谈新用户
-             * user_id : 138
-             * user_type : 1
-             */
-
-            private String name;
-            private int user_id;
-            private int user_type;
-
-            public String getName() {
-                return name;
-            }
-
-            public void setName(String name) {
-                this.name = name;
-            }
-
-            public int getUser_id() {
-                return user_id;
-            }
-
-            public void setUser_id(int user_id) {
-                this.user_id = user_id;
-            }
-
-            public int getUser_type() {
-                return user_type;
-            }
-
-            public void setUser_type(int user_type) {
-                this.user_type = user_type;
-            }
         }
     }
 }

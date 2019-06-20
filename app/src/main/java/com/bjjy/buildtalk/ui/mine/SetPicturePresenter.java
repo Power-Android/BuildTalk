@@ -6,14 +6,14 @@ import javax.inject.Inject;
 
 /**
  * @author power
- * @date 2019/5/29 12:01 PM
+ * @date 2019/6/11 1:54 PM
  * @project BuildTalk
  * @description:
  */
-public class PersonPagePresenter extends BasePresenter<PersonPageContract.View> implements PersonPageContract.Presenter {
+public class SetPicturePresenter extends BasePresenter<SetPictureContract.View> {
 
     @Inject
-    public PersonPagePresenter() {
+    public SetPicturePresenter() {
 
     }
 }

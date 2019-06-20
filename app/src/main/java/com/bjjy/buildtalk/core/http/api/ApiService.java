@@ -3,19 +3,24 @@ package com.bjjy.buildtalk.core.http.api;
 
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.app.User;
-import com.bjjy.buildtalk.core.greendao.CircleHistoryData;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.entity.BannerEntity;
 import com.bjjy.buildtalk.entity.CircleEntity;
 import com.bjjy.buildtalk.entity.CircleInfoEntity;
+import com.bjjy.buildtalk.entity.CircleMasterInfoEntity;
 import com.bjjy.buildtalk.entity.CircleTagEntity;
+import com.bjjy.buildtalk.entity.CommentSuccessEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
 import com.bjjy.buildtalk.entity.EveryTalkListEntity;
 import com.bjjy.buildtalk.entity.GuestBookEntity;
+import com.bjjy.buildtalk.entity.MemberEntity;
+import com.bjjy.buildtalk.entity.MyCardEntity;
+import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.SaveRecordEntity;
 import com.bjjy.buildtalk.entity.IEntity;
+import com.bjjy.buildtalk.entity.SearchCircleInfoEntity;
 import com.bjjy.buildtalk.entity.SearchResultEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 
@@ -31,7 +36,6 @@ import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
-import retrofit2.http.Url;
 
 public interface ApiService {
 
@@ -41,8 +45,6 @@ public interface ApiService {
     Observable<BaseResponse<List<IEntity>>> signTest(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> paramas);
 
     /**
-     * @param headers
-     * @param params
      * @return 首页轮播图
      */
     @Headers(Constants.HEADER_PASSID)
@@ -51,8 +53,6 @@ public interface ApiService {
     Observable<BaseResponse<List<BannerEntity>>> discoverBanner(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
     /**
-     * @param headers
-     * @param params
      * @return 首页每日一谈
      */
     @Headers(Constants.HEADER_PASSID)
@@ -61,8 +61,6 @@ public interface ApiService {
     Observable<BaseResponse<List<EveryTalkEntity>>> everyDayTalk(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
     /**
-     * @param headers
-     * @param params
      * @return 热门话题和精品课程（首页和列表）
      */
     @Headers(Constants.HEADER_PASSID)
@@ -71,8 +69,6 @@ public interface ApiService {
     Observable<BaseResponse<CourseEntity>> courseInfo(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
     /**
-     * @param headers
-     * @param params
      * @return 每日一谈列表
      */
     @Headers(Constants.HEADER_PASSID)
@@ -81,8 +77,6 @@ public interface ApiService {
     Observable<BaseResponse<EveryTalkListEntity>> everyDayTalkList(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
     /**
-     * @param headers
-     * @param params
      * @return 每日一谈详情
      */
     @Headers(Constants.HEADER_PASSID)
@@ -91,8 +85,6 @@ public interface ApiService {
     Observable<BaseResponse<EveryTalkDetailEntity>> everyTalkDetail(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
     /**
-     * @param headers
-     * @param params
      * @return 获取留言
      */
     @Headers(Constants.HEADER_PASSID)
@@ -101,8 +93,6 @@ public interface ApiService {
     Observable<BaseResponse<GuestBookEntity>> guestBookList(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
     /**
-     * @param headers
-     * @param params
      * @return 发表留言
      */
     @Headers(Constants.HEADER_PASSID)
@@ -111,8 +101,6 @@ public interface ApiService {
     Observable<BaseResponse<List<SaveRecordEntity>>> saveRecord(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
     /**
-     * @param headers
-     * @param params
      * @return 留言点赞
      */
     @Headers(Constants.HEADER_PASSID)
@@ -121,8 +109,6 @@ public interface ApiService {
     Observable<BaseResponse<IEntity>> praiseRecord(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
     /**
-     * @param headers
-     * @param params
      * @return 新闻，文稿点赞
      */
     @Headers(Constants.HEADER_PASSID)
@@ -131,8 +117,6 @@ public interface ApiService {
     Observable<BaseResponse<IEntity>> collectArticle(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
     /**
-     * @param headers
-     * @param params
      * @return 发送短信
      */
     @Headers(Constants.HEADER_PASSID)
@@ -141,8 +125,6 @@ public interface ApiService {
     Observable<BaseResponse<IEntity>> sendSms(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
     /**
-     * @param headers
-     * @param params
      * @return 手机号登录
      */
     @Headers(Constants.HEADER_PASSID)
@@ -151,8 +133,6 @@ public interface ApiService {
     Observable<BaseResponse<User>> mobileRegister(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
     /**
-     * @param headers
-     * @param params
      * @return 我的圈子
      */
     @Headers(Constants.HEADER_PASSID)
@@ -176,10 +156,7 @@ public interface ApiService {
     @POST("manyPicUploadHandle")
     Observable<BaseResponse<String>> uploadFiles(@Part List<MultipartBody.Part> files);
 
-
     /**
-     * @param headers
-     * @param params
      * @return 获取可用标签
      */
     @Headers(Constants.HEADER_PASSID)
@@ -188,8 +165,6 @@ public interface ApiService {
     Observable<BaseResponse<List<CircleTagEntity>>> searchCircleTags(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
     /**
-     * @param headers
-     * @param params
      * @return 创建圈子
      */
     @Headers(Constants.HEADER_PASSID)
@@ -198,8 +173,6 @@ public interface ApiService {
     Observable<BaseResponse<IEntity>> createCircle(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
     /**
-     * @param headers
-     * @param params
      * @return 圈子搜索列表
      */
     @Headers(Constants.HEADER_PASSID)
@@ -208,8 +181,6 @@ public interface ApiService {
     Observable<BaseResponse<SearchResultEntity>> searchHistory(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
     /**
-     * @param headers
-     * @param params
      * @return 话题圈、课程圈（话题圈课程圈的圈子信息）
      */
     @Headers(Constants.HEADER_PASSID)
@@ -218,8 +189,6 @@ public interface ApiService {
     Observable<BaseResponse<CircleInfoEntity>> circleInfo(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
     /**
-     * @param headers
-     * @param params
      * @return 主题分类查看(话题圈评论列表)
      */
     @Headers(Constants.HEADER_PASSID)
@@ -228,8 +197,6 @@ public interface ApiService {
     Observable<BaseResponse<ThemeInfoEntity>> themeInfo(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
     /**
-     * @param headers
-     * @param params
      * @return 加入话题圈
      */
     @Headers(Constants.HEADER_PASSID)
@@ -237,4 +204,116 @@ public interface ApiService {
     @FormUrlEncoded
     Observable<BaseResponse<IEntity>> joinCircle(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
+
+    /**
+     * @return 发表主题评论
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("publishThemeComment")
+    @FormUrlEncoded
+    Observable<BaseResponse<CommentSuccessEntity>> publishComment(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 主题点赞
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("themeParise")
+    @FormUrlEncoded
+    Observable<BaseResponse<PraiseEntity>> themeParise(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 发表主题
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("publishTheme")
+    @FormUrlEncoded
+    Observable<BaseResponse<IEntity>> publishTheme(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 修改主题
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("updateTheme")
+    @FormUrlEncoded
+    Observable<BaseResponse<IEntity>> updateTheme(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 收藏主题
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("collectTheme")
+    @FormUrlEncoded
+    Observable<BaseResponse<IEntity>> collectTheme(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 删除主题
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("deleteTheme")
+    @FormUrlEncoded
+    Observable<BaseResponse<IEntity>> deleteTheme(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 根据圈子id查询圈主、成员信息
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("circleMasterInfo")
+    @FormUrlEncoded
+    Observable<BaseResponse<CircleMasterInfoEntity>> circleMasterInfo(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 退出圈子
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("quitCircle")
+    @FormUrlEncoded
+    Observable<BaseResponse<IEntity>> quitCircle(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 我的名片
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("myCard")
+    @FormUrlEncoded
+    Observable<BaseResponse<MyCardEntity>> myCard(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 圈子成员
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("circleUser")
+    @FormUrlEncoded
+    Observable<BaseResponse<MemberEntity>> circleUser(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 圈子资料
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("searchCircleInfo")
+    @FormUrlEncoded
+    Observable<BaseResponse<SearchCircleInfoEntity>> searchCircleInfo(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 主题详情
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("searchThemeDetail")
+    @FormUrlEncoded
+    Observable<BaseResponse<ThemeInfoEntity.ThemeInfoBean>> searchThemeDetail(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 主题全部评论
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("commentPageHandle")
+    @FormUrlEncoded
+    Observable<BaseResponse<ThemeInfoEntity.ThemeInfoBean>> commentPageHandle(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 删除留言
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("deleteGuestbook")
+    @FormUrlEncoded
+    Observable<BaseResponse<IEntity>> deleteGuestbook(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 }

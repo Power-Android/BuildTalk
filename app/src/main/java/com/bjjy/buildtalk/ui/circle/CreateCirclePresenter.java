@@ -99,25 +99,4 @@ public class CreateCirclePresenter extends BasePresenter<CreateCircleContract.Vi
                     }
                 }));
     }
-
-    public void upload(List<MultipartBody.Part> parts) {
-        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
-        Map<String, String> paramas = new HashMap<>();
-        paramas.put(Constants.TIMESTAMP, timestamp);
-        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
-
-        Map<String, String> headers = new HashMap<>();
-        headers.put(Constants.TIMESTAMP, timestamp);
-        headers.put(Constants.SIGN, sign);
-
-        addSubscribe(mDataManager.uploadFiles(parts)
-                .compose(RxUtils.SchedulerTransformer())
-                .filter(stringBaseResponse -> mView != null)
-                .subscribeWith(new BaseObserver<String>(mView, false) {
-                    @Override
-                    public void onSuccess(String picUrl) {
-//                        creatCircle(picUrl,circle_name,circle_tags,circle_desc);
-                    }
-                }));
-    }
 }

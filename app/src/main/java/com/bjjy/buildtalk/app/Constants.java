@@ -68,6 +68,8 @@ public class Constants {
     /**
      * EventBus Tag
      */
+    public static final String TOPTIC_REFRESH = "toptic_refresh";
+    public static final String TOPTIC_REFRESH_ALL = "toptic_refresh_all";
     public static final String EVENT_BUS_TAG = "event_bus_tag";
     public static final String PROJECT_PAGER = "project_pager";
     public static final String KNOWLEDGE_PAGER = "knowledge_pager";

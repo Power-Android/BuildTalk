@@ -83,6 +83,7 @@
                 android:id="@+id/viewpager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/dp_44"
                 android:overScrollMode="never" />
         </RelativeLayout>
 
@@ -164,6 +165,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_44"
         android:visibility="gone"
+        android:focusable="false"
         android:background="@color/white"
         android:layout_alignParentBottom="true">
         <TextView

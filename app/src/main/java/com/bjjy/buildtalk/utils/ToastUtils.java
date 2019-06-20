@@ -17,13 +17,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.App;
 
 import java.lang.reflect.Field;
@@ -185,6 +188,22 @@ public class ToastUtils {
     public static View showCustomShort(@LayoutRes final int layoutId) {
         final View view = getView(layoutId);
         show(view, Toast.LENGTH_SHORT);
+        return view;
+    }
+
+    public static View showCollect(final String message, Drawable drawable) {
+        Context context = App.getContext();
+        //使用布局加载器，将编写的toast_layout布局加载进来
+        View view = LayoutInflater.from(context).inflate(R.layout.toast_collect_layout, null);
+        ImageView imageView = view.findViewById(R.id.image);
+        imageView.setImageDrawable(drawable);
+        //获取TextView
+        TextView text = view.findViewById(R.id.text);
+        //设置显示的内容
+        text.setText(message);
+        setGravity(Gravity.CENTER,sXOffset, sYOffset);
+        show(view, Toast.LENGTH_SHORT);
+
         return view;
     }
 

@@ -19,6 +19,16 @@ public class SizeUtils {
         throw new UnsupportedOperationException("u can't instantiate me...");
     }
 
+    public static int getScreenWidth() {
+
+        return App.getContext().getResources().getDisplayMetrics().widthPixels;
+    }
+
+    public static int getScreenHeight() {
+
+        return App.getContext().getResources().getDisplayMetrics().heightPixels;
+    }
+
     /**
      * Value of dp to value of px.
      *

@@ -3,20 +3,25 @@
 package com.bjjy.buildtalk.core.http.helper;
 
 import com.bjjy.buildtalk.app.User;
-import com.bjjy.buildtalk.core.greendao.CircleHistoryData;
 import com.bjjy.buildtalk.core.http.api.ApiService;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.entity.BannerEntity;
 import com.bjjy.buildtalk.entity.CircleEntity;
 import com.bjjy.buildtalk.entity.CircleInfoEntity;
+import com.bjjy.buildtalk.entity.CircleMasterInfoEntity;
 import com.bjjy.buildtalk.entity.CircleTagEntity;
+import com.bjjy.buildtalk.entity.CommentSuccessEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
 import com.bjjy.buildtalk.entity.EveryTalkListEntity;
 import com.bjjy.buildtalk.entity.GuestBookEntity;
+import com.bjjy.buildtalk.entity.MemberEntity;
+import com.bjjy.buildtalk.entity.MyCardEntity;
+import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.SaveRecordEntity;
 import com.bjjy.buildtalk.entity.IEntity;
+import com.bjjy.buildtalk.entity.SearchCircleInfoEntity;
 import com.bjjy.buildtalk.entity.SearchResultEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 
@@ -148,91 +153,73 @@ public class HttpHelperImpl implements HttpHelper {
         return mApiService.joinCircle(headers, params);
     }
 
-    //
-//    @Override
-//    public Observable<BaseResponse<List<BannerData>>> getBannerData() {
-//        return mApiService.getBannerData();
-//    }
-//
-//    @Override
-//    public Observable<BaseResponse<List<ArticleItemData>>> getTopArticles() {
-//        return mApiService.getTopArticles();
-//    }
-//
-//    @Override
-//    public Observable<BaseResponse<List<UsefulSiteData>>> getUsefulSites() {
-//        return mApiService.getUsefulSites();
-//    }
-//
-//    @Override
-//    public Observable<BaseResponse<List<TopSearchData>>> getTopSearchData() {
-//        return mApiService.getTopSearchData();
-//    }
-//
-//    @Override
-//    public Observable<BaseResponse<ArticleListData>> getSearchResultList(int pageNum, String k) {
-//        return mApiService.getSearchResultList(pageNum, k);
-//    }
-//
-//    @Override
-//    public Observable<BaseResponse<LoginData>> login(String username, String password) {
-//        return mApiService.login(username, password);
-//    }
-//
-//    @Override
-//    public Observable<BaseResponse<LoginData>> register(String username, String password, String repassword) {
-//        return mApiService.register(username, password, repassword);
-//    }
-//
-//    @Override
-//    public Observable<BaseResponse<LoginData>> logout() {
-//        return mApiService.logout();
-//    }
-//
-//    @Override
-//    public Observable<BaseResponse<ArticleListData>> addCollectArticle(int id) {
-//        return mApiService.addCollectArticle(id);
-//    }
-//
-//    @Override
-//    public Observable<BaseResponse<ArticleListData>> addCollectOutsideArticle(String title, String author, String link) {
-//        return mApiService.addCollectOutsideArticle(title, author, link);
-//    }
-//
-//    @Override
-//    public Observable<BaseResponse<ArticleListData>> getCollectList(int page) {
-//        return mApiService.getCollectList(page);
-//    }
-//
-//    @Override
-//    public Observable<BaseResponse<ArticleListData>> cancelCollectArticle(int id) {
-//        return mApiService.cancelCollectArticle(id);
-//    }
-//
-//    @Override
-//    public Observable<BaseResponse<ArticleListData>> cancelCollectInCollectPage(int id, int originId) {
-//        return mApiService.cancelCollectInCollectPage(id, originId);
-//    }
-//
-//    @Override
-//    public Observable<BaseResponse<List<NavigationListData>>> getNavigationListData() {
-//        return mApiService.getNavigationListData();
-//    }
-//
-//    @Override
-//    public Observable<BaseResponse<List<ProjectTreeData>>> getProjectTreeData() {
-//        return mApiService.getProjectTreeData();
-//    }
-//
-//    @Override
-//    public Observable<BaseResponse<ArticleListData>> getProjectListData(int page, int cid) {
-//        return mApiService.getProjectListData(page, cid);
-//    }
-//
-//    @Override
-//    public Observable<BaseResponse<List<WxChapterData>>> getWxChapterListData() {
-//        return mApiService.getWxChapterListData();
-//    }
-//
+    @Override
+    public Observable<BaseResponse<CommentSuccessEntity>> publishComment(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.publishComment(headers, params);
+    }
 
+    @Override
+    public Observable<BaseResponse<PraiseEntity>> themeParise(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.themeParise(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> publishTheme(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.publishTheme(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> updateTheme(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.updateTheme(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> collectTheme(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.collectTheme(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> deleteTheme(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.deleteTheme(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<CircleMasterInfoEntity>> circleMasterInfo(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.circleMasterInfo(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> quitCircle(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.quitCircle(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<MyCardEntity>> myCard(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.myCard(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<MemberEntity>> circleUser(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.circleUser(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<SearchCircleInfoEntity>> searchCircleInfo(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.searchCircleInfo(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<ThemeInfoEntity.ThemeInfoBean>> searchThemeDetail(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.searchThemeDetail(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<ThemeInfoEntity.ThemeInfoBean>> commentPageHandle(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.commentPageHandle(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> deleteGuestbook(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.deleteGuestbook(headers, params);
+    }
 }

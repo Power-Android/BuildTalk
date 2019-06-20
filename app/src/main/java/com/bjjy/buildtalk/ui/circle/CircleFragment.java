@@ -7,6 +7,7 @@ import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
@@ -14,13 +15,19 @@ import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.CircleAdapter;
+import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.fragment.BaseFragment;
+import com.bjjy.buildtalk.core.event.RefreshEvent;
 import com.bjjy.buildtalk.entity.CircleEntity;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +61,13 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
     private int mPage_count = 1;
     private View mFooterView;
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void event(RefreshEvent eventBean) {
+        if (TextUtils.equals(eventBean.getMsg(), Constants.TOPTIC_REFRESH_ALL)){
+            onRefresh(mRefreshLayout);
+        }
+    }
+
     public static CircleFragment newInstance() {
         return new CircleFragment();
     }
@@ -74,11 +88,15 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
         mCircleAdapter.addHeaderView(headerView);
         headerView.setOnClickListener(v -> startActivity(new Intent(mContext, CircleSearchActivity.class)));
         mCircleAdapter.setFooterViewAsFlow(true);
+        mFooterView = LayoutInflater.from(mContext).inflate(R.layout.circle_footer_view, null);
+        mCircleAdapter.addFooterView(mFooterView);
+        mFooterView.setOnClickListener(v -> createCircle());
         mCircleAdapter.setOnItemClickListener(this);
     }
 
     @Override
     protected void initEventAndData() {
+        EventBus.getDefault().register(this);
         mPresenter.circleList(page, false);
     }
 
@@ -90,11 +108,6 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
             mCircleAdapter.setNewData(circle_list);
         } else {
             mCircleAdapter.addData(circle_list);
-        }
-        if (mFooterView == null){
-            mFooterView = LayoutInflater.from(mContext).inflate(R.layout.circle_footer_view, null);
-            mCircleAdapter.addFooterView(mFooterView);
-            mFooterView.setOnClickListener(v -> createCircle());
         }
     }
 
@@ -157,12 +170,18 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
     @Override
     public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int position) {
         List<CircleEntity.CircleInfoBean> list = baseQuickAdapter.getData();
-        if (2 == list.get(position).getType()){
+        if (2 == list.get(position).getType()) {
             startActivity(new Intent(mContext, CourseCircleActivity.class));
-        }else {
+        } else {
             Intent intent = new Intent(mContext, TopticCircleActivity.class);
             intent.putExtra("circle_id", String.valueOf(list.get(position).getCircle_id()));
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

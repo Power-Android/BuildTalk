@@ -10,7 +10,10 @@ import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.App;
+import com.bjjy.buildtalk.entity.ThemeImageBean;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
+import com.bjjy.buildtalk.utils.LogUtils;
+import com.bjjy.buildtalk.utils.SizeUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -23,12 +26,20 @@ import java.util.List;
  * @description:
  */
 public class MyGridAdapter extends BaseAdapter {
-    private List<ThemeInfoEntity.ThemeInfoBean.ThemeImageBean> list;
-//    int imageWidth;
+    private List<ThemeImageBean> list;
+    int imageWidth;
+    private boolean isDel;
+    private DeleteCallBackListener mDeleteCallBackListener;
 
-    public MyGridAdapter(List<ThemeInfoEntity.ThemeInfoBean.ThemeImageBean> imgList) {
+    public MyGridAdapter(List<ThemeImageBean> imgList, boolean isDel) {
         this.list = imgList;
-//        imageWidth = (UIUtil.getScreenWidth(mContext) - UIUtil.dip2px(mContext, 38)) / 3;
+        this.isDel = isDel;
+        if (isDel){
+            imageWidth = (SizeUtils.getScreenWidth() - SizeUtils.dp2px(30)) / 3;
+        }else {
+            float dimension = App.getContext().getResources().getDimension(R.dimen.dp_50);
+            imageWidth = (SizeUtils.getScreenWidth() - (int)dimension) / 3;
+        }
     }
 
     @Override
@@ -53,27 +64,35 @@ public class MyGridAdapter extends BaseAdapter {
             holder = new ViewHolder();
             convertView = LayoutInflater.from(App.getContext()).inflate(R.layout.item_grid_view_layout, null);
             holder.iv = convertView.findViewById(R.id.image);
-//            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.iv.getLayoutParams();
-//            params.width = imageWidth;
-//            params.height = imageWidth;
-//            holder.iv.setLayoutParams(params);
+            holder.delete_iv = convertView.findViewById(R.id.delete_iv);
+            if (isDel){
+                holder.delete_iv.setVisibility(View.VISIBLE);
+            }else {
+                holder.delete_iv.setVisibility(View.GONE);
+            }
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.iv.getLayoutParams();
+            params.width = imageWidth;
+            params.height = imageWidth;
+            holder.iv.setLayoutParams(params);
             convertView.setTag(holder);
         }else
             holder = (ViewHolder) convertView.getTag();
 
         holder.iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
         Glide.with(App.getContext()).load(list.get(position).getPic_url()).into(holder.iv);
-//        if (position >= 2 && list.size() > 3) {
-//            holder.tv.setVisibility(View.VISIBLE);
-//            holder.tv.setText("+" + (list.size() - 3));
-//        } else {
-//            holder.tv.setVisibility(View.GONE);
-//        }
+        holder.delete_iv.setOnClickListener(v -> mDeleteCallBackListener.deleteCallBack(position));
         return convertView;
     }
 
+    public interface DeleteCallBackListener {
+        void deleteCallBack(int position);
+    }
+
+    public void setDeleteCallBack(DeleteCallBackListener deleteCallBackListener){
+        this.mDeleteCallBackListener = deleteCallBackListener;
+    }
+
     class ViewHolder {
-        ImageView iv;
-//        TextView tv;
+        ImageView iv, delete_iv;
     }
 }

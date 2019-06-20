@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -13,7 +14,10 @@ import android.widget.RelativeLayout;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.App;
+import com.bjjy.buildtalk.entity.CommentContentBean;
 import com.bjjy.buildtalk.entity.ImgOptionEntity;
+import com.bjjy.buildtalk.entity.PariseNickNameBean;
+import com.bjjy.buildtalk.entity.ThemeImageBean;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
 import com.bjjy.buildtalk.ui.main.ViewPagerActivity;
@@ -47,28 +51,32 @@ public class CircleTopticAdapter extends BaseQuickAdapter<ThemeInfoEntity.ThemeI
 
     @Override
     protected void convert(BaseViewHolder helper, ThemeInfoEntity.ThemeInfoBean item) {
-
         Glide.with(mContext).load(item.getHeadImage()).into((ImageView) helper.getView(R.id.item_face_iv));
         helper.setText(R.id.item_name_tv, item.getName())
+                .setGone(R.id.item_content_tv, TextUtils.isEmpty(item.getTheme_content())? false : true)
                 .setGone(R.id.item_job_tv, "1".equals(item.getIs_circleMaster()) ? true : false)
                 .setGone(R.id.item_more_iv, "1".equals(isJoin) ? true : false)
                 .setGone(R.id.column_rl, "1".equals(isJoin) ? true : false)
                 .setGone(R.id.praise_rl, "1".equals(isJoin) ? true : false)
                 .setGone(R.id.comment_rl, "1".equals(isJoin) ? true : false)
                 .setText(R.id.item_time_tv, item.getPublish_time())
-                .setText(R.id.item_content_tv, item.getTheme_content());
-        List<ThemeInfoEntity.ThemeInfoBean.ThemeImageBean> themeImageBeanList = item.getTheme_image();
+                .setText(R.id.item_content_tv, item.getTheme_content())
+                .addOnClickListener(R.id.item_more_iv)
+                .addOnClickListener(R.id.item_praise_iv)
+                .addOnClickListener(R.id.item_comment_iv)
+                .addOnClickListener(R.id.item_share_iv)
+                .addOnClickListener(R.id.more_tv);
+        List<ThemeImageBean> themeImageBeanList = item.getTheme_image();
         NoScrollGridView gridView = helper.getView(R.id.item_grid_view);
         if (themeImageBeanList.size() == 4) {
             gridView.setNumColumns(2);
         } else {
             gridView.setNumColumns(3);
         }
-        gridView.setAdapter(new MyGridAdapter(themeImageBeanList));
+        gridView.setAdapter(new MyGridAdapter(themeImageBeanList, false));
 
         gridView.setOnItemClickListener((parent, view, position, id) -> {
             ArrayList<ImageView> imgDatas = new ArrayList<>();
-            LogUtils.e(gridView.getChildCount());
             for (int i = 0; i < gridView.getChildCount(); i++) {
                 RelativeLayout relativeLayout = (RelativeLayout) gridView.getChildAt(i);
                 ImageView imageView = relativeLayout.findViewById(R.id.image);
@@ -99,7 +107,7 @@ public class CircleTopticAdapter extends BaseQuickAdapter<ThemeInfoEntity.ThemeI
         } else {
             helper.setImageResource(R.id.item_praise_iv, R.drawable.praise_def);
         }
-        List<ThemeInfoEntity.ThemeInfoBean.PariseNickNameBean> praiseList = item.getParise_nickName();
+        List<PariseNickNameBean> praiseList = item.getParise_nickName();
         LinearLayout pariseRl = helper.getView(R.id.praise_rl);
         if ("1".equals(isJoin) && praiseList.size() > 0) {
             pariseRl.setVisibility(View.VISIBLE);
@@ -116,14 +124,14 @@ public class CircleTopticAdapter extends BaseQuickAdapter<ThemeInfoEntity.ThemeI
         commentRecycler.setAdapter(commentAdapter);
     }
 
-    private class CommentAdapter extends BaseQuickAdapter<ThemeInfoEntity.ThemeInfoBean.CommentContentBean, BaseViewHolder> {
+    private class CommentAdapter extends BaseQuickAdapter<CommentContentBean, BaseViewHolder> {
 
-        public CommentAdapter(int layoutResId, @Nullable List<ThemeInfoEntity.ThemeInfoBean.CommentContentBean> data) {
+        public CommentAdapter(int layoutResId, @Nullable List<CommentContentBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, ThemeInfoEntity.ThemeInfoBean.CommentContentBean item) {
+        protected void convert(BaseViewHolder helper, CommentContentBean item) {
             helper.setText(R.id.comment_name_tv, item.getName() + "：")
                     .setText(R.id.comment_content_tv, item.getContent());
         }

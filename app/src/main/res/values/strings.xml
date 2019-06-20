@@ -47,4 +47,6 @@
     <string name="person_info">个人信息</string>
     <string name="higher_ups_certification">大咖认证</string>
     <string name="transaction_list">交易明细列表</string>
+    <string name="cancle">取消</string>
+    <string name="circle_member">圈子成员</string>
 </resources>

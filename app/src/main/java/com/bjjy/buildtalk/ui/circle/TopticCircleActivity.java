@@ -1,9 +1,11 @@
 package com.bjjy.buildtalk.ui.circle;
 
-import android.content.ClipboardManager;
-import android.content.Context;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,7 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,16 +24,22 @@ import android.widget.TextView;
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.CircleTopticAdapter;
 import com.bjjy.buildtalk.app.App;
+import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
+import com.bjjy.buildtalk.core.event.RefreshEvent;
 import com.bjjy.buildtalk.entity.CircleInfoEntity;
+import com.bjjy.buildtalk.entity.CommentContentBean;
 import com.bjjy.buildtalk.entity.IEntity;
+import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
-import com.bjjy.buildtalk.utils.SizeUtils;
+import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
+import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bjjy.buildtalk.weight.BaseDialog;
 import com.bjjy.buildtalk.weight.MyBadgeViewPagerAdapter;
 import com.bjjy.buildtalk.weight.tablayout.TabLayout;
 import com.bumptech.glide.Glide;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -40,6 +48,10 @@ import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +59,9 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> implements TopticCircleContract.View, AppBarLayout.OnOffsetChangedListener, OnRefreshLoadMoreListener {
+public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> implements
+        TopticCircleContract.View, AppBarLayout.OnOffsetChangedListener, OnRefreshLoadMoreListener,
+        BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener {
 
     @BindView(R.id.toptic_bg)
     ImageView mTopticBg;
@@ -130,6 +144,24 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
     private String type = "1";
     private CircleTopticAdapter mTopticAdapter;
 
+    private BottomSheetDialog mBottomSheetDialog;
+    private BottomSheetBehavior mBehavior;
+    private View mView;
+    private BaseDialog mMInputDialog, mEditDailog;
+    private TextView mCollect_tv;
+    private Intent mIntent;
+    private BaseDialog mDeleteDialog;
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void event(RefreshEvent eventBean) {
+        if (TextUtils.equals(eventBean.getMsg(), Constants.TOPTIC_REFRESH)) {
+            onRefresh(mRefreshLayout);
+        }
+        if (TextUtils.equals(eventBean.getMsg(), Constants.TOPTIC_REFRESH_ALL)) {
+            mPresenter.CircleInfo(mCircle_id);
+        }
+    }
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_toptic_circle;
@@ -148,7 +180,13 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
 
     @Override
     protected void initEventAndData() {
+        EventBus.getDefault().register(this);
         mPresenter.CircleInfo(mCircle_id);
+        KeyboardUtils.registerSoftInputChangedListener(this, height -> {
+            if (height == 0 && mMInputDialog != null) {
+                mMInputDialog.dismiss();
+            }
+        });
     }
 
     @Override
@@ -215,6 +253,8 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
         recyclerView.setLayoutManager(new LinearLayoutManager(App.getContext()));
         mTopticAdapter = new CircleTopticAdapter(R.layout.adapter_article_toptic, mThemeInfoList, mIsJoin, this);
         recyclerView.setAdapter(mTopticAdapter);
+        mTopticAdapter.setOnItemClickListener(this);
+        mTopticAdapter.setOnItemChildClickListener(this);
         if (TextUtils.equals("0", mIsJoin)) {
             mRefreshLayout.setEnableLoadMore(false);
             View footerView = LayoutInflater.from(App.getContext()).inflate(R.layout.footer_circle_toptic, null, false);
@@ -230,8 +270,8 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
         pageCount = themeInfoEntity.getPage_count();
         mThemeInfoList = themeInfoEntity.getThemeInfo();
 
-        if ("0".equals(mIsJoin) && mThemeInfoList.size() > 5){
-            mThemeInfoList = mThemeInfoList.subList(0,5);
+        if ("0".equals(mIsJoin) && mThemeInfoList.size() > 5) {
+            mThemeInfoList = mThemeInfoList.subList(0, 5);
         }
         if (isRefresh) {
             mTopticAdapter.setNewData(mThemeInfoList);
@@ -279,7 +319,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
         }
     }
 
-    @OnClick({R.id.expand_iv, R.id.back_iv, R.id.share_iv, R.id.join_tv, R.id.pre_share_iv, R.id.more_iv, R.id.screen_rl})
+    @OnClick({R.id.expand_iv, R.id.back_iv, R.id.share_iv, R.id.join_tv, R.id.pre_share_iv, R.id.more_iv, R.id.screen_rl, R.id.publis_rl})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.expand_iv:
@@ -317,9 +357,18 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
             case R.id.pre_share_iv:
                 break;
             case R.id.more_iv:
+                mIntent = new Intent(this, CircleInfoActivity.class);
+                mIntent.putExtra("circle_id", mCircle_id);
+                mIntent.putExtra("operate_user", mCircleInfoEntity.getCircleInfo().getUser_id() + "");
+                startActivity(mIntent);
                 break;
             case R.id.screen_rl:
                 showThemeTypeDialog();
+                break;
+            case R.id.publis_rl:
+                mIntent = new Intent(this, PublishActivity.class);
+                mIntent.putExtra("circle_id", mCircle_id);
+                startActivity(mIntent);
                 break;
         }
     }
@@ -383,5 +432,177 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
         page = 1;
         mPresenter.themeInfo(mCircle_id, page, type, true);
         refreshLayout.finishRefresh();
+    }
+
+    @Override
+    public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+        List<ThemeInfoEntity.ThemeInfoBean> data = baseQuickAdapter.getData();
+        if ("1".equals(mIsJoin)) {
+            Intent intent = new Intent(this, TopticDetailActivity.class);
+            intent.putExtra("title", mCircleInfoEntity.getCircleInfo().getCircle_name());
+            intent.putExtra("theme_id", data.get(i).getTheme_id()+"");
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+        List<ThemeInfoEntity.ThemeInfoBean> data = baseQuickAdapter.getData();
+        switch (view.getId()) {
+            case R.id.item_more_iv:
+                showEditDialog(data.get(i), i, data);
+                break;
+            case R.id.item_praise_iv:
+                mPresenter.praise(data, i);
+                break;
+            case R.id.item_comment_iv:
+                showCommentDialog(data.get(i).getTheme_id(), i, data);
+                break;
+            case R.id.item_share_iv:
+                ToastUtils.showShort("item_share_iv");
+                break;
+            case R.id.more_tv:
+                Intent intent = new Intent(this, TopticDetailActivity.class);
+                intent.putExtra("title", mCircleInfoEntity.getCircleInfo().getCircle_name());
+                intent.putExtra("theme_id", data.get(i).getTheme_id()+"");
+                startActivity(intent);
+                break;
+        }
+    }
+
+    private void showEditDialog(ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list) {
+        mEditDailog = new BaseDialog.Builder(this)
+                .setGravity(Gravity.BOTTOM)
+                .setViewId(R.layout.dialog_theme_edit)
+                .setWidthHeightpx(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                .setAnimation(R.style.bottom_aniamtion)
+                .isOnTouchCanceled(true)
+                .builder();
+        mCollect_tv = mEditDailog.getView(R.id.collect_tv);
+        if (1 == data.getIs_collect()) {
+            Drawable drawable = getResources().getDrawable(R.drawable.collect_sel_icon);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            mCollect_tv.setCompoundDrawables(null, drawable, null, null);
+        } else {
+            Drawable drawable = getResources().getDrawable(R.drawable.collect_def_icon);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            mCollect_tv.setCompoundDrawables(null, drawable, null, null);
+        }
+        mCollect_tv.setOnClickListener(v -> {
+            mPresenter.collectTheme(data, i);
+            mEditDailog.dismiss();
+        });
+        TextView edit_tv = mEditDailog.getView(R.id.edit_tv);
+        edit_tv.setOnClickListener(v -> {
+            if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
+                Intent intent = new Intent(TopticCircleActivity.this, PublishActivity.class);
+                intent.putExtra("themeInfo", data);
+                intent.putExtra("circle_name", mCircleInfoEntity.getCircleInfo().getCircle_name());
+                startActivity(intent);
+            }
+            mEditDailog.dismiss();
+        });
+        TextView delete_tv = mEditDailog.getView(R.id.delete_tv);
+        delete_tv.setOnClickListener(v -> {
+            if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
+                showQuitDialog(data, i, list);
+            }
+            mEditDailog.dismiss();
+        });
+        TextView cancle_tv = mEditDailog.getView(R.id.cancle_tv);
+        cancle_tv.setOnClickListener(v -> mEditDailog.dismiss());
+        mEditDailog.show();
+    }
+
+    private void showQuitDialog(ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list) {
+        mDeleteDialog = new BaseDialog.Builder(this)
+                .setGravity(Gravity.CENTER)
+                .setAnimation(R.style.nomal_aniamtion)
+                .setViewId(R.layout.dialog_quit_layout)
+                .setWidthHeightdp((int) getResources().getDimension(R.dimen.dp_275), (int) getResources().getDimension(R.dimen.dp_138))
+                .isOnTouchCanceled(true)
+                .addViewOnClickListener(R.id.cancle_tv, v -> mDeleteDialog.dismiss())
+                .addViewOnClickListener(R.id.query_tv, v -> {
+                    mPresenter.deleteTheme(data, i, list);
+                    mDeleteDialog.dismiss();
+                })
+                .builder();
+        TextView textView = mDeleteDialog.getView(R.id.text);
+        textView.setText("确定删除此主题？");
+        mDeleteDialog.show();
+    }
+
+    private void showCommentDialog(int theme_id, int i, List<ThemeInfoEntity.ThemeInfoBean> data) {
+        mMInputDialog = new BaseDialog.Builder(TopticCircleActivity.this)
+                .setGravity(Gravity.BOTTOM)
+                .setViewId(R.layout.dialog_input_layout)
+                .setWidthHeightdp(ViewGroup.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.dp_129))
+                .isOnTouchCanceled(false)
+                .builder();
+        EditText mInputEt = mMInputDialog.getView(R.id.comment_et);
+        TextView publishTv = mMInputDialog.getView(R.id.publish_tv);
+        mMInputDialog.setOnShowListener(dialog -> mInputEt.postDelayed(() -> {
+            mInputEt.requestFocus();
+            KeyboardUtils.showSoftInput(mInputEt);
+        }, 200));
+        mMInputDialog.setOnDismissListener(dialog -> {
+            mInputEt.getText().clear();
+            KeyboardUtils.hideSoftInput(mInputEt);
+        });
+        mMInputDialog.show();
+        publishTv.setOnClickListener(v -> {
+            if (TextUtils.isEmpty(mInputEt.getText().toString().trim())) {
+                ToastUtils.showShort("请输入评论内容");
+                return;
+            }
+            mPresenter.publishComment(mInputEt.getText().toString().trim(), String.valueOf(theme_id), i, data);
+            if (mMInputDialog != null) {
+                KeyboardUtils.hideSoftInput(mInputEt);
+                mMInputDialog.dismiss();
+            }
+        });
+    }
+
+    @Override
+    public void handlerCommentSuccess(int position, List<ThemeInfoEntity.ThemeInfoBean> data, List<CommentContentBean> contentBeanList) {
+        data.get(position).setComment_content(contentBeanList);
+        mTopticAdapter.notifyItemChanged(position);
+    }
+
+    @Override
+    public void handlerPraiseSuccess(List<ThemeInfoEntity.ThemeInfoBean> data, int i, PraiseEntity praiseEntity) {
+        if (data.get(i).getIs_parise() == 0){
+            data.get(i).setIs_parise(1);
+        }else {
+            data.get(i).setIs_parise(0);
+        }
+        data.get(i).setParise_nickName(praiseEntity.getNickName());
+        mTopticAdapter.notifyItemChanged(i);
+    }
+
+    @Override
+    public void handlerCollectSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i) {
+        if (0 == data.getIs_collect()) {
+            data.setIs_collect(1);
+            mTopticAdapter.notifyItemChanged(i);
+            ToastUtils.showCollect("收藏成功", getResources().getDrawable(R.drawable.collect_success_icon));
+        } else {
+            data.setIs_collect(0);
+            mTopticAdapter.notifyItemChanged(i);
+            ToastUtils.showCollect("取消收藏", getResources().getDrawable(R.drawable.collect_cancle_icon));
+        }
+    }
+
+    @Override
+    public void handlerDeleteSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list) {
+        list.remove(i);
+        mTopticAdapter.notifyItemRemoved(i);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+        KeyboardUtils.unregisterSoftInputChangedListener(this);
     }
 }
