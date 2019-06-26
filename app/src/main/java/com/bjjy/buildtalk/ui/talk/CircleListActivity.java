@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.CircleListAdapter;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
+import com.bjjy.buildtalk.entity.CircleListEntity;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
@@ -32,7 +33,10 @@ public class CircleListActivity extends BaseActivity<CircleListPresenter> implem
     @BindView(R.id.refresh_Layout)
     SmartRefreshLayout mRefreshLayout;
 
-    private List<String> mList = new ArrayList<>();
+    private int page = 1;
+    private int mPage_count = 1;
+    private List<CircleListEntity.CircleInfoBean> mCircleInfo = new ArrayList<>();
+    private CircleListAdapter mCircleListAdapter;
 
     @Override
     protected int getLayoutId() {
@@ -45,29 +49,43 @@ public class CircleListActivity extends BaseActivity<CircleListPresenter> implem
         mToolbar.setNavigationOnClickListener(v -> finish());
         mToolbarTitle.setText("人气圈主排行");
 
-
-        for (int i = 0; i < 10; i++) {
-            mList.add("");
-        }
         mRefreshLayout.setOnRefreshLoadMoreListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        CircleListAdapter circleListAdapter = new CircleListAdapter(R.layout.adapter_circle_list,mList);
-        mRecyclerView.setAdapter(circleListAdapter);
+        mCircleListAdapter = new CircleListAdapter(R.layout.adapter_circle_list,mCircleInfo);
+        mRecyclerView.setAdapter(mCircleListAdapter);
     }
 
     @Override
     protected void initEventAndData() {
-
+        mPresenter.circleList(page, false);
     }
 
+    @Override
+    public void handlerCircleList(CircleListEntity circleListEntity, boolean isRefresh) {
+        mPage_count = circleListEntity.getPage_count();
+        mCircleInfo = circleListEntity.getCircleInfo();
+        if (isRefresh){
+            mCircleListAdapter.setNewData(mCircleInfo);
+        }else {
+            mCircleListAdapter.addData(mCircleInfo);
+        }
+    }
 
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-        refreshLayout.finishLoadMore();
+        if (page < mPage_count) {
+            page++;
+            mPresenter.circleList(page, false);
+            refreshLayout.finishLoadMore();
+        } else {
+            refreshLayout.finishLoadMoreWithNoMoreData();
+        }
     }
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+        page = 1;
+        mPresenter.circleList(page, true);
         refreshLayout.finishRefresh();
     }
 }

@@ -27,12 +27,19 @@
             android:layout_below="@+id/item_face_iv"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/dp_7"
-            android:drawablePadding="@dimen/dp_4"
-            android:drawableRight="@drawable/tag_icon"
             android:text="戴简"
             android:textColor="@color/text_drak"
             android:textSize="@dimen/sp_12"
             android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/item_tag_iv"
+            android:layout_width="@dimen/dp_8"
+            android:layout_height="@dimen/dp_8"
+            android:src="@drawable/tag_icon"
+            android:layout_marginLeft="@dimen/dp_4"
+            android:layout_toRightOf="@+id/item_name_tv"
+            android:layout_below="@id/item_face_iv"
+            android:layout_marginTop="@dimen/dp_10"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -70,12 +77,14 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true">
             <ImageView
+                android:id="@+id/item_focus_iv"
                 android:layout_width="@dimen/dp_8"
                 android:layout_height="@dimen/dp_8"
                 android:src="@drawable/check_icon"
                 android:visibility="gone"
                 android:layout_marginRight="@dimen/dp_5"/>
             <TextView
+                android:id="@+id/item_focus_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="+关注"

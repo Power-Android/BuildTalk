@@ -8,6 +8,7 @@ import com.bjjy.buildtalk.di.module.activity.CircleAgreementActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CircleDataActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CircleInfoActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CircleListActivityModule;
+import com.bjjy.buildtalk.di.module.activity.CircleManDetailActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CircleMemberActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CircleSearchActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CourseCircleActivityModule;
@@ -67,6 +68,7 @@ import com.bjjy.buildtalk.ui.mine.SettingActivity;
 import com.bjjy.buildtalk.ui.mine.TransactionActivity;
 import com.bjjy.buildtalk.ui.mine.WalletActivity;
 import com.bjjy.buildtalk.ui.talk.CircleListActivity;
+import com.bjjy.buildtalk.ui.talk.CircleManDetailActivity;
 import com.bjjy.buildtalk.ui.talk.FansFocusActivity;
 import com.bjjy.buildtalk.ui.talk.MasterCircleActivity;
 import com.bjjy.buildtalk.ui.talk.MasterCollectActivity;
@@ -184,4 +186,7 @@ public abstract class AbstractAllActivityModule {
 
     @ContributesAndroidInjector(modules = TopticDetailActivityMudule.class)
     abstract TopticDetailActivity mTopticDetailActivity();
+
+    @ContributesAndroidInjector(modules = CircleManDetailActivityModule.class)
+    abstract CircleManDetailActivity mCircleManDetailActivity();
 }

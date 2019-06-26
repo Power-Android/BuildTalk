@@ -8,14 +8,21 @@ import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.entity.BannerEntity;
 import com.bjjy.buildtalk.entity.CircleEntity;
 import com.bjjy.buildtalk.entity.CircleInfoEntity;
+import com.bjjy.buildtalk.entity.CircleListEntity;
+import com.bjjy.buildtalk.entity.CircleMasterEntity;
 import com.bjjy.buildtalk.entity.CircleMasterInfoEntity;
 import com.bjjy.buildtalk.entity.CircleTagEntity;
+import com.bjjy.buildtalk.entity.CollectEntity;
 import com.bjjy.buildtalk.entity.CommentSuccessEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
 import com.bjjy.buildtalk.entity.EveryTalkListEntity;
+import com.bjjy.buildtalk.entity.FansFocusEntity;
 import com.bjjy.buildtalk.entity.GuestBookEntity;
+import com.bjjy.buildtalk.entity.IndustryMasterEntity;
+import com.bjjy.buildtalk.entity.MasterDetailEntity;
+import com.bjjy.buildtalk.entity.MasterListEntity;
 import com.bjjy.buildtalk.entity.MemberEntity;
 import com.bjjy.buildtalk.entity.MyCardEntity;
 import com.bjjy.buildtalk.entity.PraiseEntity;
@@ -221,5 +228,60 @@ public class HttpHelperImpl implements HttpHelper {
     @Override
     public Observable<BaseResponse<IEntity>> deleteGuestbook(Map<String, String> headers, Map<String, String> params) {
         return mApiService.deleteGuestbook(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<SearchResultEntity>> searchTalkHistory(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.searchTalkHistory(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IndustryMasterEntity>> searchIndustryMaster(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.searchIndustryMaster(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<List<CircleMasterEntity>>> searchCircleMaster(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.searchCircleMaster(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<MasterListEntity>> searchAuthor(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.searchAuthor(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<CircleListEntity>> searchCircleList(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.searchCircleList(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<MasterDetailEntity>> userDetail(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.userDetail(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<FansFocusEntity>> myFans(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.myFans(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<FansFocusEntity>> myAttention(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.myAttention(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<SearchResultEntity>> searchUserCircle(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.searchUserCircle(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<CollectEntity>> myCollect(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.myCollect(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> attention(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.attention(headers, params);
     }
 }

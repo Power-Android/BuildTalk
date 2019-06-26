@@ -63,7 +63,7 @@ public abstract class BaseObserver<T> extends ResourceObserver<BaseResponse<T>> 
     }
 
     @Override
-    public final void onNext(BaseResponse<T> baseResponse) {
+    public void onNext(BaseResponse<T> baseResponse) {
         if (baseResponse.getErrorCode() == BaseResponse.SUCCESS) {
             Log.d(TAG, "onSuccess");
             if (isShowStatusView) {

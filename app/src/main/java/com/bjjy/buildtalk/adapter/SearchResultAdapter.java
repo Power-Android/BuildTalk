@@ -1,11 +1,16 @@
 package com.bjjy.buildtalk.adapter;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
+import com.bjjy.buildtalk.entity.MasterListEntity;
+import com.bjjy.buildtalk.entity.SearchResultEntity;
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.zhy.view.flowlayout.FlowLayout;
@@ -21,20 +26,25 @@ import java.util.List;
  * @project BuildTalk
  * @description:
  */
-public class SearchResultAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+public class SearchResultAdapter extends BaseQuickAdapter<SearchResultEntity.AuthorInfoBean, BaseViewHolder> {
 
-    public SearchResultAdapter(int layoutResId, @Nullable List<String> data) {
+    public SearchResultAdapter(int layoutResId, @Nullable List<SearchResultEntity.AuthorInfoBean> data) {
         super(layoutResId, data);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, String s) {
+    protected void convert(BaseViewHolder helper, SearchResultEntity.AuthorInfoBean item) {
+        Glide.with(mContext).load(item.getAuthor_pic()).into((ImageView) helper.getView(R.id.item_face_iv));
+        if (!TextUtils.isEmpty(item.getEducation())){
+            helper.setText(R.id.item_job_tv, item.getEducation() + " "+item.getAuthor_desc());
+        }else {
+            helper.setText(R.id.item_job_tv, item.getAuthor_desc());
+        }
+        helper.setText(R.id.item_name_tv, item.getAuthor_name())
+                .setText(R.id.item_content_tv, item.getAuthor_intro());
         TagFlowLayout flowLayout = helper.getView(R.id.flow_layout);
-        List<String> list = new ArrayList<>();
-        list.add("BIM");
-        list.add("模型数据");
-        list.add("装配式钢结构");
-        flowLayout.setAdapter(new TagAdapter<String>(list) {
+        List<String> circle_tags = item.getSign();
+        flowLayout.setAdapter(new TagAdapter<String>(circle_tags) {
             @Override
             public View getView(FlowLayout parent, int position, String s) {
                 if ("".equals(s)){

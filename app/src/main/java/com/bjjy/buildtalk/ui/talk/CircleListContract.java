@@ -2,6 +2,7 @@ package com.bjjy.buildtalk.ui.talk;
 
 import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.base.view.IView;
+import com.bjjy.buildtalk.entity.CircleListEntity;
 
 /**
  * @author power
@@ -13,6 +14,7 @@ public class CircleListContract {
 
     interface View extends IView{
 
+        void handlerCircleList(CircleListEntity circleListEntity, boolean isRefresh);
     }
 
     interface Presenter extends IPresenter<View>{

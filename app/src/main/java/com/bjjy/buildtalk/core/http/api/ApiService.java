@@ -7,14 +7,21 @@ import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.entity.BannerEntity;
 import com.bjjy.buildtalk.entity.CircleEntity;
 import com.bjjy.buildtalk.entity.CircleInfoEntity;
+import com.bjjy.buildtalk.entity.CircleListEntity;
+import com.bjjy.buildtalk.entity.CircleMasterEntity;
 import com.bjjy.buildtalk.entity.CircleMasterInfoEntity;
 import com.bjjy.buildtalk.entity.CircleTagEntity;
+import com.bjjy.buildtalk.entity.CollectEntity;
 import com.bjjy.buildtalk.entity.CommentSuccessEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
 import com.bjjy.buildtalk.entity.EveryTalkListEntity;
+import com.bjjy.buildtalk.entity.FansFocusEntity;
 import com.bjjy.buildtalk.entity.GuestBookEntity;
+import com.bjjy.buildtalk.entity.IndustryMasterEntity;
+import com.bjjy.buildtalk.entity.MasterDetailEntity;
+import com.bjjy.buildtalk.entity.MasterListEntity;
 import com.bjjy.buildtalk.entity.MemberEntity;
 import com.bjjy.buildtalk.entity.MyCardEntity;
 import com.bjjy.buildtalk.entity.PraiseEntity;
@@ -88,7 +95,7 @@ public interface ApiService {
      * @return 获取留言
      */
     @Headers(Constants.HEADER_PASSID)
-    @POST("serachManyGuestbook")
+    @POST("searchManyGuestbook")
     @FormUrlEncoded
     Observable<BaseResponse<GuestBookEntity>> guestBookList(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
@@ -316,4 +323,100 @@ public interface ApiService {
     @POST("deleteGuestbook")
     @FormUrlEncoded
     Observable<BaseResponse<IEntity>> deleteGuestbook(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 搜索大咖
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("searchAuthorByKeyword")
+    @FormUrlEncoded
+    Observable<BaseResponse<SearchResultEntity>> searchTalkHistory(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 行业大咖
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("searchIndustryMaster")
+    @FormUrlEncoded
+    Observable<BaseResponse<IndustryMasterEntity>> searchIndustryMaster(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 人气圈主
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("searchCircleMaster")
+    @FormUrlEncoded
+    Observable<BaseResponse<List<CircleMasterEntity>>> searchCircleMaster(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 大咖列表
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("searchAuthor")
+    @FormUrlEncoded
+    Observable<BaseResponse<MasterListEntity>> searchAuthor(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 人气圈主排行
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("searchCircleMaster")
+    @FormUrlEncoded
+    Observable<BaseResponse<CircleListEntity>> searchCircleList(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 大咖详情
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("userDetail")
+    @FormUrlEncoded
+    Observable<BaseResponse<MasterDetailEntity>> userDetail(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 粉丝
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("myFans")
+    @FormUrlEncoded
+    Observable<BaseResponse<FansFocusEntity>> myFans(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 关注
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("myAttention")
+    @FormUrlEncoded
+    Observable<BaseResponse<FansFocusEntity>> myAttention(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 查询用户创建的圈子、加入的圈子
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("searchUserCircle")
+    @FormUrlEncoded
+    Observable<BaseResponse<SearchResultEntity>> searchUserCircle(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 收藏
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("myCollect")
+    @FormUrlEncoded
+    Observable<BaseResponse<CollectEntity>> myCollect(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 关注、取消关注
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("attentionUserOperate")
+    @FormUrlEncoded
+    Observable<BaseResponse<IEntity>> attention(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+
+
+
+
+
+
+
 }

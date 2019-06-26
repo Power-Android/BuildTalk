@@ -50,8 +50,8 @@ public class EveryTalkDetailEntity implements Serializable {
 
         private int article_id;
         private String article_title;
-        private int audio_id;
-        private int video_id;
+        private String audio_id;
+        private String video_id;
         private String content;
         private String publish_time;
         private int author_id;
@@ -83,19 +83,19 @@ public class EveryTalkDetailEntity implements Serializable {
             this.article_title = article_title;
         }
 
-        public int getAudio_id() {
+        public String getAudio_id() {
             return audio_id;
         }
 
-        public void setAudio_id(int audio_id) {
+        public void setAudio_id(String audio_id) {
             this.audio_id = audio_id;
         }
 
-        public int getVideo_id() {
+        public String getVideo_id() {
             return video_id;
         }
 
-        public void setVideo_id(int video_id) {
+        public void setVideo_id(String video_id) {
             this.video_id = video_id;
         }
 

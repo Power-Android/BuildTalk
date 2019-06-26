@@ -2,6 +2,8 @@ package com.bjjy.buildtalk.ui.talk;
 
 import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.base.view.IView;
+import com.bjjy.buildtalk.entity.CircleMasterEntity;
+import com.bjjy.buildtalk.entity.IndustryMasterEntity;
 import com.bjjy.buildtalk.entity.TalkEntity;
 
 import java.util.List;
@@ -15,6 +17,10 @@ import java.util.List;
 public class TalkContract {
     interface View extends IView {
         void handlerTalkType(List<TalkEntity> talkEntityList);
+
+        void handlerTalkMaster(IndustryMasterEntity industryMasterEntity);
+
+        void handlerCircleMaster(List<CircleMasterEntity> list);
     }
 
     interface Presenter extends IPresenter<View> {

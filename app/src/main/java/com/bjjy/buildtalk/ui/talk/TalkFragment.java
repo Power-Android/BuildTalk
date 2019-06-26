@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.TalkAdapter;
 import com.bjjy.buildtalk.base.fragment.BaseFragment;
+import com.bjjy.buildtalk.entity.CircleMasterEntity;
+import com.bjjy.buildtalk.entity.IndustryMasterEntity;
 import com.bjjy.buildtalk.entity.TalkEntity;
 import com.bjjy.buildtalk.utils.AnimatorUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -45,6 +47,7 @@ public class TalkFragment extends BaseFragment<TalkPresnter> implements TalkCont
 
     private List<TalkEntity> mTalkEntityList = new ArrayList<>();
     private TalkAdapter mTalkAdapter;
+    public static int PAGE = 1;
 
     public static TalkFragment newInstance() {
         return new TalkFragment();
@@ -71,6 +74,8 @@ public class TalkFragment extends BaseFragment<TalkPresnter> implements TalkCont
     @Override
     protected void initEventAndData() {
         mPresenter.talkType(mTalkEntityList);
+        mPresenter.talkMaster();
+        mPresenter.talkCircleMaster();
     }
 
     @Override
@@ -79,7 +84,20 @@ public class TalkFragment extends BaseFragment<TalkPresnter> implements TalkCont
     }
 
     @Override
+    public void handlerTalkMaster(IndustryMasterEntity industryMasterEntity) {
+        mTalkAdapter.setMasterEntities(industryMasterEntity);
+    }
+
+    @Override
+    public void handlerCircleMaster(List<CircleMasterEntity> list) {
+        mTalkAdapter.setCircleMasterEntities(list);
+    }
+
+    @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+        PAGE = 1;
+        mPresenter.talkMaster();
+        mPresenter.talkCircleMaster();
         refreshLayout.finishRefresh(2000);
     }
 
@@ -94,8 +112,8 @@ public class TalkFragment extends BaseFragment<TalkPresnter> implements TalkCont
                 AnimatorUtils.setRotateAnimation(masterChangeIv);
                 view.setClickable(false);
                 new Handler().postDelayed(() -> {
-//                    HOT_TOPTIC_PAGE++;
-//                    mPresenter.discoverToptic();
+                    PAGE++;
+                    mPresenter.talkMaster();
                     view.setClickable(true);
                 }, 2000);
                 break;

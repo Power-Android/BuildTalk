@@ -8,8 +8,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
+import com.bjjy.buildtalk.adapter.MasterListAdapter;
 import com.bjjy.buildtalk.adapter.SearchResultAdapter;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
+import com.bjjy.buildtalk.entity.MasterListEntity;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
@@ -32,8 +34,10 @@ public class MasterListActivity extends BaseActivity<MasterListPresenter> implem
     @BindView(R.id.refresh_Layout)
     SmartRefreshLayout mRefreshLayout;
 
-    private List<String> mList = new ArrayList<>();
-    private SearchResultAdapter mMasterListAdapter;
+    private MasterListAdapter mMasterListAdapter;
+    private int page = 1;
+    private int mPage_count;
+    private List<MasterListEntity.MasterInfoBean> mMasterInfo = new ArrayList<>();
 
     @Override
     protected int getLayoutId() {
@@ -48,27 +52,41 @@ public class MasterListActivity extends BaseActivity<MasterListPresenter> implem
 
         mRefreshLayout.setOnRefreshLoadMoreListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mMasterListAdapter = new SearchResultAdapter(R.layout.adapter_search_result, mList);
+        mMasterListAdapter = new MasterListAdapter(R.layout.adapter_search_result, mMasterInfo);
         mRecyclerView.setAdapter(mMasterListAdapter);
     }
 
     @Override
     protected void initEventAndData() {
-        mPresenter.masterList();
+        mPresenter.masterList(page, false);
     }
 
     @Override
-    public void handlerMasterList(List<String> list) {
-        mMasterListAdapter.setNewData(list);
+    public void handlerMasterList(MasterListEntity masterListEntity, boolean isRefresh) {
+        mPage_count = masterListEntity.getPage_count();
+        mMasterInfo = masterListEntity.getMasterInfo();
+        if (isRefresh){
+            mMasterListAdapter.setNewData(mMasterInfo);
+        }else {
+            mMasterListAdapter.addData(mMasterInfo);
+        }
     }
 
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-        refreshLayout.finishLoadMore();
+        if (page < mPage_count) {
+            page++;
+            mPresenter.masterList(page, false);
+            refreshLayout.finishLoadMore();
+        } else {
+            refreshLayout.finishLoadMoreWithNoMoreData();
+        }
     }
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+        page = 1;
+        mPresenter.masterList(page, true);
         refreshLayout.finishRefresh();
     }
 }

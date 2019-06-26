@@ -145,9 +145,9 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
         mMediaNameTv.setText(mMNewsInfo.getArticle_title());
         if (!TextUtils.isEmpty(mMNewsInfo.getAudio_duration())) {
             mMediaRl.setVisibility(View.VISIBLE);
-            int size = Integer.parseInt(mMNewsInfo.getAudio_duration());
-            int m = size / 60;
-            int s = size % 60;
+            float size = Float.parseFloat(mMNewsInfo.getAudio_duration());
+            int m = (int) (size / 60);
+            int s = (int) (size % 60);
             String s1 = m + "分" + s + "秒";
             mMediaTimeTv.setText(s1);
             mMediaSizeTv.setText(mMNewsInfo.getAudio_size() + "M");

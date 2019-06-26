@@ -113,6 +113,12 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+        HOT_TOPTIC_PAGE = 1;
+        COURSE_PAGE = 1;
+        mPresenter.discoverBanner();
+        mPresenter.discoverEveryTalk();
+        mPresenter.discoverToptic();
+        mPresenter.discoverCourse();
         refreshLayout.finishRefresh(2000);
     }
 

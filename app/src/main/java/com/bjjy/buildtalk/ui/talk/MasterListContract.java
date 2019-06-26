@@ -2,8 +2,7 @@ package com.bjjy.buildtalk.ui.talk;
 
 import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.base.view.IView;
-
-import java.util.List;
+import com.bjjy.buildtalk.entity.MasterListEntity;
 
 /**
  * @author power
@@ -15,8 +14,7 @@ public class MasterListContract {
 
     interface View extends IView{
 
-        void handlerMasterList(List<String> list);
-
+        void handlerMasterList(MasterListEntity masterListEntity, boolean isRefresh);
     }
 
     interface Presenter extends IPresenter<View>{

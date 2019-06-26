@@ -1,5 +1,7 @@
 package com.bjjy.buildtalk.ui.talk;
 
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -15,9 +17,13 @@ import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.SearchResultAdapter;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.core.greendao.HistoryData;
+import com.bjjy.buildtalk.entity.SearchResultEntity;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bjjy.buildtalk.weight.ClearEditText;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
@@ -26,9 +32,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class TalkSearchActivity extends BaseActivity<TalkSearchPresenter> implements TalkSearchContract.View, TextView.OnEditorActionListener {
+public class TalkSearchActivity extends BaseActivity<TalkSearchPresenter> implements TalkSearchContract.View, TextView.OnEditorActionListener, OnRefreshLoadMoreListener {
 
     @BindView(R.id.search_et)
     ClearEditText mSearchEt;
@@ -42,9 +49,12 @@ public class TalkSearchActivity extends BaseActivity<TalkSearchPresenter> implem
     LinearLayout mSearchRl;
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
+    @BindView(R.id.refresh_Layout)
+    SmartRefreshLayout mRefreshLayout;
 
-    private List<String> mList = new ArrayList<>();
+    private List<SearchResultEntity.AuthorInfoBean> mList = new ArrayList<>();
     private SearchResultAdapter mSearchResultAdapter;
+    private int page = 1, pageCount = 1;
 
     @Override
     protected int getLayoutId() {
@@ -55,6 +65,7 @@ public class TalkSearchActivity extends BaseActivity<TalkSearchPresenter> implem
     protected void initView() {
         mSearchEt.setHint(R.string.search_name);
         mSearchEt.setOnEditorActionListener(this);
+        mRefreshLayout.setOnRefreshLoadMoreListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mSearchResultAdapter = new SearchResultAdapter(R.layout.adapter_search_result, mList);
         mRecyclerView.setAdapter(mSearchResultAdapter);
@@ -67,32 +78,37 @@ public class TalkSearchActivity extends BaseActivity<TalkSearchPresenter> implem
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if (actionId == EditorInfo.IME_ACTION_SEARCH){
-            if (TextUtils.isEmpty(mSearchEt.getText().toString().trim())){
+        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            if (TextUtils.isEmpty(mSearchEt.getText().toString().trim())) {
                 ToastUtils.showShort("请输入搜索内容");
                 return true;
             }
-            gotoSearchResult(mSearchEt.getText().toString().trim());
+            gotoSearchResult(page, mSearchEt.getText().toString().trim(), false);
             KeyboardUtils.hideSoftInput(this);
         }
         return false;
     }
 
-    private void gotoSearchResult(String content) {
-        mPresenter.addHistoryData(content);
+    private void gotoSearchResult(int page, String content, boolean isRefresh) {
+        mPresenter.addHistoryData(page, content, isRefresh);
     }
 
     @Override
-    public void handlerResultSearchList(List<String> list) {
-        mSearchResultAdapter.setNewData(list);
+    public void handlerResultSearchList(SearchResultEntity searchResultEntity, boolean isRefresh) {
+        pageCount = searchResultEntity.getPage_count();
+        mList = searchResultEntity.getAuthorInfo();
+        if (isRefresh) {
+            mSearchResultAdapter.setNewData(mList);
+        } else {
+            mSearchResultAdapter.addData(mList);
+        }
         mSearchRl.setVisibility(View.GONE);
-        mRecyclerView.setVisibility(View.VISIBLE);
-
+        mRefreshLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showHistoryData(List<HistoryData> historyDataList) {
-        if (historyDataList.size() == 0){
+        if (historyDataList.size() == 0) {
             mSearchRl.setVisibility(View.GONE);
             return;
         }
@@ -110,7 +126,8 @@ public class TalkSearchActivity extends BaseActivity<TalkSearchPresenter> implem
         });
 
         mFlowLayout.setOnTagClickListener((view, position1, parent1) -> {
-            gotoSearchResult(historyDataList.get(position1).getData());
+            gotoSearchResult(page, historyDataList.get(position1).getData(), false);
+            mSearchEt.setText(historyDataList.get(position1).getData());
             KeyboardUtils.hideSoftInput(this);
             return true;
         });
@@ -130,5 +147,21 @@ public class TalkSearchActivity extends BaseActivity<TalkSearchPresenter> implem
         }
     }
 
+    @Override
+    public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+        if (page < pageCount) {
+            page++;
+            gotoSearchResult(page, mSearchEt.getText().toString().trim(), false);
+            refreshLayout.finishLoadMore();
+        } else {
+            refreshLayout.finishLoadMoreWithNoMoreData();
+        }
+    }
 
+    @Override
+    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+        page = 1;
+        gotoSearchResult(page,mSearchEt.getText().toString().trim(), true);
+        refreshLayout.finishRefresh();
+    }
 }

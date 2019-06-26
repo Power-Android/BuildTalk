@@ -20,6 +20,8 @@ public class SearchResultEntity implements Serializable {
     private String page;
     private int page_count;
     private List<CircleInfoBean> circleInfo;
+    private List<AuthorInfoBean> authorInfo;
+
 
     public String getPage() {
         return page;
@@ -43,6 +45,14 @@ public class SearchResultEntity implements Serializable {
 
     public void setCircleInfo(List<CircleInfoBean> circleInfo) {
         this.circleInfo = circleInfo;
+    }
+
+    public List<AuthorInfoBean> getAuthorInfo() {
+        return authorInfo;
+    }
+
+    public void setAuthorInfo(List<AuthorInfoBean> authorInfo) {
+        this.authorInfo = authorInfo;
     }
 
     public static class CircleInfoBean {
@@ -184,6 +194,82 @@ public class SearchResultEntity implements Serializable {
             public void setSavetime(int savetime) {
                 this.savetime = savetime;
             }
+        }
+    }
+
+    public static class AuthorInfoBean {
+        /**
+         * author_id : 10
+         * author_name : 张鸣
+         * author_pic : https://www.51jiantan.com/static/image/zhangming.png
+         * author_desc : 民盟成员、高级工程师
+         * author_intro : 悉尼大学工商管理硕士
+         * sign : ["平台","数据","BIM"]
+         * education : 博士
+         */
+
+        private int author_id;
+        private String author_name;
+        private String author_pic;
+        private String author_desc;
+        private String author_intro;
+        private String education;
+        private List<String> sign;
+
+        public int getAuthor_id() {
+            return author_id;
+        }
+
+        public void setAuthor_id(int author_id) {
+            this.author_id = author_id;
+        }
+
+        public String getAuthor_name() {
+            return author_name;
+        }
+
+        public void setAuthor_name(String author_name) {
+            this.author_name = author_name;
+        }
+
+        public String getAuthor_pic() {
+            return author_pic;
+        }
+
+        public void setAuthor_pic(String author_pic) {
+            this.author_pic = author_pic;
+        }
+
+        public String getAuthor_desc() {
+            return author_desc;
+        }
+
+        public void setAuthor_desc(String author_desc) {
+            this.author_desc = author_desc;
+        }
+
+        public String getAuthor_intro() {
+            return author_intro;
+        }
+
+        public void setAuthor_intro(String author_intro) {
+            this.author_intro = author_intro;
+        }
+
+        public String getEducation() {
+            return education;
+        }
+
+        public void setEducation(String education) {
+            this.education = education;
+        }
+
+        public List<String> getSign() {
+            return sign;
+        }
+
+        public void setSign(List<String> sign) {
+            this.sign = sign;
         }
     }
 }

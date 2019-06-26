@@ -6,7 +6,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.bjjy.buildtalk.R;
+import com.bjjy.buildtalk.entity.CircleMasterEntity;
+import com.bjjy.buildtalk.entity.IndustryMasterEntity;
 import com.bjjy.buildtalk.entity.TalkEntity;
+import com.bjjy.buildtalk.ui.talk.CircleManDetailActivity;
 import com.bjjy.buildtalk.ui.talk.MasterDetailActivity;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -26,6 +29,9 @@ public class TalkAdapter extends BaseMultiItemQuickAdapter<TalkEntity, BaseViewH
     public static final int BODY_MASTER = 0;            //行业大咖
     public static final int BODY_CIRCLE_MAN = 1;        //人气圈主
 
+    private List<IndustryMasterEntity.MasterInfoBean> mMasterInfo = new ArrayList<>();
+    private List<CircleMasterEntity> mCircleMasterEntities = new ArrayList<>();
+
     /**
      * Same as QuickAdapter#QuickAdapter(Context,int) but with
      * some initialization data.
@@ -42,35 +48,43 @@ public class TalkAdapter extends BaseMultiItemQuickAdapter<TalkEntity, BaseViewH
     protected void convert(BaseViewHolder helper, TalkEntity item) {
         switch (item.getItemType()) {
             case BODY_MASTER:
-                List<String> master_list = new ArrayList<>();
-                master_list.add("");
-                master_list.add("");
-                master_list.add("");
                 RecyclerView master_recyclerView = helper.getView(R.id.master_recyclerView);
                 master_recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-                TalkMasterAdapter masterAdapter = new TalkMasterAdapter(R.layout.adapter_talk_master,master_list);
+                TalkMasterAdapter masterAdapter = new TalkMasterAdapter(R.layout.adapter_talk_master,mMasterInfo);
                 master_recyclerView.setAdapter(masterAdapter);
-                masterAdapter.setOnItemClickListener((baseQuickAdapter, view, position) -> mContext.startActivity(new Intent(mContext,MasterDetailActivity.class)));
+                masterAdapter.setOnItemClickListener((baseQuickAdapter, view, position) -> {
+                    Intent intent = new Intent(mContext,MasterDetailActivity.class);
+                    intent.putExtra("user_id", mMasterInfo.get(position).getUser_id()+"");
+                    mContext.startActivity(intent);
+                });
                 helper.addOnClickListener(R.id.master_all_tv)
                         .addOnClickListener(R.id.master_change_ll);
                 break;
             case BODY_CIRCLE_MAN:
-                List<String> circle_list = new ArrayList<>();
-                circle_list.add("");
-                circle_list.add("");
-                circle_list.add("");
                 RecyclerView circle_recyclerView = helper.getView(R.id.circle_recyclerView);
                 circle_recyclerView.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false));
-                TalkCircleAdapter circleAdapter = new TalkCircleAdapter(R.layout.adapter_talk_circle,circle_list);
+                TalkCircleAdapter circleAdapter = new TalkCircleAdapter(R.layout.adapter_talk_circle,mCircleMasterEntities);
                 circle_recyclerView.setAdapter(circleAdapter);
                 circleAdapter.setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int position) {
-
+                        Intent intent = new Intent(mContext,CircleManDetailActivity.class);
+                        intent.putExtra("user_id", mMasterInfo.get(position).getUser_id()+"");
+                        mContext.startActivity(intent);
                     }
                 });
                 helper.addOnClickListener(R.id.circle_all_tv);
                 break;
         }
+    }
+
+    public void setMasterEntities(IndustryMasterEntity masterEntities) {
+        mMasterInfo = masterEntities.getMasterInfo();
+        notifyDataSetChanged();
+    }
+
+    public void setCircleMasterEntities(List<CircleMasterEntity> circleMasterEntities) {
+        mCircleMasterEntities = circleMasterEntities;
+        notifyDataSetChanged();
     }
 }
