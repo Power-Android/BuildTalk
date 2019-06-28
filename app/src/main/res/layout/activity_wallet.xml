@@ -1,10 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
     tools:context="com.bjjy.buildtalk.ui.mine.WalletActivity">
 
-</RelativeLayout>
+    <include layout="@layout/toolbar_layout" />
+
+    <RelativeLayout
+        android:layout_width="@dimen/dp_345"
+        android:layout_height="@dimen/dp_120"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/wallet_bg_icon">
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dp_15"
+            android:text="余额（元）"
+            android:textColor="@color/orange_drak"
+            android:textSize="@dimen/sp_12" />
+
+        <TextView
+            android:id="@+id/money_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_below="@+id/text"
+            android:text="0.00"
+            android:includeFontPadding="false"
+            android:textColor="@color/orange_drak"
+            android:textSize="@dimen/sp_23" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:layout_marginBottom="@dimen/dp_3"
+            android:text="￥"
+            android:textColor="@color/orange_drak"
+            android:textSize="@dimen/sp_15"
+            android:layout_toLeftOf="@+id/money_tv"
+            android:layout_alignBottom="@+id/money_tv"/>
+        <TextView
+            android:id="@+id/with_draw_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="申请提现"
+            android:textColor="@color/blue_mid"
+            android:layout_centerHorizontal="true"
+            android:textSize="@dimen/sp_12"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/dp_20"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/wallet_rl"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_44"
+        android:background="@drawable/item_selector"
+        android:paddingLeft="@dimen/common_margin"
+        android:paddingRight="@dimen/common_margin"
+        android:layout_marginTop="@dimen/dp_20">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:drawablePadding="@dimen/dp_15"
+            android:text="交易明细"
+            android:textColor="@color/text_drak"
+            android:textSize="@dimen/sp_15" />
+
+        <ImageView
+            android:layout_width="@dimen/dp_13"
+            android:layout_height="@dimen/dp_13"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/arrow_right_black" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_1"
+        android:background="@color/background" />
+</LinearLayout>

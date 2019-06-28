@@ -5,6 +5,7 @@ package com.bjjy.buildtalk.core.http.helper;
 import com.bjjy.buildtalk.app.User;
 import com.bjjy.buildtalk.core.http.api.ApiService;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
+import com.bjjy.buildtalk.entity.AleadyBuyEntity;
 import com.bjjy.buildtalk.entity.BannerEntity;
 import com.bjjy.buildtalk.entity.CircleEntity;
 import com.bjjy.buildtalk.entity.CircleInfoEntity;
@@ -283,5 +284,40 @@ public class HttpHelperImpl implements HttpHelper {
     @Override
     public Observable<BaseResponse<IEntity>> attention(Map<String, String> headers, Map<String, String> params) {
         return mApiService.attention(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> userInfo(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.userInfo(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> updateUserInfo(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.updateUserInfo(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> updatePhone(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.updatePhone(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> questionFeedback(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.questionFeedback(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<List<AleadyBuyEntity>>> alreadyBuy(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.alreadyBuy(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<User>> checkisBind(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.checkisBind(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<User>> checkMobileCodeByAPP(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.checkMobileCodeByAPP(headers, params);
     }
 }

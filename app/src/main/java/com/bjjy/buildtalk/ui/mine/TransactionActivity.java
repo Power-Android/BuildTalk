@@ -11,6 +11,7 @@ import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.TransactionAdapter;
 import com.bjjy.buildtalk.adapter.TransactionTabAdapter;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
+import com.bjjy.buildtalk.entity.AleadyBuyEntity;
 import com.bjjy.buildtalk.entity.TransactionTabEntity;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -37,8 +38,10 @@ public class TransactionActivity extends BaseActivity<TransactionPresenter> impl
     private List<TransactionTabEntity> mTabList = new ArrayList<>();
     private TransactionTabAdapter mTabAdapter;
 
-    private List<String> mList = new ArrayList<>();
+    private List<AleadyBuyEntity> mList = new ArrayList<>();
     private TransactionAdapter mTransactionAdapter;
+
+    private String type = "0";
 
     @Override
     protected int getLayoutId() {
@@ -64,7 +67,7 @@ public class TransactionActivity extends BaseActivity<TransactionPresenter> impl
     @Override
     protected void initEventAndData() {
         mPresenter.setTab();
-        mPresenter.setRecord();
+        mPresenter.setRecord(type);
     }
 
     @Override
@@ -76,11 +79,12 @@ public class TransactionActivity extends BaseActivity<TransactionPresenter> impl
             }
             list.get(position).setSelected(true);
             mTabAdapter.notifyDataSetChanged();
+            mPresenter.setRecord(position+"");
         });
     }
 
     @Override
-    public void handlerRecord(List<String> list) {
+    public void handlerList(List<AleadyBuyEntity> list) {
         mTransactionAdapter.setNewData(list);
     }
 

@@ -13,6 +13,7 @@ public class SetPictureContract {
 
     interface View extends IView{
 
+        void handlerUpData(String picUrl);
     }
 
     interface Presenter extends IPresenter<View>{

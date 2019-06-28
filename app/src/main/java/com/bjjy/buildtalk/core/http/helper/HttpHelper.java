@@ -2,6 +2,7 @@ package com.bjjy.buildtalk.core.http.helper;
 
 import com.bjjy.buildtalk.app.User;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
+import com.bjjy.buildtalk.entity.AleadyBuyEntity;
 import com.bjjy.buildtalk.entity.BannerEntity;
 import com.bjjy.buildtalk.entity.CircleEntity;
 import com.bjjy.buildtalk.entity.CircleInfoEntity;
@@ -138,5 +139,18 @@ public interface HttpHelper {
 
     Observable<BaseResponse<IEntity>> attention(Map<String, String> headers, Map<String, String> params);
 
+    Observable<BaseResponse<IEntity>> userInfo(Map<String, String> headers, Map<String, String> params);
+
+    Observable<BaseResponse<IEntity>> updateUserInfo(Map<String, String> headers, Map<String, String> params);
+
+    Observable<BaseResponse<IEntity>> updatePhone(Map<String, String> headers, Map<String, String> params);
+
+    Observable<BaseResponse<IEntity>> questionFeedback(Map<String, String> headers, Map<String, String> params);
+
+    Observable<BaseResponse<List<AleadyBuyEntity>>> alreadyBuy(Map<String, String> headers, Map<String, String> params);
+
+    Observable<BaseResponse<User>> checkisBind(Map<String, String> headers, Map<String, String> params);
+
+    Observable<BaseResponse<User>> checkMobileCodeByAPP(Map<String, String> headers, Map<String, String> params);
 
 }

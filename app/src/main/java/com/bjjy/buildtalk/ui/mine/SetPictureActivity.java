@@ -1,27 +1,29 @@
 package com.bjjy.buildtalk.ui.mine;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
+import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
+import com.bjjy.buildtalk.core.event.RefreshEvent;
+import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.File;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -45,6 +47,8 @@ public class SetPictureActivity extends BaseActivity<SetPicturePresenter> implem
     TextView mCameraTv;
 
     private MultipartBody.Part mFile;
+    private String type;
+    private String mTag;
 
     @Override
     protected int getLayoutId() {
@@ -53,13 +57,17 @@ public class SetPictureActivity extends BaseActivity<SetPicturePresenter> implem
 
     @Override
     protected void initView() {
-        String tag = getIntent().getStringExtra(TAG);
+        mTag = getIntent().getStringExtra(TAG);
+        String pic = getIntent().getStringExtra("pic");
         mToolbarLeftTitle.setText(getResources().getString(R.string.cancle));
-        if (TextUtils.equals(tag, FACE)){
+        if (TextUtils.equals(mTag, FACE)){
             mToolbarTitle.setText("设置个人头像");
+            type = "2";
         }else {
             mToolbarTitle.setText("设置背景");
+            type = "3";
         }
+        Glide.with(this).load(pic).into(mImageView);
     }
 
     @Override
@@ -145,13 +153,24 @@ public class SetPictureActivity extends BaseActivity<SetPicturePresenter> implem
             if (requestCode == PictureConfig.CHOOSE_REQUEST) {
                 List<LocalMedia> localMedia = PictureSelector.obtainMultipleResult(data);
                 String image = localMedia.get(0).getPath();
-                Glide.with(this).load(image).into(mImageView);
                 if (!TextUtils.isEmpty(image)){
                     File file = new File(image);
                     RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
                     mFile = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+                    mPresenter.upload(mFile, type);
                 }
             }
         }
+    }
+
+    @Override
+    public void handlerUpData(String picUrl) {
+        if (TextUtils.equals(mTag, FACE)){
+            ToastUtils.showCollect("头像更新成功", getResources().getDrawable(R.drawable.collect_success_icon));
+        }else {
+            ToastUtils.showCollect("背景更新成功", getResources().getDrawable(R.drawable.collect_success_icon));
+        }
+        Glide.with(this).load(picUrl).into(mImageView);
+        EventBus.getDefault().post(new RefreshEvent(Constants.INFO_REFRESH));
     }
 }

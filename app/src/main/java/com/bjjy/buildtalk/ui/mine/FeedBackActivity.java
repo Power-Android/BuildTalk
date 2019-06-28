@@ -3,6 +3,7 @@ package com.bjjy.buildtalk.ui.mine;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
+import com.bjjy.buildtalk.utils.KeyboardUtils;
+import com.bjjy.buildtalk.utils.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,8 +54,8 @@ public class FeedBackActivity extends BaseActivity<FeedBackPresenter> implements
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() > 60) {
-                    s.delete(60, s.length());
+                if (s.length() > 2000) {
+                    s.delete(2000, s.length());
                 }
                 int num = s.length();
                 mEditNumTv.setText(String.valueOf(num) + "/2000个字");
@@ -67,6 +70,17 @@ public class FeedBackActivity extends BaseActivity<FeedBackPresenter> implements
 
     @OnClick(R.id.commit_tv)
     public void onViewClicked() {
+        if (TextUtils.isEmpty(mContentEt.getText().toString().trim())){
+            ToastUtils.showShort("请输入问题或建议");
+            return;
+        }
+        mPresenter.questFeedBack(mContentEt.getText().toString());
+    }
 
+    @Override
+    public void handlerquestFeedBack() {
+        ToastUtils.showShort("问题反馈已提交");
+        KeyboardUtils.hideSoftInput(this);
+        finish();
     }
 }

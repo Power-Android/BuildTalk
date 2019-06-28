@@ -45,8 +45,6 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
     RecyclerView mDiscoverRecyclerView;
     @BindView(R.id.refresh_Layout)
     SmartRefreshLayout mRefreshLayout;
-    @BindView(R.id.normalView)
-    LinearLayout mNormalView;
 
     private List<DiscoverEntity> discoverEntityList = new ArrayList<>();
     private DiscoverAdapter mDiscoverAdapter;

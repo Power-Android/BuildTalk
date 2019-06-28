@@ -6,6 +6,7 @@ import com.bjjy.buildtalk.core.greendao.HistoryData;
 import com.bjjy.buildtalk.core.http.helper.HttpHelper;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.core.preference.PreferenceHelper;
+import com.bjjy.buildtalk.entity.AleadyBuyEntity;
 import com.bjjy.buildtalk.entity.BannerEntity;
 import com.bjjy.buildtalk.entity.CircleEntity;
 import com.bjjy.buildtalk.entity.CircleInfoEntity;
@@ -362,5 +363,40 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     @Override
     public Observable<BaseResponse<IEntity>> attention(Map<String, String> headers, Map<String, String> params) {
         return mHttpHelper.attention(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> userInfo(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.userInfo(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> updateUserInfo(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.updateUserInfo(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> updatePhone(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.updatePhone(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> questionFeedback(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.questionFeedback(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<List<AleadyBuyEntity>>> alreadyBuy(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.alreadyBuy(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<User>> checkisBind(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.checkisBind(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<User>> checkMobileCodeByAPP(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.checkMobileCodeByAPP(headers, params);
     }
 }

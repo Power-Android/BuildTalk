@@ -88,7 +88,7 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
                         .addOnClickListener(R.id.toptic_change_ll);
                 topticAdapter.setOnItemClickListener((adapter, view, position) -> {
                     Intent intent = new Intent(mContext, TopticCircleActivity.class);
-                    intent.putExtra("circle_id", mTopticEntity.getCircleInfo().get(position).getCircle_id());
+                    intent.putExtra("circle_id", mTopticEntity.getCircleInfo().get(position).getCircle_id()+"");
                     mContext.startActivity(intent);
                 });
                 break;

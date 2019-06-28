@@ -4,6 +4,7 @@ package com.bjjy.buildtalk.di.module;
 
 import com.bjjy.buildtalk.di.component.BaseActivityComponent;
 import com.bjjy.buildtalk.di.module.activity.AboutUsActivityModule;
+import com.bjjy.buildtalk.di.module.activity.BindPhoneActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CircleAgreementActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CircleDataActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CircleInfoActivityModule;
@@ -14,6 +15,8 @@ import com.bjjy.buildtalk.di.module.activity.CircleSearchActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CourseCircleActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CourseListActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CreateCircleActivityModule;
+import com.bjjy.buildtalk.di.module.activity.EditBindPhoneActivityModule;
+import com.bjjy.buildtalk.di.module.activity.EditNameActivityModule;
 import com.bjjy.buildtalk.di.module.activity.EverTalkListActivityModule;
 import com.bjjy.buildtalk.di.module.activity.EveryTalkDetailModule;
 import com.bjjy.buildtalk.di.module.activity.FansFocusActivityModule;
@@ -61,6 +64,9 @@ import com.bjjy.buildtalk.ui.main.PhoneLoginActivity;
 import com.bjjy.buildtalk.ui.main.SplashActivity;
 import com.bjjy.buildtalk.ui.main.ViewPagerActivity;
 import com.bjjy.buildtalk.ui.mine.AboutUsActivity;
+import com.bjjy.buildtalk.ui.mine.BindPhoneActivity;
+import com.bjjy.buildtalk.ui.mine.EditBindPhoneActivity;
+import com.bjjy.buildtalk.ui.mine.EditNameActivity;
 import com.bjjy.buildtalk.ui.mine.FeedBackActivity;
 import com.bjjy.buildtalk.ui.mine.PersonInfoActivity;
 import com.bjjy.buildtalk.ui.mine.SetPictureActivity;
@@ -189,4 +195,13 @@ public abstract class AbstractAllActivityModule {
 
     @ContributesAndroidInjector(modules = CircleManDetailActivityModule.class)
     abstract CircleManDetailActivity mCircleManDetailActivity();
+
+    @ContributesAndroidInjector(modules = EditNameActivityModule.class)
+    abstract EditNameActivity mEditNameActivity();
+
+    @ContributesAndroidInjector(modules = BindPhoneActivityModule.class)
+    abstract BindPhoneActivity mBindPhoneActivity();
+
+    @ContributesAndroidInjector(modules = EditBindPhoneActivityModule.class)
+    abstract EditBindPhoneActivity mEditBindPhoneActivity();
 }

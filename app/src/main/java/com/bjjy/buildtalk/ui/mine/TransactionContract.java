@@ -2,6 +2,7 @@ package com.bjjy.buildtalk.ui.mine;
 
 import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.base.view.IView;
+import com.bjjy.buildtalk.entity.AleadyBuyEntity;
 import com.bjjy.buildtalk.entity.TransactionTabEntity;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class TransactionContract {
 
         void handlerTab(List<TransactionTabEntity> list);
 
-        void handlerRecord(List<String> list);
+        void handlerList(List<AleadyBuyEntity> list);
     }
 
     interface Presenter extends IPresenter<View>{

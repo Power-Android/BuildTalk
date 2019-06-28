@@ -10,6 +10,5 @@
         android:id="@+id/item_img_iv"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_117"
-        android:background="@drawable/test_talk_master"
         android:scaleType="centerCrop"/>
 </RelativeLayout>

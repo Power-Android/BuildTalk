@@ -1,10 +1,19 @@
 package com.bjjy.buildtalk.ui.mine;
 
+import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.presenter.BasePresenter;
+import com.bjjy.buildtalk.core.rx.BaseObserver;
+import com.bjjy.buildtalk.core.rx.RxUtils;
+import com.bjjy.buildtalk.entity.AleadyBuyEntity;
+import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.TransactionTabEntity;
+import com.bjjy.buildtalk.utils.HeaderUtils;
+import com.bjjy.buildtalk.utils.TimeUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -30,11 +39,27 @@ public class TransactionPresenter extends BasePresenter<TransactionContract.View
         mView.handlerTab(list);
     }
 
-    public void setRecord() {
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            list.add("");
-        }
-        mView.handlerRecord(list);
+    public void setRecord(String type) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put(Constants.USER_ID, "47");
+        paramas.put("type",type);
+        paramas.put(Constants.SOURCE, Constants.ANDROID);
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.alreadyBuy(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(iEntityBaseResponse -> mView != null)
+                .subscribeWith(new BaseObserver<List<AleadyBuyEntity>>(mView, false) {
+                    @Override
+                    public void onSuccess(List<AleadyBuyEntity> list) {
+                        mView.handlerList(list);
+                    }
+                }));
     }
 }

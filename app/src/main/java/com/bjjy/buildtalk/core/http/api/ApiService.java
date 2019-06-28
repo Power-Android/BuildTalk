@@ -4,6 +4,7 @@ package com.bjjy.buildtalk.core.http.api;
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.app.User;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
+import com.bjjy.buildtalk.entity.AleadyBuyEntity;
 import com.bjjy.buildtalk.entity.BannerEntity;
 import com.bjjy.buildtalk.entity.CircleEntity;
 import com.bjjy.buildtalk.entity.CircleInfoEntity;
@@ -149,7 +150,7 @@ public interface ApiService {
 
     /**
      * 使用@Multipart注解方法，并用@Part注解方法参数，类型是List<okhttp3.MultipartBody.Part>
-     * @return 上传图片
+     * @return 上传单张图片
      */
     @Multipart
     @POST("picuploadhandle")
@@ -157,7 +158,7 @@ public interface ApiService {
 
     /**
      * 使用@Multipart注解方法，并用@Part注解方法参数，类型是List<okhttp3.MultipartBody.Part>
-     * @return 上传图片
+     * @return 上传多张图片
      */
     @Multipart
     @POST("manyPicUploadHandle")
@@ -411,6 +412,62 @@ public interface ApiService {
     @POST("attentionUserOperate")
     @FormUrlEncoded
     Observable<BaseResponse<IEntity>> attention(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 查询个人信息、个人主页
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("searchUserInfoByUser_id")
+    @FormUrlEncoded
+    Observable<BaseResponse<IEntity>> userInfo(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 更改名字、头像、背景
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("updateUserInfo")
+    @FormUrlEncoded
+    Observable<BaseResponse<IEntity>> updateUserInfo(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 更改手机号
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("updatePhone")
+    @FormUrlEncoded
+    Observable<BaseResponse<IEntity>> updatePhone(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 问题反馈
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("questionFeedback")
+    @FormUrlEncoded
+    Observable<BaseResponse<IEntity>> questionFeedback(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 交易明细
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("alreadyBuy")
+    @FormUrlEncoded
+    Observable<BaseResponse<List<AleadyBuyEntity>>> alreadyBuy(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 是否绑定手机号
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("checkisBindMobileByApp")
+    @FormUrlEncoded
+    Observable<BaseResponse<User>> checkisBind(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 绑定手机号
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("checkMobileCodeByAPP")
+    @FormUrlEncoded
+    Observable<BaseResponse<User>> checkMobileCodeByAPP(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
 
 

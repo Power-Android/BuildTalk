@@ -22,21 +22,28 @@ public class User {
     private String headImage;
     private String nickName;
     private String mobile;
+    private String user_type;
+    private String updateStatus;
     private String bindStatus;
+    private String bg_pic;
     private boolean loginStatus;
 
     public User() {
     }
 
-    @Generated(hash = 2097022275)
+    @Generated(hash = 1863838147)
     public User(Long id, String user_id, String headImage, String nickName,
-            String mobile, String bindStatus, boolean loginStatus) {
+            String mobile, String user_type, String updateStatus, String bindStatus,
+            String bg_pic, boolean loginStatus) {
         this.id = id;
         this.user_id = user_id;
         this.headImage = headImage;
         this.nickName = nickName;
         this.mobile = mobile;
+        this.user_type = user_type;
+        this.updateStatus = updateStatus;
         this.bindStatus = bindStatus;
+        this.bg_pic = bg_pic;
         this.loginStatus = loginStatus;
     }
 
@@ -78,6 +85,30 @@ public class User {
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+    }
+
+    public String getUser_type() {
+        return user_type;
+    }
+
+    public void setUser_type(String user_type) {
+        this.user_type = user_type;
+    }
+
+    public String getUpdateStatus() {
+        return updateStatus;
+    }
+
+    public void setUpdateStatus(String updateStatus) {
+        this.updateStatus = updateStatus;
+    }
+
+    public String getBg_pic() {
+        return bg_pic;
+    }
+
+    public void setBg_pic(String bg_pic) {
+        this.bg_pic = bg_pic;
     }
 
     public String getBindStatus() {
