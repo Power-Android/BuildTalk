@@ -163,7 +163,7 @@
             android:layout_marginRight="@dimen/common_margin"
             android:layout_centerVertical="true"/>
         <ImageView
-            android:id="@+id/view2"
+            android:id="@+id/view5"
             android:layout_width="@dimen/common_margin"
             android:layout_height="@dimen/common_margin"
             android:src="@drawable/arrow_right_black"
@@ -174,7 +174,7 @@
             android:id="@+id/verify_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/view2"
+            android:layout_toLeftOf="@+id/view5"
             android:text="未认证"
             android:textSize="@dimen/sp_15"
             android:textColor="@color/text_mid"

@@ -1,14 +1,21 @@
 package com.bjjy.buildtalk.ui.discover;
 
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -22,6 +29,7 @@ import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.GuestBookEntity;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
+import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -33,7 +41,6 @@ import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,6 +104,10 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     SmartRefreshLayout mLoadMoreLayout;
     @BindView(R.id.appBarLayout)
     AppBarLayout mAppBarLayout;
+    @BindView(R.id.webview)
+    WebView mWebView;
+    @BindView(R.id.record_ll)
+    LinearLayout mRecordLl;
 
     private SimpleExoPlayer simpleExoPlayer;
     private EveryTalkDetailAdapter mEveryTalkDetailAdapter;
@@ -105,6 +116,8 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     private EveryTalkDetailEntity.NewsInfoBean mMNewsInfo;
     private int mCountCollect = 0;
     private int page = 1;
+    private Spanned mText;
+    private boolean isGone = false;
 
     @Override
     protected int getLayoutId() {
@@ -125,6 +138,12 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
         mEveryTalkDetailAdapter = new EveryTalkDetailAdapter(R.layout.adapter_every_talk_detail, mList);
         mRecyclerView.setAdapter(mEveryTalkDetailAdapter);
         mEveryTalkDetailAdapter.setOnItemChildClickListener(this);
+        KeyboardUtils.registerSoftInputChangedListener(this, height -> {
+            if (height <= 0){
+                mRecordLl.setVisibility(View.VISIBLE);
+                isGone = false;
+            }
+        });
     }
 
     @Override
@@ -186,7 +205,15 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
                     .into(mVideoplayer.thumbImageView);
             mVideoplayer.setUp(new JZDataSource(mMNewsInfo.getVideo_url()), Jzvd.SCREEN_WINDOW_NORMAL);
         }
-        mContentTv.setText(Html.fromHtml(mMNewsInfo.getContent()));
+
+        WebSettings settings = mWebView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setDomStorageEnabled(true);
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
+        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        mWebView.loadData(getHtmlData(mMNewsInfo.getContent()), "text/html;charset=utf-8","utf-8");
+
         if ("0".equals(String.valueOf(mMNewsInfo.getIsCollect()))){
             mPraiseIv.setImageResource(R.drawable.praise_def);
         }else {
@@ -199,10 +226,20 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
                 mPresenter.saveRecord(mMNewsInfo.getArticle_id(),mRecordEt.getText().toString().trim());
                 mRecordEt.clearFocus();
                 mRecordEt.getText().clear();
+                mRecordLl.setVisibility(View.VISIBLE);
+                isGone = !isGone;
                 KeyboardUtils.hideSoftInput(this);
             }
             return false;
         });
+    }
+
+    private String getHtmlData(String bodyHTML) {
+        String head = "<head>" +
+                "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\"> " +
+                "<style>html{padding:15px;} body{word-wrap:break-word;font-size:13px;padding:0px;margin:0px} p{padding:0px;margin:0px;font-size:13px;color:FF656565;line-height:1.3;} img{padding:0px,margin:0px;max-width:100%; width:100%; height:auto;}</style>" +
+                "</head>";
+        return "<html>" + head + "<body>" + bodyHTML + "</body></html>";
     }
 
     @Override
@@ -211,7 +248,6 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
         mEveryTalkDetailAdapter.setNewData(mList);
 
         mRecordNumTv.setText(String.valueOf(mList.size()));
-        mRecordEt.setHint(mList.size()+"评论");
     }
 
     @Override
@@ -228,13 +264,14 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     @Override
     public void onDestroy() {
         super.onDestroy();
+        KeyboardUtils.unregisterSoftInputChangedListener(this);
         KeyboardUtils.hideSoftInput(this);
         if (simpleExoPlayer != null) {
             simpleExoPlayer.release();
         }
     }
 
-    @OnClick({R.id.play_iv, R.id.praise_ll, R.id.share_iv})
+    @OnClick({R.id.play_iv, R.id.praise_ll, R.id.share_iv, R.id.record_ll})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.play_iv:
@@ -247,6 +284,16 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
                 mPresenter.collectArticle(mArticle_id,isCollect);
                 break;
             case R.id.share_iv:
+                break;
+            case R.id.record_ll:
+                if (!isGone){
+                    mRecordLl.setVisibility(View.GONE);
+                    mRecordEt.setFocusable(true);
+                    mRecordEt.setFocusableInTouchMode(true);
+                    mRecordEt.requestFocus();
+                    KeyboardUtils.showSoftInput(this);
+                    isGone = !isGone;
+                }
                 break;
         }
     }
@@ -271,19 +318,19 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     @Override
     public void onItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int position) {
         if (view.getId() == R.id.item_praise_iv){
-//            boolean isPraise = "1".equals(mEveryTalkDetailAdapter.getData().get(position).getIsPraise()+"");
-//            mPresenter.praiseRecord(mList.get(position).getGuestbook_id(),position,isPraise);
+            boolean isPraise = "1".equals(mEveryTalkDetailAdapter.getData().get(position).getIsPraise()+"");
+            mPresenter.praiseRecord(mList.get(position).getGuestbook_id(),position,isPraise);
         }
     }
 
     @Override
     public void praiseSuccess(boolean isSuccess, int position, boolean isPraise) {
         if (isPraise){
-//            mEveryTalkDetailAdapter.getData().get(position).setIsPraise(0);
-//            mEveryTalkDetailAdapter.setData(position,mEveryTalkDetailAdapter.getData().get(position));
+            mEveryTalkDetailAdapter.getData().get(position).setIsPraise(0);
+            mEveryTalkDetailAdapter.setData(position,mEveryTalkDetailAdapter.getData().get(position));
         }else {
-//            mEveryTalkDetailAdapter.getData().get(position).setIsPraise(1);
-//            mEveryTalkDetailAdapter.setData(position,mEveryTalkDetailAdapter.getData().get(position));
+            mEveryTalkDetailAdapter.getData().get(position).setIsPraise(1);
+            mEveryTalkDetailAdapter.setData(position,mEveryTalkDetailAdapter.getData().get(position));
         }
     }
 }

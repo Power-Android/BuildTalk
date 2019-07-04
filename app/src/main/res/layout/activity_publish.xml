@@ -30,6 +30,8 @@
                 android:background="@color/white"
                 android:gravity="start"
                 android:hint="说点什么..."
+                android:maxLength="200"
+                android:ellipsize="end"
                 android:minHeight="@dimen/dp_70"
                 android:padding="@dimen/dp_15"
                 android:textColor="@color/text_mid"

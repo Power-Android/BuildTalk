@@ -211,10 +211,19 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
 
     @Override
     public void handlerCommentList(ThemeInfoEntity.ThemeInfoBean themeInfoBean, boolean isRefresh) {
-        mPage_count = themeInfoBean.getPage_count();
-        mCountCommentNum = themeInfoBean.getCountCommentNum();
-        mRecordNumTv.setText(mCountCommentNum + "");
-        mRecordEt.setHint(mCountCommentNum + "评论");
+        if (themeInfoBean.getComment_content().size() > 0){
+            mPage_count = themeInfoBean.getPage_count();
+            mCountCommentNum = themeInfoBean.getCountCommentNum();
+            mRecordNumTv.setText(mCountCommentNum + "");
+            mRecordEt.setHint(mCountCommentNum + "评论");
+            mComment_content = themeInfoBean.getComment_content();
+            if (isRefresh) {
+                mCommentAdapter.setNewData(themeInfoBean.getComment_content());
+            } else {
+                mCommentAdapter.addData(themeInfoBean.getComment_content());
+            }
+        }
+
         mRecordEt.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEND){
                 if (TextUtils.isEmpty(mRecordEt.getText().toString().trim())) {
@@ -228,12 +237,6 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
             }
             return false;
         });
-        mComment_content = themeInfoBean.getComment_content();
-        if (isRefresh) {
-            mCommentAdapter.setNewData(themeInfoBean.getComment_content());
-        } else {
-            mCommentAdapter.addData(themeInfoBean.getComment_content());
-        }
     }
 
     @OnClick({R.id.item_more_iv, R.id.praise_ll, R.id.share_iv})

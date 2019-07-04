@@ -17,6 +17,7 @@ import com.bjjy.buildtalk.entity.CircleTagEntity;
 import com.bjjy.buildtalk.entity.CollectEntity;
 import com.bjjy.buildtalk.entity.CommentSuccessEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
+import com.bjjy.buildtalk.entity.CourseListEntity;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
 import com.bjjy.buildtalk.entity.EveryTalkListEntity;
@@ -398,5 +399,10 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     @Override
     public Observable<BaseResponse<User>> checkMobileCodeByAPP(Map<String, String> headers, Map<String, String> params) {
         return mHttpHelper.checkMobileCodeByAPP(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<CourseListEntity>> getCourseList(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.getCourseList(headers, params);
     }
 }

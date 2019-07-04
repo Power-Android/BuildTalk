@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.bjjy.buildtalk.ui.talk.MasterDetailActivity">
+
     <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinator"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -15,11 +16,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:elevation="@dimen/dp_0">
+
             <RelativeLayout
                 android:id="@+id/min_rl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
                 <include
                     layout="@layout/include_course_detail"
                     android:layout_width="match_parent"
@@ -30,11 +33,13 @@
                 android:id="@+id/tab_rl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_1"
-                    android:background="@color/border3"
-                    android:layout_alignParentBottom="true"/>
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/border3" />
+
                 <com.bjjy.buildtalk.weight.tablayout.TabLayout
                     android:id="@+id/tablayout"
                     android:layout_width="match_parent"
@@ -48,25 +53,27 @@
                     app:tabSelectedTextColor="@color/text_drak"
                     app:tabTextAppearance="@style/TabLayoutTextStyle"
                     app:tabTextColor="@color/text_mid" />
+
                 <RelativeLayout
                     android:id="@+id/screen_rl"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_30"
-                    android:visibility="gone"
-                    android:layout_below="@+id/tablayout">
+                    android:layout_below="@+id/tablayout"
+                    android:visibility="gone">
+
                     <TextView
                         android:id="@+id/screen_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_centerInParent="true"
+                        android:drawablePadding="@dimen/dp_5"
+                        android:drawableRight="@drawable/sanjiao_icon"
+                        android:gravity="center"
                         android:paddingLeft="@dimen/dp_30"
                         android:paddingRight="@dimen/dp_30"
                         android:text="全部主题"
-                        android:gravity="center"
-                        android:textSize="@dimen/sp_10"
                         android:textColor="@color/text_light"
-                        android:drawableRight="@drawable/sanjiao_icon"
-                        android:drawablePadding="@dimen/dp_5"/>
+                        android:textSize="@dimen/sp_10" />
                 </RelativeLayout>
 
             </RelativeLayout>
@@ -76,7 +83,6 @@
             android:id="@+id/viewpager_rl"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/background"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <android.support.v4.view.ViewPager
@@ -87,6 +93,7 @@
         </RelativeLayout>
 
     </android.support.design.widget.CoordinatorLayout>
+
     <RelativeLayout
         android:id="@+id/top_title_rl"
         android:layout_width="match_parent"
@@ -101,11 +108,11 @@
                 android:id="@+id/back_iv"
                 android:layout_width="@dimen/dp_50"
                 android:layout_height="@dimen/dp_44"
-                android:src="@drawable/arrow_left_white_icon"
+                android:paddingBottom="@dimen/dp_12"
                 android:paddingLeft="@dimen/dp_15"
                 android:paddingRight="@dimen/dp_15"
                 android:paddingTop="@dimen/dp_12"
-                android:paddingBottom="@dimen/dp_12"/>
+                android:src="@drawable/arrow_left_white_icon" />
 
             <TextView
                 android:id="@+id/title_tv"
@@ -116,70 +123,240 @@
                 android:singleLine="true"
                 android:textColor="@color/white"
                 android:textSize="17sp" />
+
             <ImageView
                 android:id="@+id/pre_share_iv"
                 android:layout_width="@dimen/dp_40"
                 android:layout_height="@dimen/dp_40"
-                android:padding="@dimen/dp_10"
                 android:layout_alignParentRight="true"
-                android:src="@drawable/share_icon_white"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/dp_5"/>
+                android:layout_marginRight="@dimen/dp_5"
+                android:padding="@dimen/dp_10"
+                android:src="@drawable/share_icon_white" />
+
             <ImageView
                 android:id="@+id/share_iv"
                 android:layout_width="@dimen/dp_40"
                 android:layout_height="@dimen/dp_40"
-                android:visibility="gone"
-                android:padding="@dimen/dp_10"
-                android:layout_toLeftOf="@+id/more_iv"
-                android:src="@drawable/share_icon_white"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/dp_5"/>
+                android:layout_marginRight="@dimen/dp_5"
+                android:layout_toLeftOf="@+id/more_iv"
+                android:padding="@dimen/dp_10"
+                android:src="@drawable/share_icon_white"
+                android:visibility="gone" />
+
             <ImageView
                 android:id="@+id/more_iv"
                 android:layout_width="@dimen/dp_40"
                 android:layout_height="@dimen/dp_40"
-                android:visibility="gone"
                 android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_5"
                 android:padding="@dimen/dp_10"
                 android:src="@drawable/toolbar_right_more_icon"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/dp_5"/>
+                android:visibility="gone" />
         </RelativeLayout>
 
     </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/mc_rl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dp_200"
+        android:background="@drawable/shape_white_top_22raidus"
+        android:visibility="gone">
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/mc_view1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_15"
+                    android:layout_marginTop="@dimen/dp_20"
+                    android:text="圈子介绍"
+                    android:textColor="@color/text_drak"
+                    android:textSize="@dimen/sp_15"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/mc_qz_expand_iv"
+                    android:layout_width="@dimen/dp_29"
+                    android:layout_height="@dimen/dp_29"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/dp_5"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:padding="@dimen/dp_10"
+                    android:src="@drawable/sanjiao_icon" />
+
+                <RelativeLayout
+                    android:id="@+id/mc_jieshao_rl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/mc_view1">
+
+                    <TextView
+                        android:id="@+id/mc_recommend_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/common_margin"
+                        android:layout_marginRight="@dimen/common_margin"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:textColor="@color/text_mid"
+                        android:textSize="12sp" />
+
+                    <RelativeLayout
+                        android:id="@+id/expand_rl"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/mc_recommend_tv"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/mc_ld_rl"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/dp_15"
+                            android:layout_marginTop="@dimen/dp_20"
+                            android:text="课程亮点"
+                            android:textColor="@color/text_drak"
+                            android:textSize="@dimen/sp_15"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/mc_ld_tv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/mc_ld_rl"
+                            android:layout_marginLeft="@dimen/common_margin"
+                            android:layout_marginRight="@dimen/common_margin"
+                            android:layout_marginTop="@dimen/dp_10"
+                            android:ellipsize="end"
+                            android:textColor="@color/text_mid"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/mc_ff_rl"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/mc_ld_tv"
+                            android:layout_marginLeft="@dimen/dp_15"
+                            android:layout_marginTop="@dimen/dp_20"
+                            android:text="付费须知"
+                            android:textColor="@color/text_drak"
+                            android:textSize="@dimen/sp_15"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/mc_ff_tv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/mc_ff_rl"
+                            android:layout_marginBottom="@dimen/dp_60"
+                            android:layout_marginLeft="@dimen/common_margin"
+                            android:layout_marginRight="@dimen/common_margin"
+                            android:layout_marginTop="@dimen/dp_10"
+                            android:ellipsize="end"
+                            android:text="1、本课程为视频课程，预计四月底更新完毕，购买成功后即可通过“建谈”APP端、小程序端永久观看。\n2、由于视频内容为虚拟商品，一经购买，概不退款。\n3、课程学习过程中，如有任何问题，请联系13433280987"
+                            android:textColor="@color/text_mid"
+                            android:textSize="12sp" />
+                    </RelativeLayout>
+                </RelativeLayout>
+            </RelativeLayout>
+        </ScrollView>
+
+        <RelativeLayout
+            android:id="@+id/mc_table_rl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_below="@+id/scrollView">
+
+            <TextView
+                android:id="@+id/mc_view2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_15"
+                android:layout_marginTop="@dimen/dp_20"
+                android:text="目录"
+                android:textColor="@color/text_drak"
+                android:textSize="@dimen/sp_15"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/mc_ml_expand_iv"
+                android:layout_width="@dimen/dp_29"
+                android:layout_height="@dimen/dp_29"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/dp_5"
+                android:layout_alignBottom="@+id/mc_view2"
+                android:padding="@dimen/dp_10"
+                android:src="@drawable/sanjiao_icon" />
+
+            <TextView
+                android:id="@+id/mc_ml_num_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/mc_view2"
+                android:layout_toLeftOf="@+id/mc_ml_expand_iv"
+                android:textColor="@color/text_light"
+                android:textSize="@dimen/sp_10" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/mc_ml_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"
+                android:layout_below="@+id/mc_ml_expand_iv"
+                android:layout_marginTop="@dimen/dp_10" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
     <TextView
         android:id="@+id/join_tv"
         android:layout_width="@dimen/dp_245"
         android:layout_height="@dimen/dp_44"
-        android:background="@drawable/shape_blue_25button"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="加入圈子￥10.00"
+        android:layout_marginBottom="@dimen/dp_5"
+        android:background="@drawable/shape_blue_25button"
         android:gravity="center"
         android:textColor="@color/white"
-        android:textSize="@dimen/sp_16"
-        android:layout_marginBottom="@dimen/dp_5"/>
+        android:textSize="@dimen/sp_16" />
+
     <RelativeLayout
         android:id="@+id/publis_rl"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_44"
-        android:visibility="gone"
+        android:layout_alignParentBottom="true"
         android:background="@color/white"
-        android:layout_alignParentBottom="true">
+        android:visibility="gone">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_33"
             android:layout_centerInParent="true"
+            android:layout_marginLeft="@dimen/common_margin"
+            android:layout_marginRight="@dimen/common_margin"
             android:background="@drawable/shape_search_15radius"
-            android:text="发表..."
-            android:textColor="@color/blue_mid"
-            android:gravity="center_vertical"
             android:drawableLeft="@drawable/fabiao_icon"
             android:drawablePadding="@dimen/dp_10"
+            android:gravity="center_vertical"
             android:paddingLeft="@dimen/dp_15"
             android:paddingRight="@dimen/dp_15"
-            android:layout_marginLeft="@dimen/common_margin"
-            android:layout_marginRight="@dimen/common_margin"/>
+            android:text="发表..."
+            android:textColor="@color/blue_mid" />
     </RelativeLayout>
 </RelativeLayout>

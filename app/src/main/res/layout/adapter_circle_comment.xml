@@ -6,19 +6,10 @@
     android:paddingTop="@dimen/dp_5"
     android:paddingBottom="@dimen/dp_5">
     <TextView
-        android:id="@+id/comment_name_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        android:textSize="@dimen/sp_11"
-        android:textColor="@color/text_mid" />
-    <TextView
         android:id="@+id/comment_content_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="我也有同类的资源，在我网盘里大家可以下载浏览哦，网址：链接:https://pan.baidu.com/s/1Z9Inl0LNa6zGIDXUgmGnhw  密码:l6ag"
         android:textSize="@dimen/sp_11"
-        android:textColor="@color/text_drak"
-        android:layout_toRightOf="@+id/comment_name_tv"
-        android:layout_marginLeft="@dimen/dp_5"/>
+        android:lineSpacingExtra="2dp"
+        android:textColor="@color/text_drak" />
 </RelativeLayout>

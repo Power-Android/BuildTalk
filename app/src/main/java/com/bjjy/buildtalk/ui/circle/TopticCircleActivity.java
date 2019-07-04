@@ -325,7 +325,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
             case R.id.expand_iv:
                 mLayoutParams = (CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams();
                 AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mMinRl.getLayoutParams();
-                mExpandIv.animate().rotation(rotationAngle);
+                mExpandIv.animate().setDuration(200).rotation(rotationAngle);
                 rotationAngle += 180;
                 if (isExpand) {
                     mLayoutParams.height = CoordinatorLayout.LayoutParams.WRAP_CONTENT;

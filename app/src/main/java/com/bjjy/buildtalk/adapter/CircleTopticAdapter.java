@@ -2,10 +2,14 @@ package com.bjjy.buildtalk.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -98,6 +102,7 @@ public class CircleTopticAdapter extends BaseQuickAdapter<ThemeInfoEntity.ThemeI
             bIntent.putExtra("positon", position);
             bIntent.putExtra("optionEntities", (Serializable) optionEntities);
             mContext.startActivity(bIntent);
+
             //取消原有默认的Activity到Activity的过渡动画
             mActivity.overridePendingTransition(0, 0);
         });
@@ -132,8 +137,11 @@ public class CircleTopticAdapter extends BaseQuickAdapter<ThemeInfoEntity.ThemeI
 
         @Override
         protected void convert(BaseViewHolder helper, CommentContentBean item) {
-            helper.setText(R.id.comment_name_tv, item.getName() + "：")
-                    .setText(R.id.comment_content_tv, item.getContent());
+            String content = item.getName() + "：" + item.getContent();
+            SpannableString spannableString = new SpannableString(content);
+            ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#656565"));
+            spannableString.setSpan(colorSpan,0,content.indexOf("："), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            helper.setText(R.id.comment_content_tv, spannableString);
         }
     }
 

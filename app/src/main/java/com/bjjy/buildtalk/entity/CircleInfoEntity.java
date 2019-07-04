@@ -76,6 +76,60 @@ public class CircleInfoEntity implements Serializable {
         private CourseBean course;
         private List<String> circle_tags;
         private String master_pic;
+        private String course_money;
+        private String lightSpot;
+        private String course_desc;
+        private String pay_desc;
+        private int course_id;
+        private int joinCirlceNum;
+
+        public String getCourse_desc() {
+            return course_desc;
+        }
+
+        public void setCourse_desc(String course_desc) {
+            this.course_desc = course_desc;
+        }
+
+        public String getPay_desc() {
+            return pay_desc;
+        }
+
+        public void setPay_desc(String pay_desc) {
+            this.pay_desc = pay_desc;
+        }
+
+        public int getCourse_id() {
+            return course_id;
+        }
+
+        public void setCourse_id(int course_id) {
+            this.course_id = course_id;
+        }
+
+        public int getJoinCirlceNum() {
+            return joinCirlceNum;
+        }
+
+        public void setJoinCirlceNum(int joinCirlceNum) {
+            this.joinCirlceNum = joinCirlceNum;
+        }
+
+        public String getLightSpot() {
+            return lightSpot;
+        }
+
+        public void setLightSpot(String lightSpot) {
+            this.lightSpot = lightSpot;
+        }
+
+        public String getCourse_money() {
+            return course_money;
+        }
+
+        public void setCourse_money(String course_money) {
+            this.course_money = course_money;
+        }
 
         public String getMaster_pic() {
             return master_pic;

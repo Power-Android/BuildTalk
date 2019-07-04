@@ -8,10 +8,21 @@ import android.view.View;
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.CircleTopticAdapter;
 import com.bjjy.buildtalk.app.App;
+import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.presenter.BasePresenter;
+import com.bjjy.buildtalk.core.rx.BaseObserver;
+import com.bjjy.buildtalk.core.rx.RxUtils;
+import com.bjjy.buildtalk.entity.CircleInfoEntity;
+import com.bjjy.buildtalk.entity.CourseListEntity;
+import com.bjjy.buildtalk.entity.IEntity;
+import com.bjjy.buildtalk.entity.ThemeInfoEntity;
+import com.bjjy.buildtalk.utils.HeaderUtils;
+import com.bjjy.buildtalk.utils.TimeUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -38,7 +49,7 @@ public class CourseCirclePresenter extends BasePresenter<CourseCircleContract.Vi
         mTitleList.add(App.getContext().getString(R.string.essence));
 
         mBadgeCountList.add(0);
-        mBadgeCountList.add(2);
+        mBadgeCountList.add(0);
 
         mThemeView = LayoutInflater.from(App.getContext()).inflate(R.layout.circle_toptic_theme, null, false);
         mEssenceView = LayoutInflater.from(App.getContext()).inflate(R.layout.circle_toptic_essence, null, false);
@@ -47,21 +58,84 @@ public class CourseCirclePresenter extends BasePresenter<CourseCircleContract.Vi
 
         mView.handlerTab(mTitleList, mViews, mBadgeCountList);
 
-//        setAdapter();
     }
 
-//    private void setAdapter() {
-//        List<String> list = new ArrayList<>();
-//        for (int i = 0; i < 5; i++) {
-//            list.add("");
-//        }
-//        RecyclerView recyclerView = mThemeView.findViewById(R.id.recycler_view);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(App.getContext()));
-//        CircleTopticAdapter topticAdapter = new CircleTopticAdapter(R.layout.adapter_article_toptic, list);
-//        View footerView = LayoutInflater.from(App.getContext()).inflate(R.layout.footer_circle_toptic,null,false);
-//        topticAdapter.addFooterView(footerView);
-//        recyclerView.setAdapter(topticAdapter);
-//
-//    }
+    public void CircleInfo(String circle_id) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        paramas.put(Constants.SOURCE, Constants.ANDROID);
+        paramas.put("circle_id", circle_id);
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
 
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.circleInfo(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<CircleInfoEntity>(mView, false) {
+                    @Override
+                    public void onSuccess(CircleInfoEntity circleInfoEntity) {
+                        mView.handlerCircleInfo(circleInfoEntity);
+                    }
+                }));
+    }
+
+    public void themeInfo(String circle_id, int page, String type, boolean isRefresh) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        paramas.put(Constants.PAGE, String.valueOf(page));
+        paramas.put(Constants.PAGE_SIZE, "10");
+        paramas.put("circle_id", circle_id);
+        paramas.put("type_id", type);
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.themeInfo(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<ThemeInfoEntity>(mView, false) {
+                    @Override
+                    public void onSuccess(ThemeInfoEntity themeInfoEntity) {
+                        if (themeInfoEntity.getThemeInfo().size() > 0){
+                            mView.handlerThemeInfo(themeInfoEntity, isRefresh);
+                        }
+                    }
+                }));
+    }
+
+    public void courseList(String circle_id, int coursePage) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put("course_id", circle_id);
+        paramas.put(Constants.PAGE, coursePage+"");
+        paramas.put(Constants.PAGE_SIZE, "10");
+
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.getCourseList(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<CourseListEntity>(mView, false) {
+                    @Override
+                    public void onSuccess(CourseListEntity courseListEntity) {
+                        if (courseListEntity.getCourselist().size() > 0){
+                            mView.handlerCourseList(courseListEntity);
+                        }
+                    }
+                }));
+    }
 }

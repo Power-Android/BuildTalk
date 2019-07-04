@@ -16,6 +16,7 @@ import com.bjjy.buildtalk.entity.CircleTagEntity;
 import com.bjjy.buildtalk.entity.CollectEntity;
 import com.bjjy.buildtalk.entity.CommentSuccessEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
+import com.bjjy.buildtalk.entity.CourseListEntity;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
 import com.bjjy.buildtalk.entity.EveryTalkListEntity;
@@ -319,5 +320,10 @@ public class HttpHelperImpl implements HttpHelper {
     @Override
     public Observable<BaseResponse<User>> checkMobileCodeByAPP(Map<String, String> headers, Map<String, String> params) {
         return mApiService.checkMobileCodeByAPP(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<CourseListEntity>> getCourseList(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.getCourseList(headers, params);
     }
 }

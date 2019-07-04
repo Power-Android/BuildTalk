@@ -1,5 +1,6 @@
 package com.bjjy.buildtalk.ui.circle;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.Constants;
@@ -27,6 +29,8 @@ import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.luck.picture.lib.permissions.RxPermissions;
+import com.luck.picture.lib.tools.PictureFileUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -37,6 +41,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -174,6 +180,30 @@ public class PublishActivity extends BaseActivity<PublishPresenter> implements P
                 break;
             case R.id.pic_rl:
                 requestPhoto();
+                RxPermissions permissions = new RxPermissions(this);
+                permissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        if (aBoolean) {
+                            PictureFileUtils.deleteCacheDirFile(PublishActivity.this);
+                        } else {
+                            Toast.makeText(PublishActivity.this,
+                                    getString(R.string.picture_jurisdiction), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
                 break;
         }
 

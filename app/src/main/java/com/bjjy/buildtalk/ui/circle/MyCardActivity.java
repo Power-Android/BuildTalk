@@ -1,6 +1,7 @@
 package com.bjjy.buildtalk.ui.circle;
 
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -40,6 +41,9 @@ public class MyCardActivity extends BaseActivity<MyCardPresenter> implements MyC
     TextView mWechatTv;
     @BindView(R.id.wechat_circle_tv)
     TextView mWechatCircleTv;
+    @BindView(R.id.text)
+    TextView mTextView;
+
     private String mCircle_id;
 
     @Override
@@ -65,6 +69,11 @@ public class MyCardActivity extends BaseActivity<MyCardPresenter> implements MyC
         Glide.with(this).load(myCardEntity.getCircle_image().getPic_url()).into(mBgIv);
         Glide.with(this).load(myCardEntity.getHeadImage()).into(mFaceIv);
         Glide.with(this).load(myCardEntity.getCircle_code()).into(mQrcodeIv);
+        if (TextUtils.equals("1",myCardEntity.getIs_circleMaster())){
+            mTextView.setText("创建天数");
+        }else {
+            mTextView.setText("加入天数");
+        }
         mNameTv.setText(myCardEntity.getName());
         mDateTv.setText(myCardEntity.getJoin_day());
         mThemeTv.setText(myCardEntity.getCountTheme());

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
+    android:id="@+id/relativelayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -19,6 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/fl_VideoPlayer"
         android:text="第105期 各地重点工程最新进展来了"
+        android:lineSpacingExtra="@dimen/dp_3"
         android:layout_marginTop="@dimen/dp_15"
         android:layout_marginLeft="@dimen/dp_15"
         android:textSize="@dimen/sp_16"
@@ -134,4 +136,9 @@
         android:layout_below="@+id/media_rl"
         android:layout_marginLeft="@dimen/dp_15"
         android:layout_marginRight="@dimen/dp_15"/>
+    <WebView
+        android:id="@+id/webview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/content_tv"/>
 </RelativeLayout>

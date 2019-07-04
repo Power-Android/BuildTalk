@@ -15,6 +15,7 @@ import com.bjjy.buildtalk.entity.CircleTagEntity;
 import com.bjjy.buildtalk.entity.CollectEntity;
 import com.bjjy.buildtalk.entity.CommentSuccessEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
+import com.bjjy.buildtalk.entity.CourseListEntity;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
 import com.bjjy.buildtalk.entity.EveryTalkListEntity;
@@ -469,6 +470,13 @@ public interface ApiService {
     @FormUrlEncoded
     Observable<BaseResponse<User>> checkMobileCodeByAPP(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
+    /**
+     * @return 获取课程目录
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("getCourseList")
+    @FormUrlEncoded
+    Observable<BaseResponse<CourseListEntity>> getCourseList(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
 
 

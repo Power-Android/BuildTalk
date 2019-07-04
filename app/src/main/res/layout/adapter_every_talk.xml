@@ -3,10 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/item_selector"
-    android:paddingBottom="@dimen/dp_8"
+    android:paddingBottom="@dimen/dp_6"
     android:paddingLeft="@dimen/common_margin"
     android:paddingRight="@dimen/common_margin"
-    android:paddingTop="@dimen/dp_8">
+    android:paddingTop="@dimen/dp_6">
 
     <TextView
         android:id="@+id/period_tv"

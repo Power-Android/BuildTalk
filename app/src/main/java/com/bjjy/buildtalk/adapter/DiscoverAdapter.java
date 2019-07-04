@@ -10,6 +10,7 @@ import com.bjjy.buildtalk.entity.BannerEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.DiscoverEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
+import com.bjjy.buildtalk.ui.circle.CourseCircleActivity;
 import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
 import com.bjjy.buildtalk.ui.discover.EveryTalkDetailActivity;
 import com.bjjy.buildtalk.utils.GlideUtils;
@@ -93,11 +94,6 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
                 });
                 break;
             case BODY_COURSE:
-                List<String> course_list = new ArrayList<>();
-                course_list.add("");
-                course_list.add("");
-                course_list.add("");
-                course_list.add("");
                 RecyclerView course_RecyclerView = helper.getView(R.id.course_recyclerView);
                 course_RecyclerView.setLayoutManager(new GridLayoutManager(mContext, 2));
                 CourseAdapter courseAdapter = new CourseAdapter(R.layout.adapter_quality_course, mCourseEntities);
@@ -105,7 +101,10 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
                 helper.addOnClickListener(R.id.course_all_tv)
                         .addOnClickListener(R.id.course_change_ll);
                 courseAdapter.setOnItemClickListener((adapter, view, position) -> {
-                    ToastUtils.showShort("精品课程：" + position);
+                    List<CourseEntity.CircleInfoBean> mCourseEntities = adapter.getData();
+                    Intent intent = new Intent(mContext, CourseCircleActivity.class);
+                    intent.putExtra("circle_id", String.valueOf(mCourseEntities.get(position).getCircle_id()));
+                    mContext.startActivity(intent);
                 });
                 break;
             case BODY_PROJECT:

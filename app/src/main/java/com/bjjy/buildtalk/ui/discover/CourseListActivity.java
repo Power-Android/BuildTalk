@@ -1,5 +1,6 @@
 package com.bjjy.buildtalk.ui.discover;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.CourseListAdapter;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.entity.CourseEntity;
+import com.bjjy.buildtalk.ui.circle.CourseCircleActivity;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -91,6 +93,9 @@ public class CourseListActivity extends BaseActivity<CourseListPresenter> implem
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-
+        List<CourseEntity.CircleInfoBean> mList = adapter.getData();
+        Intent intent = new Intent(this, CourseCircleActivity.class);
+        intent.putExtra("circle_id", String.valueOf(mList.get(position).getCircle_id()));
+        startActivity(intent);
     }
 }

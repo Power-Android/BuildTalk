@@ -171,7 +171,9 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
     public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int position) {
         List<CircleEntity.CircleInfoBean> list = baseQuickAdapter.getData();
         if (2 == list.get(position).getType()) {
-            startActivity(new Intent(mContext, CourseCircleActivity.class));
+            Intent intent = new Intent(mContext, CourseCircleActivity.class);
+            intent.putExtra("circle_id", String.valueOf(list.get(position).getCircle_id()));
+            startActivity(intent);
         } else {
             Intent intent = new Intent(mContext, TopticCircleActivity.class);
             intent.putExtra("circle_id", String.valueOf(list.get(position).getCircle_id()));

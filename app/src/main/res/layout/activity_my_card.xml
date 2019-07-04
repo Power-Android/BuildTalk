@@ -68,15 +68,9 @@
                             android:text="18"
                             android:textColor="@color/text_drak"
                             android:textSize="@dimen/sp_18"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="天"
-                            android:textSize="@dimen/sp_12"
-                            android:textColor="@color/text_light"
-                            android:layout_marginLeft="@dimen/dp_4"/>
                     </LinearLayout>
                     <TextView
+                        android:id="@+id/text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="加入圈子"

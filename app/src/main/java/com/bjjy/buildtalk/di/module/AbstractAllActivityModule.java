@@ -13,6 +13,7 @@ import com.bjjy.buildtalk.di.module.activity.CircleManDetailActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CircleMemberActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CircleSearchActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CourseCircleActivityModule;
+import com.bjjy.buildtalk.di.module.activity.CourseDetailActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CourseListActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CreateCircleActivityModule;
 import com.bjjy.buildtalk.di.module.activity.EditBindPhoneActivityModule;
@@ -48,6 +49,7 @@ import com.bjjy.buildtalk.ui.circle.CircleInfoActivity;
 import com.bjjy.buildtalk.ui.circle.CircleMemberActivity;
 import com.bjjy.buildtalk.ui.circle.CircleSearchActivity;
 import com.bjjy.buildtalk.ui.circle.CourseCircleActivity;
+import com.bjjy.buildtalk.ui.circle.CourseDetailActivity;
 import com.bjjy.buildtalk.ui.circle.CreateCircleActivity;
 import com.bjjy.buildtalk.ui.circle.MyCardActivity;
 import com.bjjy.buildtalk.ui.circle.PublishActivity;
@@ -204,4 +206,7 @@ public abstract class AbstractAllActivityModule {
 
     @ContributesAndroidInjector(modules = EditBindPhoneActivityModule.class)
     abstract EditBindPhoneActivity mEditBindPhoneActivity();
+
+    @ContributesAndroidInjector(modules = CourseDetailActivityModule.class)
+    abstract CourseDetailActivity mCourseDetailActivity();
 }

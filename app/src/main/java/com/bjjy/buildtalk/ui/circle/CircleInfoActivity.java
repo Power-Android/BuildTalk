@@ -94,7 +94,7 @@ public class CircleInfoActivity extends BaseActivity<CircleInfoPresenter> implem
         this.mMasterInfoEntity = masterInfoEntity;
         Glide.with(this).load(masterInfoEntity.getCircle_image().getPic_url()).into(mBgIv);
         Glide.with(this).load(masterInfoEntity.getMaster_pic()).into(mFaceIv);
-        if (mPresenter.mDataManager.getUser().getUser_id().equals(masterInfoEntity.getCircle_user())) {
+        if (masterInfoEntity.getIs_circleMaster().equals("1") && Integer.parseInt(masterInfoEntity.getCountUser()) > 1) {
             mQuitTv.setVisibility(View.GONE);
         }
         mTitleTv.setText(masterInfoEntity.getCircle_name());

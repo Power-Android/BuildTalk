@@ -13,6 +13,7 @@ import com.bjjy.buildtalk.adapter.TopticListAdapter;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
+import com.bjjy.buildtalk.utils.LogUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -65,11 +66,10 @@ public class TopticListActivity extends BaseActivity<TopticListPresenter> implem
     @Override
     public void handlerTopticList(CourseEntity courseEntities, boolean isRefresh) {
         mPage_count = courseEntities.getPage_count();
-        mList = courseEntities.getCircleInfo();
         if (isRefresh) {
-            mTopticListAdapter.setNewData(mList);
+            mTopticListAdapter.setNewData(courseEntities.getCircleInfo());
         } else {
-            mTopticListAdapter.addData(mList);
+            mTopticListAdapter.addData(courseEntities.getCircleInfo());
         }
     }
 

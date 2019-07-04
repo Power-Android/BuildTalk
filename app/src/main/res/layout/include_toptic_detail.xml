@@ -49,6 +49,9 @@
             android:layout_marginTop="@dimen/dp_10"
             android:layout_toRightOf="@+id/pre_face_iv"
             android:text="圈主：小地瓜"
+            android:maxLength="15"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_10" />
 
@@ -147,6 +150,9 @@
                 android:layout_height="wrap_content"
                 android:text="圈主：小地瓜"
                 android:textSize="@dimen/sp_10"
+                android:maxLength="15"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:textColor="@color/text_light"
                 android:layout_below="@+id/formal_title_tv"
                 android:layout_marginLeft="@dimen/dp_15"

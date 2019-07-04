@@ -114,7 +114,8 @@
         <activity android:name=".ui.talk.CircleManDetailActivity" />
         <activity android:name=".ui.mine.EditNameActivity" />
         <activity android:name=".ui.mine.BindPhoneActivity" />
-        <activity android:name=".ui.mine.EditBindPhoneActivity"></activity>
+        <activity android:name=".ui.mine.EditBindPhoneActivity" />
+        <activity android:name=".ui.circle.CourseDetailActivity"></activity>
     </application>
 
 </manifest>

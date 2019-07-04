@@ -1,6 +1,7 @@
 package com.bjjy.buildtalk.adapter;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -32,7 +33,9 @@ public class TopticListAdapter extends BaseQuickAdapter<CourseEntity.CircleInfoB
 
     @Override
     protected void convert(BaseViewHolder helper, CourseEntity.CircleInfoBean item) {
-        Glide.with(mContext).load(item.getCircle_image().getPic_url()).into((ImageView) helper.getView(R.id.item_img_iv));
+        if (item.getCircle_image() != null){
+            Glide.with(mContext).load(item.getCircle_image().getPic_url()).into((ImageView) helper.getView(R.id.item_img_iv));
+        }
         helper.setText(R.id.item_title_tv, item.getCircle_name())
                 .setText(R.id.item_name_tv, "圈主： " + item.getName());
 
