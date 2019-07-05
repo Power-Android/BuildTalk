@@ -24,6 +24,7 @@ import com.bjjy.buildtalk.entity.MasterDetailEntity;
 import com.bjjy.buildtalk.entity.MasterListEntity;
 import com.bjjy.buildtalk.entity.MemberEntity;
 import com.bjjy.buildtalk.entity.MyCardEntity;
+import com.bjjy.buildtalk.entity.PayOrderEntity;
 import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.SaveRecordEntity;
 import com.bjjy.buildtalk.entity.IEntity;
@@ -155,5 +156,7 @@ public interface HttpHelper {
     Observable<BaseResponse<User>> checkMobileCodeByAPP(Map<String, String> headers, Map<String, String> params);
 
     Observable<BaseResponse<CourseListEntity>> getCourseList(Map<String, String> headers, Map<String, String> params);
+
+    Observable<BaseResponse<PayOrderEntity>> payOrder(Map<String, String> headers, Map<String, String> params);
 
 }

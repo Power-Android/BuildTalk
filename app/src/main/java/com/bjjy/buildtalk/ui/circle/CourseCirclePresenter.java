@@ -15,6 +15,7 @@ import com.bjjy.buildtalk.core.rx.RxUtils;
 import com.bjjy.buildtalk.entity.CircleInfoEntity;
 import com.bjjy.buildtalk.entity.CourseListEntity;
 import com.bjjy.buildtalk.entity.IEntity;
+import com.bjjy.buildtalk.entity.PayOrderEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.utils.HeaderUtils;
 import com.bjjy.buildtalk.utils.TimeUtils;
@@ -135,6 +136,33 @@ public class CourseCirclePresenter extends BasePresenter<CourseCircleContract.Vi
                         if (courseListEntity.getCourselist().size() > 0){
                             mView.handlerCourseList(courseListEntity);
                         }
+                    }
+                }));
+    }
+
+    public void payOrder(String type_id, int data_id, String circle_name, String course_money) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        paramas.put("type_id", type_id);
+        paramas.put("data_id", data_id+"");
+        paramas.put("order_name", circle_name);
+        paramas.put("order_price", course_money);
+        paramas.put(Constants.SOURCE, Constants.ANDROID);
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.payOrder(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<PayOrderEntity>(mView, true) {
+                    @Override
+                    public void onSuccess(PayOrderEntity payOrderEntity) {
+                        mView.handlerWxOrder(payOrderEntity);
                     }
                 }));
     }

@@ -29,5 +29,6 @@
     <color name="transparent">#00000000</color>
     <color name="black">#000000</color>
     <color name="orange_drak">#4C2705</color>
+    <color name="green">#28DB84</color>
 
 </resources>

@@ -8,12 +8,18 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bjjy.buildtalk.R;
+import com.bjjy.buildtalk.app.Constants;
+import com.bjjy.buildtalk.core.event.PayEvent;
+import com.bjjy.buildtalk.utils.ToastUtils;
 import com.tencent.mm.opensdk.constants.ConstantsAPI;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+
+import org.greenrobot.eventbus.EventBus;
 
 
 public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
@@ -25,13 +31,6 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        TextView tv = new TextView(this);
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        tv.setText("支付中...");
-        tv.setTextSize(30);
-        tv.setGravity(Gravity.CENTER);
-        tv.setLayoutParams(params);
-        setContentView(tv);
         //WeiXinConstants.APP_ID
         api = WXAPIFactory.createWXAPI(this, "wx24a51a57c203d22a");
         api.handleIntent(getIntent(), this);
@@ -53,23 +52,16 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
         Log.i(TAG, "errCode = " + resp.errCode);
         //最好依赖于商户后台的查询结果
         if (resp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
-            //如果返回-1，很大可能是因为应用签名的问题。用官方的工具生成
-            //签名工具下载：https://open.weixin.qq.com/zh_CN/htmledition/res/dev/download/sdk/Gen_Signature_Android.apk
-//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//            builder.setTitle("提示");
-//            builder.setMessage(getString(R.string.pay_result_callback_msg, String.valueOf(resp.errCode)));
-//            builder.show();
-
-//            Intent intent = new Intent(this, OrderResultActivity.class);
-//            if (resp.errCode >= 0) {//成功
-//                intent.putExtra(OrderResultActivity.IN_ARG_RESULT, OrderResultActivity.PAY_STATUS_SUCCESS);
-//            } else if (resp.errCode == -2) {//取消
-//                intent.putExtra(OrderResultActivity.IN_ARG_RESULT, OrderResultActivity.PAY_STATUS_CANCEL);
-//            } else {//失败，错误
-//                intent.putExtra(OrderResultActivity.IN_ARG_RESULT, OrderResultActivity.PAY_STATUS_FAIL);
-//            }
-//            startActivity(intent);
-//            finish();
+            if (resp.errCode == 0){
+                EventBus.getDefault().post(new PayEvent(Constants.PAY_SUCCESS));
+            }else if (resp.errCode == -1){
+                ToastUtils.showShort("支付失败");
+            }else if (resp.errCode == -2){
+                ToastUtils.showShort("支付取消");
+            }else {
+                ToastUtils.showShort(resp.errStr);
+            }
+            finish();
         }
     }
 }

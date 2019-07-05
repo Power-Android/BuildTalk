@@ -6,6 +6,7 @@ import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.base.view.IView;
 import com.bjjy.buildtalk.entity.CircleInfoEntity;
 import com.bjjy.buildtalk.entity.CourseListEntity;
+import com.bjjy.buildtalk.entity.PayOrderEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 
 import java.util.List;
@@ -27,6 +28,8 @@ public class CourseCircleContract {
         void handlerThemeInfo(ThemeInfoEntity themeInfoEntity, boolean isRefresh);
 
         void handlerCourseList(CourseListEntity courseListEntity);
+
+        void handlerWxOrder(PayOrderEntity payOrderEntity);
     }
 
     interface Presenyer extends IPresenter<View>{

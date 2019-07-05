@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,12 +26,17 @@ import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.CircleTopticAdapter;
 import com.bjjy.buildtalk.adapter.DirectoryAdapter;
 import com.bjjy.buildtalk.app.App;
+import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
+import com.bjjy.buildtalk.core.event.PayEvent;
+import com.bjjy.buildtalk.core.event.RefreshEvent;
 import com.bjjy.buildtalk.entity.CircleInfoEntity;
 import com.bjjy.buildtalk.entity.CourseListEntity;
+import com.bjjy.buildtalk.entity.PayOrderEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.utils.SizeUtils;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
+import com.bjjy.buildtalk.weight.BaseDialog;
 import com.bjjy.buildtalk.weight.MyBadgeViewPagerAdapter;
 import com.bjjy.buildtalk.weight.tablayout.TabLayout;
 import com.bumptech.glide.Glide;
@@ -39,9 +45,15 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
+import com.tencent.mm.opensdk.modelpay.PayReq;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -186,6 +198,15 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     private DirectoryAdapter mDirectoryAdapter;
     private AppBarLayout.LayoutParams mParams;
     private int mCourse_page_count;
+    private BaseDialog mPayDialog;
+    private IWXAPI wxapi;
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void event(PayEvent eventBean) {
+        if (TextUtils.equals(eventBean.getMsg(), Constants.PAY_SUCCESS)) {
+            recreate();
+        }
+    }
 
     @Override
     protected int getLayoutId() {
@@ -397,6 +418,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
             case R.id.more_iv:
                 break;
             case R.id.join_tv:
+                showPayDialog();
                 break;
             case R.id.publis_rl:
                 break;
@@ -419,6 +441,42 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
                 mMcRl.setVisibility(View.GONE);
                 break;
         }
+    }
+
+    private void showPayDialog() {
+        mPayDialog = new BaseDialog.Builder(this)
+                .setGravity(Gravity.BOTTOM)
+                .setAnimation(R.style.bottom_aniamtion)
+                .setViewId(R.layout.dialog_pay_layout)
+                .setWidthHeightdp(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                .isOnTouchCanceled(true)
+                .addViewOnClickListener(R.id.cancle_tv, v -> mPayDialog.dismiss())
+                .addViewOnClickListener(R.id.pay_ll, v -> {
+                            mPresenter.payOrder("2", mCircleInfoEntity.getCircleInfo().getCourse_id(), mCircleInfoEntity.getCircleInfo().getCircle_name(),
+                                    mCircleInfoEntity.getCircleInfo().getCourse_money());
+                            mPayDialog.dismiss();
+                        }
+                )
+                .builder();
+        TextView payTv = mPayDialog.getView(R.id.pay_money_tv);
+        payTv.setText("￥" + mCircleInfoEntity.getCircleInfo().getCourse_money());
+        mPayDialog.show();
+    }
+
+    @Override
+    public void handlerWxOrder(PayOrderEntity payOrderEntity) {
+        if (wxapi == null) {
+            wxapi = WXAPIFactory.createWXAPI(this, "wx24a51a57c203d22a", false);
+        }
+        PayReq request = new PayReq();
+        request.appId = payOrderEntity.getAppid();
+        request.partnerId = payOrderEntity.getPartnerid();
+        request.prepayId = payOrderEntity.getPrepayid();
+        request.packageValue = payOrderEntity.getPackageX();
+        request.nonceStr = payOrderEntity.getNoncestr();
+        request.timeStamp = payOrderEntity.getTimestamp();
+        request.sign = payOrderEntity.getSign();
+        wxapi.sendReq(request);
     }
 
     @Override

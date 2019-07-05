@@ -28,6 +28,7 @@ import com.bjjy.buildtalk.entity.MasterDetailEntity;
 import com.bjjy.buildtalk.entity.MasterListEntity;
 import com.bjjy.buildtalk.entity.MemberEntity;
 import com.bjjy.buildtalk.entity.MyCardEntity;
+import com.bjjy.buildtalk.entity.PayOrderEntity;
 import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.SaveRecordEntity;
 import com.bjjy.buildtalk.entity.IEntity;
@@ -404,5 +405,10 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     @Override
     public Observable<BaseResponse<CourseListEntity>> getCourseList(Map<String, String> headers, Map<String, String> params) {
         return mHttpHelper.getCourseList(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<PayOrderEntity>> payOrder(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.payOrder(headers, params);
     }
 }

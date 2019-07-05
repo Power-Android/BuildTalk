@@ -26,6 +26,7 @@ import com.bjjy.buildtalk.entity.MasterDetailEntity;
 import com.bjjy.buildtalk.entity.MasterListEntity;
 import com.bjjy.buildtalk.entity.MemberEntity;
 import com.bjjy.buildtalk.entity.MyCardEntity;
+import com.bjjy.buildtalk.entity.PayOrderEntity;
 import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.SaveRecordEntity;
 import com.bjjy.buildtalk.entity.IEntity;
@@ -478,7 +479,13 @@ public interface ApiService {
     @FormUrlEncoded
     Observable<BaseResponse<CourseListEntity>> getCourseList(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
-
+    /**
+     * @return 微信支付 返回微信支付所需参数
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("unifiedapporder")
+    @FormUrlEncoded
+    Observable<BaseResponse<PayOrderEntity>> payOrder(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
 
 
