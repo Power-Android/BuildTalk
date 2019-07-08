@@ -95,6 +95,11 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     }
 
     @Override
+    public void loginOut() {
+        mDbHelper.loginOut();
+    }
+
+    @Override
     public List<HistoryData> addHistoryData(String data) {
         return mDbHelper.addHistoryData(data);
     }

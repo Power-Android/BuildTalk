@@ -76,7 +76,11 @@ public class TalkPresnter extends BasePresenter<TalkContract.View> implements Ta
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
         paramas.put("show", "1");
-        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        if (mDataManager.getLoginStatus()){
+            paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        }else {
+            paramas.put(Constants.USER_ID, "");
+        }
         paramas.put(App.getContext().getString(R.string.TIMESTAMP), timestamp);
         String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
 

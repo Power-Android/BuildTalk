@@ -59,7 +59,11 @@ public class MasterDetailPresenter extends BasePresenter<MasterDetailContract.Vi
     public void userDetail(String user_id) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
-        paramas.put("examine_user", mDataManager.getUser().getUser_id());
+        if (mDataManager.getLoginStatus()){
+            paramas.put("examine_user", mDataManager.getUser().getUser_id());
+        }else {
+            paramas.put("examine_user", "");
+        }
         paramas.put(Constants.USER_ID, user_id);
         paramas.put("user_type", "1");
         paramas.put(App.getContext().getString(R.string.TIMESTAMP), timestamp);

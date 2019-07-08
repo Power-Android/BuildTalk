@@ -104,4 +104,16 @@
             android:background="@color/border3"
             android:layout_alignParentBottom="true"/>
     </RelativeLayout>
+    <TextView
+        android:id="@+id/quit_tv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_44"
+        android:text="@string/quit_login"
+        android:textColor="@color/text_drak"
+        android:gravity="center"
+        android:textSize="@dimen/sp_15"
+        android:background="@drawable/shape_gray_5radius"
+        android:layout_marginLeft="@dimen/common_margin"
+        android:layout_marginRight="@dimen/common_margin"
+        android:layout_marginTop="@dimen/dp_40"/>
 </LinearLayout>

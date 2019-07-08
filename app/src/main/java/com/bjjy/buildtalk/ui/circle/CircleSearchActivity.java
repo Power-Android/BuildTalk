@@ -1,5 +1,6 @@
 package com.bjjy.buildtalk.ui.circle;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +22,7 @@ import com.bjjy.buildtalk.entity.SearchResultEntity;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bjjy.buildtalk.weight.ClearEditText;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
@@ -34,7 +36,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class CircleSearchActivity extends BaseActivity<CircleSearchPresenter> implements CircleSearchContract.View, TextView.OnEditorActionListener, OnRefreshLoadMoreListener {
+public class CircleSearchActivity extends BaseActivity<CircleSearchPresenter> implements CircleSearchContract.View, TextView.OnEditorActionListener, OnRefreshLoadMoreListener, BaseQuickAdapter.OnItemClickListener {
 
     @BindView(R.id.search_et)
     ClearEditText mSearchEt;
@@ -72,6 +74,7 @@ public class CircleSearchActivity extends BaseActivity<CircleSearchPresenter> im
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mSearchResultAdapter = new CircleSearchResultAdapter(R.layout.adapter_circle_search_result, mList);
         mRecyclerView.setAdapter(mSearchResultAdapter);
+        mSearchResultAdapter.setOnItemClickListener(this);
     }
 
     @Override
@@ -166,5 +169,15 @@ public class CircleSearchActivity extends BaseActivity<CircleSearchPresenter> im
         page = 1;
         gotoSearchResult(page,mSearchEt.getText().toString().trim(), true);
         refreshLayout.finishRefresh();
+    }
+
+    @Override
+    public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+        List<SearchResultEntity.CircleInfoBean> mList = baseQuickAdapter.getData();
+        if (TextUtils.equals("话题", mList.get(i).getType())){
+            Intent intent = new Intent(this, TopticCircleActivity.class);
+            intent.putExtra("circle_id", mList.get(i).getCircle_id()+"");
+            startActivity(intent);
+        }
     }
 }

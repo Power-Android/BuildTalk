@@ -76,13 +76,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                     showFragment(Constants.TYPE_TALK);
                     break;
                 case R.id.tab_mine:
-                    if (mPresenter.mDataManager.getLoginStatus()) {
-                        showFragment(Constants.TYPE_MINE);
-                    } else {
-                        Intent intent = new Intent(this, LoginActivity.class);
-                        startActivity(intent);
-                        return false;
-                    }
+                    showFragment(Constants.TYPE_MINE);
                     break;
             }
             return true;

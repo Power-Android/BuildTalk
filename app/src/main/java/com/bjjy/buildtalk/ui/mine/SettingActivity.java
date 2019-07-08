@@ -11,6 +11,7 @@ import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.User;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.utils.LogUtils;
+import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
@@ -36,6 +37,8 @@ public class SettingActivity extends BaseActivity<SettingPresenter> implements S
     RelativeLayout mAboutUs;
     @BindView(R.id.version_info)
     RelativeLayout mVersionInfo;
+    @BindView(R.id.quit_tv)
+    TextView mQuitTv;
 
     @Override
     protected int getLayoutId() {
@@ -58,7 +61,7 @@ public class SettingActivity extends BaseActivity<SettingPresenter> implements S
         }
     }
 
-    @OnClick({R.id.bind_wechat, R.id.about_us, R.id.version_info})
+    @OnClick({R.id.bind_wechat, R.id.about_us, R.id.version_info, R.id.quit_tv})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bind_wechat:
@@ -70,6 +73,9 @@ public class SettingActivity extends BaseActivity<SettingPresenter> implements S
                 startActivity(new Intent(this,AboutUsActivity.class));
                 break;
             case R.id.version_info:
+                break;
+            case R.id.quit_tv:
+                LoginHelper.loginOut(this, mPresenter.mDataManager);
                 break;
         }
     }

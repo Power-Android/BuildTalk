@@ -9,10 +9,15 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.bjjy.buildtalk.R;
+import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.app.User;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
+import com.bjjy.buildtalk.core.event.RefreshEvent;
+import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -143,6 +148,8 @@ public class PhoneLoginActivity extends BaseActivity<PhoneLoginPresenter> implem
     @Override
     public void handlerLoginSuccess(User user) {
         LogUtils.e(user.toString());
+        KeyboardUtils.hideSoftInput(this);
+        EventBus.getDefault().post(new RefreshEvent(Constants.INFO_REFRESH));
         setResult(RESULT_OK);
         finish();
     }

@@ -30,7 +30,9 @@ import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.GuestBookEntity;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.LogUtils;
+import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
+import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -76,8 +78,6 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     TextView mMediaSizeTv;
     @BindView(R.id.media_rl)
     RelativeLayout mMediaRl;
-    @BindView(R.id.content_tv)
-    TextView mContentTv;
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
     @BindView(R.id.record_et)
@@ -158,7 +158,7 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
         mMNewsInfo = everyTalkDetailEntity.getNewsInfo();
 
         mTitleTv.setText(mMNewsInfo.getArticle_title());
-        Glide.with(this).load(mMNewsInfo.getAuthor_pic()).into(mFaceIv);
+        Glide.with(this).load(mMNewsInfo.getAuthor_pic()).apply(new RequestOptions().error(R.drawable.moren_face)).into(mFaceIv);
         mNameTv.setText(mMNewsInfo.getAuthor_name());
         mTimeTv.setText(mMNewsInfo.getPublish_time());
         mMediaNameTv.setText(mMNewsInfo.getArticle_title());
@@ -275,25 +275,32 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.play_iv:
-                if (simpleExoPlayer != null) {
-                    simpleExoPlayer.setPlayWhenReady(!simpleExoPlayer.getPlayWhenReady());
-                }
+                LoginHelper.login(this, mPresenter.mDataManager, () -> {
+                    if (simpleExoPlayer != null) {
+                        simpleExoPlayer.setPlayWhenReady(!simpleExoPlayer.getPlayWhenReady());
+                    }
+                });
                 break;
             case R.id.praise_ll:
-                boolean isCollect = "1".equals(String.valueOf(mMNewsInfo.getIsCollect()));
-                mPresenter.collectArticle(mArticle_id,isCollect);
+                LoginHelper.login(this, mPresenter.mDataManager, () -> {
+                    boolean isCollect = "1".equals(String.valueOf(mMNewsInfo.getIsCollect()));
+                    mPresenter.collectArticle(mArticle_id,isCollect);
+                });
                 break;
             case R.id.share_iv:
+                ToastUtils.showShort("即将开放分享功能");
                 break;
             case R.id.record_ll:
-                if (!isGone){
-                    mRecordLl.setVisibility(View.GONE);
-                    mRecordEt.setFocusable(true);
-                    mRecordEt.setFocusableInTouchMode(true);
-                    mRecordEt.requestFocus();
-                    KeyboardUtils.showSoftInput(this);
-                    isGone = !isGone;
-                }
+                LoginHelper.login(this, mPresenter.mDataManager, () -> {
+                    if (!isGone){
+                        mRecordLl.setVisibility(View.GONE);
+                        mRecordEt.setFocusable(true);
+                        mRecordEt.setFocusableInTouchMode(true);
+                        mRecordEt.requestFocus();
+                        KeyboardUtils.showSoftInput(EveryTalkDetailActivity.this);
+                        isGone = !isGone;
+                    }
+                });
                 break;
         }
     }
@@ -318,8 +325,10 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     @Override
     public void onItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int position) {
         if (view.getId() == R.id.item_praise_iv){
-            boolean isPraise = "1".equals(mEveryTalkDetailAdapter.getData().get(position).getIsPraise()+"");
-            mPresenter.praiseRecord(mList.get(position).getGuestbook_id(),position,isPraise);
+            LoginHelper.login(this, mPresenter.mDataManager, () -> {
+                boolean isPraise = "1".equals(mEveryTalkDetailAdapter.getData().get(position).getIsPraise()+"");
+                mPresenter.praiseRecord(mList.get(position).getGuestbook_id(),position,isPraise);
+            });
         }
     }
 

@@ -19,6 +19,7 @@ import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.fragment.BaseFragment;
 import com.bjjy.buildtalk.core.event.RefreshEvent;
 import com.bjjy.buildtalk.entity.CircleEntity;
+import com.bjjy.buildtalk.utils.LoginHelper;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -90,7 +91,7 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
         mCircleAdapter.setFooterViewAsFlow(true);
         mFooterView = LayoutInflater.from(mContext).inflate(R.layout.circle_footer_view, null);
         mCircleAdapter.addFooterView(mFooterView);
-        mFooterView.setOnClickListener(v -> createCircle());
+        mFooterView.setOnClickListener(v -> LoginHelper.login(mContext, mPresenter.mDataManager, () -> createCircle()));
         mCircleAdapter.setOnItemClickListener(this);
     }
 

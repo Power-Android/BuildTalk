@@ -19,7 +19,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/fl_VideoPlayer"
-        android:text="第105期 各地重点工程最新进展来了"
         android:lineSpacingExtra="@dimen/dp_3"
         android:layout_marginTop="@dimen/dp_15"
         android:layout_marginLeft="@dimen/dp_15"
@@ -32,7 +31,7 @@
         android:layout_width="@dimen/dp_30"
         android:layout_height="@dimen/dp_30"
         android:scaleType="centerCrop"
-        android:src="@drawable/test_toptic"
+        android:src="@drawable/moren_face"
         android:layout_marginTop="@dimen/dp_10"
         android:layout_marginLeft="@dimen/dp_15"
         android:layout_below="@+id/title_tv"/>
@@ -51,7 +50,6 @@
         android:id="@+id/time_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="2019-05-07 14:40:59"
         android:layout_alignBottom="@+id/face_iv"
         android:layout_toRightOf="@+id/face_iv"
         android:includeFontPadding="false"
@@ -88,7 +86,6 @@
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/playing_iv"
             android:includeFontPadding="false"
-            android:text="各地重点工程最新进展来了"
             android:textColor="@color/text_drak"
             android:textSize="@dimen/sp_15"
             android:layout_toRightOf="@+id/play_iv"
@@ -110,7 +107,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"
-                android:text="4分钟10秒"
+                android:text="0分钟0秒"
                 android:textColor="@color/blue_mid"
                 android:textSize="@dimen/sp_10" />
             <View
@@ -123,22 +120,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"
-                android:text="45M"
+                android:text="0M"
                 android:textColor="@color/blue_mid"
                 android:textSize="@dimen/sp_10"
                 android:layout_marginLeft="@dimen/dp_10"/>
         </LinearLayout>
     </RelativeLayout>
-    <TextView
-        android:id="@+id/content_tv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/media_rl"
-        android:layout_marginLeft="@dimen/dp_15"
-        android:layout_marginRight="@dimen/dp_15"/>
     <WebView
         android:id="@+id/webview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/content_tv"/>
+        android:layout_below="@+id/media_rl"/>
 </RelativeLayout>

@@ -34,7 +34,11 @@ public class EveryTalkDetailPresenter extends BasePresenter<EveryTalkDetailContr
     public void everyTalkDetail(String article_id) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
-        paramas.put("user_id", "47");
+        if (mDataManager.getLoginStatus()){
+            paramas.put("user_id", mDataManager.getUser().getUser_id());
+        }else {
+            paramas.put("user_id", "");
+        }
         paramas.put("article_id", article_id);
         paramas.put("source", "android");
         paramas.put(Constants.TIMESTAMP, timestamp);
@@ -82,7 +86,7 @@ public class EveryTalkDetailPresenter extends BasePresenter<EveryTalkDetailContr
     public void saveRecord(int article_id, String content) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
-        paramas.put("user_id", "7");
+        paramas.put("user_id", mDataManager.getUser().getUser_id());
         paramas.put("article_id", article_id + "");
         paramas.put("source", "android");
         paramas.put("content", content);
@@ -107,8 +111,8 @@ public class EveryTalkDetailPresenter extends BasePresenter<EveryTalkDetailContr
     public void praiseRecord(int guestbook_id, int position, boolean isPraise) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
-        paramas.put("user_id", "33");
-        paramas.put("guestbook_id", "160");
+        paramas.put("user_id", mDataManager.getUser().getUser_id());
+        paramas.put("guestbook_id", guestbook_id+"");
         paramas.put("source", "android");
         paramas.put(App.getContext().getString(R.string.TIMESTAMP), timestamp);
         String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
@@ -139,8 +143,8 @@ public class EveryTalkDetailPresenter extends BasePresenter<EveryTalkDetailContr
     public void collectArticle(String article_id, boolean isCollect) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
-        paramas.put("user_id", "47");
-        paramas.put("article_id", "568");
+        paramas.put("user_id", mDataManager.getUser().getUser_id());
+        paramas.put("article_id", article_id+"");
         paramas.put("source", "android");
         paramas.put(App.getContext().getString(R.string.TIMESTAMP), timestamp);
         String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));

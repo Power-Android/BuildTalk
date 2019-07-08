@@ -22,6 +22,8 @@ public interface DbHelper {
 
     boolean getLoginStatus();
 
+    void loginOut();
+
     /**
      * Add search history data
      *

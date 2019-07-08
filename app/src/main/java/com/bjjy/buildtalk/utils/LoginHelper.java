@@ -4,8 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.app.DataManager;
+import com.bjjy.buildtalk.core.event.RefreshEvent;
 import com.bjjy.buildtalk.ui.main.LoginActivity;
+import com.bjjy.buildtalk.ui.mine.SettingActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -30,9 +33,11 @@ public class LoginHelper {
         }
     }
 
-    public static void loginOut(DataManager dataManager) {
+    public static void loginOut(Activity activity, DataManager dataManager) {
         dataManager.setLoginStatus(false);
-//        EventBus.getDefault().post(new EventBean(Constant.REFRESH));
+        dataManager.loginOut();
+        EventBus.getDefault().post(new RefreshEvent(Constants.INFO_REFRESH));
+        activity.finish();
     }
 
     public interface CallBack {

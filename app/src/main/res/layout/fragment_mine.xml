@@ -32,7 +32,7 @@
                     android:layout_marginLeft="@dimen/common_margin"
                     android:layout_marginTop="@dimen/dp_64"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/test_course"
+                    android:src="@drawable/moren_face"
                     app:civ_border_color="@color/white"
                     app:civ_border_width="@dimen/dp_2" />
 
@@ -48,7 +48,7 @@
                     android:includeFontPadding="false"
                     android:maxLength="15"
                     android:singleLine="true"
-                    android:text="建谊集团"
+                    android:text="@string/login"
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_18" />
 
@@ -61,7 +61,7 @@
                     android:layout_marginTop="@dimen/dp_10"
                     android:layout_toRightOf="@+id/face_iv"
                     android:includeFontPadding="false"
-                    android:text="17611223344"
+                    android:text="@string/login_more_look"
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_14" />
 
@@ -106,6 +106,7 @@
                     android:id="@+id/wallet_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="@dimen/common_margin"
                     android:layout_toLeftOf="@+id/icon1"

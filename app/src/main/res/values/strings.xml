@@ -49,4 +49,7 @@
     <string name="transaction_list">交易明细列表</string>
     <string name="cancle">取消</string>
     <string name="circle_member">圈子成员</string>
+    <string name="quit_login">退出登录</string>
+    <string name="login">登录</string>
+    <string name="login_more_look">登录后，可预览更多内容哦～</string>
 </resources>

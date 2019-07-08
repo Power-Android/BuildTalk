@@ -26,7 +26,6 @@
             android:id="@+id/item_period_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="第105期"
             android:singleLine="true"
             android:ellipsize="end"
             android:textColor="@color/text_drak"
@@ -45,13 +44,11 @@
             android:id="@+id/item_time_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2019-05-05 14:07:08"
             android:layout_marginLeft="@dimen/dp_25"/>
         <TextView
             android:id="@+id/item_num_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="89阅读"
             android:layout_marginLeft="@dimen/dp_15"/>
     </LinearLayout>
 

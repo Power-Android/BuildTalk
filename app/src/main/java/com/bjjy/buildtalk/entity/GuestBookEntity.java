@@ -59,7 +59,7 @@ public class GuestBookEntity {
         private int user_id;
         private String content;
         private String guestbook_time;
-        private String nickname;
+        private String name;
         private String headimage;
         private int countpraise;
         private int isPraise;
@@ -97,11 +97,11 @@ public class GuestBookEntity {
         }
 
         public String getNickname() {
-            return nickname;
+            return name;
         }
 
         public void setNickname(String nickname) {
-            this.nickname = nickname;
+            this.name = nickname;
         }
 
         public String getHeadimage() {

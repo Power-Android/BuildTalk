@@ -91,6 +91,11 @@ public class DbHelperImpl implements DbHelper {
     }
 
     @Override
+    public void loginOut() {
+        getUserDao().deleteAll();
+    }
+
+    @Override
     public List<HistoryData> addHistoryData(String data) {
         this.data = data;
         getHistoryDataList();

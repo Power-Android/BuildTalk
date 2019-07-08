@@ -16,6 +16,7 @@ import com.bjjy.buildtalk.ui.main.LoginActivity;
 import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -92,29 +93,39 @@ public class MineFragment extends BaseFragment<MinePresenter> implements MineCon
 
     @Override
     protected void initEventAndData() {
-        User user = mPresenter.mDataManager.getUser();
-        Glide.with(mContext).load(user.getHeadImage()).into(mFaceIv);
-        mNameTv.setText(user.getNickName());
-        mPhoneTv.setText(user.getMobile());
+        if (mPresenter.mDataManager.getLoginStatus()){
+            User user = mPresenter.mDataManager.getUser();
+            Glide.with(mContext).load(user.getHeadImage()).apply(new RequestOptions().error(R.drawable.moren_face)).into(mFaceIv);
+            mNameTv.setText(user.getNickName());
+            mPhoneTv.setText(user.getMobile());
+        }else {
+            Glide.with(mContext).load(R.drawable.moren_face).into(mFaceIv);
+            mNameTv.setText(R.string.login);
+            mPhoneTv.setText(R.string.login_more_look);
+        }
 //        mPresenter.userInfo(user.getUser_id());
     }
 
-    @OnClick({R.id.info_iv, R.id.wallet_rl, R.id.set_rl, R.id.help_rl, R.id.service_rl})
+    @OnClick({R.id.info_iv, R.id.wallet_rl, R.id.set_rl, R.id.help_rl, R.id.service_rl, R.id.name_tv})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.info_iv:
-                startActivity(new Intent(mContext, PersonInfoActivity.class));
+                LoginHelper.login(mContext, mPresenter.mDataManager, () -> startActivity(new Intent(mContext, PersonInfoActivity.class)));
                 break;
             case R.id.wallet_rl:
-                startActivity(new Intent(mContext, WalletActivity.class));
+                LoginHelper.login(mContext, mPresenter.mDataManager, () -> startActivity(new Intent(mContext, WalletActivity.class)));
                 break;
             case R.id.set_rl:
-                startActivity(new Intent(mContext, SettingActivity.class));
+                LoginHelper.login(mContext, mPresenter.mDataManager, () -> startActivity(new Intent(mContext, SettingActivity.class)));
                 break;
             case R.id.help_rl:
-                startActivity(new Intent(mContext, FeedBackActivity.class));
+                LoginHelper.login(mContext, mPresenter.mDataManager, () -> startActivity(new Intent(mContext, FeedBackActivity.class)));
                 break;
             case R.id.service_rl:
+                break;
+            case R.id.name_tv:
+                if (!mPresenter.mDataManager.getLoginStatus())
+                    startActivity(new Intent(mContext, LoginActivity.class));
                 break;
         }
     }
