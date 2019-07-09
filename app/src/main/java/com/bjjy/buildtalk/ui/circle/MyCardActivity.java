@@ -70,12 +70,13 @@ public class MyCardActivity extends BaseActivity<MyCardPresenter> implements MyC
         Glide.with(this).load(myCardEntity.getHeadImage()).into(mFaceIv);
         Glide.with(this).load(myCardEntity.getCircle_code()).into(mQrcodeIv);
         if (TextUtils.equals("1",myCardEntity.getIs_circleMaster())){
+            mDateTv.setText(myCardEntity.getCreate_day());
             mTextView.setText("创建天数");
         }else {
+            mDateTv.setText(myCardEntity.getJoin_day());
             mTextView.setText("加入天数");
         }
         mNameTv.setText(myCardEntity.getName());
-        mDateTv.setText(myCardEntity.getJoin_day());
         mThemeTv.setText(myCardEntity.getCountTheme());
         mPraiseTv.setText(myCardEntity.getCountpraise());
         mTitleTv.setText(myCardEntity.getCircle_name());

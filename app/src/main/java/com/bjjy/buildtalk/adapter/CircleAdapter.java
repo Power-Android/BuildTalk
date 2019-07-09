@@ -30,7 +30,9 @@ public class CircleAdapter extends BaseMultiItemQuickAdapter<CircleEntity.Circle
     @Override
     protected void convert(BaseViewHolder helper, CircleEntity.CircleInfoBean item) {
         if (item != null && item.getItemType() == BODY_CONTENT) {
-            Glide.with(mContext).load(item.getCircle_image().getPic_url()).into((ImageView) helper.getView(R.id.circle_iv));
+            if (item.getCircle_image() != null){
+                Glide.with(mContext).load(item.getCircle_image().getPic_url()).into((ImageView) helper.getView(R.id.circle_iv));
+            }
             helper.setText(R.id.circle_title_tv, item.getCircle_name())
                     .setText(R.id.course_name_tv, item.getName());
             helper.setGone(R.id.isCourse, 2 == item.getType() ? true : false)

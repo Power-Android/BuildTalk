@@ -2,9 +2,9 @@ package com.bjjy.buildtalk.ui.circle;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -66,6 +66,8 @@ public class CircleInfoActivity extends BaseActivity<CircleInfoPresenter> implem
     RelativeLayout mDataRl;
     @BindView(R.id.quit_tv)
     TextView mQuitTv;
+    @BindView(R.id.ziliao_tv)
+    TextView mZiliaoTv;
     private String mCircle_id;
     private String mOperate_user;
     private CircleMasterInfoEntity mMasterInfoEntity;
@@ -92,6 +94,11 @@ public class CircleInfoActivity extends BaseActivity<CircleInfoPresenter> implem
     @Override
     public void handlerMasterInfo(CircleMasterInfoEntity masterInfoEntity) {
         this.mMasterInfoEntity = masterInfoEntity;
+        if (TextUtils.equals("1", masterInfoEntity.getIs_circleMaster())){
+            mZiliaoTv.setText("编辑资料");
+        }else {
+            mZiliaoTv.setText("圈子资料");
+        }
         Glide.with(this).load(masterInfoEntity.getCircle_image().getPic_url()).into(mBgIv);
         Glide.with(this).load(masterInfoEntity.getMaster_pic()).into(mFaceIv);
         if (masterInfoEntity.getIs_circleMaster().equals("1") && Integer.parseInt(masterInfoEntity.getCountUser()) > 1) {
@@ -136,9 +143,17 @@ public class CircleInfoActivity extends BaseActivity<CircleInfoPresenter> implem
                 startActivity(mIntent);
                 break;
             case R.id.data_rl:
-                mIntent = new Intent(this, CircleDataActivity.class);
-                mIntent.putExtra("circle_id", mMasterInfoEntity.getCircle_id());
-                startActivity(mIntent);
+                if (TextUtils.equals("1", mMasterInfoEntity.getIs_circleMaster())){
+                    mIntent = new Intent(this, CreateCircleActivity.class);
+                    mIntent.putExtra("type", "edit");
+                    mIntent.putExtra("circle_id", mMasterInfoEntity.getCircle_id());
+                    startActivity(mIntent);
+                }else {
+                    mIntent = new Intent(this, CircleDataActivity.class);
+                    mIntent.putExtra("circle_id", mMasterInfoEntity.getCircle_id());
+                    startActivity(mIntent);
+                }
+
                 break;
             case R.id.quit_tv:
                 showQuitDialog();

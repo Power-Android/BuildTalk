@@ -2,7 +2,9 @@ package com.bjjy.buildtalk.ui.talk;
 
 import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.base.view.IView;
+import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.entity.CircleMasterEntity;
+import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.IndustryMasterEntity;
 import com.bjjy.buildtalk.entity.TalkEntity;
 
@@ -21,6 +23,8 @@ public class TalkContract {
         void handlerTalkMaster(IndustryMasterEntity industryMasterEntity);
 
         void handlerCircleMaster(List<CircleMasterEntity> list);
+
+        void handlerAttrntion(BaseResponse<IEntity> baseResponse, List<CircleMasterEntity> mMyFansInfo, int i);
     }
 
     interface Presenter extends IPresenter<View> {

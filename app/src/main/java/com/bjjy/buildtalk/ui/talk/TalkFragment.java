@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,7 +15,9 @@ import android.widget.TextView;
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.TalkAdapter;
 import com.bjjy.buildtalk.base.fragment.BaseFragment;
+import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.entity.CircleMasterEntity;
+import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.IndustryMasterEntity;
 import com.bjjy.buildtalk.entity.TalkEntity;
 import com.bjjy.buildtalk.utils.AnimatorUtils;
@@ -69,6 +72,10 @@ public class TalkFragment extends BaseFragment<TalkPresnter> implements TalkCont
         mTalkAdapter.addHeaderView(headerView);
         headerView.setOnClickListener(v -> startActivity(new Intent(mContext, TalkSearchActivity.class)));
         mTalkAdapter.setOnItemChildClickListener(this);
+        mTalkAdapter.setOnFocusClickListener((baseQuickAdapter, view, i) -> {
+            List<CircleMasterEntity> mList = baseQuickAdapter.getData();
+            mPresenter.attention(mList.get(i).getUser_id(),mList,i);
+        });
     }
 
     @Override
@@ -121,5 +128,15 @@ public class TalkFragment extends BaseFragment<TalkPresnter> implements TalkCont
                 startActivity(new Intent(mContext, CircleListActivity.class));
                 break;
         }
+    }
+
+    @Override
+    public void handlerAttrntion(BaseResponse<IEntity> baseResponse, List<CircleMasterEntity> mList, int i) {
+        if (TextUtils.equals("关注成功", baseResponse.getErrorMsg())){
+            mList.get(i).setIs_attention(1);
+        }else {
+            mList.get(i).setIs_attention(0);
+        }
+        mTalkAdapter.setFocus(i);
     }
 }

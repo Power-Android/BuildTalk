@@ -157,11 +157,13 @@ public class PublishActivity extends BaseActivity<PublishPresenter> implements P
                 for (int i = 0; i < mLocalMedia.size(); i++) {
                     ThemeImageBean imageBean = new ThemeImageBean();
                     imageBean.setPic_url(mLocalMedia.get(i).getPath());
-                    list.add(imageBean);
-                    File file = new File(mLocalMedia.get(i).getPath());
-                    RequestBody body = RequestBody.create(MediaType.parse("image/*"), file);   //说明该文件为图片类型
-                    MultipartBody.Part part = MultipartBody.Part.createFormData("file[]", file.getName(), body);
-                    mParts.add(part);
+                    if (list.size() < 9){
+                        list.add(imageBean);
+                        File file = new File(mLocalMedia.get(i).getPath());
+                        RequestBody body = RequestBody.create(MediaType.parse("image/*"), file);   //说明该文件为图片类型
+                        MultipartBody.Part part = MultipartBody.Part.createFormData("file[]", file.getName(), body);
+                        mParts.add(part);
+                    }
                 }
                 mMyGridAdapter.notifyDataSetChanged();
             }

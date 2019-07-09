@@ -366,9 +366,27 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
                 mPresenter.praise(mComment_content.get(i).getComment_id() + "", "2",  mComment_content);
                 break;
             case R.id.item_delete_iv:
-                mPresenter.deleteComment(mComment_content.get(i).getComment_id() + "", mComment_content);
+                showDeleteDialog(mComment_content, i);
                 break;
         }
+    }
+
+    private void showDeleteDialog(List<CommentContentBean> mComment_content, int i) {
+        mDeleteDialog = new BaseDialog.Builder(this)
+                .setGravity(Gravity.CENTER)
+                .setAnimation(R.style.nomal_aniamtion)
+                .setViewId(R.layout.dialog_quit_layout)
+                .setWidthHeightdp((int) getResources().getDimension(R.dimen.dp_275), (int) getResources().getDimension(R.dimen.dp_138))
+                .isOnTouchCanceled(true)
+                .addViewOnClickListener(R.id.cancle_tv, v -> mDeleteDialog.dismiss())
+                .addViewOnClickListener(R.id.query_tv, v -> {
+                    mPresenter.deleteComment(mComment_content.get(i).getComment_id() + "", mComment_content);
+                    mDeleteDialog.dismiss();
+                })
+                .builder();
+        TextView textView = mDeleteDialog.getView(R.id.text);
+        textView.setText("确定删除此条评论？");
+        mDeleteDialog.show();
     }
 
     @Override

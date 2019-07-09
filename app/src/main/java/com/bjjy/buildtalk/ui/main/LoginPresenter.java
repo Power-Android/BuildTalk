@@ -3,6 +3,7 @@ package com.bjjy.buildtalk.ui.main;
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.app.User;
 import com.bjjy.buildtalk.base.presenter.BasePresenter;
+import com.bjjy.buildtalk.core.event.RefreshEvent;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.core.rx.BaseObserver;
 import com.bjjy.buildtalk.core.rx.RxUtils;
@@ -10,6 +11,8 @@ import com.bjjy.buildtalk.entity.AleadyBuyEntity;
 import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.utils.HeaderUtils;
 import com.bjjy.buildtalk.utils.TimeUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
 import java.util.List;
@@ -53,6 +56,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> {
                         user.setLoginStatus(true);
                         mDataManager.addUser(user);
                         mView.handlerSuccess(user);
+                        EventBus.getDefault().post(new RefreshEvent(Constants.INFO_REFRESH));
                     }
 
                     @Override

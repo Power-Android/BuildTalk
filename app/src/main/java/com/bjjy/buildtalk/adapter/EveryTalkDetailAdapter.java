@@ -39,6 +39,6 @@ public class EveryTalkDetailAdapter extends BaseQuickAdapter<GuestBookEntity.Gue
         }else {
             helper.setImageResource(R.id.item_praise_iv, R.drawable.praise_def);
         }
-        helper.addOnClickListener(R.id.item_praise_iv);
+        helper.addOnClickListener(R.id.item_parise_ll);
     }
 }

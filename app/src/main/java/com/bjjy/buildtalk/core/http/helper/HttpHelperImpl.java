@@ -94,7 +94,7 @@ public class HttpHelperImpl implements HttpHelper {
     }
 
     @Override
-    public Observable<BaseResponse<List<SaveRecordEntity>>> saveRecord(Map<String, String> headers, Map<String, String> params) {
+    public Observable<BaseResponse<SaveRecordEntity>> saveRecord(Map<String, String> headers, Map<String, String> params) {
         return mApiService.saveRecord(headers, params);
     }
 
@@ -134,7 +134,7 @@ public class HttpHelperImpl implements HttpHelper {
     }
 
     @Override
-    public Observable<BaseResponse<IEntity>> createCircle(Map<String, String> headers, Map<String, String> params) {
+    public Observable<BaseResponse<String>> createCircle(Map<String, String> headers, Map<String, String> params) {
         return mApiService.createCircle(headers, params);
     }
 

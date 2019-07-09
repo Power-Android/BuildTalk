@@ -28,7 +28,8 @@ public class CircleListAdapter extends BaseQuickAdapter<CircleListEntity.CircleI
     protected void convert(BaseViewHolder helper, CircleListEntity.CircleInfoBean item) {
         Glide.with(mContext).load(item.getHeadImage()).into((ImageView) helper.getView(R.id.item_face_iv));
         helper.setText(R.id.item_name_tv, item.getName())
-                .setText(R.id.item_num_tv, item.getCountAttention()+"");
+                .setText(R.id.item_num_tv, item.getCountAttention()+"")
+                .addOnClickListener(R.id.item_focus_ll);
         int is_attention = item.getIs_attention();
         if (TextUtils.equals("1", is_attention+"")){
             helper.setGone(R.id.item_focus_iv, true);

@@ -5,10 +5,12 @@ import com.bjjy.buildtalk.adapter.TalkAdapter;
 import com.bjjy.buildtalk.app.App;
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.presenter.BasePresenter;
+import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.core.rx.BaseObserver;
 import com.bjjy.buildtalk.core.rx.RxUtils;
 import com.bjjy.buildtalk.entity.CircleMasterEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
+import com.bjjy.buildtalk.entity.FansFocusEntity;
 import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.IndustryMasterEntity;
 import com.bjjy.buildtalk.entity.TalkEntity;
@@ -95,6 +97,38 @@ public class TalkPresnter extends BasePresenter<TalkContract.View> implements Ta
                     @Override
                     public void onSuccess(List<CircleMasterEntity> list) {
                         mView.handlerCircleMaster(list);
+                    }
+                }));
+    }
+
+    public void attention(int userId, List<CircleMasterEntity> mList, int i) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put("examine_user", mDataManager.getUser().getUser_id());
+        paramas.put(Constants.USER_ID, userId+"");
+        paramas.put(Constants.SOURCE, Constants.ANDROID);
+        paramas.put(App.getContext().getString(R.string.TIMESTAMP), timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(App.getContext().getString(R.string.TIMESTAMP), timestamp);
+        headers.put(App.getContext().getString(R.string.SIGN), sign);
+
+        addSubscribe(mDataManager.attention(headers,paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<IEntity>(mView,false){
+                    @Override
+                    public void onSuccess(IEntity iEntity) {
+//                        mView.handlerUserDetail(detailEntity);
+                    }
+
+                    @Override
+                    public void onNext(BaseResponse<IEntity> baseResponse) {
+                        super.onNext(baseResponse);
+                        if (baseResponse.getErrorCode() == 1){
+                            mView.handlerAttrntion(baseResponse, mList, i);
+                        }
                     }
                 }));
     }

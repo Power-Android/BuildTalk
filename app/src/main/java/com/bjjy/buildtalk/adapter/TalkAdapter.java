@@ -11,6 +11,7 @@ import com.bjjy.buildtalk.entity.IndustryMasterEntity;
 import com.bjjy.buildtalk.entity.TalkEntity;
 import com.bjjy.buildtalk.ui.talk.CircleManDetailActivity;
 import com.bjjy.buildtalk.ui.talk.MasterDetailActivity;
+import com.bjjy.buildtalk.ui.talk.TalkPresnter;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -32,6 +33,18 @@ public class TalkAdapter extends BaseMultiItemQuickAdapter<TalkEntity, BaseViewH
     private List<IndustryMasterEntity.MasterInfoBean> mMasterInfo = new ArrayList<>();
     private List<CircleMasterEntity> mCircleMasterEntities = new ArrayList<>();
 
+    private OnRecyclerViewItemClickListener mOnItemClickListener = null;
+    private TalkCircleAdapter mCircleAdapter;
+
+    //define interface
+    public static interface OnRecyclerViewItemClickListener {
+        void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i);
+    }
+
+    public void setOnFocusClickListener(OnRecyclerViewItemClickListener listener) {
+        this.mOnItemClickListener = listener;
+    }
+
     /**
      * Same as QuickAdapter#QuickAdapter(Context,int) but with
      * some initialization data.
@@ -50,11 +63,11 @@ public class TalkAdapter extends BaseMultiItemQuickAdapter<TalkEntity, BaseViewH
             case BODY_MASTER:
                 RecyclerView master_recyclerView = helper.getView(R.id.master_recyclerView);
                 master_recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-                TalkMasterAdapter masterAdapter = new TalkMasterAdapter(R.layout.adapter_talk_master,mMasterInfo);
+                TalkMasterAdapter masterAdapter = new TalkMasterAdapter(R.layout.adapter_talk_master, mMasterInfo);
                 master_recyclerView.setAdapter(masterAdapter);
                 masterAdapter.setOnItemClickListener((baseQuickAdapter, view, position) -> {
-                    Intent intent = new Intent(mContext,MasterDetailActivity.class);
-                    intent.putExtra("user_id", mMasterInfo.get(position).getUser_id()+"");
+                    Intent intent = new Intent(mContext, MasterDetailActivity.class);
+                    intent.putExtra("user_id", mMasterInfo.get(position).getUser_id() + "");
                     mContext.startActivity(intent);
                 });
                 helper.addOnClickListener(R.id.master_all_tv)
@@ -62,15 +75,17 @@ public class TalkAdapter extends BaseMultiItemQuickAdapter<TalkEntity, BaseViewH
                 break;
             case BODY_CIRCLE_MAN:
                 RecyclerView circle_recyclerView = helper.getView(R.id.circle_recyclerView);
-                circle_recyclerView.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false));
-                TalkCircleAdapter circleAdapter = new TalkCircleAdapter(R.layout.adapter_talk_circle,mCircleMasterEntities);
-                circle_recyclerView.setAdapter(circleAdapter);
-                circleAdapter.setOnItemClickListener(new OnItemClickListener() {
-                    @Override
-                    public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int position) {
-                        Intent intent = new Intent(mContext,CircleManDetailActivity.class);
-                        intent.putExtra("user_id", mMasterInfo.get(position).getUser_id()+"");
-                        mContext.startActivity(intent);
+                circle_recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+                mCircleAdapter = new TalkCircleAdapter(R.layout.adapter_talk_circle, mCircleMasterEntities);
+                circle_recyclerView.setAdapter(mCircleAdapter);
+                mCircleAdapter.setOnItemClickListener((baseQuickAdapter, view, position) -> {
+                    Intent intent = new Intent(mContext, CircleManDetailActivity.class);
+                    intent.putExtra("user_id", mCircleMasterEntities.get(position).getUser_id() + "");
+                    mContext.startActivity(intent);
+                });
+                mCircleAdapter.setOnItemChildClickListener((baseQuickAdapter, view, i) -> {
+                    if (mOnItemClickListener != null){
+                        mOnItemClickListener.onItemClick(baseQuickAdapter, view, i);
                     }
                 });
                 helper.addOnClickListener(R.id.circle_all_tv);
@@ -86,5 +101,9 @@ public class TalkAdapter extends BaseMultiItemQuickAdapter<TalkEntity, BaseViewH
     public void setCircleMasterEntities(List<CircleMasterEntity> circleMasterEntities) {
         mCircleMasterEntities = circleMasterEntities;
         notifyDataSetChanged();
+    }
+
+    public void setFocus(int i) {
+        mCircleAdapter.notifyItemChanged(i);
     }
 }

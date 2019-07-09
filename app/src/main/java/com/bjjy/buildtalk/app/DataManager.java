@@ -177,7 +177,7 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     }
 
     @Override
-    public Observable<BaseResponse<List<SaveRecordEntity>>> saveRecord(Map<String, String> headers, Map<String, String> params) {
+    public Observable<BaseResponse<SaveRecordEntity>> saveRecord(Map<String, String> headers, Map<String, String> params) {
         return mHttpHelper.saveRecord(headers, params);
     }
 
@@ -217,7 +217,7 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     }
 
     @Override
-    public Observable<BaseResponse<IEntity>> createCircle(Map<String, String> headers, Map<String, String> params) {
+    public Observable<BaseResponse<String>> createCircle(Map<String, String> headers, Map<String, String> params) {
         return mHttpHelper.createCircle(headers, params);
     }
 

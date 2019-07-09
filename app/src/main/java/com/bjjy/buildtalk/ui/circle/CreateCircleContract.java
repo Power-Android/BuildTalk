@@ -4,6 +4,7 @@ import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.base.view.IView;
 import com.bjjy.buildtalk.entity.CircleTagEntity;
 import com.bjjy.buildtalk.entity.IEntity;
+import com.bjjy.buildtalk.entity.SearchCircleInfoEntity;
 
 import java.util.List;
 
@@ -18,7 +19,9 @@ public class CreateCircleContract {
 
         void handlerTagList(List<CircleTagEntity> circleTagEntityList);
 
-        void handlerCreateSuccess(IEntity iEntity);
+        void handlerCreateSuccess(String iEntity);
+
+        void handlerSearchCircleInfo(SearchCircleInfoEntity infoEntity);
     }
     interface Presenter extends IPresenter<View>{
 

@@ -74,12 +74,9 @@ public class FansFocusActivity extends BaseActivity<FansFocusPresenter> implemen
         }else {
             mFocusAdapter = new FocusAdapter(R.layout.adapter_circle_list, mAttentionInfoBeans);
             mRecyclerView.setAdapter(mFocusAdapter);
-            mFocusAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-                @Override
-                public void onItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-                    List<FansFocusEntity.AttentionInfoBean> mAttentionInfoBeans = baseQuickAdapter.getData();
-                    mPresenter.attention1(mAttentionInfoBeans.get(i).getUser_id(), mAttentionInfoBeans, i);
-                }
+            mFocusAdapter.setOnItemChildClickListener((baseQuickAdapter, view, i) -> {
+                List<FansFocusEntity.AttentionInfoBean> mAttentionInfoBeans = baseQuickAdapter.getData();
+                mPresenter.attention1(mAttentionInfoBeans.get(i).getUser_id(), mAttentionInfoBeans, i);
             });
         }
     }

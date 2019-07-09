@@ -108,7 +108,7 @@ public interface ApiService {
     @Headers(Constants.HEADER_PASSID)
     @POST("saveguestbook")
     @FormUrlEncoded
-    Observable<BaseResponse<List<SaveRecordEntity>>> saveRecord(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+    Observable<BaseResponse<SaveRecordEntity>> saveRecord(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
     /**
      * @return 留言点赞
@@ -180,7 +180,7 @@ public interface ApiService {
     @Headers(Constants.HEADER_PASSID)
     @POST("createCircle")
     @FormUrlEncoded
-    Observable<BaseResponse<IEntity>> createCircle(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+    Observable<BaseResponse<String>> createCircle(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
     /**
      * @return 圈子搜索列表
@@ -384,7 +384,7 @@ public interface ApiService {
     Observable<BaseResponse<FansFocusEntity>> myFans(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
     /**
-     * @return 关注
+     * @return 我的关注
      */
     @Headers(Constants.HEADER_PASSID)
     @POST("myAttention")

@@ -100,9 +100,9 @@ public class EveryTalkDetailPresenter extends BasePresenter<EveryTalkDetailContr
         addSubscribe(mDataManager.saveRecord(headers, paramas)
                 .compose(RxUtils.SchedulerTransformer())
                 .filter(saveRecordEntity -> mView != null)
-                .subscribeWith(new BaseObserver<List<SaveRecordEntity>>(mView) {
+                .subscribeWith(new BaseObserver<SaveRecordEntity>(mView) {
                     @Override
-                    public void onSuccess(List<SaveRecordEntity> saveRecordEntities) {
+                    public void onSuccess(SaveRecordEntity saveRecordEntities) {
                         mView.handlerSaveRecord();
                     }
                 }));

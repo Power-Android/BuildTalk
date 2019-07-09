@@ -11,16 +11,10 @@
         android:id="@+id/include_toolbar"
         layout="@layout/toolbar_layout" />
 
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/refresh_Layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/include_toolbar"
-        app:srlEnableLoadMore="false">
-
         <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@+id/include_toolbar"
             android:layout_marginTop="@dimen/dp_3">
 
             <android.support.design.widget.AppBarLayout
@@ -88,8 +82,6 @@
             </RelativeLayout>
 
         </android.support.design.widget.CoordinatorLayout>
-
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"

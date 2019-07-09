@@ -63,7 +63,7 @@ public interface HttpHelper {
 
     Observable<BaseResponse<GuestBookEntity>> guestBookList(Map<String, String> headers, Map<String, String> params);
 
-    Observable<BaseResponse<List<SaveRecordEntity>>> saveRecord(Map<String, String> headers, Map<String, String> params);
+    Observable<BaseResponse<SaveRecordEntity>> saveRecord(Map<String, String> headers, Map<String, String> params);
 
     Observable<BaseResponse<IEntity>> praiseRecord(Map<String, String> headers, Map<String, String> params);
 
@@ -79,7 +79,7 @@ public interface HttpHelper {
 
     Observable<BaseResponse<List<CircleTagEntity>>> searchCircleTags(Map<String, String> headers, Map<String, String> params);
 
-    Observable<BaseResponse<IEntity>> createCircle(Map<String, String> headers, Map<String, String> params);
+    Observable<BaseResponse<String>> createCircle(Map<String, String> headers, Map<String, String> params);
 
     Observable<BaseResponse<SearchResultEntity>> searchHistory(Map<String, String> headers, Map<String, String> params);
 

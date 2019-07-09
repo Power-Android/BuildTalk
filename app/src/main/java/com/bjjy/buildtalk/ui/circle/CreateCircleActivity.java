@@ -16,6 +16,7 @@ import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.entity.CircleTagEntity;
 import com.bjjy.buildtalk.entity.IEntity;
+import com.bjjy.buildtalk.entity.SearchCircleInfoEntity;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.SizeUtils;
@@ -33,6 +34,7 @@ import com.zhy.view.flowlayout.TagFlowLayout;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -64,6 +66,9 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
     private List<CircleTagEntity> mTagList = new ArrayList<>();
     private TagAdapter mTagAdapter;
     private List<CircleTagEntity> mSelList = new ArrayList<>();
+    private String mType;
+    private String mCircle_id;
+    private List<String> mCircle_tags = new ArrayList<>();
 
     @Override
     protected int getLayoutId() {
@@ -72,9 +77,15 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
 
     @Override
     protected void initView() {
+        mType = getIntent().getStringExtra("type");
+        mCircle_id = getIntent().getStringExtra("circle_id");
         mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
         mToolbar.setNavigationOnClickListener(v -> finish());
-        mToolbarTitle.setText("免费创建圈子");
+        if (TextUtils.isEmpty(mType)){
+            mToolbarTitle.setText("免费创建圈子");
+        }else {
+            mToolbarTitle.setText("圈子资料");
+        }
         mToolbarRightTitle.setText("完成");
         mToolbarRightTitle.setOnClickListener(v -> {
             createCircle();
@@ -87,6 +98,9 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
     @Override
     protected void initEventAndData() {
         mPresenter.circleTags();
+        if (!TextUtils.isEmpty(mType)){
+            mPresenter.searchCircleInfo(mCircle_id);
+        }
     }
 
     @Override
@@ -118,7 +132,7 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
                 }
                 delete.setOnClickListener(v -> {
                     mTagList.remove(position);
-                    if (mTagList.size() < 10){
+                    if (mTagList.size() < 5){
                         mAddEt.setVisibility(View.VISIBLE);
                     }
                     notifyDataChanged();
@@ -171,7 +185,7 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
                 mTagAdapter.notifyDataChanged();
                 mAddEt.getText().clear();
                 KeyboardUtils.hideSoftInput(CreateCircleActivity.this);
-                if (mTagList.size() == 10){
+                if (mTagList.size() == 5){
                     mAddEt.setVisibility(View.GONE);
                 }
                 vervify();
@@ -213,7 +227,10 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
     }
 
     @Override
-    public void handlerCreateSuccess(IEntity iEntity) {
+    public void handlerCreateSuccess(String iEntity) {
+        Intent intent = new Intent(this, TopticCircleActivity.class);
+        intent.putExtra("circle_id", iEntity);
+        startActivity(intent);
         finish();
     }
 
@@ -239,6 +256,7 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
                 .showCropFrame(true)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false   true or false
                 .showCropGrid(true)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false    true or false
                 .openClickSound(false)// 是否开启点击声音 true or false
+                .cropWH(1,1)
                 .previewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中) true or false
                 .minimumCompressSize(100)// 小于100kb的图片不压缩
                 .synOrAsy(true)//同步true或异步false 压缩 默认同步
@@ -260,5 +278,22 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
                 }
             }
         }
+    }
+
+    @Override
+    public void handlerSearchCircleInfo(SearchCircleInfoEntity infoEntity) {
+        Glide.with(this).load(infoEntity.getCircle_image().getPic_url()).into(mCircleIv);
+        mCircleTitleEt.setText(infoEntity.getCircle_name());
+        mEditText.setText(infoEntity.getCircle_desc());
+        String circle_tags = infoEntity.getCircle_tags();
+        mCircle_tags = Arrays.asList(circle_tags.split(","));
+        for (int i = 0; i <mCircle_tags.size(); i++) {
+            if (mTagList.size() > 0 && mTagList.get(i).getTag_name().equals(mCircle_tags.get(i))){
+                mTagList.get(i).setSelected(true);
+            }else {
+                mTagList.add(new CircleTagEntity(mCircle_tags.get(i), true, true));
+            }
+        }
+        mTagAdapter.notifyDataChanged();
     }
 }

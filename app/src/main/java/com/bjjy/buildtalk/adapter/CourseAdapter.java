@@ -29,10 +29,6 @@ public class CourseAdapter extends BaseQuickAdapter<CourseEntity.CircleInfoBean,
         helper.setText(R.id.course_title_tv,item.getCircle_name())
                 .setText(R.id.course_name_tv,item.getName())
                 .setText(R.id.course_job_tv,item.getAuthor_desc());
-        if ("1".equals(item.getIs_author())){
-            helper.setGone(R.id.course_tag_iv,true);
-        }else {
-            helper.setGone(R.id.course_tag_iv,false);
-        }
+        helper.setGone(R.id.course_tag_iv, 1 == item.getIs_author() ? true : false);
     }
 }

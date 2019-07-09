@@ -38,14 +38,16 @@
 
             <TextView
                 android:id="@+id/circle_title_tv"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_15"
                 android:includeFontPadding="false"
-                android:maxLength="11"
+                android:paddingLeft="@dimen/dp_20"
+                android:paddingRight="@dimen/dp_20"
+                android:gravity="center"
                 android:singleLine="true"
                 android:ellipsize="end"
-                android:text="ArchCAD建筑模型"
+                android:text="ArchCAD建筑模型ArchCAD建筑模型"
                 android:textColor="@color/text_drak"
                 android:textSize="@dimen/sp_15" />
             

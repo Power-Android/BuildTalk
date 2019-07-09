@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,6 +44,9 @@ import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +56,7 @@ import cn.jzvd.JZDataSource;
 import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
 
-public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresenter> implements EveryTalkDetailContract.View, BaseQuickAdapter.OnItemChildClickListener {
+public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresenter> implements EveryTalkDetailContract.View, BaseQuickAdapter.OnItemChildClickListener, OnLoadMoreListener {
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
@@ -98,8 +102,6 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     RelativeLayout mIncludeToolbar;
     @BindView(R.id.record_num_tv)
     TextView mRecordNumTv;
-    @BindView(R.id.refresh_Layout)
-    SmartRefreshLayout mRefreshLayout;
     @BindView(R.id.loadmore_layout)
     SmartRefreshLayout mLoadMoreLayout;
     @BindView(R.id.appBarLayout)
@@ -118,6 +120,7 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     private int page = 1;
     private Spanned mText;
     private boolean isGone = false;
+    private int mPage_count = 1;
 
     @Override
     protected int getLayoutId() {
@@ -144,6 +147,7 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
                 isGone = false;
             }
         });
+        mLoadMoreLayout.setOnLoadMoreListener(this);
     }
 
     @Override
@@ -223,6 +227,10 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
         mPraiseTv.setText( mCountCollect + "赞");
         mRecordEt.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEND){
+                if (TextUtils.isEmpty(mRecordEt.getText().toString().trim())){
+                    ToastUtils.showShort("请输入评论内容");
+                    return false;
+                }
                 mPresenter.saveRecord(mMNewsInfo.getArticle_id(),mRecordEt.getText().toString().trim());
                 mRecordEt.clearFocus();
                 mRecordEt.getText().clear();
@@ -245,6 +253,7 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     @Override
     public void handlerGuestBookList(GuestBookEntity guestBookEntity) {
         mList = guestBookEntity.getGuestbookInfo();
+        mPage_count = guestBookEntity.getPage_count();
         mEveryTalkDetailAdapter.setNewData(mList);
 
         mRecordNumTv.setText(String.valueOf(mList.size()));
@@ -252,7 +261,8 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
 
     @Override
     public void handlerSaveRecord() {
-        mPresenter.everyTalkDetail(mArticle_id);
+        mPresenter.guestbook(mArticle_id, 1);
+        mRecyclerView.scrollToPosition(0);
     }
 
     @Override
@@ -324,7 +334,7 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
 
     @Override
     public void onItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int position) {
-        if (view.getId() == R.id.item_praise_iv){
+        if (view.getId() == R.id.item_parise_ll){
             LoginHelper.login(this, mPresenter.mDataManager, () -> {
                 boolean isPraise = "1".equals(mEveryTalkDetailAdapter.getData().get(position).getIsPraise()+"");
                 mPresenter.praiseRecord(mList.get(position).getGuestbook_id(),position,isPraise);
@@ -334,12 +344,28 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
 
     @Override
     public void praiseSuccess(boolean isSuccess, int position, boolean isPraise) {
+        int countpraise = mList.get(position).getCountpraise();
         if (isPraise){
             mEveryTalkDetailAdapter.getData().get(position).setIsPraise(0);
+            if (countpraise > 0){
+                mList.get(position).setCountpraise(--countpraise);
+            }
             mEveryTalkDetailAdapter.setData(position,mEveryTalkDetailAdapter.getData().get(position));
         }else {
             mEveryTalkDetailAdapter.getData().get(position).setIsPraise(1);
+            mList.get(position).setCountpraise(++countpraise);
             mEveryTalkDetailAdapter.setData(position,mEveryTalkDetailAdapter.getData().get(position));
+        }
+    }
+
+    @Override
+    public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+        if (page < mPage_count){
+            page++;
+            mPresenter.guestbook(mArticle_id, page);
+            refreshLayout.finishLoadMore();
+        }else {
+            refreshLayout.finishLoadMoreWithNoMoreData();
         }
     }
 }

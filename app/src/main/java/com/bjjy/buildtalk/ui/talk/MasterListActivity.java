@@ -1,9 +1,11 @@
 package com.bjjy.buildtalk.ui.talk;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -12,6 +14,7 @@ import com.bjjy.buildtalk.adapter.MasterListAdapter;
 import com.bjjy.buildtalk.adapter.SearchResultAdapter;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.entity.MasterListEntity;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
@@ -21,7 +24,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class MasterListActivity extends BaseActivity<MasterListPresenter> implements MasterListContract.View, OnRefreshLoadMoreListener {
+public class MasterListActivity extends BaseActivity<MasterListPresenter> implements MasterListContract.View, OnRefreshLoadMoreListener, BaseQuickAdapter.OnItemClickListener {
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
@@ -54,6 +57,7 @@ public class MasterListActivity extends BaseActivity<MasterListPresenter> implem
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mMasterListAdapter = new MasterListAdapter(R.layout.adapter_search_result, mMasterInfo);
         mRecyclerView.setAdapter(mMasterListAdapter);
+        mMasterListAdapter.setOnItemClickListener(this);
     }
 
     @Override
@@ -88,5 +92,13 @@ public class MasterListActivity extends BaseActivity<MasterListPresenter> implem
         page = 1;
         mPresenter.masterList(page, true);
         refreshLayout.finishRefresh();
+    }
+
+    @Override
+    public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+        List<MasterListEntity.MasterInfoBean> mMasterInfo = baseQuickAdapter.getData();
+        Intent intent = new Intent(this, MasterDetailActivity.class);
+        intent.putExtra("user_id", mMasterInfo.get(i).getUser_id() + "");
+        startActivity(intent);
     }
 }

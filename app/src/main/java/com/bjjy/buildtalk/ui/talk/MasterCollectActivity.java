@@ -1,10 +1,12 @@
 package com.bjjy.buildtalk.ui.talk;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
@@ -12,6 +14,8 @@ import com.bjjy.buildtalk.adapter.MaseterCollectAdapter;
 import com.bjjy.buildtalk.adapter.MasterListAdapter;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.entity.CollectEntity;
+import com.bjjy.buildtalk.ui.circle.TopticDetailActivity;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
@@ -21,7 +25,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class MasterCollectActivity extends BaseActivity<MasterCollectPresenter> implements MasterCollectContract.View, OnRefreshLoadMoreListener {
+public class MasterCollectActivity extends BaseActivity<MasterCollectPresenter> implements MasterCollectContract.View, OnRefreshLoadMoreListener, BaseQuickAdapter.OnItemClickListener {
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
@@ -59,6 +63,7 @@ public class MasterCollectActivity extends BaseActivity<MasterCollectPresenter> 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mCollectAdapter = new MaseterCollectAdapter(mList);
         mRecyclerView.setAdapter(mCollectAdapter);
+        mCollectAdapter.setOnItemClickListener(this);
     }
 
     @Override
@@ -100,5 +105,14 @@ public class MasterCollectActivity extends BaseActivity<MasterCollectPresenter> 
         page = 1;
         mPresenter.myCollect(mUser_id, page, true);
         refreshLayout.finishRefresh();
+    }
+
+    @Override
+    public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+        List<CollectEntity.MyCollectInfoBean> mList = baseQuickAdapter.getData();
+        Intent intent = new Intent(this, TopticDetailActivity.class);
+        intent.putExtra("title", mList.get(i).getCircle_name());
+        intent.putExtra("theme_id", mList.get(i).getTheme_id()+"");
+        startActivity(intent);
     }
 }

@@ -39,6 +39,15 @@ public class MyCardEntity implements Serializable {
     private String countTheme;
     private String countpraise;
     private String circle_code;
+    private String create_day;
+
+    public String getCreate_day() {
+        return create_day;
+    }
+
+    public void setCreate_day(String create_day) {
+        this.create_day = create_day;
+    }
 
     public String getCircle_id() {
         return circle_id;

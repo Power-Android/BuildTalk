@@ -206,7 +206,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
             Glide.with(this).load(R.drawable.circle_bg_icon).into(mTopticBg);
             Glide.with(this).load(circleInfoEntity.getCircleInfo().getMaster_pic()).into(mPreFaceIv);
             mPreTitleTv.setText(circleInfoEntity.getCircleInfo().getCircle_name());
-            mPreNameTv.setText("圈子：" + circleInfoEntity.getCircleInfo().getName());
+            mPreNameTv.setText("圈主：" + circleInfoEntity.getCircleInfo().getName());
             mPreDateTv.setText("创建 " + circleInfoEntity.getCircleInfo().getCreate_day() + "天");
             List<String> circle_tags = circleInfoEntity.getCircleInfo().getCircle_tags();
             mFlowLayout.setAdapter(new TagAdapter<String>(circle_tags) {
@@ -231,10 +231,12 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
             mJoinTv.setVisibility(View.GONE);
             mPublisRl.setVisibility(View.VISIBLE);
             mScreenRl.setVisibility(View.VISIBLE);
-            Glide.with(this).load(circleInfoEntity.getCircleInfo().getCircle_image().getPic_url()).into(mTopticBg);
+            if (circleInfoEntity.getCircleInfo().getCircle_image() != null){
+                Glide.with(this).load(circleInfoEntity.getCircleInfo().getCircle_image().getPic_url()).into(mTopticBg);
+            }
             Glide.with(this).load(circleInfoEntity.getCircleInfo().getMaster_pic()).into(mFormalFaceIv);
             mFormalTitleTv.setText(circleInfoEntity.getCircleInfo().getCircle_name());
-            mFormalNameTv.setText("圈子：" + circleInfoEntity.getCircleInfo().getName());
+            mFormalNameTv.setText("圈主：" + circleInfoEntity.getCircleInfo().getName());
             mFormalDateTv.setText("创建 " + circleInfoEntity.getCircleInfo().getCreate_day() + "天");
         }
     }
@@ -391,6 +393,9 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
                 .isOnTouchCanceled(true)
                 //设置监听事件
                 .builder();
+        if (mPresenter.mDataManager.getUser().getUser_id().equals(mCircleInfoEntity.getCircleInfo().getUser_id()+"")){
+            mDialog.getView(R.id.type3).setVisibility(View.INVISIBLE);
+        }
         page = 1;
         mDialog.getView(R.id.type1).setOnClickListener(v -> {
             type = "1";
@@ -479,6 +484,18 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
                 .isOnTouchCanceled(true)
                 .builder();
         mCollect_tv = mEditDailog.getView(R.id.collect_tv);
+        TextView edit_tv = mEditDailog.getView(R.id.edit_tv);
+        TextView delete_tv = mEditDailog.getView(R.id.delete_tv);
+
+        if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())){
+            mCollect_tv.setVisibility(View.GONE);
+            edit_tv.setVisibility(View.VISIBLE);
+            delete_tv.setVisibility(View.VISIBLE);
+        }else {
+            mCollect_tv.setVisibility(View.VISIBLE);
+            edit_tv.setVisibility(View.GONE);
+            delete_tv.setVisibility(View.GONE);
+        }
         if (1 == data.getIs_collect()) {
             Drawable drawable = getResources().getDrawable(R.drawable.collect_sel_icon);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
@@ -492,7 +509,6 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
             mPresenter.collectTheme(data, i);
             mEditDailog.dismiss();
         });
-        TextView edit_tv = mEditDailog.getView(R.id.edit_tv);
         edit_tv.setOnClickListener(v -> {
             if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
                 Intent intent = new Intent(TopticCircleActivity.this, PublishActivity.class);
@@ -502,7 +518,6 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
             }
             mEditDailog.dismiss();
         });
-        TextView delete_tv = mEditDailog.getView(R.id.delete_tv);
         delete_tv.setOnClickListener(v -> {
             if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
                 showQuitDialog(data, i, list);

@@ -3,6 +3,7 @@ package com.bjjy.buildtalk.ui.mine;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.ToastUtils;
+import com.bjjy.buildtalk.weight.BaseDialog;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -39,6 +41,7 @@ public class SettingActivity extends BaseActivity<SettingPresenter> implements S
     RelativeLayout mVersionInfo;
     @BindView(R.id.quit_tv)
     TextView mQuitTv;
+    private BaseDialog mDialog;
 
     @Override
     protected int getLayoutId() {
@@ -75,9 +78,27 @@ public class SettingActivity extends BaseActivity<SettingPresenter> implements S
             case R.id.version_info:
                 break;
             case R.id.quit_tv:
-                LoginHelper.loginOut(this, mPresenter.mDataManager);
+                showDialog();
                 break;
         }
+    }
+
+    private void showDialog() {
+        mDialog = new BaseDialog.Builder(this)
+                .setGravity(Gravity.CENTER)
+                .setAnimation(R.style.nomal_aniamtion)
+                .setViewId(R.layout.dialog_quit_layout)
+                .setWidthHeightdp((int) getResources().getDimension(R.dimen.dp_275), (int) getResources().getDimension(R.dimen.dp_138))
+                .isOnTouchCanceled(true)
+                .addViewOnClickListener(R.id.cancle_tv, v -> mDialog.dismiss())
+                .addViewOnClickListener(R.id.query_tv, v -> {
+                    LoginHelper.loginOut(this, mPresenter.mDataManager);
+                    mDialog.dismiss();
+                })
+                .builder();
+        TextView textView = mDialog.getView(R.id.text);
+        textView.setText("确定退出登录？");
+        mDialog.show();
     }
 
     @Override
