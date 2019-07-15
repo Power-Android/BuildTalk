@@ -383,6 +383,7 @@
 	<dimen name="dp_640">1092.2667dp</dimen>
 	<dimen name="dp_720">1228.8000dp</dimen>
 	<dimen name="dp_m_60">-102.4000dp</dimen>
+	<dimen name="dp_m_50">-85.3333dp</dimen>
 	<dimen name="dp_m_30">-51.2000dp</dimen>
 	<dimen name="dp_m_20">-34.1333dp</dimen>
 	<dimen name="dp_m_12">-20.4800dp</dimen>

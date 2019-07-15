@@ -89,6 +89,7 @@
                 android:id="@+id/viewpager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/dp_44"
                 android:overScrollMode="never" />
         </RelativeLayout>
 
@@ -276,11 +277,58 @@
         </ScrollView>
 
         <RelativeLayout
+            android:id="@+id/mc_formal_top_rl"
+            android:visibility="invisible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/mc_formal_title_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="建筑产业工业互联网"
+                android:textColor="@color/text_drak"
+                android:textSize="@dimen/sp_18"
+                android:textStyle="bold"
+                android:layout_marginLeft="@dimen/common_margin"
+                android:layout_marginTop="@dimen/dp_35"/>
+            <TextView
+                android:id="@+id/mc_formal_name_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="圈主：小地瓜"
+                android:textSize="@dimen/sp_10"
+                android:textColor="@color/text_light"
+                android:layout_below="@+id/mc_formal_title_tv"
+                android:layout_marginLeft="@dimen/dp_15"
+                android:layout_marginTop="@dimen/dp_5"/>
+            <ImageView
+                android:id="@+id/mc_tag_iv"
+                android:layout_width="@dimen/dp_9"
+                android:layout_height="@dimen/dp_9"
+                android:src="@drawable/tag_icon"
+                android:layout_toRightOf="@+id/mc_formal_name_tv"
+                android:layout_below="@id/mc_formal_title_tv"
+                android:layout_marginTop="@dimen/dp_7"
+                android:layout_marginLeft="@dimen/dp_2"/>
+            <TextView
+                android:id="@+id/mc_formal_date_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="创建 490天"
+                android:textColor="@color/text_light"
+                android:textSize="@dimen/sp_10"
+                android:layout_below="@+id/mc_formal_title_tv"
+                android:layout_toRightOf="@+id/mc_formal_name_tv"
+                android:layout_marginTop="@dimen/dp_5"
+                android:layout_marginLeft="@dimen/dp_25"/>
+        </RelativeLayout>
+
+        <RelativeLayout
             android:id="@+id/mc_table_rl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:layout_below="@+id/scrollView">
+            android:layout_below="@+id/mc_formal_top_rl">
 
             <TextView
                 android:id="@+id/mc_view2"
@@ -322,6 +370,16 @@
 
         </RelativeLayout>
 
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/mc_formal_face_iv"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="@dimen/dp_60"
+            android:visibility="gone"
+            android:src="@drawable/test_course"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="@dimen/dp_1"
+            android:layout_marginTop="@dimen/dp_m_30"
+            android:layout_marginLeft="@dimen/dp_15"/>
     </RelativeLayout>
 
     <TextView

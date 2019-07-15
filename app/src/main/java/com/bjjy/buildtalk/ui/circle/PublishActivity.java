@@ -142,6 +142,7 @@ public class PublishActivity extends BaseActivity<PublishPresenter> implements P
                 .showCropFrame(false)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false   true or false
                 .showCropGrid(false)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false    true or false
                 .openClickSound(false)// 是否开启点击声音 true or false
+                .withAspectRatio(1,1)
                 .previewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中) true or false
                 .minimumCompressSize(100)// 小于100kb的图片不压缩
                 .synOrAsy(true)//同步true或异步false 压缩 默认同步
@@ -156,7 +157,11 @@ public class PublishActivity extends BaseActivity<PublishPresenter> implements P
                 List<LocalMedia> mLocalMedia = PictureSelector.obtainMultipleResult(data);
                 for (int i = 0; i < mLocalMedia.size(); i++) {
                     ThemeImageBean imageBean = new ThemeImageBean();
-                    imageBean.setPic_url(mLocalMedia.get(i).getPath());
+                    if (mLocalMedia.get(i).isCompressed()){
+                        imageBean.setPic_url(mLocalMedia.get(i).getCompressPath());
+                    }else {
+                        imageBean.setPic_url(mLocalMedia.get(i).getPath());
+                    }
                     if (list.size() < 9){
                         list.add(imageBean);
                         File file = new File(mLocalMedia.get(i).getPath());

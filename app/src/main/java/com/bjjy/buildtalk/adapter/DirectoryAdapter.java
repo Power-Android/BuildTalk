@@ -16,20 +16,27 @@ import java.util.List;
  * @description:
  */
 public class DirectoryAdapter extends BaseQuickAdapter<CourseListEntity.CourselistBean, BaseViewHolder> {
+    private String mIsJoin;
 
-    public DirectoryAdapter(int layoutResId, @Nullable List<CourseListEntity.CourselistBean> data) {
+    public DirectoryAdapter(int layoutResId, @Nullable List<CourseListEntity.CourselistBean> data, String isJoin) {
         super(layoutResId, data);
+        this.mIsJoin = isJoin;
     }
 
     @Override
     protected void convert(BaseViewHolder helper, CourseListEntity.CourselistBean item) {
         helper.setText(R.id.item_name_tv, item.getArticle_title());
-        if (item.getIs_audition() == 1){
-            helper.setGone(R.id.item_sk_iv, true);
+        if (mIsJoin.equals("1")){
+            helper.setGone(R.id.item_sk_iv, false);
             helper.setGone(R.id.item_sd_iv, false);
         }else {
-            helper.setGone(R.id.item_sk_iv, false);
-            helper.setGone(R.id.item_sd_iv, true);
+            if (item.getIs_audition() == 1){
+                helper.setGone(R.id.item_sk_iv, true);
+                helper.setGone(R.id.item_sd_iv, false);
+            }else {
+                helper.setGone(R.id.item_sk_iv, false);
+                helper.setGone(R.id.item_sd_iv, true);
+            }
         }
     }
 }

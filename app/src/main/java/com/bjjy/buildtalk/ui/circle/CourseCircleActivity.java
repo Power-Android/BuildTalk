@@ -1,8 +1,7 @@
 package com.bjjy.buildtalk.ui.circle;
 
-import android.animation.Animator;
 import android.content.Intent;
-import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -17,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -31,11 +31,15 @@ import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.core.event.PayEvent;
 import com.bjjy.buildtalk.core.event.RefreshEvent;
 import com.bjjy.buildtalk.entity.CircleInfoEntity;
+import com.bjjy.buildtalk.entity.CommentContentBean;
 import com.bjjy.buildtalk.entity.CourseListEntity;
+import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.PayOrderEntity;
+import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
-import com.bjjy.buildtalk.utils.SizeUtils;
+import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
+import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bjjy.buildtalk.weight.BaseDialog;
 import com.bjjy.buildtalk.weight.MyBadgeViewPagerAdapter;
 import com.bjjy.buildtalk.weight.tablayout.TabLayout;
@@ -52,6 +56,7 @@ import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -61,7 +66,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.jzvd.JzvdStd;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> implements CourseCircleContract.View, AppBarLayout.OnOffsetChangedListener, OnRefreshLoadMoreListener, BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.RequestLoadMoreListener {
@@ -80,14 +84,10 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     TagFlowLayout mFlowLayout;
     @BindView(R.id.pre_top_rl)
     RelativeLayout mPreTopRl;
-    @BindView(R.id.view1)
-    TextView mView1;
     @BindView(R.id.qz_expand_iv)
     ImageView mQzExpandIv;
     @BindView(R.id.recommend_tv)
     TextView mRecommendTv;
-    @BindView(R.id.view2)
-    TextView mView2;
     @BindView(R.id.ml_expand_iv)
     ImageView mMlExpandIv;
     @BindView(R.id.pre_mid_rl)
@@ -98,24 +98,16 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     TextView mFormalNameTv;
     @BindView(R.id.formal_date_tv)
     TextView mFormalDateTv;
-    @BindView(R.id.view3)
-    TextView mView3;
     @BindView(R.id.formal_ml_expand_iv)
     ImageView mFormalMlExpandIv;
-    @BindView(R.id.formal_ml_recycler)
-    RecyclerView mFormalMlRecycler;
     @BindView(R.id.formal_rl)
     RelativeLayout mFormalRl;
     @BindView(R.id.min_rl)
     RelativeLayout mMinRl;
     @BindView(R.id.tablayout)
     TabLayout mTablayout;
-    @BindView(R.id.screen_tv)
-    TextView mScreenTv;
     @BindView(R.id.screen_rl)
     RelativeLayout mScreenRl;
-    @BindView(R.id.tab_rl)
-    RelativeLayout mTabRl;
     @BindView(R.id.appBarLayout)
     AppBarLayout mAppBarLayout;
     @BindView(R.id.viewpager)
@@ -140,10 +132,8 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     RelativeLayout mPublisRl;
     @BindView(R.id.formal_face_iv)
     CircleImageView mFormalFaceIv;
-    @BindView(R.id.view7)
-    ImageView mView7;
-    @BindView(R.id.item_name_tv)
-    TextView mItemNameTv;
+    @BindView(R.id.pre_item_name_tv)
+    TextView mPreItemNameTv;
     @BindView(R.id.ml_rl)
     RelativeLayout mMlRl;
     @BindView(R.id.coordinator)
@@ -178,10 +168,34 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     RelativeLayout mMcRl;
     @BindView(R.id.ml_num_tv)
     TextView mMlNumTv;
-
-    private boolean isQzExpand = false;
-    private boolean isMlExpand = false;
-    private int rotationAngle = 180;
+    @BindView(R.id.formal_item_name_tv)
+    TextView mFormalItemNameTv;
+    @BindView(R.id.formal_ml_rl)
+    RelativeLayout mFormalMlRl;
+    @BindView(R.id.mc_formal_title_tv)
+    TextView mMcFormalTitleTv;
+    @BindView(R.id.mc_formal_name_tv)
+    TextView mMcFormalNameTv;
+    @BindView(R.id.mc_tag_iv)
+    ImageView mMcTagIv;
+    @BindView(R.id.mc_formal_date_tv)
+    TextView mMcFormalDateTv;
+    @BindView(R.id.mc_formal_top_rl)
+    RelativeLayout mMcFormalTopRl;
+    @BindView(R.id.mc_formal_face_iv)
+    CircleImageView mMcFormalFaceIv;
+    @BindView(R.id.tag_iv)
+    ImageView mTagIv;
+    @BindView(R.id.formal_ml_num_tv)
+    TextView mFormalMlNumTv;
+    @BindView(R.id.pre_item_free_iv)
+    ImageView mPreItemFreeIv;
+    @BindView(R.id.pre_item_sd_iv)
+    ImageView mPreItemSdIv;
+    @BindView(R.id.formal_item_free_iv)
+    ImageView mFormalItemFreeIv;
+    @BindView(R.id.formal_item_sd_iv)
+    ImageView mFormalItemSdIv;
 
     private MyBadgeViewPagerAdapter mPagerAdapter;
     private List<View> mViews = new ArrayList<>();
@@ -200,11 +214,27 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     private int mCourse_page_count;
     private BaseDialog mPayDialog;
     private IWXAPI wxapi;
+    private BaseDialog mMInputDialog, mEditDailog, mDeleteDialog;
+    private TextView mCollect_tv;
+    private Intent mIntent;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void event(PayEvent eventBean) {
         if (TextUtils.equals(eventBean.getMsg(), Constants.PAY_SUCCESS)) {
             recreate();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void event1(RefreshEvent eventBean) {
+        if (TextUtils.equals(eventBean.getMsg(), Constants.TOPTIC_REFRESH)) {
+            onRefresh(mRefreshLayout);
+        }
+        if (TextUtils.equals(eventBean.getMsg(), Constants.TOPTIC_REFRESH_ALL)) {
+            mPresenter.CircleInfo(mCircle_id);
+        }
+        if (TextUtils.equals(eventBean.getMsg(), Constants.QUIT_CIRCLE)){
+            finish();
         }
     }
 
@@ -226,7 +256,13 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
 
     @Override
     protected void initEventAndData() {
+        EventBus.getDefault().register(this);
         mPresenter.CircleInfo(mCircle_id);
+        KeyboardUtils.registerSoftInputChangedListener(this, height -> {
+            if (height == 0 && mMInputDialog != null) {
+                mMInputDialog.dismiss();
+            }
+        });
     }
 
     @Override
@@ -236,17 +272,26 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
         mPresenter.tabData();
         mPresenter.courseList(circleInfoEntity.getCircleInfo().getData_id() + "", coursePage);
         mMcMlRecycler.setLayoutManager(new LinearLayoutManager(this));
-        mMcMlRecycler.addItemDecoration(new RecyclerItemDecoration(0, 1));
-        mDirectoryAdapter = new DirectoryAdapter(R.layout.adapter_directory_layout, mList);
+        mDirectoryAdapter = new DirectoryAdapter(R.layout.adapter_directory_layout, mList, mIsJoin);
         mMcMlRecycler.setAdapter(mDirectoryAdapter);
         mDirectoryAdapter.setOnLoadMoreListener(this, mMcMlRecycler);
         mDirectoryAdapter.setOnItemClickListener((baseQuickAdapter, view, i) -> {
+            List<CourseListEntity.CourselistBean> mList = baseQuickAdapter.getData();
+            if (mList.get(i).getIs_audition() == 0 && "0".equals(mIsJoin)){
+                ToastUtils.showShort("该课程还未解锁");
+                return;
+            }
             Intent intent = new Intent(CourseCircleActivity.this, CourseDetailActivity.class);
+            if (mList.size() > 0) {
+                intent.putExtra("bean", mList.get(i));
+            }
+            intent.putExtra("circle_id", mCircle_id);
             startActivity(intent);
         });
         if (TextUtils.equals("0", mIsJoin)) {//未加入
             mFormalRl.setVisibility(View.GONE);
             mPreTopRl.setVisibility(View.VISIBLE);
+            mPreMidRl.setVisibility(View.VISIBLE);
             mShareIv.setVisibility(View.GONE);
             mMoreIv.setVisibility(View.GONE);
             mPreShareIv.setVisibility(View.VISIBLE);
@@ -279,6 +324,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
             mMcRecommendTv.setText(circleInfoEntity.getCircleInfo().getCourse_desc());
         } else {//已加入
             mPreTopRl.setVisibility(View.GONE);
+            mPreMidRl.setVisibility(View.GONE);
             mFormalRl.setVisibility(View.VISIBLE);
             mPreShareIv.setVisibility(View.GONE);
             mShareIv.setVisibility(View.VISIBLE);
@@ -290,7 +336,15 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
             Glide.with(this).load(circleInfoEntity.getCircleInfo().getMaster_pic()).into(mFormalFaceIv);
             mFormalTitleTv.setText(circleInfoEntity.getCircleInfo().getCircle_name());
             mFormalNameTv.setText("圈主：" + circleInfoEntity.getCircleInfo().getName());
+            if (circleInfoEntity.getCircleInfo().getIs_author() == 1) {
+                mTagIv.setVisibility(View.VISIBLE);
+                mMcTagIv.setVisibility(View.VISIBLE);
+            }
             mFormalDateTv.setText("创建 " + circleInfoEntity.getCircleInfo().getCreate_day() + "天");
+            Glide.with(this).load(circleInfoEntity.getCircleInfo().getMaster_pic()).into(mMcFormalFaceIv);
+            mMcFormalTitleTv.setText(circleInfoEntity.getCircleInfo().getCircle_name());
+            mMcFormalNameTv.setText("圈主：" + circleInfoEntity.getCircleInfo().getName());
+            mMcFormalDateTv.setText("创建 " + circleInfoEntity.getCircleInfo().getCreate_day() + "天");
         }
     }
 
@@ -335,6 +389,11 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
         }
     }
 
+    @Override
+    public void handlerThemeInfoEmpty(List<ThemeInfoEntity.ThemeInfoBean> themeInfo) {
+        mTopticAdapter.setNewData(themeInfo);
+    }
+
     /**
      * 设置Tablayout上的标题的角标
      */
@@ -363,10 +422,25 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
         mCourse_page_count = courseListEntity.getPage_count();
         int countUpdateCourse = courseListEntity.getCountUpdateCourse();
         int countCourse = courseListEntity.getCountCourse();
+        mList = courseListEntity.getCourselist();
         mMlNumTv.setText("更新至" + countUpdateCourse + "讲/全" + countCourse + "讲");
         mMcMlNumTv.setText("更新至" + countUpdateCourse + "讲/全" + countCourse + "讲");
-        mItemNameTv.setText(courseListEntity.getCourselist().get(0).getArticle_title());
+        mFormalMlNumTv.setText("更新至" + countUpdateCourse + "讲/全" + countCourse + "讲");
+        mPreItemNameTv.setText(courseListEntity.getCourselist().get(0).getArticle_title());
         mDirectoryAdapter.addData(courseListEntity.getCourselist());
+        mFormalItemNameTv.setText(courseListEntity.getCourselist().get(0).getArticle_title());
+        if (mIsJoin.equals("1")) {
+            mFormalItemFreeIv.setVisibility(View.GONE);
+            mFormalItemSdIv.setVisibility(View.GONE);
+        } else {
+            if (courseListEntity.getCourselist().get(0).getIs_audition() == 1) {
+                mPreItemFreeIv.setVisibility(View.VISIBLE);
+                mPreItemSdIv.setVisibility(View.GONE);
+            } else {
+                mPreItemFreeIv.setVisibility(View.GONE);
+                mPreItemSdIv.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     @Override
@@ -388,7 +462,8 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
 
     @OnClick({R.id.qz_expand_iv, R.id.ml_expand_iv, R.id.formal_ml_expand_iv, R.id.back_iv,
             R.id.pre_share_iv, R.id.share_iv, R.id.more_iv, R.id.join_tv, R.id.publis_rl,
-            R.id.mc_qz_expand_iv, R.id.mc_ml_expand_iv})
+            R.id.mc_qz_expand_iv, R.id.mc_ml_expand_iv, R.id.screen_rl, R.id.formal_ml_rl,
+            R.id.ml_rl})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.qz_expand_iv:
@@ -407,20 +482,56 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
                 mMcTableRl.setVisibility(View.VISIBLE);
                 break;
             case R.id.formal_ml_expand_iv:
+                mParams.setScrollFlags(0);//不能伸缩
+                mMinRl.setLayoutParams(mParams);
+                mMcMlExpandIv.setImageResource(R.drawable.sanjiao_top_icon);
+                mScrollView.setVisibility(View.INVISIBLE);
+                mMcFormalTopRl.setVisibility(View.VISIBLE);
+                mMcFormalFaceIv.setVisibility(View.VISIBLE);
+                mMcRl.setVisibility(View.VISIBLE);
+                mMcTableRl.setVisibility(View.VISIBLE);
                 break;
             case R.id.back_iv:
                 finish();
                 break;
             case R.id.pre_share_iv:
+                ToastUtils.showShort("敬请期待");
                 break;
             case R.id.share_iv:
+                ToastUtils.showShort("敬请期待");
                 break;
             case R.id.more_iv:
+                mIntent = new Intent(this, CircleInfoActivity.class);
+                mIntent.putExtra("circle_id", mCircle_id);
+                mIntent.putExtra("operate_user", mCircleInfoEntity.getCircleInfo().getUser_id() + "");
+                startActivity(mIntent);
+                break;
+            case R.id.ml_rl://预览 目录
+                mIntent = new Intent(this, CourseDetailActivity.class);
+                if (mList.size() > 0) {
+                    mIntent.putExtra("bean", mList.get(0));
+                }
+                mIntent.putExtra("circle_id", mCircle_id);
+                startActivity(mIntent);
+                break;
+            case R.id.formal_ml_rl://正式 目录
+                mIntent = new Intent(this, CourseDetailActivity.class);
+                if (mList.size() > 0) {
+                    mIntent.putExtra("bean", mList.get(0));
+                }
+                mIntent.putExtra("circle_id", mCircle_id);
+                startActivity(mIntent);
+                break;
+            case R.id.screen_rl:
+                showThemeTypeDialog();
                 break;
             case R.id.join_tv:
                 showPayDialog();
                 break;
             case R.id.publis_rl:
+                mIntent = new Intent(this, PublishActivity.class);
+                mIntent.putExtra("circle_id", mCircle_id);
+                startActivity(mIntent);
                 break;
             case R.id.mc_qz_expand_iv:
                 mMcQzExpandIv.setImageResource(R.drawable.sanjiao_icon);
@@ -441,6 +552,47 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
                 mMcRl.setVisibility(View.GONE);
                 break;
         }
+    }
+
+    private void showThemeTypeDialog() {
+        BaseDialog mDialog = new BaseDialog.Builder(this)
+                .setViewId(R.layout.dialog_theme_type)
+                //设置显示位置
+                .setGravity(Gravity.CENTER)
+                //设置动画
+                .setAnimation(R.style.nomal_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx((int) getResources().getDimension(R.dimen.dp_309), ViewGroup.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        if (mPresenter.mDataManager.getUser().getUser_id().equals(mCircleInfoEntity.getCircleInfo().getUser_id() + "")) {
+            mDialog.getView(R.id.type3).setVisibility(View.INVISIBLE);
+        }
+        page = 1;
+        mDialog.getView(R.id.type1).setOnClickListener(v -> {
+            type = "1";
+            mPresenter.themeInfo(mCircle_id, page, type, true);
+            mDialog.dismiss();
+        });
+        mDialog.getView(R.id.type2).setOnClickListener(v -> {
+            type = "2";
+            mPresenter.themeInfo(mCircle_id, page, type, true);
+            mDialog.dismiss();
+        });
+        mDialog.getView(R.id.type3).setOnClickListener(v -> {
+            type = "3";
+            mPresenter.themeInfo(mCircle_id, page, type, true);
+            mDialog.dismiss();
+        });
+        mDialog.getView(R.id.type4).setOnClickListener(v -> {
+            type = "4";
+            mPresenter.themeInfo(mCircle_id, page, type, true);
+            mDialog.dismiss();
+        });
+
+        mDialog.show();
     }
 
     private void showPayDialog() {
@@ -499,12 +651,177 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
 
     @Override
     public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-
+        List<ThemeInfoEntity.ThemeInfoBean> data = baseQuickAdapter.getData();
+        if ("1".equals(mIsJoin)) {
+            Intent intent = new Intent(this, TopticDetailActivity.class);
+            intent.putExtra("title", mCircleInfoEntity.getCircleInfo().getCircle_name());
+            intent.putExtra("theme_id", data.get(i).getTheme_id() + "");
+            startActivity(intent);
+        }
     }
 
     @Override
     public void onItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+        List<ThemeInfoEntity.ThemeInfoBean> data = baseQuickAdapter.getData();
+        switch (view.getId()) {
+            case R.id.item_more_iv:
+                showEditDialog(data.get(i), i, data);
+                break;
+            case R.id.item_praise_iv:
+                mPresenter.praise(data, i);
+                break;
+            case R.id.item_comment_iv:
+                showCommentDialog(data.get(i).getTheme_id(), i, data);
+                break;
+            case R.id.item_share_iv:
+                ToastUtils.showShort("敬请期待");
+                break;
+            case R.id.more_tv:
+                Intent intent = new Intent(this, TopticDetailActivity.class);
+                intent.putExtra("title", mCircleInfoEntity.getCircleInfo().getCircle_name());
+                intent.putExtra("theme_id", data.get(i).getTheme_id() + "");
+                startActivity(intent);
+                break;
+        }
+    }
 
+    private void showEditDialog(ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list) {
+        mEditDailog = new BaseDialog.Builder(this)
+                .setGravity(Gravity.BOTTOM)
+                .setViewId(R.layout.dialog_theme_edit)
+                .setWidthHeightpx(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                .setAnimation(R.style.bottom_aniamtion)
+                .isOnTouchCanceled(true)
+                .builder();
+        mCollect_tv = mEditDailog.getView(R.id.collect_tv);
+        TextView edit_tv = mEditDailog.getView(R.id.edit_tv);
+        TextView delete_tv = mEditDailog.getView(R.id.delete_tv);
+
+        if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
+            mCollect_tv.setVisibility(View.GONE);
+            edit_tv.setVisibility(View.VISIBLE);
+            delete_tv.setVisibility(View.VISIBLE);
+        } else {
+            mCollect_tv.setVisibility(View.VISIBLE);
+            edit_tv.setVisibility(View.GONE);
+            delete_tv.setVisibility(View.GONE);
+        }
+        if (1 == data.getIs_collect()) {
+            Drawable drawable = getResources().getDrawable(R.drawable.collect_sel_icon);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            mCollect_tv.setCompoundDrawables(null, drawable, null, null);
+        } else {
+            Drawable drawable = getResources().getDrawable(R.drawable.collect_def_icon);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            mCollect_tv.setCompoundDrawables(null, drawable, null, null);
+        }
+        mCollect_tv.setOnClickListener(v -> {
+            mPresenter.collectTheme(data, i);
+            mEditDailog.dismiss();
+        });
+        edit_tv.setOnClickListener(v -> {
+            if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
+                Intent intent = new Intent(CourseCircleActivity.this, PublishActivity.class);
+                intent.putExtra("themeInfo", data);
+                intent.putExtra("circle_name", mCircleInfoEntity.getCircleInfo().getCircle_name());
+                startActivity(intent);
+            }
+            mEditDailog.dismiss();
+        });
+        delete_tv.setOnClickListener(v -> {
+            if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
+                showQuitDialog(data, i, list);
+            }
+            mEditDailog.dismiss();
+        });
+        TextView cancle_tv = mEditDailog.getView(R.id.cancle_tv);
+        cancle_tv.setOnClickListener(v -> mEditDailog.dismiss());
+        mEditDailog.show();
+    }
+
+    private void showQuitDialog(ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list) {
+        mDeleteDialog = new BaseDialog.Builder(this)
+                .setGravity(Gravity.CENTER)
+                .setAnimation(R.style.nomal_aniamtion)
+                .setViewId(R.layout.dialog_quit_layout)
+                .setWidthHeightdp((int) getResources().getDimension(R.dimen.dp_275), (int) getResources().getDimension(R.dimen.dp_138))
+                .isOnTouchCanceled(true)
+                .addViewOnClickListener(R.id.cancle_tv, v -> mDeleteDialog.dismiss())
+                .addViewOnClickListener(R.id.query_tv, v -> {
+                    mPresenter.deleteTheme(data, i, list);
+                    mDeleteDialog.dismiss();
+                })
+                .builder();
+        TextView textView = mDeleteDialog.getView(R.id.text);
+        textView.setText("确定删除此主题？");
+        mDeleteDialog.show();
+    }
+
+    private void showCommentDialog(int theme_id, int i, List<ThemeInfoEntity.ThemeInfoBean> data) {
+        mMInputDialog = new BaseDialog.Builder(CourseCircleActivity.this)
+                .setGravity(Gravity.BOTTOM)
+                .setViewId(R.layout.dialog_input_layout)
+                .setWidthHeightdp(ViewGroup.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.dp_129))
+                .isOnTouchCanceled(false)
+                .builder();
+        EditText mInputEt = mMInputDialog.getView(R.id.comment_et);
+        TextView publishTv = mMInputDialog.getView(R.id.publish_tv);
+        mMInputDialog.setOnShowListener(dialog -> mInputEt.postDelayed(() -> {
+            mInputEt.requestFocus();
+            KeyboardUtils.showSoftInput(mInputEt);
+        }, 200));
+        mMInputDialog.setOnDismissListener(dialog -> {
+            mInputEt.getText().clear();
+            KeyboardUtils.hideSoftInput(mInputEt);
+        });
+        mMInputDialog.show();
+        publishTv.setOnClickListener(v -> {
+            if (TextUtils.isEmpty(mInputEt.getText().toString().trim())) {
+                ToastUtils.showShort("请输入评论内容");
+                return;
+            }
+            mPresenter.publishComment(mInputEt.getText().toString().trim(), String.valueOf(theme_id), i, data);
+            if (mMInputDialog != null) {
+                KeyboardUtils.hideSoftInput(mInputEt);
+                mMInputDialog.dismiss();
+            }
+        });
+    }
+
+    @Override
+    public void handlerCommentSuccess(int position, List<ThemeInfoEntity.ThemeInfoBean> data, List<CommentContentBean> contentBeanList) {
+        data.get(position).setComment_content(contentBeanList);
+        mTopticAdapter.notifyItemChanged(position);
+    }
+
+    @Override
+    public void handlerPraiseSuccess(List<ThemeInfoEntity.ThemeInfoBean> data, int i, PraiseEntity praiseEntity) {
+        if (data.get(i).getIs_parise() == 0) {
+            data.get(i).setIs_parise(1);
+        } else {
+            data.get(i).setIs_parise(0);
+        }
+        data.get(i).setParise_nickName(praiseEntity.getNickName());
+        mTopticAdapter.notifyItemChanged(i);
+    }
+
+    @Override
+    public void handlerCollectSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i) {
+        if (0 == data.getIs_collect()) {
+            data.setIs_collect(1);
+            mTopticAdapter.notifyItemChanged(i);
+            ToastUtils.showCollect("收藏成功", getResources().getDrawable(R.drawable.collect_success_icon));
+        } else {
+            data.setIs_collect(0);
+            mTopticAdapter.notifyItemChanged(i);
+            ToastUtils.showCollect("取消收藏", getResources().getDrawable(R.drawable.collect_cancle_icon));
+        }
+    }
+
+    @Override
+    public void handlerDeleteSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list) {
+        list.remove(i);
+        mTopticAdapter.notifyItemRemoved(i);
     }
 
     @Override
@@ -518,32 +835,10 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
         }
     }
 
-    public class RecyclerItemDecoration extends RecyclerView.ItemDecoration {
-        private int itemSpace;
-        private int itemNum;
-
-        /**
-         * @param itemSpace item间隔
-         * @param itemNum   每行item的个数
-         */
-        public RecyclerItemDecoration(int itemSpace, int itemNum) {
-            this.itemSpace = itemSpace;
-            this.itemNum = itemNum;
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            super.getItemOffsets(outRect, view, parent, state);
-            if (isLastRow(view, parent)) {
-                outRect.bottom = SizeUtils.dp2px(50);
-            }
-        }
-
-        private boolean isLastRow(View view, RecyclerView parent) {
-            int position = parent.getChildAdapterPosition(view);
-            int count = parent.getAdapter().getItemCount();
-            return position == count - 1;
-        }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+        KeyboardUtils.unregisterSoftInputChangedListener(this);
     }
-
 }

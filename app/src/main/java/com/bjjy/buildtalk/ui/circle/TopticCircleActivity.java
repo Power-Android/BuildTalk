@@ -160,6 +160,9 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
         if (TextUtils.equals(eventBean.getMsg(), Constants.TOPTIC_REFRESH_ALL)) {
             mPresenter.CircleInfo(mCircle_id);
         }
+        if (TextUtils.equals(eventBean.getMsg(), Constants.QUIT_CIRCLE)){
+            finish();
+        }
     }
 
     @Override

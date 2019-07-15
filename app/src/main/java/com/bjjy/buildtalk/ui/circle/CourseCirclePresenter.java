@@ -13,9 +13,11 @@ import com.bjjy.buildtalk.base.presenter.BasePresenter;
 import com.bjjy.buildtalk.core.rx.BaseObserver;
 import com.bjjy.buildtalk.core.rx.RxUtils;
 import com.bjjy.buildtalk.entity.CircleInfoEntity;
+import com.bjjy.buildtalk.entity.CommentSuccessEntity;
 import com.bjjy.buildtalk.entity.CourseListEntity;
 import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.PayOrderEntity;
+import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.utils.HeaderUtils;
 import com.bjjy.buildtalk.utils.TimeUtils;
@@ -108,6 +110,10 @@ public class CourseCirclePresenter extends BasePresenter<CourseCircleContract.Vi
                     public void onSuccess(ThemeInfoEntity themeInfoEntity) {
                         if (themeInfoEntity.getThemeInfo().size() > 0){
                             mView.handlerThemeInfo(themeInfoEntity, isRefresh);
+                        }else {
+                            if ("4".equals(type)){
+                                mView.handlerThemeInfoEmpty(themeInfoEntity.getThemeInfo());
+                            }
                         }
                     }
                 }));
@@ -163,6 +169,103 @@ public class CourseCirclePresenter extends BasePresenter<CourseCircleContract.Vi
                     @Override
                     public void onSuccess(PayOrderEntity payOrderEntity) {
                         mView.handlerWxOrder(payOrderEntity);
+                    }
+                }));
+    }
+
+    public void praise(List<ThemeInfoEntity.ThemeInfoBean> data, int i) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        paramas.put(Constants.SOURCE, Constants.ANDROID);
+        paramas.put("data_id", data.get(i).getTheme_id()+"");
+        paramas.put("type_id", "1");
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.themeParise(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<PraiseEntity>(mView, false) {
+                    @Override
+                    public void onSuccess(PraiseEntity praiseEntity) {
+                        mView.handlerPraiseSuccess(data,i,praiseEntity);
+                    }
+                }));
+    }
+
+    public void collectTheme(ThemeInfoEntity.ThemeInfoBean data, int i) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        paramas.put("theme_id", data.getTheme_id()+"");
+        paramas.put(Constants.SOURCE, Constants.ANDROID);
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.collectTheme(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<IEntity>(mView, false) {
+                    @Override
+                    public void onSuccess(IEntity iEntity) {
+                        mView.handlerCollectSuccess(iEntity,data, i);
+                    }
+                }));
+    }
+
+    public void deleteTheme(ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        paramas.put("theme_id", data.getTheme_id()+"");
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.deleteTheme(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<IEntity>(mView, false) {
+                    @Override
+                    public void onSuccess(IEntity iEntity) {
+                        mView.handlerDeleteSuccess(iEntity,data, i, list);
+                    }
+                }));
+    }
+
+    public void publishComment(String content, String theme_id, int i, List<ThemeInfoEntity.ThemeInfoBean> data) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        paramas.put(Constants.SOURCE, Constants.ANDROID);
+        paramas.put("theme_id", theme_id);
+        paramas.put("content", content);
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.publishComment(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<CommentSuccessEntity>(mView, false) {
+                    @Override
+                    public void onSuccess(CommentSuccessEntity commentSuccessEntity) {
+                        mView.handlerCommentSuccess(i,data, commentSuccessEntity.getCommentInfo());
                     }
                 }));
     }

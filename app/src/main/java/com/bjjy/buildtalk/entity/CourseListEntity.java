@@ -65,7 +65,7 @@ public class CourseListEntity implements Serializable {
         this.courselist = courselist;
     }
 
-    public static class CourselistBean {
+    public static class CourselistBean implements Serializable{
         /**
          * article_id : 11
          * article_title : ArchiCAD课程1
@@ -180,7 +180,7 @@ public class CourseListEntity implements Serializable {
             this.videoInfo = videoInfo;
         }
 
-        public static class VideoInfoBean {
+        public static class VideoInfoBean implements Serializable{
             /**
              * video_id : 39
              * video_url : http://www.chinabim.com/teachonline/teach/courseStudy/goCurriculumDetail?curriculumId=142&TEACH_VIDEO

@@ -256,7 +256,7 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
                 .showCropFrame(true)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false   true or false
                 .showCropGrid(true)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false    true or false
                 .openClickSound(false)// 是否开启点击声音 true or false
-                .cropWH(1,1)
+                .withAspectRatio(1,1)
                 .previewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中) true or false
                 .minimumCompressSize(100)// 小于100kb的图片不压缩
                 .synOrAsy(true)//同步true或异步false 压缩 默认同步
@@ -269,7 +269,12 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
         if (resultCode == RESULT_OK) {
             if (requestCode == PictureConfig.CHOOSE_REQUEST) {
                 List<LocalMedia> localMedia = PictureSelector.obtainMultipleResult(data);
-                String image = localMedia.get(0).getPath();
+                String image = "";
+                if (localMedia.get(0).isCompressed()){
+                    image = localMedia.get(0).getCompressPath();
+                }else {
+                    image = localMedia.get(0).getPath();
+                }
                 Glide.with(this).load(image).into(mCircleIv);
                 if (!TextUtils.isEmpty(image)){
                     File file = new File(image);

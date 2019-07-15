@@ -1,12 +1,13 @@
 package com.bjjy.buildtalk.ui.circle;
 
-import android.view.View;
-
 import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.base.view.IView;
 import com.bjjy.buildtalk.entity.CircleInfoEntity;
+import com.bjjy.buildtalk.entity.CommentContentBean;
 import com.bjjy.buildtalk.entity.CourseListEntity;
+import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.PayOrderEntity;
+import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 
 import java.util.List;
@@ -30,6 +31,17 @@ public class CourseCircleContract {
         void handlerCourseList(CourseListEntity courseListEntity);
 
         void handlerWxOrder(PayOrderEntity payOrderEntity);
+
+        void handlerPraiseSuccess(List<ThemeInfoEntity.ThemeInfoBean> data, int i, PraiseEntity praiseEntity);
+
+        void handlerCollectSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i);
+
+        void handlerDeleteSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list);
+
+        void handlerCommentSuccess(int i, List<ThemeInfoEntity.ThemeInfoBean> data, List<CommentContentBean> commentInfo);
+
+        void handlerThemeInfoEmpty(List<ThemeInfoEntity.ThemeInfoBean> themeInfo);
+
     }
 
     interface Presenyer extends IPresenter<View>{

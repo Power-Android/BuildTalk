@@ -99,7 +99,9 @@ public class CircleInfoActivity extends BaseActivity<CircleInfoPresenter> implem
         }else {
             mZiliaoTv.setText("圈子资料");
         }
-        Glide.with(this).load(masterInfoEntity.getCircle_image().getPic_url()).into(mBgIv);
+        if (masterInfoEntity.getCircle_image() != null){
+            Glide.with(this).load(masterInfoEntity.getCircle_image().getPic_url()).into(mBgIv);
+        }
         Glide.with(this).load(masterInfoEntity.getMaster_pic()).into(mFaceIv);
         if (masterInfoEntity.getIs_circleMaster().equals("1") && Integer.parseInt(masterInfoEntity.getCountUser()) > 1) {
             mQuitTv.setVisibility(View.GONE);
@@ -179,7 +181,7 @@ public class CircleInfoActivity extends BaseActivity<CircleInfoPresenter> implem
 
     @Override
     public void handlerQuitCircle(IEntity iEntity) {
-        EventBus.getDefault().post(new RefreshEvent(Constants.TOPTIC_REFRESH_ALL));
+        EventBus.getDefault().post(new RefreshEvent(Constants.QUIT_CIRCLE));
         finish();
     }
 }
