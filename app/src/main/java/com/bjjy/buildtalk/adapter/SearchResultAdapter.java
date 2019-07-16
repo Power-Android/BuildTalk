@@ -34,27 +34,10 @@ public class SearchResultAdapter extends BaseQuickAdapter<SearchResultEntity.Aut
 
     @Override
     protected void convert(BaseViewHolder helper, SearchResultEntity.AuthorInfoBean item) {
-        Glide.with(mContext).load(item.getAuthor_pic()).into((ImageView) helper.getView(R.id.item_face_iv));
-        if (!TextUtils.isEmpty(item.getEducation())){
-            helper.setText(R.id.item_job_tv, item.getEducation() + " "+item.getAuthor_desc());
-        }else {
-            helper.setText(R.id.item_job_tv, item.getAuthor_desc());
-        }
-        helper.setText(R.id.item_name_tv, item.getAuthor_name())
-                .setText(R.id.item_content_tv, item.getAuthor_intro());
+        Glide.with(mContext).load(item.getHeadImage()).into((ImageView) helper.getView(R.id.item_face_iv));
+
+        helper.setText(R.id.item_name_tv, item.getNickName())
+                .setText(R.id.item_num_tv, item.getCountAttention()+"");
         TagFlowLayout flowLayout = helper.getView(R.id.flow_layout);
-        List<String> circle_tags = item.getSign();
-        flowLayout.setAdapter(new TagAdapter<String>(circle_tags) {
-            @Override
-            public View getView(FlowLayout parent, int position, String s) {
-                if ("".equals(s)){
-                    return new View(mContext);
-                }
-                TextView tv = (TextView) LayoutInflater.from(mContext)
-                        .inflate(R.layout.flow_layout_tv, parent, false);
-                tv.setText(s);
-                return tv;
-            }
-        });
     }
 }

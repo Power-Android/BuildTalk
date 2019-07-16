@@ -22,6 +22,8 @@ public class CreateCircleContract {
         void handlerCreateSuccess(String iEntity);
 
         void handlerSearchCircleInfo(SearchCircleInfoEntity infoEntity);
+
+        void handlerUpdateCircleInfo(String iEntity);
     }
     interface Presenter extends IPresenter<View>{
 

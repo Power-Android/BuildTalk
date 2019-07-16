@@ -70,6 +70,7 @@
                         android:layout_marginLeft="@dimen/dp_15"
                         android:layout_marginRight="@dimen/dp_15"
                         android:maxLines="2"
+                        android:maxLength="12"
                         android:ellipsize="end"
                         android:includeFontPadding="false"
                         android:background="@null"

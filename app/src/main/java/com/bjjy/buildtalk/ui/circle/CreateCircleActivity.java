@@ -13,7 +13,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
+import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
+import com.bjjy.buildtalk.core.event.RefreshEvent;
 import com.bjjy.buildtalk.entity.CircleTagEntity;
 import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.SearchCircleInfoEntity;
@@ -32,7 +34,12 @@ import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -69,6 +76,7 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
     private String mType;
     private String mCircle_id;
     private List<String> mCircle_tags = new ArrayList<>();
+    private String mPic_url;
 
     @Override
     protected int getLayoutId() {
@@ -132,7 +140,13 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
                 }
                 delete.setOnClickListener(v -> {
                     mTagList.remove(position);
-                    if (mTagList.size() < 5){
+                    mSelList.clear();
+                    for (int i = 0; i < mTagList.size(); i++) {
+                        if (mTagList.get(i).isSelected()){
+                            mSelList.add(mTagList.get(i));
+                        }
+                    }
+                    if (mSelList.size() < 5){
                         mAddEt.setVisibility(View.VISIBLE);
                     }
                     notifyDataChanged();
@@ -142,6 +156,15 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
 
             @Override
             public void onSelected(int position, View view) {
+                mSelList.clear();
+                for (int i = 0; i < mTagList.size(); i++) {
+                    if (mTagList.get(i).isSelected()){
+                        mSelList.add(mTagList.get(i));
+                    }
+                }
+                if (mSelList.size() >= 5){
+                    return;
+                }
                 TextView tv = view.findViewById(R.id.tag_tv);
                 ImageView delete = view.findViewById(R.id.tag_delete);
                 tv.setBackground(getResources().getDrawable(R.drawable.shape_create_circle_sel));
@@ -163,6 +186,15 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
         mFlowLayout.setAdapter(mTagAdapter);
 
         mFlowLayout.setOnTagClickListener((view, position, parent) -> {
+            mSelList.clear();
+            for (int i = 0; i < mTagList.size(); i++) {
+                if (mTagList.get(i).isSelected()){
+                    mSelList.add(mTagList.get(i));
+                }
+            }
+            if (mSelList.size() >= 5){
+                return true;
+            }
             TextView tv = view.findViewById(R.id.tag_tv);
             if (tv.isSelected()) {
                 mTagList.get(position).setSelected(false);
@@ -185,7 +217,7 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
                 mTagAdapter.notifyDataChanged();
                 mAddEt.getText().clear();
                 KeyboardUtils.hideSoftInput(CreateCircleActivity.this);
-                if (mTagList.size() == 5){
+                if (mTagList.size() >= 5){
                     mAddEt.setVisibility(View.GONE);
                 }
                 vervify();
@@ -201,7 +233,7 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
                 mSelList.add(mTagList.get(i));
             }
         }
-        if (mSelList.size() == 5){
+        if (mSelList.size() >= 5){
             mAddEt.setVisibility(View.GONE);
         }else {
             mAddEt.setVisibility(View.VISIBLE);
@@ -219,7 +251,11 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
             return;
         }
         if (mFile == null){
-            ToastUtils.showShort("请添加圈子封面");
+            if (!TextUtils.isEmpty(mPic_url)){
+                mPresenter.updateCircleInfo(mCircle_id, mPic_url, mCircleTitleEt.getText().toString(), StringUtils.listToString(mSelList,','),mEditText.getText().toString().trim());
+            }else {
+                ToastUtils.showShort("请添加圈子封面");
+            }
             return;
         }
 
@@ -231,6 +267,12 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
         Intent intent = new Intent(this, TopticCircleActivity.class);
         intent.putExtra("circle_id", iEntity);
         startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void handlerUpdateCircleInfo(String iEntity) {
+        EventBus.getDefault().post(new RefreshEvent(Constants.TOPTIC_REFRESH_ALL));
         finish();
     }
 
@@ -287,18 +329,20 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
 
     @Override
     public void handlerSearchCircleInfo(SearchCircleInfoEntity infoEntity) {
+        mPic_url = infoEntity.getCircle_image().getPic_url();
         Glide.with(this).load(infoEntity.getCircle_image().getPic_url()).into(mCircleIv);
         mCircleTitleEt.setText(infoEntity.getCircle_name());
         mEditText.setText(infoEntity.getCircle_desc());
         String circle_tags = infoEntity.getCircle_tags();
         mCircle_tags = Arrays.asList(circle_tags.split(","));
         for (int i = 0; i <mCircle_tags.size(); i++) {
-            if (mTagList.size() > 0 && mTagList.get(i).getTag_name().equals(mCircle_tags.get(i))){
+            if (mTagList.size() > 0 && i < 3 && mTagList.get(i).getTag_name().equals(mCircle_tags.get(i))){
                 mTagList.get(i).setSelected(true);
             }else {
                 mTagList.add(new CircleTagEntity(mCircle_tags.get(i), true, true));
             }
         }
+        vervify();
         mTagAdapter.notifyDataChanged();
     }
 }

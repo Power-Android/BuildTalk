@@ -1,6 +1,7 @@
 package com.bjjy.buildtalk.ui.discover;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class EveryTalkListActivity extends BaseActivity<EveryTalkListPresenter> implements EveryTalkContract.View, OnRefreshLoadMoreListener, BaseQuickAdapter.OnItemClickListener {
@@ -53,6 +55,8 @@ public class EveryTalkListActivity extends BaseActivity<EveryTalkListPresenter> 
     TextView mView2;
     @BindView(R.id.received_tv)
     TextView mReceivedTv;
+    @BindView(R.id.num_tv)
+    TextView mNumTv;
 
     private EveryTalkListAdapter mTalkListAdapter;
     private int page = 1;
@@ -83,6 +87,8 @@ public class EveryTalkListActivity extends BaseActivity<EveryTalkListPresenter> 
     @Override
     public void handlerTalkList(EveryTalkListEntity everyTalkListEntity, boolean isRefresh) {
         mPage_count = everyTalkListEntity.getPage_count();
+        int countupdate = everyTalkListEntity.getAuthorInfo().getCountupdate();
+        mNumTv.setText("已更新至" + countupdate + "期");
         introduce(everyTalkListEntity.getAuthorInfo());
         mNewsInfoBeanList = everyTalkListEntity.getNewsInfo();
         if (isRefresh) {
@@ -99,7 +105,7 @@ public class EveryTalkListActivity extends BaseActivity<EveryTalkListPresenter> 
         mFlowLayout.setAdapter(new TagAdapter<String>(author_desc) {
             @Override
             public View getView(FlowLayout parent, int position, String s) {
-                if ("".equals(s)){
+                if ("".equals(s)) {
                     return new View(EveryTalkListActivity.this);
                 }
                 TextView tv = (TextView) LayoutInflater.from(EveryTalkListActivity.this)

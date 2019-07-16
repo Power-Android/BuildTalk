@@ -1,12 +1,22 @@
 package com.bjjy.buildtalk.utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
+import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
 import com.bjjy.buildtalk.R;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.request.RequestOptions;
 import com.youth.banner.loader.ImageLoader;
+
+import java.security.MessageDigest;
+import java.util.HashMap;
+
+import static com.bumptech.glide.load.resource.bitmap.VideoDecoder.FRAME_OPTION;
 
 /**
  * @author power
@@ -29,6 +39,28 @@ public class GlideUtils extends ImageLoader {
                 .apply(new RequestOptions()
                 .error(R.drawable.test_banner))
                 .into(imageView);
+    }
+
+    /**
+     *  context 上下文
+     *  url 视频地址
+     *  imageView 设置image
+     */
+    public static void loadVideoScreenshot(final Context context, String url, ImageView imageView) {
+        Bitmap bitmap = null;
+
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            //根据url获取缩略图
+            retriever.setDataSource(url, new HashMap());
+            //获得第一帧图片
+            bitmap = retriever.getFrameAtTime();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } finally {
+            retriever.release();
+        }
+        Glide.with(context).load(bitmap).into(imageView);
     }
 
 }

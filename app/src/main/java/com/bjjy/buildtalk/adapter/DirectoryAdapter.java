@@ -1,6 +1,8 @@
 package com.bjjy.buildtalk.adapter;
 
+import android.graphics.Typeface;
 import android.support.annotation.Nullable;
+import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.entity.CourseListEntity;
@@ -26,6 +28,12 @@ public class DirectoryAdapter extends BaseQuickAdapter<CourseListEntity.Courseli
     @Override
     protected void convert(BaseViewHolder helper, CourseListEntity.CourselistBean item) {
         helper.setText(R.id.item_name_tv, item.getArticle_title());
+        TextView nameTv = helper.getView(R.id.item_name_tv);
+        if (item.isSelected()){
+            nameTv.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        }else {
+            nameTv.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+        }
         if (mIsJoin.equals("1")){
             helper.setGone(R.id.item_sk_iv, false);
             helper.setGone(R.id.item_sd_iv, false);

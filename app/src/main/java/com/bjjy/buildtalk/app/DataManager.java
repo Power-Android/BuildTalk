@@ -416,4 +416,9 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     public Observable<BaseResponse<PayOrderEntity>> payOrder(Map<String, String> headers, Map<String, String> params) {
         return mHttpHelper.payOrder(headers, params);
     }
+
+    @Override
+    public Observable<BaseResponse<String>> updateCircleInfo(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.updateCircleInfo(headers, params);
+    }
 }

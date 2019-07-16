@@ -159,4 +159,6 @@ public interface HttpHelper {
 
     Observable<BaseResponse<PayOrderEntity>> payOrder(Map<String, String> headers, Map<String, String> params);
 
+    Observable<BaseResponse<String>> updateCircleInfo(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
 }

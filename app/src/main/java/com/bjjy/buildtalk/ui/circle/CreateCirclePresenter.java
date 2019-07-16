@@ -101,6 +101,33 @@ public class CreateCirclePresenter extends BasePresenter<CreateCircleContract.Vi
                 }));
     }
 
+    public void updateCircleInfo(String circle_id, String pic_url, String circle_name, String circle_tags, String circle_desc) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        paramas.put("circle_id", circle_id);
+        paramas.put("circle_image", pic_url);
+        paramas.put("circle_name", circle_name);
+        paramas.put("circle_tags", circle_tags);
+        paramas.put("circle_desc", circle_desc);
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.updateCircleInfo(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(iEntityBaseResponse -> mView != null)
+                .subscribeWith(new BaseObserver<String>(mView, false) {
+                    @Override
+                    public void onSuccess(String iEntity) {
+                        mView.handlerUpdateCircleInfo(iEntity);
+                    }
+                }));
+    }
+
     public void searchCircleInfo(String circle_id) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();

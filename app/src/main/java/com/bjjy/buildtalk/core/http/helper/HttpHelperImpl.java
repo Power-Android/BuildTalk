@@ -332,4 +332,9 @@ public class HttpHelperImpl implements HttpHelper {
     public Observable<BaseResponse<PayOrderEntity>> payOrder(Map<String, String> headers, Map<String, String> params) {
         return mApiService.payOrder(headers, params);
     }
+
+    @Override
+    public Observable<BaseResponse<String>> updateCircleInfo(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.updateCircleInfo(headers, params);
+    }
 }

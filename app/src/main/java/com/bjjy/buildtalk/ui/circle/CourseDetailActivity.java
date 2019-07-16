@@ -37,6 +37,7 @@ import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.PayOrderEntity;
 import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
+import com.bjjy.buildtalk.utils.GlideUtils;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
@@ -77,12 +78,6 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
     ImageView mXqExpandIv;
     @BindView(R.id.more_ll)
     LinearLayout mMoreLl;
-    @BindView(R.id.view7)
-    ImageView mView7;
-    @BindView(R.id.item_name_tv)
-    TextView mItemNameTv;
-    @BindView(R.id.only_play_rl)
-    RelativeLayout mOnlyPlayRl;
     @BindView(R.id.update_tv)
     TextView mUpdateTv;
     @BindView(R.id.gx_expand_iv)
@@ -119,10 +114,6 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
     SmartRefreshLayout mRefreshLayout;
     @BindView(R.id.dir_rl)
     RelativeLayout mDirRl;
-    @BindView(R.id.item_free_iv)
-    ImageView mItemFreeIv;
-    @BindView(R.id.item_sd_iv)
-    ImageView mItemSdIv;
     @BindView(R.id.collapse_tv)
     RelativeLayout mCollapseTv;
 
@@ -141,6 +132,7 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
     private CourseListEntity.CourselistBean mData;
     private IWXAPI wxapi;
     private CircleInfoEntity mCircleInfoEntity;
+    private String mPosition;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void event(PayEvent eventBean) {
@@ -167,13 +159,9 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
         mTopTitleRl.setPadding(0, StatusBarUtils.getStatusBarHeight(), 0, 0);
 
         mData = (CourseListEntity.CourselistBean) getIntent().getSerializableExtra("bean");
+        mPosition = getIntent().getStringExtra("position");
         mCircle_id = getIntent().getStringExtra("circle_id");
-        Glide.with(this.getApplicationContext())
-                .setDefaultRequestOptions(
-                        new RequestOptions()
-                                .frame(1000000))
-                .load(mData.getVideoInfo().getVideo_url())
-                .into(mVideoplayer.thumbImageView);
+        GlideUtils.loadVideoScreenshot(this, mData.getVideoInfo().getVideo_url(), mVideoplayer.thumbImageView);
         mVideoplayer.setUp(new JZDataSource(mData.getVideoInfo().getVideo_url()), Jzvd.SCREEN_WINDOW_NORMAL);
     }
 
@@ -192,70 +180,6 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
     @Override
     public void handlerCircleInfo(CircleInfoEntity circleInfoEntity) {
         this.mCircleInfoEntity = circleInfoEntity;
-        mPresenter.courseList(mCircleInfoEntity.getCircleInfo().getData_id() + "", coursePage);
-
-        mIsJoin = circleInfoEntity.getIsJoin();
-        mChapterTitleTv.setText(mData.getArticle_title());
-        WebSettings settings = mWebView.getSettings();
-        settings.setJavaScriptEnabled(true);
-        settings.setDomStorageEnabled(true);
-        settings.setUseWideViewPort(true);
-        settings.setLoadWithOverviewMode(true);
-        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-        mWebView.loadData(getHtmlData(mData.getContent()), "text/html;charset=utf-8","utf-8");
-        mItemNameTv.setText(mData.getArticle_title());
-        if (mIsJoin.equals("1")) {
-            mItemFreeIv.setVisibility(View.GONE);
-            mItemSdIv.setVisibility(View.GONE);
-            mJoinTv.setVisibility(View.GONE);
-        } else {
-            mJoinTv.setText("加入圈子￥" + mCircleInfoEntity.getCircleInfo().getCourse_money());
-            mJoinTv.setVisibility(View.VISIBLE);
-            if (mData.getIs_audition() == 1) {
-                mItemFreeIv.setVisibility(View.VISIBLE);
-                mItemSdIv.setVisibility(View.GONE);
-            } else {
-                mItemFreeIv.setVisibility(View.GONE);
-                mItemSdIv.setVisibility(View.VISIBLE);
-            }
-        }
-        mChapterRecycler.setLayoutManager(new LinearLayoutManager(this));
-        mDirectoryAdapter = new DirectoryAdapter(R.layout.adapter_directory_layout, mList, mIsJoin);
-        mChapterRecycler.setAdapter(mDirectoryAdapter);
-        mDirectoryAdapter.setOnLoadMoreListener(this, mChapterRecycler);
-        mDirectoryAdapter.setOnItemClickListener((baseQuickAdapter, view, i) -> {
-            List<CourseListEntity.CourselistBean> mList = baseQuickAdapter.getData();
-
-            if (mIsJoin.equals("0") && mList.get(i).getIs_audition() == 0) {
-                ToastUtils.showShort("该课程还未解锁");
-                return;
-            }
-            mData = mList.get(i);
-            Jzvd.releaseAllVideos();
-            Glide.with(this)
-                    .setDefaultRequestOptions(
-                            new RequestOptions()
-                                    .frame(1000000))
-                    .load(mList.get(i).getVideoInfo().getVideo_url())
-                    .into(mVideoplayer.thumbImageView);
-            mVideoplayer.setUp(new JZDataSource(mList.get(i).getVideoInfo().getVideo_url()), Jzvd.SCREEN_WINDOW_NORMAL);
-            mVideoplayer.startVideo();
-            mChapterTitleTv.setText(mData.getArticle_title());
-            mWebView.loadData(getHtmlData(mData.getContent()), "text/html;charset=utf-8","utf-8");
-            mItemNameTv.setText(mList.get(i).getArticle_title());
-            if (mIsJoin.equals("1")) {
-                mItemFreeIv.setVisibility(View.GONE);
-                mItemSdIv.setVisibility(View.GONE);
-            } else {
-                if (mData.getIs_audition() == 1) {
-                    mItemFreeIv.setVisibility(View.VISIBLE);
-                    mItemSdIv.setVisibility(View.GONE);
-                } else {
-                    mItemFreeIv.setVisibility(View.GONE);
-                    mItemSdIv.setVisibility(View.VISIBLE);
-                }
-            }
-        });
 
         mRefreshLayout.setOnRefreshLoadMoreListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -270,6 +194,48 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
         } else {
             mRefreshLayout.setEnableLoadMore(true);
         }
+
+        mPresenter.courseList(mCircleInfoEntity.getCircleInfo().getData_id() + "", coursePage);
+
+        mIsJoin = circleInfoEntity.getIsJoin();
+        mChapterTitleTv.setText(mData.getArticle_title());
+        WebSettings settings = mWebView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setDomStorageEnabled(true);
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
+        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        mWebView.loadData(getHtmlData(mData.getContent()), "text/html;charset=utf-8","utf-8");
+        if (mIsJoin.equals("1")) {
+            mJoinTv.setVisibility(View.GONE);
+        } else {
+            mJoinTv.setText("加入圈子￥" + mCircleInfoEntity.getCircleInfo().getCourse_money());
+            mJoinTv.setVisibility(View.VISIBLE);
+        }
+        mChapterRecycler.setLayoutManager(new LinearLayoutManager(this));
+        mDirectoryAdapter = new DirectoryAdapter(R.layout.adapter_directory_layout, mList, mIsJoin);
+        mChapterRecycler.setAdapter(mDirectoryAdapter);
+        mDirectoryAdapter.setOnLoadMoreListener(this, mChapterRecycler);
+        mDirectoryAdapter.setOnItemClickListener((baseQuickAdapter, view, i) -> {
+            List<CourseListEntity.CourselistBean> mList = baseQuickAdapter.getData();
+
+            if (mIsJoin.equals("0") && mList.get(i).getIs_audition() == 0) {
+                ToastUtils.showShort("该课程还未解锁");
+                return;
+            }
+            for (int j = 0; j < mList.size(); j++) {
+                mList.get(j).setSelected(false);
+            }
+            mList.get(i).setSelected(true);
+            mData = mList.get(i);
+            Jzvd.releaseAllVideos();
+            GlideUtils.loadVideoScreenshot(this, mList.get(i).getVideoInfo().getVideo_url(), mVideoplayer.thumbImageView);
+            mVideoplayer.setUp(new JZDataSource(mList.get(i).getVideoInfo().getVideo_url()), Jzvd.SCREEN_WINDOW_NORMAL);
+            mVideoplayer.startVideo();
+            mChapterTitleTv.setText(mData.getArticle_title());
+            mWebView.loadData(getHtmlData(mData.getContent()), "text/html;charset=utf-8","utf-8");
+            mDirectoryAdapter.notifyDataSetChanged();
+        });
     }
 
     private String getHtmlData(String bodyHTML) {
@@ -285,6 +251,7 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
         mDir_page_count = courseListEntity.getPage_count();
         int countUpdateCourse = courseListEntity.getCountUpdateCourse();
         int countCourse = courseListEntity.getCountCourse();
+        courseListEntity.getCourselist().get(Integer.parseInt(mPosition)).setSelected(true);
         mList = courseListEntity.getCourselist();
         mUpdateTv.setText("更新至" + countUpdateCourse + "讲/全" + countCourse + "讲");
         mDirectoryAdapter.addData(courseListEntity.getCourselist());
@@ -311,7 +278,7 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
         mTopticAdapter.setNewData(themeInfo);
     }
 
-    @OnClick({R.id.more_ll, R.id.only_play_rl, R.id.list_ll, R.id.join_tv, R.id.back_iv, R.id.pre_share_iv, R.id.share_iv, R.id.more_iv, R.id.collapse_tv})
+    @OnClick({R.id.more_ll, R.id.list_ll, R.id.join_tv, R.id.back_iv, R.id.pre_share_iv, R.id.share_iv, R.id.more_iv, R.id.collapse_tv})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.more_ll:
@@ -323,17 +290,6 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
                     mXqExpandIv.setImageResource(R.drawable.sanjiao_icon);
                 }
                 isExpand = !isExpand;
-                break;
-            case R.id.only_play_rl:
-                Jzvd.releaseAllVideos();
-                Glide.with(this)
-                        .setDefaultRequestOptions(
-                                new RequestOptions()
-                                        .frame(1000000))
-                        .load(mData.getVideoInfo().getVideo_url())
-                        .into(mVideoplayer.thumbImageView);
-                mVideoplayer.setUp(new JZDataSource(mData.getVideoInfo().getVideo_url()), Jzvd.SCREEN_WINDOW_NORMAL);
-                mVideoplayer.startVideo();
                 break;
             case R.id.list_ll:
                 mDirRl.setVisibility(View.VISIBLE);

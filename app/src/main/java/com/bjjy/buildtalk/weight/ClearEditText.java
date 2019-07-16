@@ -13,6 +13,7 @@ import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
 
 import com.bjjy.buildtalk.R;
+import com.bjjy.buildtalk.utils.KeyboardUtils;
 
 /**
  * @author power
@@ -20,7 +21,7 @@ import com.bjjy.buildtalk.R;
  * @description:
  */
 public class ClearEditText extends android.support.v7.widget.AppCompatEditText implements
-        OnFocusChangeListener, TextWatcher {
+        TextWatcher {
     /**
      * 删除按钮的引用
      */
@@ -69,7 +70,7 @@ public class ClearEditText extends android.support.v7.widget.AppCompatEditText i
         //默认设置隐藏图标
         setClearIconVisible(false);
         //设置焦点改变的监听
-        setOnFocusChangeListener(this);
+//        setOnFocusChangeListener(this);
         //设置输入框里面内容发生改变的监听
         addTextChangedListener(this);
     }
@@ -82,6 +83,8 @@ public class ClearEditText extends android.support.v7.widget.AppCompatEditText i
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_UP) {
+            setFocusable(true);
+            requestFocus();
             if (getCompoundDrawables()[2] != null) {
 
                 boolean touchable = event.getX() > (getWidth() - getTotalPaddingRight())
@@ -91,6 +94,7 @@ public class ClearEditText extends android.support.v7.widget.AppCompatEditText i
                     this.setText("");
                 }
             }
+            KeyboardUtils.showSoftInput(this);
         }
 
         return super.onTouchEvent(event);
@@ -99,15 +103,15 @@ public class ClearEditText extends android.support.v7.widget.AppCompatEditText i
     /**
      * 当ClearEditText焦点发生变化的时候，判断里面字符串长度设置清除图标的显示与隐藏
      */
-    @Override
-    public void onFocusChange(View v, boolean hasFocus) {
-        this.hasFoucs = hasFocus;
-        if (hasFocus) {
-            setClearIconVisible(getText().length() > 0);
-        } else {
-            setClearIconVisible(false);
-        }
-    }
+//    @Override
+//    public void onFocusChange(View v, boolean hasFocus) {
+//        this.hasFoucs = hasFocus;
+//        if (hasFocus) {
+//            setClearIconVisible(getText().length() > 0);
+//        } else {
+//            setClearIconVisible(false);
+//        }
+//    }
 
     /**
      * 设置清除图标的显示与隐藏，调用setCompoundDrawables为EditText绘制上去
@@ -126,9 +130,9 @@ public class ClearEditText extends android.support.v7.widget.AppCompatEditText i
     @Override
     public void onTextChanged(CharSequence s, int start, int count,
                               int after) {
-        if (hasFoucs) {
+//        if (hasFoucs) {
             setClearIconVisible(s.length() > 0);
-        }
+//        }
     }
 
     @Override

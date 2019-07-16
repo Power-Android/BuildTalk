@@ -42,7 +42,7 @@ public class TransactionPresenter extends BasePresenter<TransactionContract.View
     public void setRecord(String type) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
-        paramas.put(Constants.USER_ID, "47");
+        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
         paramas.put("type",type);
         paramas.put(Constants.SOURCE, Constants.ANDROID);
         paramas.put(Constants.TIMESTAMP, timestamp);

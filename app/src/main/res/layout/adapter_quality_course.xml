@@ -40,7 +40,6 @@
                 android:maxLength="11"
                 android:singleLine="true"
                 android:ellipsize="end"
-                android:text="ArchCAD建筑模型"
                 android:textColor="@color/text_drak"
                 android:textSize="@dimen/sp_14" />
             <LinearLayout
@@ -59,7 +58,6 @@
                     android:includeFontPadding="false"
                     android:maxLength="6"
                     android:singleLine="true"
-                    android:text="顾雍陶"
                     android:textColor="@color/text_mid"
                     android:textSize="@dimen/sp_11" />
 
@@ -67,6 +65,7 @@
                     android:id="@+id/course_tag_iv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/tag_icon"
                     android:layout_marginLeft="@dimen/dp_4"
@@ -75,15 +74,16 @@
 
             <TextView
                 android:id="@+id/course_job_tv"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/view1"
                 android:layout_below="@+id/course_title_tv"
                 android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_10"
                 android:layout_marginTop="@dimen/dp_5"
-                android:text="项目经理"
+                android:text=""
+                android:ellipsize="end"
                 android:includeFontPadding="false"
-                android:maxLength="6"
                 android:singleLine="true"
                 android:textColor="@color/text_mid"
                 android:textSize="@dimen/sp_11" />

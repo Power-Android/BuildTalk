@@ -198,78 +198,69 @@ public class SearchResultEntity implements Serializable {
     }
 
     public static class AuthorInfoBean {
+
         /**
-         * author_id : 10
-         * author_name : 张鸣
-         * author_pic : https://www.51jiantan.com/static/image/zhangming.png
-         * author_desc : 民盟成员、高级工程师
-         * author_intro : 悉尼大学工商管理硕士
-         * sign : ["平台","数据","BIM"]
-         * education : 博士
+         * user_id : 24
+         * nickName : 就你最近的表现
+         * headImage : https://wx.qlogo.cn/mmopen/vi_32/l9vY4SPbAKegKetuYRU9FDJu6W7Ac38Ngj5MSpJicHsKdxuniadLRnvV2KUnBhhbHfDVvpY8iaGgrMxiaws1X5G8Ag/132
+         * is_author : 0
+         * name : 就你最近的表现
+         * countAttention : 0
          */
 
-        private int author_id;
-        private String author_name;
-        private String author_pic;
-        private String author_desc;
-        private String author_intro;
-        private String education;
-        private List<String> sign;
+        private int user_id;
+        private String nickName;
+        private String headImage;
+        private int is_author;
+        private String name;
+        private int countAttention;
 
-        public int getAuthor_id() {
-            return author_id;
+        public int getUser_id() {
+            return user_id;
         }
 
-        public void setAuthor_id(int author_id) {
-            this.author_id = author_id;
+        public void setUser_id(int user_id) {
+            this.user_id = user_id;
         }
 
-        public String getAuthor_name() {
-            return author_name;
+        public String getNickName() {
+            return nickName;
         }
 
-        public void setAuthor_name(String author_name) {
-            this.author_name = author_name;
+        public void setNickName(String nickName) {
+            this.nickName = nickName;
         }
 
-        public String getAuthor_pic() {
-            return author_pic;
+        public String getHeadImage() {
+            return headImage;
         }
 
-        public void setAuthor_pic(String author_pic) {
-            this.author_pic = author_pic;
+        public void setHeadImage(String headImage) {
+            this.headImage = headImage;
         }
 
-        public String getAuthor_desc() {
-            return author_desc;
+        public int getIs_author() {
+            return is_author;
         }
 
-        public void setAuthor_desc(String author_desc) {
-            this.author_desc = author_desc;
+        public void setIs_author(int is_author) {
+            this.is_author = is_author;
         }
 
-        public String getAuthor_intro() {
-            return author_intro;
+        public String getName() {
+            return name;
         }
 
-        public void setAuthor_intro(String author_intro) {
-            this.author_intro = author_intro;
+        public void setName(String name) {
+            this.name = name;
         }
 
-        public String getEducation() {
-            return education;
+        public int getCountAttention() {
+            return countAttention;
         }
 
-        public void setEducation(String education) {
-            this.education = education;
-        }
-
-        public List<String> getSign() {
-            return sign;
-        }
-
-        public void setSign(List<String> sign) {
-            this.sign = sign;
+        public void setCountAttention(int countAttention) {
+            this.countAttention = countAttention;
         }
     }
 }

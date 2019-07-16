@@ -2,8 +2,9 @@ package com.bjjy.buildtalk.ui.mine;
 
 import android.Manifest;
 import android.content.Intent;
-import android.os.Handler;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,7 +15,6 @@ import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.core.event.RefreshEvent;
-import com.bjjy.buildtalk.ui.circle.PublishActivity;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.luck.picture.lib.PictureSelector;
@@ -30,6 +30,7 @@ import java.io.File;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
@@ -43,8 +44,6 @@ public class SetPictureActivity extends BaseActivity<SetPicturePresenter> implem
     public static String FACE = "FACE";
     public static String BACKGROUND = "BACKGROUND";
 
-    @BindView(R.id.toolbar_left_title)
-    TextView mToolbarLeftTitle;
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
     @BindView(R.id.image_view)
@@ -53,6 +52,8 @@ public class SetPictureActivity extends BaseActivity<SetPicturePresenter> implem
     TextView mPhotoTv;
     @BindView(R.id.camera_tv)
     TextView mCameraTv;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
 
     private MultipartBody.Part mFile;
     private String type;
@@ -67,11 +68,12 @@ public class SetPictureActivity extends BaseActivity<SetPicturePresenter> implem
     protected void initView() {
         mTag = getIntent().getStringExtra(TAG);
         String pic = getIntent().getStringExtra("pic");
-        mToolbarLeftTitle.setText(getResources().getString(R.string.cancle));
-        if (TextUtils.equals(mTag, FACE)){
+        mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
+        mToolbar.setNavigationOnClickListener(v -> finish());
+        if (TextUtils.equals(mTag, FACE)) {
             mToolbarTitle.setText("设置个人头像");
             type = "2";
-        }else {
+        } else {
             mToolbarTitle.setText("设置背景");
             type = "3";
         }
@@ -109,9 +111,6 @@ public class SetPictureActivity extends BaseActivity<SetPicturePresenter> implem
     @OnClick({R.id.toolbar_left_title, R.id.photo_tv, R.id.camera_tv})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.toolbar_left_title:
-                finish();
-                break;
             case R.id.photo_tv:
                 requestPhoto();
                 break;
@@ -184,7 +183,7 @@ public class SetPictureActivity extends BaseActivity<SetPicturePresenter> implem
             if (requestCode == PictureConfig.CHOOSE_REQUEST) {
                 List<LocalMedia> localMedia = PictureSelector.obtainMultipleResult(data);
                 String image = localMedia.get(0).getPath();
-                if (!TextUtils.isEmpty(image)){
+                if (!TextUtils.isEmpty(image)) {
                     File file = new File(image);
                     RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
                     mFile = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
@@ -196,9 +195,9 @@ public class SetPictureActivity extends BaseActivity<SetPicturePresenter> implem
 
     @Override
     public void handlerUpData(String picUrl) {
-        if (TextUtils.equals(mTag, FACE)){
+        if (TextUtils.equals(mTag, FACE)) {
             ToastUtils.showCollect("头像更新成功", getResources().getDrawable(R.drawable.collect_success_icon));
-        }else {
+        } else {
             ToastUtils.showCollect("背景更新成功", getResources().getDrawable(R.drawable.collect_success_icon));
         }
         Glide.with(this).load(picUrl).into(mImageView);

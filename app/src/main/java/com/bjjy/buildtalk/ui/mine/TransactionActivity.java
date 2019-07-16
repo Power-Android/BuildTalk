@@ -79,7 +79,17 @@ public class TransactionActivity extends BaseActivity<TransactionPresenter> impl
             }
             list.get(position).setSelected(true);
             mTabAdapter.notifyDataSetChanged();
-            mPresenter.setRecord(position+"");
+            switch (position){
+                case 0:
+                    mPresenter.setRecord("0");
+                    break;
+                case 1:
+                    mPresenter.setRecord("2");
+                    break;
+                case 2:
+                    mPresenter.setRecord("1");
+                    break;
+            }
         });
     }
 

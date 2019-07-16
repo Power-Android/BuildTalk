@@ -1,15 +1,19 @@
 package com.bjjy.buildtalk.ui.circle;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.CircleMemberAdapter;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.entity.MemberEntity;
+import com.bjjy.buildtalk.ui.talk.CircleManDetailActivity;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
@@ -19,7 +23,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class CircleMemberActivity extends BaseActivity<CircleMemberPresenter> implements CircleMemberContract.View, OnRefreshLoadMoreListener {
+public class CircleMemberActivity extends BaseActivity<CircleMemberPresenter> implements CircleMemberContract.View, OnRefreshLoadMoreListener, BaseQuickAdapter.OnItemClickListener {
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
@@ -51,6 +55,7 @@ public class CircleMemberActivity extends BaseActivity<CircleMemberPresenter> im
         mRefreshLayout.setOnRefreshLoadMoreListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mMemberAdapter = new CircleMemberAdapter(R.layout.adapter_circle_member, mList);
+        mMemberAdapter.setOnItemClickListener(this);
         mRecyclerView.setAdapter(mMemberAdapter);
     }
 
@@ -87,4 +92,11 @@ public class CircleMemberActivity extends BaseActivity<CircleMemberPresenter> im
         }
     }
 
+    @Override
+    public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+        List<MemberEntity.CircleUserBean> mList = baseQuickAdapter.getData();
+        Intent intent = new Intent(this, CircleManDetailActivity.class);
+        intent.putExtra("user_id", mList.get(i).getUser_id() + "");
+        startActivity(intent);
+    }
 }

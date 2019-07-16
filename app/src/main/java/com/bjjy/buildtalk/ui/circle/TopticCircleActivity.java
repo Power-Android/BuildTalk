@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -143,10 +144,6 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
     private int page = 1, pageCount = 1;
     private String type = "1";
     private CircleTopticAdapter mTopticAdapter;
-
-    private BottomSheetDialog mBottomSheetDialog;
-    private BottomSheetBehavior mBehavior;
-    private View mView;
     private BaseDialog mMInputDialog, mEditDailog;
     private TextView mCollect_tv;
     private Intent mIntent;
@@ -207,7 +204,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
             mPublisRl.setVisibility(View.GONE);
             mScreenRl.setVisibility(View.GONE);
             Glide.with(this).load(R.drawable.circle_bg_icon).into(mTopticBg);
-            Glide.with(this).load(circleInfoEntity.getCircleInfo().getMaster_pic()).into(mPreFaceIv);
+            Glide.with(this).load(circleInfoEntity.getCircleInfo().getCircle_image().getPic_url()).into(mPreFaceIv);
             mPreTitleTv.setText(circleInfoEntity.getCircleInfo().getCircle_name());
             mPreNameTv.setText("圈主：" + circleInfoEntity.getCircleInfo().getName());
             mPreDateTv.setText("创建 " + circleInfoEntity.getCircleInfo().getCreate_day() + "天");
@@ -225,6 +222,19 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
                 }
             });
             mRecommendTv.setText(circleInfoEntity.getCircleInfo().getCircle_desc());
+            mRecommendTv.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                @Override
+                public boolean onPreDraw() {
+                    if (mRecommendTv.getLineCount() < 2){
+                        mExpandIv.setVisibility(View.GONE);
+                    }else {
+                        mExpandIv.setVisibility(View.VISIBLE);
+                    }
+                    //这个回调会调用多次，获取完行数记得注销监听
+                    mRecommendTv.getViewTreeObserver().removeOnPreDrawListener(this);
+                    return true;
+                }
+            });
         } else {//已加入
             mPreTopRl.setVisibility(View.GONE);
             mFormalRl.setVisibility(View.VISIBLE);
@@ -272,6 +282,9 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
 
     @Override
     public void handlerThemeInfo(ThemeInfoEntity themeInfoEntity, boolean isRefresh) {
+        if (mThemeInfoList != null){
+            mThemeInfoList.clear();
+        }
         pageCount = themeInfoEntity.getPage_count();
         mThemeInfoList = themeInfoEntity.getThemeInfo();
 

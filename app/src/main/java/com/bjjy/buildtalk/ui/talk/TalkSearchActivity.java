@@ -1,5 +1,6 @@
 package com.bjjy.buildtalk.ui.talk;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
@@ -17,10 +19,12 @@ import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.SearchResultAdapter;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.core.greendao.HistoryData;
+import com.bjjy.buildtalk.entity.CircleListEntity;
 import com.bjjy.buildtalk.entity.SearchResultEntity;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bjjy.buildtalk.weight.ClearEditText;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
@@ -35,7 +39,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class TalkSearchActivity extends BaseActivity<TalkSearchPresenter> implements TalkSearchContract.View, TextView.OnEditorActionListener, OnRefreshLoadMoreListener {
+public class TalkSearchActivity extends BaseActivity<TalkSearchPresenter> implements TalkSearchContract.View, TextView.OnEditorActionListener, OnRefreshLoadMoreListener, BaseQuickAdapter.OnItemClickListener, View.OnFocusChangeListener {
 
     @BindView(R.id.search_et)
     ClearEditText mSearchEt;
@@ -65,10 +69,12 @@ public class TalkSearchActivity extends BaseActivity<TalkSearchPresenter> implem
     protected void initView() {
         mSearchEt.setHint(R.string.search_name);
         mSearchEt.setOnEditorActionListener(this);
+        mSearchEt.setOnFocusChangeListener(this);
         mRefreshLayout.setOnRefreshLoadMoreListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mSearchResultAdapter = new SearchResultAdapter(R.layout.adapter_search_result, mList);
+        mSearchResultAdapter = new SearchResultAdapter(R.layout.adapter_search_result_talk, mList);
         mRecyclerView.setAdapter(mSearchResultAdapter);
+        mSearchResultAdapter.setOnItemClickListener(this);
     }
 
     @Override
@@ -79,14 +85,27 @@ public class TalkSearchActivity extends BaseActivity<TalkSearchPresenter> implem
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            mSearchEt.setFocusable(false);
             if (TextUtils.isEmpty(mSearchEt.getText().toString().trim())) {
                 ToastUtils.showShort("请输入搜索内容");
                 return true;
             }
-            gotoSearchResult(page, mSearchEt.getText().toString().trim(), false);
+            gotoSearchResult(page, mSearchEt.getText().toString().trim(), true);
             KeyboardUtils.hideSoftInput(this);
         }
         return false;
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        if (hasFocus){
+            mPresenter.getSearchData();
+            mRefreshLayout.setVisibility(View.GONE);
+            mSearchRl.setVisibility(View.VISIBLE);
+        }else {
+            mSearchRl.setVisibility(View.GONE);
+            mRefreshLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     private void gotoSearchResult(int page, String content, boolean isRefresh) {
@@ -108,10 +127,6 @@ public class TalkSearchActivity extends BaseActivity<TalkSearchPresenter> implem
 
     @Override
     public void showHistoryData(List<HistoryData> historyDataList) {
-        if (historyDataList.size() == 0) {
-            mSearchRl.setVisibility(View.GONE);
-            return;
-        }
         mSearchRl.setVisibility(View.VISIBLE);
         mFlowLayout.setAdapter(new TagAdapter<HistoryData>(historyDataList) {
             @Override
@@ -126,8 +141,10 @@ public class TalkSearchActivity extends BaseActivity<TalkSearchPresenter> implem
         });
 
         mFlowLayout.setOnTagClickListener((view, position1, parent1) -> {
-            gotoSearchResult(page, historyDataList.get(position1).getData(), false);
+            mSearchEt.setFocusable(false);
+            gotoSearchResult(page, historyDataList.get(position1).getData(), true);
             mSearchEt.setText(historyDataList.get(position1).getData());
+            mSearchEt.setSelection(historyDataList.get(position1).getData().length());//将光标追踪到内容的最后
             KeyboardUtils.hideSoftInput(this);
             return true;
         });
@@ -163,5 +180,13 @@ public class TalkSearchActivity extends BaseActivity<TalkSearchPresenter> implem
         page = 1;
         gotoSearchResult(page,mSearchEt.getText().toString().trim(), true);
         refreshLayout.finishRefresh();
+    }
+
+    @Override
+    public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+        List<SearchResultEntity.AuthorInfoBean> mList = baseQuickAdapter.getData();
+        Intent intent = new Intent(this, CircleManDetailActivity.class);
+        intent.putExtra("user_id", mList.get(i).getUser_id() + "");
+        startActivity(intent);
     }
 }

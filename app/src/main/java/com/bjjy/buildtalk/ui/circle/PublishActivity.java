@@ -120,10 +120,10 @@ public class PublishActivity extends BaseActivity<PublishPresenter> implements P
         });
     }
 
-    private void requestPhoto() {
+    private void requestPhoto(int maxNum) {
         PictureSelector.create(this)
                 .openGallery(PictureMimeType.ofImage())//全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
-                .maxSelectNum(9)// 最大图片选择数量 int
+                .maxSelectNum(maxNum)// 最大图片选择数量 int
                 .minSelectNum(1)// 最小选择数量 int
                 .imageSpanCount(4)// 每行显示个数 int
                 .selectionMode(PictureConfig.MULTIPLE)// 多选 or 单选 PictureConfig.MULTIPLE or PictureConfig.SINGLE
@@ -186,7 +186,11 @@ public class PublishActivity extends BaseActivity<PublishPresenter> implements P
                 mPresenter.publishTheme(mCircle_id, mTheme_id , mPublishTv.getText().toString().trim(), mParts, isEdit, list);
                 break;
             case R.id.pic_rl:
-                requestPhoto();
+                if (list.size() >= 9){
+                    ToastUtils.showShort("最多只能选择9张图片");
+                    return;
+                }
+                requestPhoto(9 - list.size());
                 RxPermissions permissions = new RxPermissions(this);
                 permissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(new Observer<Boolean>() {
                     @Override

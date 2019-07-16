@@ -91,6 +91,15 @@ public class CourseListEntity implements Serializable {
         private String content;
         private int media_id;
         private VideoInfoBean videoInfo;
+        private boolean isSelected;
+
+        public boolean isSelected() {
+            return isSelected;
+        }
+
+        public void setSelected(boolean selected) {
+            isSelected = selected;
+        }
 
         public int getArticle_id() {
             return article_id;

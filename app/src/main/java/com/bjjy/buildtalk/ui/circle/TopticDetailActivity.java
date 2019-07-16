@@ -2,6 +2,7 @@ package com.bjjy.buildtalk.ui.circle;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,8 +31,10 @@ import com.bjjy.buildtalk.entity.PariseNickNameBean;
 import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.ThemeImageBean;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
+import com.bjjy.buildtalk.ui.discover.EveryTalkDetailActivity;
 import com.bjjy.buildtalk.ui.main.ViewPagerActivity;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
+import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
 import com.bjjy.buildtalk.utils.StringUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
@@ -52,6 +55,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -103,6 +107,8 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
     ImageView mShareIv;
     @BindView(R.id.include_toolbar)
     RelativeLayout mIncludeToolbar;
+    @BindView(R.id.record_ll)
+    LinearLayout mRecordLl;
     private String mTheme_id;
     private ThemeInfoEntity.ThemeInfoBean themeInfoEntity;
     private int page = 1;
@@ -116,6 +122,7 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
     private int mThemeCountParise;
     private int itemPosition = 0;
     private int mCountCommentNum = 0;
+    private boolean isGone = false;
 
     @Override
     protected int getLayoutId() {
@@ -133,6 +140,12 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
         mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
         mToolbar.setNavigationOnClickListener(v -> finish());
         mToolbarTitle.setText(mTitle);
+        KeyboardUtils.registerSoftInputChangedListener(this, height -> {
+            if (height <= 0){
+                mRecordLl.setVisibility(View.VISIBLE);
+                isGone = false;
+            }
+        });
     }
 
     @Override
@@ -211,11 +224,10 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
 
     @Override
     public void handlerCommentList(ThemeInfoEntity.ThemeInfoBean themeInfoBean, boolean isRefresh) {
-        if (themeInfoBean.getComment_content().size() > 0){
+        if (themeInfoBean.getComment_content().size() > 0) {
             mPage_count = themeInfoBean.getPage_count();
             mCountCommentNum = themeInfoBean.getCountCommentNum();
             mRecordNumTv.setText(mCountCommentNum + "");
-            mRecordEt.setHint(mCountCommentNum + "评论");
             mComment_content = themeInfoBean.getComment_content();
             if (isRefresh) {
                 mCommentAdapter.setNewData(themeInfoBean.getComment_content());
@@ -225,7 +237,7 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
         }
 
         mRecordEt.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_SEND){
+            if (actionId == EditorInfo.IME_ACTION_SEND) {
                 if (TextUtils.isEmpty(mRecordEt.getText().toString().trim())) {
                     ToastUtils.showShort("请输入评论内容");
                     return false;
@@ -233,13 +245,15 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
                 mPresenter.publishComment(mRecordEt.getText().toString().trim(), themeInfoEntity.getTheme_id());
                 mRecordEt.clearFocus();
                 mRecordEt.getText().clear();
+                mRecordLl.setVisibility(View.VISIBLE);
+                isGone = !isGone;
                 KeyboardUtils.hideSoftInput(this);
             }
             return false;
         });
     }
 
-    @OnClick({R.id.item_more_iv, R.id.praise_ll, R.id.share_iv})
+    @OnClick({R.id.item_more_iv, R.id.praise_ll, R.id.share_iv, R.id.record_ll})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.item_more_iv:
@@ -250,6 +264,17 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
                 break;
             case R.id.share_iv:
                 break;
+            case R.id.record_ll:
+                LoginHelper.login(this, mPresenter.mDataManager, () -> {
+                    if (!isGone){
+                        mRecordLl.setVisibility(View.GONE);
+                        mRecordEt.setFocusable(true);
+                        mRecordEt.setFocusableInTouchMode(true);
+                        mRecordEt.requestFocus();
+                        KeyboardUtils.showSoftInput(TopticDetailActivity.this);
+                        isGone = !isGone;
+                    }
+                });
         }
     }
 
@@ -262,6 +287,19 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
                 .isOnTouchCanceled(true)
                 .builder();
         mCollect_tv = mEditDailog.getView(R.id.collect_tv);
+        TextView edit_tv = mEditDailog.getView(R.id.edit_tv);
+        TextView delete_tv = mEditDailog.getView(R.id.delete_tv);
+
+        if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())){
+            mCollect_tv.setVisibility(View.GONE);
+            edit_tv.setVisibility(View.VISIBLE);
+            delete_tv.setVisibility(View.VISIBLE);
+        }else {
+            mCollect_tv.setVisibility(View.VISIBLE);
+            edit_tv.setVisibility(View.GONE);
+            delete_tv.setVisibility(View.GONE);
+        }
+
         if (1 == data.getIs_collect()) {
             Drawable drawable = getResources().getDrawable(R.drawable.collect_sel_icon);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
@@ -275,7 +313,6 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
             mPresenter.collectTheme(data);
             mEditDailog.dismiss();
         });
-        TextView edit_tv = mEditDailog.getView(R.id.edit_tv);
         edit_tv.setOnClickListener(v -> {
             if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
                 Intent intent = new Intent(TopticDetailActivity.this, PublishActivity.class);
@@ -285,7 +322,6 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
             }
             mEditDailog.dismiss();
         });
-        TextView delete_tv = mEditDailog.getView(R.id.delete_tv);
         delete_tv.setOnClickListener(v -> {
             if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
                 showQuitDialog(data);
@@ -363,7 +399,7 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
         itemPosition = i;
         switch (view.getId()) {
             case R.id.item_praise_ll:
-                mPresenter.praise(mComment_content.get(i).getComment_id() + "", "2",  mComment_content);
+                mPresenter.praise(mComment_content.get(i).getComment_id() + "", "2", mComment_content);
                 break;
             case R.id.item_delete_iv:
                 showDeleteDialog(mComment_content, i);
@@ -415,13 +451,13 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
             }
         } else {
             int countpraise = mComment_content.get(itemPosition).getCountpraise();
-            if (mComment_content.get(itemPosition).getIsPraise() == 1){
+            if (mComment_content.get(itemPosition).getIsPraise() == 1) {
                 mComment_content.get(itemPosition).setIsPraise(0);
-                if (countpraise > 0){
+                if (countpraise > 0) {
                     countpraise--;
                     mComment_content.get(itemPosition).setCountpraise(countpraise);
                 }
-            }else {
+            } else {
                 mComment_content.get(itemPosition).setIsPraise(1);
                 countpraise++;
                 mComment_content.get(itemPosition).setCountpraise(countpraise);
@@ -434,10 +470,9 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
     public void handlerDeleteComment(List<CommentContentBean> mComment_content) {
         mComment_content.remove(itemPosition);
         mCommentAdapter.notifyItemRemoved(itemPosition);
-        if (mCountCommentNum > 0){
+        if (mCountCommentNum > 0) {
             mCountCommentNum--;
             mRecordNumTv.setText(mCountCommentNum + "");
-            mRecordEt.setHint(mCountCommentNum + "评论");
         }
     }
 

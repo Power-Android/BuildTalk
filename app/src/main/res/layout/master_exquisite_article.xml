@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.scwang.smartrefresh.layout.SmartRefreshLayout
-    android:id="@+id/refresh_Layout"
+<com.scwang.smartrefresh.layout.SmartRefreshLayout android:id="@+id/refresh_Layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:overScrollMode="never">
+    app:srlEnableLoadMore="false"
+    app:srlEnableRefresh="false"
+    android:overScrollMode="never"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"

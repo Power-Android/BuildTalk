@@ -7,11 +7,13 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.App;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
+import com.bjjy.buildtalk.weight.ViewPagerIndicator;
 import com.bumptech.glide.Glide;
 
 public class GuideActivity extends BaseActivity<GuidePresenter> implements GuideContract.View {
@@ -25,6 +27,8 @@ public class GuideActivity extends BaseActivity<GuidePresenter> implements Guide
     protected void initView() {
         int[] images = {R.drawable.guide01, R.drawable.guide02, R.drawable.guide03};
         ViewPager viewPager = findViewById(R.id.view_pager);
+        LinearLayout linear = findViewById(R.id.liner);
+        viewPager.setOnPageChangeListener(new ViewPagerIndicator(this, viewPager, linear, images.length));
         viewPager.setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {

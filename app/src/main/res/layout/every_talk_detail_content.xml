@@ -8,9 +8,14 @@
         android:id="@+id/fl_VideoPlayer"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_200"
+        android:clickable="true"
         android:visibility="gone">
         <cn.jzvd.JzvdStd
             android:id="@+id/videoplayer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <View
+            android:id="@+id/is_play"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </FrameLayout>

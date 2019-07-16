@@ -284,6 +284,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
             Intent intent = new Intent(CourseCircleActivity.this, CourseDetailActivity.class);
             if (mList.size() > 0) {
                 intent.putExtra("bean", mList.get(i));
+                intent.putExtra("position", i+"");
             }
             intent.putExtra("circle_id", mCircle_id);
             startActivity(intent);
@@ -510,6 +511,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
                 mIntent = new Intent(this, CourseDetailActivity.class);
                 if (mList.size() > 0) {
                     mIntent.putExtra("bean", mList.get(0));
+                    mIntent.putExtra("position", "0");
                 }
                 mIntent.putExtra("circle_id", mCircle_id);
                 startActivity(mIntent);
@@ -518,6 +520,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
                 mIntent = new Intent(this, CourseDetailActivity.class);
                 if (mList.size() > 0) {
                     mIntent.putExtra("bean", mList.get(0));
+                    mIntent.putExtra("position", "0");
                 }
                 mIntent.putExtra("circle_id", mCircle_id);
                 startActivity(mIntent);

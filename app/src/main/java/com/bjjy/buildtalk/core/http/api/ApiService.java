@@ -183,6 +183,14 @@ public interface ApiService {
     Observable<BaseResponse<String>> createCircle(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
     /**
+     * @return 创建圈子
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("updateCircleInfo")
+    @FormUrlEncoded
+    Observable<BaseResponse<String>> updateCircleInfo(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
      * @return 圈子搜索列表
      */
     @Headers(Constants.HEADER_PASSID)

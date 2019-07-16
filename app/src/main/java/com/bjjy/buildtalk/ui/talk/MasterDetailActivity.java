@@ -22,6 +22,7 @@ import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.MasterDetailEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
+import com.bjjy.buildtalk.ui.discover.EveryTalkDetailActivity;
 import com.bjjy.buildtalk.utils.SizeUtils;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
@@ -29,6 +30,7 @@ import com.bjjy.buildtalk.weight.BaseDialog;
 import com.bjjy.buildtalk.weight.MyViewPagerAdapter;
 import com.bjjy.buildtalk.weight.tablayout.TabLayout;
 import com.bumptech.glide.Glide;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.zhy.view.flowlayout.FlowLayout;
 
 import java.util.ArrayList;
@@ -38,7 +40,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MasterDetailActivity extends BaseActivity<MasterDetailPresenter> implements MasterDetailContract.View, AppBarLayout.OnOffsetChangedListener {
+public class MasterDetailActivity extends BaseActivity<MasterDetailPresenter> implements MasterDetailContract.View, AppBarLayout.OnOffsetChangedListener, BaseQuickAdapter.OnItemClickListener {
 
     @BindView(R.id.master_bg)
     ImageView mMasterBg;
@@ -117,6 +119,7 @@ public class MasterDetailActivity extends BaseActivity<MasterDetailPresenter> im
         RecyclerView articleRecyclerView = views.get(0).findViewById(R.id.recycler_view);
         articleRecyclerView.setLayoutManager(new LinearLayoutManager(App.getContext()));
         mMasterArticleAdapter = new MasterArticleAdapter(R.layout.adapter_master_article, mArticleInfo);
+        mMasterArticleAdapter.setOnItemClickListener(this);
         articleRecyclerView.setAdapter(mMasterArticleAdapter);
         mIntroductionNameTv = views.get(1).findViewById(R.id.name_tv);
         mIntroductionEduTv = views.get(1).findViewById(R.id.edu_tv);
@@ -262,5 +265,13 @@ public class MasterDetailActivity extends BaseActivity<MasterDetailPresenter> im
             mFocusTv.setText("+关注");
             ToastUtils.showCollect("已取消关注", getResources().getDrawable(R.drawable.collect_cancle_icon));
         }
+    }
+
+    @Override
+    public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+        List<MasterDetailEntity.ArticleInfoBean> mArticleInfo = baseQuickAdapter.getData();
+        Intent intent = new Intent(this, EveryTalkDetailActivity.class);
+        intent.putExtra("article_id", mArticleInfo.get(i).getArticle_id()+"");
+        startActivity(intent);
     }
 }

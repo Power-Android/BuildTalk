@@ -1,5 +1,7 @@
 package com.bjjy.buildtalk.ui.discover;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -13,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.WebSettings;
@@ -29,12 +32,16 @@ import com.bjjy.buildtalk.adapter.EveryTalkDetailAdapter;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.GuestBookEntity;
+import com.bjjy.buildtalk.ui.main.LoginActivity;
+import com.bjjy.buildtalk.utils.GlideUtils;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -47,6 +54,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,6 +118,8 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     WebView mWebView;
     @BindView(R.id.record_ll)
     LinearLayout mRecordLl;
+    @BindView(R.id.is_play)
+    View misPlay;
 
     private SimpleExoPlayer simpleExoPlayer;
     private EveryTalkDetailAdapter mEveryTalkDetailAdapter;
@@ -201,13 +211,14 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
         }
         if (!TextUtils.isEmpty(mMNewsInfo.getVideo_url())) {
             mFlVideoPlayer.setVisibility(View.VISIBLE);
-            Glide.with(this.getApplicationContext())
-                    .setDefaultRequestOptions(
-                            new RequestOptions()
-                                    .frame(1000000))
-                    .load(mMNewsInfo.getVideo_url())
-                    .into(mVideoplayer.thumbImageView);
+            GlideUtils.loadVideoScreenshot(this, mMNewsInfo.getVideo_url(), mVideoplayer.thumbImageView);
             mVideoplayer.setUp(new JZDataSource(mMNewsInfo.getVideo_url()), Jzvd.SCREEN_WINDOW_NORMAL);
+            if (!mPresenter.mDataManager.getLoginStatus()){
+                misPlay.setVisibility(View.VISIBLE);
+            }else {
+                misPlay.setVisibility(View.GONE);
+            }
+            misPlay.setOnClickListener(v -> startActivity(new Intent(EveryTalkDetailActivity.this, LoginActivity.class)));
         }
 
         WebSettings settings = mWebView.getSettings();
