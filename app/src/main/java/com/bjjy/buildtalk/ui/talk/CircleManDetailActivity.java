@@ -23,6 +23,8 @@ import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.MasterDetailEntity;
 import com.bjjy.buildtalk.entity.SearchResultEntity;
+import com.bjjy.buildtalk.ui.circle.CourseCircleActivity;
+import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
 import com.bjjy.buildtalk.utils.SizeUtils;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
@@ -30,6 +32,7 @@ import com.bjjy.buildtalk.weight.BaseDialog;
 import com.bjjy.buildtalk.weight.MyViewPagerAdapter;
 import com.bjjy.buildtalk.weight.tablayout.TabLayout;
 import com.bumptech.glide.Glide;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
@@ -126,11 +129,35 @@ public class CircleManDetailActivity extends BaseActivity<CircleManDetailPresent
         create_recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new CircleSearchResultAdapter(R.layout.adapter_circle_search_result, mList);
         create_recyclerView.setAdapter(mAdapter);
+        mAdapter.setOnItemClickListener((baseQuickAdapter, view, i) -> {
+            List<SearchResultEntity.CircleInfoBean> data = baseQuickAdapter.getData();
+            if ("1".equals(data.get(i).getType())){
+                Intent intent = new Intent(CircleManDetailActivity.this, TopticCircleActivity.class);
+                intent.putExtra("circle_id", data.get(i).getCircle_id()+"");
+                startActivity(intent);
+            }else {
+                Intent intent = new Intent(CircleManDetailActivity.this, CourseCircleActivity.class);
+                intent.putExtra("circle_id", data.get(i).getCircle_id()+"");
+                startActivity(intent);
+            }
+        });
 
         RecyclerView join_recyclerView = views.get(1).findViewById(R.id.recycler_view);
         join_recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter1 = new CircleSearchResultAdapter(R.layout.adapter_circle_search_result, mList1);
         join_recyclerView.setAdapter(mAdapter1);
+        mAdapter1.setOnItemClickListener((baseQuickAdapter, view, i) -> {
+            List<SearchResultEntity.CircleInfoBean> data = baseQuickAdapter.getData();
+            if ("1".equals(data.get(i).getType())){
+                Intent intent = new Intent(CircleManDetailActivity.this, TopticCircleActivity.class);
+                intent.putExtra("circle_id", data.get(i).getCircle_id()+"");
+                startActivity(intent);
+            }else {
+                Intent intent = new Intent(CircleManDetailActivity.this, CourseCircleActivity.class);
+                intent.putExtra("circle_id", data.get(i).getCircle_id()+"");
+                startActivity(intent);
+            }
+        });
 
         mPresenter.userDetail(mUser_id);
         mPresenter.createList(mUser_id, create_page, false);

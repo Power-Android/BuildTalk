@@ -1,5 +1,6 @@
 package com.bjjy.buildtalk.ui.talk;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -71,12 +72,36 @@ public class FansFocusActivity extends BaseActivity<FansFocusPresenter> implemen
                 List<FansFocusEntity.MyFansInfoBean> mMyFansInfo = baseQuickAdapter.getData();
                 mPresenter.attention(mMyFansInfo.get(i).getUser_id(), mMyFansInfo, i);
             });
+            mFansFocusAdapter.setOnItemClickListener((baseQuickAdapter, view, i) -> {
+                List<FansFocusEntity.MyFansInfoBean> data = baseQuickAdapter.getData();
+                if (data.get(i).getIs_author() == 0){
+                    Intent intent = new Intent(FansFocusActivity.this, CircleManDetailActivity.class);
+                    intent.putExtra("user_id", data.get(i).getUser_id() + "");
+                    startActivity(intent);
+                }else {
+                    Intent intent = new Intent(FansFocusActivity.this, MasterDetailActivity.class);
+                    intent.putExtra("user_id", data.get(i).getUser_id() + "");
+                    startActivity(intent);
+                }
+            });
         }else {
             mFocusAdapter = new FocusAdapter(R.layout.adapter_circle_list, mAttentionInfoBeans);
             mRecyclerView.setAdapter(mFocusAdapter);
             mFocusAdapter.setOnItemChildClickListener((baseQuickAdapter, view, i) -> {
                 List<FansFocusEntity.AttentionInfoBean> mAttentionInfoBeans = baseQuickAdapter.getData();
                 mPresenter.attention1(mAttentionInfoBeans.get(i).getUser_id(), mAttentionInfoBeans, i);
+            });
+            mFocusAdapter.setOnItemClickListener((baseQuickAdapter, view, i) -> {
+                List<FansFocusEntity.AttentionInfoBean> data = baseQuickAdapter.getData();
+                if (data.get(i).getIs_author() == 0){
+                    Intent intent = new Intent(FansFocusActivity.this, CircleManDetailActivity.class);
+                    intent.putExtra("user_id", data.get(i).getUser_id() + "");
+                    startActivity(intent);
+                }else {
+                    Intent intent = new Intent(FansFocusActivity.this, MasterDetailActivity.class);
+                    intent.putExtra("user_id", data.get(i).getUser_id() + "");
+                    startActivity(intent);
+                }
             });
         }
     }

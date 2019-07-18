@@ -5,8 +5,6 @@ import com.bjjy.buildtalk.base.presenter.BasePresenter;
 import com.bjjy.buildtalk.core.rx.BaseObserver;
 import com.bjjy.buildtalk.core.rx.RxUtils;
 import com.bjjy.buildtalk.entity.CircleTagEntity;
-import com.bjjy.buildtalk.entity.EveryTalkListEntity;
-import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.SearchCircleInfoEntity;
 import com.bjjy.buildtalk.utils.HeaderUtils;
 import com.bjjy.buildtalk.utils.TimeUtils;
@@ -53,7 +51,7 @@ public class CreateCirclePresenter extends BasePresenter<CreateCircleContract.Vi
                 }));
     }
 
-    public void upload(MultipartBody.Part file, String circle_name, String circle_tags, String circle_desc) {
+    public void upload(boolean isFiel, String circle_id, MultipartBody.Part file, String circle_name, String circle_tags, String circle_desc) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
         paramas.put(Constants.TIMESTAMP, timestamp);
@@ -69,7 +67,11 @@ public class CreateCirclePresenter extends BasePresenter<CreateCircleContract.Vi
                 .subscribeWith(new BaseObserver<String>(mView, false) {
                     @Override
                     public void onSuccess(String picUrl) {
-                        creatCircle(picUrl,circle_name,circle_tags,circle_desc);
+                        if (isFiel){
+                            updateCircleInfo(circle_id,picUrl,circle_name,circle_tags,circle_desc);
+                        }else {
+                            creatCircle(picUrl,circle_name,circle_tags,circle_desc);
+                        }
                     }
                 }));
     }

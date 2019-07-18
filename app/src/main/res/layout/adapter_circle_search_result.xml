@@ -13,7 +13,6 @@
             android:layout_width="@dimen/dp_70"
             android:layout_height="@dimen/dp_70"
             android:layout_alignParentBottom="true"
-            android:src="@drawable/test_course"
             android:scaleType="centerCrop"
             app:riv_corner_radius="@dimen/dp_5"/>
         <ImageView

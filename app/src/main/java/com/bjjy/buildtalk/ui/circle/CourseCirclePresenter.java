@@ -111,9 +111,7 @@ public class CourseCirclePresenter extends BasePresenter<CourseCircleContract.Vi
                         if (themeInfoEntity.getThemeInfo().size() > 0){
                             mView.handlerThemeInfo(themeInfoEntity, isRefresh);
                         }else {
-                            if ("4".equals(type)){
-                                mView.handlerThemeInfoEmpty(themeInfoEntity.getThemeInfo());
-                            }
+                            mView.handlerThemeInfoEmpty(themeInfoEntity.getThemeInfo());
                         }
                     }
                 }));

@@ -185,8 +185,15 @@ public class TalkSearchActivity extends BaseActivity<TalkSearchPresenter> implem
     @Override
     public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
         List<SearchResultEntity.AuthorInfoBean> mList = baseQuickAdapter.getData();
-        Intent intent = new Intent(this, CircleManDetailActivity.class);
-        intent.putExtra("user_id", mList.get(i).getUser_id() + "");
-        startActivity(intent);
+        if(mList.get(i).getIs_author() == 0){
+            Intent intent = new Intent(this, CircleManDetailActivity.class);
+            intent.putExtra("user_id", mList.get(i).getUser_id() + "");
+            startActivity(intent);
+        }else {
+            Intent intent = new Intent(this, MasterDetailActivity.class);
+            intent.putExtra("user_id", mList.get(i).getUser_id() + "");
+            startActivity(intent);
+        }
+
     }
 }

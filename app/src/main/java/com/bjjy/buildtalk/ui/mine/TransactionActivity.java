@@ -5,6 +5,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
@@ -34,6 +35,8 @@ public class TransactionActivity extends BaseActivity<TransactionPresenter> impl
     RecyclerView mRecyclerView;
     @BindView(R.id.refresh_Layout)
     SmartRefreshLayout mRefreshLayout;
+    @BindView(R.id.empty_rl)
+    RelativeLayout mEmptyRl;
 
     private List<TransactionTabEntity> mTabList = new ArrayList<>();
     private TransactionTabAdapter mTabAdapter;
@@ -79,7 +82,7 @@ public class TransactionActivity extends BaseActivity<TransactionPresenter> impl
             }
             list.get(position).setSelected(true);
             mTabAdapter.notifyDataSetChanged();
-            switch (position){
+            switch (position) {
                 case 0:
                     mPresenter.setRecord("0");
                     break;
@@ -95,7 +98,14 @@ public class TransactionActivity extends BaseActivity<TransactionPresenter> impl
 
     @Override
     public void handlerList(List<AleadyBuyEntity> list) {
-        mTransactionAdapter.setNewData(list);
+        if (list.size() > 0){
+            mEmptyRl.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mTransactionAdapter.setNewData(list);
+        }else {
+            mRecyclerView.setVisibility(View.GONE);
+            mEmptyRl.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

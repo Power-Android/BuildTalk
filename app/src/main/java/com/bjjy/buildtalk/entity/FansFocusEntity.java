@@ -73,6 +73,15 @@ public class FansFocusEntity implements Serializable {
         private String headImage;
         private int countAttention;
         private int is_attention;
+        private int is_author;
+
+        public int getIs_author() {
+            return is_author;
+        }
+
+        public void setIs_author(int is_author) {
+            this.is_author = is_author;
+        }
 
         public int getAttention_id() {
             return attention_id;
@@ -159,6 +168,15 @@ public class FansFocusEntity implements Serializable {
         private String headImage;
         private int countAttention;
         private int is_attention;
+        private int is_author;
+
+        public int getIs_author() {
+            return is_author;
+        }
+
+        public void setIs_author(int is_author) {
+            this.is_author = is_author;
+        }
 
         public int getAttention_id() {
             return attention_id;

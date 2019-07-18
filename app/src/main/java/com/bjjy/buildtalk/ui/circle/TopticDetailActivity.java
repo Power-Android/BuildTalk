@@ -33,6 +33,7 @@ import com.bjjy.buildtalk.entity.ThemeImageBean;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.ui.discover.EveryTalkDetailActivity;
 import com.bjjy.buildtalk.ui.main.ViewPagerActivity;
+import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
@@ -123,6 +124,7 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
     private int itemPosition = 0;
     private int mCountCommentNum = 0;
     private boolean isGone = false;
+    private String mUrl;
 
     @Override
     protected int getLayoutId() {
@@ -163,6 +165,7 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
     @Override
     public void handlerThemeInfo(ThemeInfoEntity.ThemeInfoBean themeInfoEntity) {
         this.themeInfoEntity = themeInfoEntity;
+        mUrl = "https://jt.chinabim.com/share/#/theme/" + themeInfoEntity.getUser_id() + "/" + mTheme_id;
         Glide.with(this).load(themeInfoEntity.getHeadImage()).into(mItemFaceIv);
         mItemNameTv.setText(themeInfoEntity.getName());
         mThemeCountParise = themeInfoEntity.getThemeCountParise();
@@ -263,6 +266,8 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
                 mPresenter.praise(themeInfoEntity.getTheme_id() + "", "1", null);
                 break;
             case R.id.share_iv:
+                DialogUtils.showShareDialog(this, mUrl, mTitle,
+                        themeInfoEntity.getHeadImage(), themeInfoEntity.getTheme_content());
                 break;
             case R.id.record_ll:
                 LoginHelper.login(this, mPresenter.mDataManager, () -> {

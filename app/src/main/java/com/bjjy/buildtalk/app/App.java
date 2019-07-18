@@ -119,7 +119,7 @@ public class App extends Application implements HasActivityInjector {
         UMShareAPI.get(this);
 
         PlatformConfig.setWeixin("wx24a51a57c203d22a", "88bb0de3d710e5708306126d64632fe7");
-        PlatformConfig.setQQZone("101534242", "a27d6d07de633a5b72300c7a397d454d");
+        PlatformConfig.setQQZone("1109656764", "yT2c6qH0chEWCPPX");
 //        PlatformConfig.setSinaWeibo("3643532861", "1e8969939d29e307938c6092e3e93444", "http://www.dapengjiaoyu.com");//回调地址要跟微博开放平台的一样
     }
 

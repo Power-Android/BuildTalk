@@ -70,6 +70,9 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
         if (TextUtils.equals(eventBean.getMsg(), Constants.QUIT_CIRCLE)){
             onRefresh(mRefreshLayout);
         }
+        if (TextUtils.equals(eventBean.getMsg(), Constants.INFO_REFRESH)) {
+            onRefresh(mRefreshLayout);
+        }
     }
 
     public static CircleFragment newInstance() {

@@ -36,7 +36,7 @@ public class SearchResultAdapter extends BaseQuickAdapter<SearchResultEntity.Aut
     protected void convert(BaseViewHolder helper, SearchResultEntity.AuthorInfoBean item) {
         Glide.with(mContext).load(item.getHeadImage()).into((ImageView) helper.getView(R.id.item_face_iv));
 
-        helper.setText(R.id.item_name_tv, item.getNickName())
+        helper.setText(R.id.item_name_tv, item.getName())
                 .setText(R.id.item_num_tv, item.getCountAttention()+"");
         TagFlowLayout flowLayout = helper.getView(R.id.flow_layout);
     }

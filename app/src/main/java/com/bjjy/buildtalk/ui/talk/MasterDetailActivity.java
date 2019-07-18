@@ -272,6 +272,7 @@ public class MasterDetailActivity extends BaseActivity<MasterDetailPresenter> im
         List<MasterDetailEntity.ArticleInfoBean> mArticleInfo = baseQuickAdapter.getData();
         Intent intent = new Intent(this, EveryTalkDetailActivity.class);
         intent.putExtra("article_id", mArticleInfo.get(i).getArticle_id()+"");
+        intent.putExtra("type","article");
         startActivity(intent);
     }
 }

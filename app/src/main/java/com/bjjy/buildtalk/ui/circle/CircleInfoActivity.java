@@ -150,12 +150,12 @@ public class CircleInfoActivity extends BaseActivity<CircleInfoPresenter> implem
                     mIntent.putExtra("type", "edit");
                     mIntent.putExtra("circle_id", mMasterInfoEntity.getCircle_id());
                     startActivity(mIntent);
+                    finish();
                 }else {
                     mIntent = new Intent(this, CircleDataActivity.class);
                     mIntent.putExtra("circle_id", mMasterInfoEntity.getCircle_id());
                     startActivity(mIntent);
                 }
-                finish();
                 break;
             case R.id.quit_tv:
                 showQuitDialog();

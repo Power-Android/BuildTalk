@@ -33,7 +33,9 @@ public class CircleSearchResultAdapter extends BaseQuickAdapter<SearchResultEnti
 
     @Override
     protected void convert(BaseViewHolder helper, SearchResultEntity.CircleInfoBean item) {
-        Glide.with(mContext).load(item.getCircle_image().getPic_url()).into((ImageView) helper.getView(R.id.item_face_iv));
+        if (item.getCircle_image() != null){
+            Glide.with(mContext).load(item.getCircle_image().getPic_url()).into((ImageView) helper.getView(R.id.item_face_iv));
+        }
         helper.setText(R.id.item_title_tv, item.getCircle_name())
                 .setText(R.id.item_name_tv, "圈主：" + item.getName());
         helper.setGone(R.id.isCourse, "话题".equals(item.getType()) ? false : true)

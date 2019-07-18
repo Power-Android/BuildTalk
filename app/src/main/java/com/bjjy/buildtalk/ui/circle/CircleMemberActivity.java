@@ -13,6 +13,8 @@ import com.bjjy.buildtalk.adapter.CircleMemberAdapter;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.entity.MemberEntity;
 import com.bjjy.buildtalk.ui.talk.CircleManDetailActivity;
+import com.bjjy.buildtalk.ui.talk.FansFocusActivity;
+import com.bjjy.buildtalk.ui.talk.MasterDetailActivity;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -95,8 +97,14 @@ public class CircleMemberActivity extends BaseActivity<CircleMemberPresenter> im
     @Override
     public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
         List<MemberEntity.CircleUserBean> mList = baseQuickAdapter.getData();
-        Intent intent = new Intent(this, CircleManDetailActivity.class);
-        intent.putExtra("user_id", mList.get(i).getUser_id() + "");
-        startActivity(intent);
+        if (mList.get(i).getIs_author() == 0){
+            Intent intent = new Intent(this, CircleManDetailActivity.class);
+            intent.putExtra("user_id", mList.get(i).getUser_id() + "");
+            startActivity(intent);
+        }else {
+            Intent intent = new Intent(this, MasterDetailActivity.class);
+            intent.putExtra("user_id", mList.get(i).getUser_id() + "");
+            startActivity(intent);
+        }
     }
 }

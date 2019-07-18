@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.CircleTopticAdapter;
 import com.bjjy.buildtalk.adapter.DirectoryAdapter;
+import com.bjjy.buildtalk.adapter.ThemeTypeAdapter;
 import com.bjjy.buildtalk.app.App;
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
@@ -37,6 +39,8 @@ import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.PayOrderEntity;
 import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
+import com.bjjy.buildtalk.entity.ThemeTypeEntity;
+import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
@@ -68,7 +72,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> implements CourseCircleContract.View, AppBarLayout.OnOffsetChangedListener, OnRefreshLoadMoreListener, BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.RequestLoadMoreListener {
+public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> implements CourseCircleContract.View, AppBarLayout.OnOffsetChangedListener, OnRefreshLoadMoreListener, BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.RequestLoadMoreListener, ViewPager.OnPageChangeListener {
 
     @BindView(R.id.toptic_bg)
     ImageView mTopticBg;
@@ -196,6 +200,8 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     ImageView mFormalItemFreeIv;
     @BindView(R.id.formal_item_sd_iv)
     ImageView mFormalItemSdIv;
+    @BindView(R.id.screen_tv)
+    TextView mScreenTv;
 
     private MyBadgeViewPagerAdapter mPagerAdapter;
     private List<View> mViews = new ArrayList<>();
@@ -217,6 +223,8 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     private BaseDialog mMInputDialog, mEditDailog, mDeleteDialog;
     private TextView mCollect_tv;
     private Intent mIntent;
+    private int mViewpager_position;
+    private String mUrl;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void event(PayEvent eventBean) {
@@ -233,7 +241,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
         if (TextUtils.equals(eventBean.getMsg(), Constants.TOPTIC_REFRESH_ALL)) {
             mPresenter.CircleInfo(mCircle_id);
         }
-        if (TextUtils.equals(eventBean.getMsg(), Constants.QUIT_CIRCLE)){
+        if (TextUtils.equals(eventBean.getMsg(), Constants.QUIT_CIRCLE)) {
             finish();
         }
     }
@@ -252,6 +260,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
         mMinRl.setMinimumHeight(StatusBarUtils.getStatusBarHeight() + (int) getResources().getDimension(R.dimen.dp_44));
         mAppBarLayout.addOnOffsetChangedListener(this);
         mParams = (AppBarLayout.LayoutParams) mMinRl.getLayoutParams();
+        mUrl = "https://jt.chinabim.com/share/#/course/" + mCircle_id + "?suid=" + mPresenter.mDataManager.getUser().getUser_id();
     }
 
     @Override
@@ -277,14 +286,14 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
         mDirectoryAdapter.setOnLoadMoreListener(this, mMcMlRecycler);
         mDirectoryAdapter.setOnItemClickListener((baseQuickAdapter, view, i) -> {
             List<CourseListEntity.CourselistBean> mList = baseQuickAdapter.getData();
-            if (mList.get(i).getIs_audition() == 0 && "0".equals(mIsJoin)){
+            if (mList.get(i).getIs_audition() == 0 && "0".equals(mIsJoin)) {
                 ToastUtils.showShort("该课程还未解锁");
                 return;
             }
             Intent intent = new Intent(CourseCircleActivity.this, CourseDetailActivity.class);
             if (mList.size() > 0) {
                 intent.putExtra("bean", mList.get(i));
-                intent.putExtra("position", i+"");
+                intent.putExtra("position", i + "");
             }
             intent.putExtra("circle_id", mCircle_id);
             startActivity(intent);
@@ -354,6 +363,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
         this.mViews = views;
         mPagerAdapter = new MyBadgeViewPagerAdapter(titleList, views, badgeCountList);
         mViewpager.setAdapter(mPagerAdapter);
+        mViewpager.addOnPageChangeListener(this);
         mTablayout.setupWithViewPager(mViewpager);
         setUpTabBadge();
 
@@ -496,10 +506,12 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
                 finish();
                 break;
             case R.id.pre_share_iv:
-                ToastUtils.showShort("敬请期待");
+                DialogUtils.showShareDialog(this, mUrl, mCircleInfoEntity.getCircleInfo().getCircle_name(),
+                        mCircleInfoEntity.getCircleInfo().getCircle_image().getPic_url(), mCircleInfoEntity.getCircleInfo().getCircle_desc());
                 break;
             case R.id.share_iv:
-                ToastUtils.showShort("敬请期待");
+                DialogUtils.showShareDialog(this, mUrl, mCircleInfoEntity.getCircleInfo().getCircle_name(),
+                        mCircleInfoEntity.getCircleInfo().getCircle_image().getPic_url(), mCircleInfoEntity.getCircleInfo().getCircle_desc());
                 break;
             case R.id.more_iv:
                 mIntent = new Intent(this, CircleInfoActivity.class);
@@ -526,7 +538,11 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
                 startActivity(mIntent);
                 break;
             case R.id.screen_rl:
-                showThemeTypeDialog();
+                if (mViewpager_position == 0){
+                    showThemeTypeDialog();
+                }else {
+                    ToastUtils.showShort("暂未开放");
+                }
                 break;
             case R.id.join_tv:
                 showPayDialog();
@@ -570,31 +586,25 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
                 .isOnTouchCanceled(true)
                 //设置监听事件
                 .builder();
-        if (mPresenter.mDataManager.getUser().getUser_id().equals(mCircleInfoEntity.getCircleInfo().getUser_id() + "")) {
-            mDialog.getView(R.id.type3).setVisibility(View.INVISIBLE);
+        List<ThemeTypeEntity> list = new ArrayList<>();
+        list.add(new ThemeTypeEntity("全部主题", R.drawable.qbzt_icon));
+        list.add(new ThemeTypeEntity("图片主题", R.drawable.tpzt_icon));
+        if (!mPresenter.mDataManager.getUser().getUser_id().equals(mCircleInfoEntity.getCircleInfo().getUser_id() + "")) {
+            list.add(new ThemeTypeEntity("只看圈主", R.drawable.zkqz_icon));
         }
-        page = 1;
-        mDialog.getView(R.id.type1).setOnClickListener(v -> {
-            type = "1";
+        list.add(new ThemeTypeEntity("我的主题", R.drawable.wdzt_icon));
+        RecyclerView recyclerView = mDialog.getView(R.id.recycler_view);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        ThemeTypeAdapter typeAdapter = new ThemeTypeAdapter(R.layout.adapter_theme_type, list);
+        recyclerView.setAdapter(typeAdapter);
+        typeAdapter.setOnItemClickListener((baseQuickAdapter, view, i) -> {
+            List<ThemeTypeEntity> data = baseQuickAdapter.getData();
+            page = 1;
+            type = String.valueOf(i + 1);
+            mScreenTv.setText(data.get(i).getName());
             mPresenter.themeInfo(mCircle_id, page, type, true);
             mDialog.dismiss();
         });
-        mDialog.getView(R.id.type2).setOnClickListener(v -> {
-            type = "2";
-            mPresenter.themeInfo(mCircle_id, page, type, true);
-            mDialog.dismiss();
-        });
-        mDialog.getView(R.id.type3).setOnClickListener(v -> {
-            type = "3";
-            mPresenter.themeInfo(mCircle_id, page, type, true);
-            mDialog.dismiss();
-        });
-        mDialog.getView(R.id.type4).setOnClickListener(v -> {
-            type = "4";
-            mPresenter.themeInfo(mCircle_id, page, type, true);
-            mDialog.dismiss();
-        });
-
         mDialog.show();
     }
 
@@ -677,7 +687,9 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
                 showCommentDialog(data.get(i).getTheme_id(), i, data);
                 break;
             case R.id.item_share_iv:
-                ToastUtils.showShort("敬请期待");
+                String mUrl = "https://jt.chinabim.com/share/#/theme/" + data.get(i).getUser_id() + "/" + data.get(i).getTheme_id();
+                DialogUtils.showShareDialog(this, mUrl, mCircleInfoEntity.getCircleInfo().getCircle_name(),
+                        data.get(i).getHeadImage(), data.get(i).getTheme_content());
                 break;
             case R.id.more_tv:
                 Intent intent = new Intent(this, TopticDetailActivity.class);
@@ -843,5 +855,25 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
         super.onDestroy();
         EventBus.getDefault().unregister(this);
         KeyboardUtils.unregisterSoftInputChangedListener(this);
+    }
+
+    @Override
+    public void onPageScrolled(int i, float v, int i1) {
+
+    }
+
+    @Override
+    public void onPageSelected(int i) {
+        mViewpager_position = i;
+        if (i == 0){
+            mScreenTv.setText("全部主题");
+        }else {
+            mScreenTv.setText("全部精华");
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int i) {
+
     }
 }

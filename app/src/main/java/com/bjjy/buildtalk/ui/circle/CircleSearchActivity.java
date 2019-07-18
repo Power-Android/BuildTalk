@@ -36,7 +36,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class CircleSearchActivity extends BaseActivity<CircleSearchPresenter> implements CircleSearchContract.View, TextView.OnEditorActionListener, OnRefreshLoadMoreListener, BaseQuickAdapter.OnItemClickListener {
+public class CircleSearchActivity extends BaseActivity<CircleSearchPresenter> implements CircleSearchContract.View, TextView.OnEditorActionListener, OnRefreshLoadMoreListener, BaseQuickAdapter.OnItemClickListener, View.OnFocusChangeListener {
 
     @BindView(R.id.search_et)
     ClearEditText mSearchEt;
@@ -70,6 +70,7 @@ public class CircleSearchActivity extends BaseActivity<CircleSearchPresenter> im
     protected void initView() {
         mSearchEt.setHint(R.string.search_circle);
         mSearchEt.setOnEditorActionListener(this);
+        mSearchEt.setOnFocusChangeListener(this);
         mRefreshLayout.setOnRefreshLoadMoreListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mSearchResultAdapter = new CircleSearchResultAdapter(R.layout.adapter_circle_search_result, mList);
@@ -85,6 +86,7 @@ public class CircleSearchActivity extends BaseActivity<CircleSearchPresenter> im
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_SEARCH){
+            mSearchEt.setFocusable(false);
             if (TextUtils.isEmpty(mSearchEt.getText().toString().trim())){
                 ToastUtils.showShort("请输入搜索内容");
                 return true;
@@ -93,6 +95,18 @@ public class CircleSearchActivity extends BaseActivity<CircleSearchPresenter> im
             KeyboardUtils.hideSoftInput(this);
         }
         return false;
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        if (hasFocus){
+            mPresenter.getSearchData();
+            mRefreshLayout.setVisibility(View.GONE);
+            mSearchRl.setVisibility(View.VISIBLE);
+        }else {
+            mSearchRl.setVisibility(View.GONE);
+            mRefreshLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     private void gotoSearchResult(int page, String content, boolean isRefresh) {
@@ -114,10 +128,6 @@ public class CircleSearchActivity extends BaseActivity<CircleSearchPresenter> im
 
     @Override
     public void showHistoryData(List<CircleHistoryData> historyDataList) {
-        if (historyDataList.size() == 0){
-            mSearchRl.setVisibility(View.GONE);
-            return;
-        }
         mSearchRl.setVisibility(View.VISIBLE);
         mFlowLayout.setAdapter(new TagAdapter<CircleHistoryData>(historyDataList) {
             @Override
@@ -132,8 +142,10 @@ public class CircleSearchActivity extends BaseActivity<CircleSearchPresenter> im
         });
 
         mFlowLayout.setOnTagClickListener((view, position1, parent1) -> {
-            gotoSearchResult(page, historyDataList.get(position1).getData(), false);
+            mSearchEt.setFocusable(false);
+            gotoSearchResult(page, historyDataList.get(position1).getData(), true);
             mSearchEt.setText(historyDataList.get(position1).getData());
+            mSearchEt.setSelection(historyDataList.get(position1).getData().length());//将光标追踪到内容的最后
             KeyboardUtils.hideSoftInput(this);
             return true;
         });

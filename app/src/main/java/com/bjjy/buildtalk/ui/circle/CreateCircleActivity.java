@@ -17,11 +17,8 @@ import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.core.event.RefreshEvent;
 import com.bjjy.buildtalk.entity.CircleTagEntity;
-import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.SearchCircleInfoEntity;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
-import com.bjjy.buildtalk.utils.LogUtils;
-import com.bjjy.buildtalk.utils.SizeUtils;
 import com.bjjy.buildtalk.utils.StringUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bumptech.glide.Glide;
@@ -37,9 +34,6 @@ import com.zhy.view.flowlayout.TagFlowLayout;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -77,6 +71,7 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
     private String mCircle_id;
     private List<String> mCircle_tags = new ArrayList<>();
     private String mPic_url;
+    private boolean isFiel;
 
     @Override
     protected int getLayoutId() {
@@ -258,8 +253,15 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
             }
             return;
         }
-
-        mPresenter.upload(mFile,mCircleTitleEt.getText().toString(), StringUtils.listToString(mSelList,','),mEditText.getText().toString().trim());
+        if (TextUtils.isEmpty(mType)){
+            mPresenter.upload(false, mCircle_id, mFile,mCircleTitleEt.getText().toString(), StringUtils.listToString(mSelList,','),mEditText.getText().toString().trim());
+        }else {
+            if (mFile != null){
+                mPresenter.upload(true, mCircle_id, mFile,mCircleTitleEt.getText().toString(), StringUtils.listToString(mSelList,','),mEditText.getText().toString().trim());
+            }else {
+                mPresenter.updateCircleInfo(mCircle_id, mPic_url, mCircleTitleEt.getText().toString(), StringUtils.listToString(mSelList,','),mEditText.getText().toString().trim());
+            }
+        }
     }
 
     @Override
@@ -333,6 +335,8 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
         Glide.with(this).load(infoEntity.getCircle_image().getPic_url()).into(mCircleIv);
         mCircleTitleEt.setText(infoEntity.getCircle_name());
         mEditText.setText(infoEntity.getCircle_desc());
+        mEditText.setSelection(infoEntity.getCircle_desc().length());//将光标追踪到内容的最后
+
         String circle_tags = infoEntity.getCircle_tags();
         mCircle_tags = Arrays.asList(circle_tags.split(","));
         for (int i = 0; i <mCircle_tags.size(); i++) {

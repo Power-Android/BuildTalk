@@ -92,7 +92,11 @@ public class TopticCirclePresenter extends BasePresenter<TopticCircleContract.Vi
     public void themeInfo(String circle_id, int page, String type, boolean isRefresh) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
-        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        if (mDataManager.getLoginStatus()){
+            paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        }else {
+            paramas.put(Constants.USER_ID, "");
+        }
         paramas.put(Constants.PAGE, String.valueOf(page));
         paramas.put(Constants.PAGE_SIZE, "10");
         paramas.put("circle_id", circle_id);

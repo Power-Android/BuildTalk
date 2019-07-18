@@ -250,15 +250,15 @@ public class CircleInfoEntity implements Serializable {
              * savetime : null
              */
 
-            private int pic_id;
+            private String pic_id;
             private String pic_url;
-            private Object savetime;
+            private String savetime;
 
-            public int getPic_id() {
+            public String getPic_id() {
                 return pic_id;
             }
 
-            public void setPic_id(int pic_id) {
+            public void setPic_id(String pic_id) {
                 this.pic_id = pic_id;
             }
 
@@ -270,11 +270,11 @@ public class CircleInfoEntity implements Serializable {
                 this.pic_url = pic_url;
             }
 
-            public Object getSavetime() {
+            public String getSavetime() {
                 return savetime;
             }
 
-            public void setSavetime(Object savetime) {
+            public void setSavetime(String savetime) {
                 this.savetime = savetime;
             }
         }

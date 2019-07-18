@@ -55,12 +55,14 @@ public class GlideUtils extends ImageLoader {
             retriever.setDataSource(url, new HashMap());
             //获得第一帧图片
             bitmap = retriever.getFrameAtTime();
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             retriever.release();
         }
-        Glide.with(context).load(bitmap).into(imageView);
+        if (bitmap != null){
+            Glide.with(context).load(bitmap).into(imageView);
+        }
     }
 
 }

@@ -33,6 +33,7 @@ import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.GuestBookEntity;
 import com.bjjy.buildtalk.ui.main.LoginActivity;
+import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.GlideUtils;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.LogUtils;
@@ -131,6 +132,8 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     private Spanned mText;
     private boolean isGone = false;
     private int mPage_count = 1;
+    private String mType;
+    private String mUrl;
 
     @Override
     protected int getLayoutId() {
@@ -139,13 +142,14 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
 
     @Override
     protected void initView() {
+        mArticle_id = getIntent().getStringExtra("article_id");
+        mType = getIntent().getStringExtra("type");
         StatusBarUtils.changeStatusBar(this, true, true);
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(mIncludeToolbar.getLayoutParams());
         lp.setMargins(0, StatusBarUtils.getStatusBarHeight(), 0, 0);
         mIncludeToolbar.setLayoutParams(lp);
         mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
         mToolbar.setNavigationOnClickListener(v -> finish());
-        mToolbarTitle.setText("每日一谈");
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mEveryTalkDetailAdapter = new EveryTalkDetailAdapter(R.layout.adapter_every_talk_detail, mList);
@@ -162,7 +166,6 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
 
     @Override
     protected void initEventAndData() {
-        mArticle_id = getIntent().getStringExtra("article_id");
         mPresenter.everyTalkDetail(mArticle_id);
         mPresenter.guestbook(mArticle_id, page);
     }
@@ -170,7 +173,11 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     @Override
     public void handlerTalkDetail(EveryTalkDetailEntity everyTalkDetailEntity) {
         mMNewsInfo = everyTalkDetailEntity.getNewsInfo();
-
+        if (TextUtils.isEmpty(mType)){
+            mToolbarTitle.setText("每日一谈");
+        }else {
+            mToolbarTitle.setText(mMNewsInfo.getArticle_title());
+        }
         mTitleTv.setText(mMNewsInfo.getArticle_title());
         Glide.with(this).load(mMNewsInfo.getAuthor_pic()).apply(new RequestOptions().error(R.drawable.moren_face)).into(mFaceIv);
         mNameTv.setText(mMNewsInfo.getAuthor_name());
@@ -309,7 +316,13 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
                 });
                 break;
             case R.id.share_iv:
-                ToastUtils.showShort("即将开放分享功能");
+                if (TextUtils.isEmpty(mType)){
+                    mUrl = "https://jt.chinabim.com/share/#/news/" + mArticle_id;
+                    DialogUtils.showShareDialog(this, mUrl, mMNewsInfo.getArticle_title(), mMNewsInfo.getAuthor_pic(), "每日一谈");
+                }else {
+                    mUrl = "https://jt.chinabim.com/share/#/article/" + mArticle_id;
+                    DialogUtils.showShareDialog(this, mUrl, mMNewsInfo.getArticle_title(), mMNewsInfo.getAuthor_pic(), mMNewsInfo.getArticle_title());
+                }
                 break;
             case R.id.record_ll:
                 LoginHelper.login(this, mPresenter.mDataManager, () -> {

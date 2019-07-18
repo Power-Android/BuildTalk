@@ -8,6 +8,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.CircleTopticAdapter;
+import com.bjjy.buildtalk.adapter.ThemeTypeAdapter;
 import com.bjjy.buildtalk.app.App;
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
@@ -33,6 +35,8 @@ import com.bjjy.buildtalk.entity.CommentContentBean;
 import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
+import com.bjjy.buildtalk.entity.ThemeTypeEntity;
+import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
@@ -62,7 +66,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> implements
         TopticCircleContract.View, AppBarLayout.OnOffsetChangedListener, OnRefreshLoadMoreListener,
-        BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener {
+        BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, ViewPager.OnPageChangeListener {
 
     @BindView(R.id.toptic_bg)
     ImageView mTopticBg;
@@ -148,6 +152,8 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
     private TextView mCollect_tv;
     private Intent mIntent;
     private BaseDialog mDeleteDialog;
+    private int mViewpager_position;
+    private String mUrl;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void event(RefreshEvent eventBean) {
@@ -175,7 +181,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
         //设置appbar滚动布局的最小高度 因为getHeight可能为0，所以直接加上导航栏和tablayout的高度
         mMinRl.setMinimumHeight(StatusBarUtils.getStatusBarHeight() + (int) getResources().getDimension(R.dimen.dp_44));
         mAppBarLayout.addOnOffsetChangedListener(this);
-
+        mUrl = "https://jt.chinabim.com/share/#/topic/" + mCircle_id + "?suid=" + mPresenter.mDataManager.getUser().getUser_id();
     }
 
     @Override
@@ -204,7 +210,9 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
             mPublisRl.setVisibility(View.GONE);
             mScreenRl.setVisibility(View.GONE);
             Glide.with(this).load(R.drawable.circle_bg_icon).into(mTopticBg);
-            Glide.with(this).load(circleInfoEntity.getCircleInfo().getCircle_image().getPic_url()).into(mPreFaceIv);
+            if (circleInfoEntity.getCircleInfo().getCircle_image() != null){
+                Glide.with(this).load(circleInfoEntity.getCircleInfo().getCircle_image().getPic_url()).into(mPreFaceIv);
+            }
             mPreTitleTv.setText(circleInfoEntity.getCircleInfo().getCircle_name());
             mPreNameTv.setText("圈主：" + circleInfoEntity.getCircleInfo().getName());
             mPreDateTv.setText("创建 " + circleInfoEntity.getCircleInfo().getCreate_day() + "天");
@@ -260,6 +268,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
         mPagerAdapter = new MyBadgeViewPagerAdapter(titleList, views, badgeCountList);
         mViewpager.setAdapter(mPagerAdapter);
         mTablayout.setupWithViewPager(mViewpager);
+        mViewpager.addOnPageChangeListener(this);
         setUpTabBadge();
 
         RecyclerView recyclerView = views.get(0).findViewById(R.id.recycler_view);
@@ -368,11 +377,15 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
                 finish();
                 break;
             case R.id.share_iv:
+                DialogUtils.showShareDialog(this, mUrl, mCircleInfoEntity.getCircleInfo().getCircle_name(),
+                        mCircleInfoEntity.getCircleInfo().getCircle_image().getPic_url(), mCircleInfoEntity.getCircleInfo().getCircle_desc());
                 break;
             case R.id.join_tv:
                 mPresenter.joinCircle(mCircle_id);
                 break;
             case R.id.pre_share_iv:
+                DialogUtils.showShareDialog(this, mUrl, mCircleInfoEntity.getCircleInfo().getCircle_name(),
+                        mCircleInfoEntity.getCircleInfo().getCircle_image().getPic_url(), mCircleInfoEntity.getCircleInfo().getCircle_desc());
                 break;
             case R.id.more_iv:
                 mIntent = new Intent(this, CircleInfoActivity.class);
@@ -381,7 +394,11 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
                 startActivity(mIntent);
                 break;
             case R.id.screen_rl:
-                showThemeTypeDialog();
+                if (mViewpager_position == 0){
+                    showThemeTypeDialog();
+                }else {
+                    ToastUtils.showShort("暂未开放");
+                }
                 break;
             case R.id.publis_rl:
                 mIntent = new Intent(this, PublishActivity.class);
@@ -409,31 +426,25 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
                 .isOnTouchCanceled(true)
                 //设置监听事件
                 .builder();
-        if (mPresenter.mDataManager.getUser().getUser_id().equals(mCircleInfoEntity.getCircleInfo().getUser_id()+"")){
-            mDialog.getView(R.id.type3).setVisibility(View.INVISIBLE);
+        List<ThemeTypeEntity> list = new ArrayList<>();
+        list.add(new ThemeTypeEntity("全部主题", R.drawable.qbzt_icon));
+        list.add(new ThemeTypeEntity("图片主题", R.drawable.tpzt_icon));
+        if (!mPresenter.mDataManager.getUser().getUser_id().equals(mCircleInfoEntity.getCircleInfo().getUser_id()+"")){
+            list.add(new ThemeTypeEntity("只看圈主", R.drawable.zkqz_icon));
         }
-        page = 1;
-        mDialog.getView(R.id.type1).setOnClickListener(v -> {
-            type = "1";
+        list.add(new ThemeTypeEntity("我的主题", R.drawable.wdzt_icon));
+        RecyclerView recyclerView = mDialog.getView(R.id.recycler_view);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        ThemeTypeAdapter typeAdapter = new ThemeTypeAdapter(R.layout.adapter_theme_type, list);
+        recyclerView.setAdapter(typeAdapter);
+        typeAdapter.setOnItemClickListener((baseQuickAdapter, view, i) -> {
+            List<ThemeTypeEntity> data = baseQuickAdapter.getData();
+            page = 1;
+            type = String.valueOf(i + 1);
+            mScreenTv.setText(data.get(i).getName());
             mPresenter.themeInfo(mCircle_id, page, type, true);
             mDialog.dismiss();
         });
-        mDialog.getView(R.id.type2).setOnClickListener(v -> {
-            type = "2";
-            mPresenter.themeInfo(mCircle_id, page, type, true);
-            mDialog.dismiss();
-        });
-        mDialog.getView(R.id.type3).setOnClickListener(v -> {
-            type = "3";
-            mPresenter.themeInfo(mCircle_id, page, type, true);
-            mDialog.dismiss();
-        });
-        mDialog.getView(R.id.type4).setOnClickListener(v -> {
-            type = "4";
-            mPresenter.themeInfo(mCircle_id, page, type, true);
-            mDialog.dismiss();
-        });
-
         mDialog.show();
     }
 
@@ -480,7 +491,9 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
                 showCommentDialog(data.get(i).getTheme_id(), i, data);
                 break;
             case R.id.item_share_iv:
-                ToastUtils.showShort("item_share_iv");
+                String mUrl = "https://jt.chinabim.com/share/#/theme/" + data.get(i).getUser_id() + "/" + data.get(i).getTheme_id();
+                DialogUtils.showShareDialog(this, mUrl, mCircleInfoEntity.getCircleInfo().getCircle_name(),
+                        data.get(i).getHeadImage(), data.get(i).getTheme_content());
                 break;
             case R.id.more_tv:
                 Intent intent = new Intent(this, TopticDetailActivity.class);
@@ -635,5 +648,25 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
         super.onDestroy();
         EventBus.getDefault().unregister(this);
         KeyboardUtils.unregisterSoftInputChangedListener(this);
+    }
+
+    @Override
+    public void onPageScrolled(int i, float v, int i1) {
+
+    }
+
+    @Override
+    public void onPageSelected(int i) {
+        mViewpager_position = i;
+        if (i == 0){
+            mScreenTv.setText("全部主题");
+        }else {
+            mScreenTv.setText("全部精华");
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int i) {
+
     }
 }

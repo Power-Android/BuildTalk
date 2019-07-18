@@ -49,7 +49,7 @@ public class TalkPresnter extends BasePresenter<TalkContract.View> implements Ta
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
         if (TalkFragment.PAGE <= pageCount){
-            paramas.put(App.getContext().getString(R.string.PAGE),HOT_TOPTIC_PAGE+"");
+            paramas.put(App.getContext().getString(R.string.PAGE),TalkFragment.PAGE+"");
         }else {
             TalkFragment.PAGE = 1;
             paramas.put("page",TalkFragment.PAGE+"");
