@@ -315,7 +315,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
             mPublisRl.setVisibility(View.GONE);
             mScreenRl.setVisibility(View.GONE);
             Glide.with(this).load(R.drawable.circle_bg_icon).into(mTopticBg);
-            Glide.with(this).load(circleInfoEntity.getCircleInfo().getMaster_pic()).into(mPreFaceIv);
+            Glide.with(this).load(circleInfoEntity.getCircleInfo().getCircle_image().getPic_url()).into(mPreFaceIv);
             mPreTitleTv.setText(circleInfoEntity.getCircleInfo().getCircle_name());
             mPreNameTv.setText("圈主：" + circleInfoEntity.getCircleInfo().getName());
             mPreDateTv.setText("创建 " + circleInfoEntity.getCircleInfo().getCreate_day() + "天");

@@ -220,14 +220,14 @@
                             android:layout_height="match_parent"
                             android:overScrollMode="never" />
                         <android.support.v4.widget.NestedScrollView
+                            android:id="@+id/emptyView"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:overScrollMode="never">
+                            android:overScrollMode="never"
+                            android:visibility="gone">
                             <RelativeLayout
-                                android:id="@+id/emptyView"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:visibility="gone">
+                                android:layout_height="match_parent">
 
                                 <ImageView
                                     android:id="@+id/empty_img"

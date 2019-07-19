@@ -154,6 +154,7 @@ public class CircleSearchActivity extends BaseActivity<CircleSearchPresenter> im
 
         mFlowLayout.setOnTagClickListener((view, position1, parent1) -> {
             mSearchEt.setFocusable(false);
+            page = 1;
             gotoSearchResult(page, historyDataList.get(position1).getData(), true);
             mSearchEt.setText(historyDataList.get(position1).getData());
             mSearchEt.setSelection(historyDataList.get(position1).getData().length());//将光标追踪到内容的最后
@@ -197,7 +198,7 @@ public class CircleSearchActivity extends BaseActivity<CircleSearchPresenter> im
     @Override
     public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
         List<SearchResultEntity.CircleInfoBean> mList = baseQuickAdapter.getData();
-        if (TextUtils.equals("话题", mList.get(i).getType())) {
+        if (TextUtils.equals("1", mList.get(i).getType())) {
             Intent intent = new Intent(this, TopticCircleActivity.class);
             intent.putExtra("circle_id", mList.get(i).getCircle_id() + "");
             startActivity(intent);

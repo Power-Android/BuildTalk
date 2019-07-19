@@ -25,6 +25,8 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +53,15 @@ public class FansFocusActivity extends BaseActivity<FansFocusPresenter> implemen
     private List<FansFocusEntity.AttentionInfoBean> mAttentionInfoBeans = new ArrayList<>();
     private FocusAdapter mFocusAdapter;
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void event(RefreshEvent eventBean) {
+        if (TextUtils.equals(eventBean.getMsg(), Constants.FANS_REFRESH)) {
+            if (mRefreshLayout != null){
+                onRefresh(mRefreshLayout);
+            }
+        }
+    }
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_fans_focus;
@@ -63,14 +74,14 @@ public class FansFocusActivity extends BaseActivity<FansFocusPresenter> implemen
         mType = getIntent().getStringExtra("type");
         mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
         mToolbar.setNavigationOnClickListener(v -> finish());
-        if ("fans".equals(mType)){
+        if ("fans".equals(mType)) {
             mToolbarTitle.setText(mName + "的粉丝");
-        }else {
+        } else {
             mToolbarTitle.setText(mName + "的关注");
         }
         mRefreshLayout.setOnRefreshLoadMoreListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        if ("fans".equals(mType)){
+        if ("fans".equals(mType)) {
             mFansFocusAdapter = new FansFocusAdapter(R.layout.adapter_circle_list, mMyFansInfo, mPresenter.mDataManager.getUser().getUser_id());
             mRecyclerView.setAdapter(mFansFocusAdapter);
             mFansFocusAdapter.setOnItemChildClickListener((baseQuickAdapter, view, i) -> {
@@ -79,17 +90,17 @@ public class FansFocusActivity extends BaseActivity<FansFocusPresenter> implemen
             });
             mFansFocusAdapter.setOnItemClickListener((baseQuickAdapter, view, i) -> {
                 List<FansFocusEntity.MyFansInfoBean> data = baseQuickAdapter.getData();
-                if (data.get(i).getIs_author() == 0){
+                if (data.get(i).getIs_author() == 0) {
                     Intent intent = new Intent(FansFocusActivity.this, CircleManDetailActivity.class);
                     intent.putExtra("user_id", data.get(i).getUser_id() + "");
                     startActivity(intent);
-                }else {
+                } else {
                     Intent intent = new Intent(FansFocusActivity.this, MasterDetailActivity.class);
                     intent.putExtra("user_id", data.get(i).getUser_id() + "");
                     startActivity(intent);
                 }
             });
-        }else {
+        } else {
             mFocusAdapter = new FocusAdapter(R.layout.adapter_circle_list, mAttentionInfoBeans, mPresenter.mDataManager.getUser().getUser_id());
             mRecyclerView.setAdapter(mFocusAdapter);
             mFocusAdapter.setOnItemChildClickListener((baseQuickAdapter, view, i) -> {
@@ -98,11 +109,11 @@ public class FansFocusActivity extends BaseActivity<FansFocusPresenter> implemen
             });
             mFocusAdapter.setOnItemClickListener((baseQuickAdapter, view, i) -> {
                 List<FansFocusEntity.AttentionInfoBean> data = baseQuickAdapter.getData();
-                if (data.get(i).getIs_author() == 0){
+                if (data.get(i).getIs_author() == 0) {
                     Intent intent = new Intent(FansFocusActivity.this, CircleManDetailActivity.class);
                     intent.putExtra("user_id", data.get(i).getAttention_user() + "");
                     startActivity(intent);
-                }else {
+                } else {
                     Intent intent = new Intent(FansFocusActivity.this, MasterDetailActivity.class);
                     intent.putExtra("user_id", data.get(i).getAttention_user() + "");
                     startActivity(intent);
@@ -113,9 +124,10 @@ public class FansFocusActivity extends BaseActivity<FansFocusPresenter> implemen
 
     @Override
     protected void initEventAndData() {
-        if ("fans".equals(mType)){
+        EventBus.getDefault().register(this);
+        if ("fans".equals(mType)) {
             mPresenter.myFans(mUser_id, page, false);
-        }else {
+        } else {
             mPresenter.myAttention(mUser_id, page, false);
         }
     }
@@ -124,9 +136,9 @@ public class FansFocusActivity extends BaseActivity<FansFocusPresenter> implemen
     public void handlerMyFans(FansFocusEntity fansFocusEntity, boolean isRefresh) {
         mPage_count = fansFocusEntity.getPage_count();
         mMyFansInfo = fansFocusEntity.getMyFansInfo();
-        if (isRefresh){
+        if (isRefresh) {
             mFansFocusAdapter.setNewData(mMyFansInfo);
-        }else {
+        } else {
             mFansFocusAdapter.addData(mMyFansInfo);
         }
     }
@@ -135,18 +147,23 @@ public class FansFocusActivity extends BaseActivity<FansFocusPresenter> implemen
     public void handlerMyAttention(FansFocusEntity fansFocusEntity, boolean isRefresh) {
         mPage_count = fansFocusEntity.getPage_count();
         mAttentionInfoBeans = fansFocusEntity.getAttentionInfo();
-        if (isRefresh){
+        if (isRefresh) {
             mFocusAdapter.setNewData(mAttentionInfoBeans);
-        }else {
+        } else {
             mFocusAdapter.addData(mAttentionInfoBeans);
         }
     }
 
     @Override
     public void handlerAttrntion(BaseResponse<IEntity> baseResponse, List<FansFocusEntity.MyFansInfoBean> mMyFansInfo, int i) {
-        if (TextUtils.equals("关注成功", baseResponse.getErrorMsg())){
+        int attention_user = mMyFansInfo.get(i).getCountAttention();
+        if (TextUtils.equals("关注成功", baseResponse.getErrorMsg())) {
+            mMyFansInfo.get(i).setCountAttention(attention_user + 1);
             mMyFansInfo.get(i).setIs_attention(1);
-        }else {
+        } else {
+            if (attention_user > 0) {
+                mMyFansInfo.get(i).setCountAttention(attention_user - 1);
+            }
             mMyFansInfo.get(i).setIs_attention(0);
         }
         mFansFocusAdapter.notifyItemChanged(i);
@@ -155,15 +172,20 @@ public class FansFocusActivity extends BaseActivity<FansFocusPresenter> implemen
 
     @Override
     public void handlerAttrntion1(BaseResponse<IEntity> baseResponse, List<FansFocusEntity.AttentionInfoBean> mAttentionInfoBeans, int i) {
-        if (TextUtils.equals("关注成功", baseResponse.getErrorMsg())){
+        int attention_user = mAttentionInfoBeans.get(i).getCountAttention();
+        if (TextUtils.equals("关注成功", baseResponse.getErrorMsg())) {
+            mAttentionInfoBeans.get(i).setCountAttention(attention_user + 1);
             mAttentionInfoBeans.get(i).setIs_attention(1);
             mFocusAdapter.notifyItemChanged(i);
-        }else {
-            if (mUser_id.equals(mPresenter.mDataManager.getUser().getUser_id())){
+        } else {
+            if (mUser_id.equals(mPresenter.mDataManager.getUser().getUser_id())) {
                 mAttentionInfoBeans.get(i).setIs_attention(0);
                 mAttentionInfoBeans.remove(i);
                 mFocusAdapter.notifyDataSetChanged();
-            }else {
+            } else {
+                if (attention_user > 0) {
+                    mAttentionInfoBeans.get(i).setCountAttention(attention_user - 1);
+                }
                 mAttentionInfoBeans.get(i).setIs_attention(0);
                 mFocusAdapter.notifyItemChanged(i);
             }
@@ -175,9 +197,9 @@ public class FansFocusActivity extends BaseActivity<FansFocusPresenter> implemen
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
         if (page < mPage_count) {
             page++;
-            if ("fans".equals(mType)){
+            if ("fans".equals(mType)) {
                 mPresenter.myFans(mUser_id, page, false);
-            }else {
+            } else {
                 mPresenter.myAttention(mUser_id, page, false);
             }
             refreshLayout.finishLoadMore();
@@ -189,11 +211,17 @@ public class FansFocusActivity extends BaseActivity<FansFocusPresenter> implemen
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         page = 1;
-        if ("fans".equals(mType)){
+        if ("fans".equals(mType)) {
             mPresenter.myFans(mUser_id, page, true);
-        }else {
+        } else {
             mPresenter.myAttention(mUser_id, page, true);
         }
         refreshLayout.finishRefresh();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

@@ -173,10 +173,11 @@ public class MasterDetailActivity extends BaseActivity<MasterDetailPresenter> im
         mCollectNumTv.setText(detailEntity.getCountMyCollect() + "\n收藏");
         mFocusNumTv.setText(detailEntity.getCountMyAttention() + "\n关注");
 
+        mArticleInfo = detailEntity.getArticleInfo();
+
         if (mArticleInfo.size() > 0){
             mEmptyView.setVisibility(View.GONE);
             mArticleRecyclerView.setVisibility(View.VISIBLE);
-            mArticleInfo = detailEntity.getArticleInfo();
             mMasterArticleAdapter.setNewData(mArticleInfo);
         }else {
             mArticleRecyclerView.setVisibility(View.GONE);
@@ -222,14 +223,11 @@ public class MasterDetailActivity extends BaseActivity<MasterDetailPresenter> im
             case R.id.face_iv:
                 break;
             case R.id.focus_ll:
-                LoginHelper.login(this, mPresenter.mDataManager, new LoginHelper.CallBack() {
-                    @Override
-                    public void onLogin() {
-                        if (1 == mMasterDetailEntity.getIs_attention()){
-                            showDialog();
-                        }else {
-                            mPresenter.attention(mUser_id);
-                        }
+                LoginHelper.login(this, mPresenter.mDataManager, () -> {
+                    if (1 == mMasterDetailEntity.getIs_attention()){
+                        showDialog();
+                    }else {
+                        mPresenter.attention(mUser_id);
                     }
                 });
                 break;
@@ -296,6 +294,7 @@ public class MasterDetailActivity extends BaseActivity<MasterDetailPresenter> im
             mFocusTv.setText("+关注");
             ToastUtils.showCollect("已取消关注", getResources().getDrawable(R.drawable.collect_cancle_icon));
         }
+        mPresenter.userDetail(mUser_id);
     }
 
     @Override

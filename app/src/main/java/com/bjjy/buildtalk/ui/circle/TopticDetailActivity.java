@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -110,7 +111,7 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
     @BindView(R.id.record_ll)
     LinearLayout mRecordLl;
     @BindView(R.id.emptyView)
-    RelativeLayout mEmptyView;
+    NestedScrollView mEmptyView;
     private String mTheme_id;
     private ThemeInfoEntity.ThemeInfoBean themeInfoEntity;
     private int page = 1;
@@ -149,6 +150,12 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
                 isGone = false;
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        KeyboardUtils.unregisterSoftInputChangedListener(this);
     }
 
     @Override

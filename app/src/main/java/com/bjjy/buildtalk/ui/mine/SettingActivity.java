@@ -1,9 +1,13 @@
 package com.bjjy.buildtalk.ui.mine;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -42,6 +46,8 @@ public class SettingActivity extends BaseActivity<SettingPresenter> implements S
     RelativeLayout mVersionInfo;
     @BindView(R.id.quit_tv)
     TextView mQuitTv;
+    @BindView(R.id.version_tv)
+    TextView mVersionTv;
     private BaseDialog mDialog;
 
     @Override
@@ -58,23 +64,40 @@ public class SettingActivity extends BaseActivity<SettingPresenter> implements S
 
     @Override
     protected void initEventAndData() {
-        if (TextUtils.isEmpty(mPresenter.mDataManager.getUser().getBindStatus()) && mPresenter.mDataManager.getUser().getBindStatus().equals("1")){
+        if (!TextUtils.isEmpty(mPresenter.mDataManager.getUser().getBindStatus()) && mPresenter.mDataManager.getUser().getBindStatus().equals("1")) {
             mNameTv.setText("已绑定");
-        }else {
+        } else {
             mNameTv.setText("未绑定");
         }
+        mVersionTv.setText("V" + getAppVersionName(this));
     }
+
+    /**
+     * 返回当前程序版本名
+     */
+    public static String getAppVersionName(Context context) {
+        String versionName=null;
+        try {
+            PackageManager pm = context.getPackageManager();
+            PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
+            versionName = pi.versionName;
+        } catch (Exception e) {
+            Log.e("VersionInfo", "Exception", e);
+        }
+        return versionName;
+    }
+
 
     @OnClick({R.id.bind_wechat, R.id.about_us, R.id.version_info, R.id.quit_tv})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bind_wechat:
-                if (mPresenter.mDataManager.getUser().getBindStatus().equals("1")){
+                if (mPresenter.mDataManager.getUser().getBindStatus().equals("1")) {
                     UMShareAPI.get(this).getPlatformInfo(this, SHARE_MEDIA.WEIXIN, mUMAuthListener);
                 }
                 break;
             case R.id.about_us:
-                startActivity(new Intent(this,AboutUsActivity.class));
+                startActivity(new Intent(this, AboutUsActivity.class));
                 break;
             case R.id.version_info:
                 break;
@@ -134,7 +157,7 @@ public class SettingActivity extends BaseActivity<SettingPresenter> implements S
             String openid = data.get("openid");
             String name = data.get("name");
             String iconurl = data.get("iconurl");
-            mPresenter.checkIsBind(unionid,openid,name,iconurl);
+            mPresenter.checkIsBind(unionid, openid, name, iconurl);
         }
 
         /**

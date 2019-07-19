@@ -387,6 +387,11 @@
      *;
   }
 
+  #腾讯bugly
+  -dontwarn com.tencent.bugly.**
+  -keep public class com.tencent.bugly.**{*;}
+  -keep class android.support.**{*;}
+
   # 友盟混淆代码
   -dontshrink
   -dontoptimize

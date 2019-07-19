@@ -326,6 +326,8 @@ public class CircleManDetailActivity extends BaseActivity<CircleManDetailPresent
             mFocusTv.setText("+关注");
             ToastUtils.showCollect("已取消关注", getResources().getDrawable(R.drawable.collect_cancle_icon));
         }
+        EventBus.getDefault().post(new RefreshEvent(Constants.FANS_REFRESH));
+        mPresenter.userDetail(mUser_id);
     }
 
     @Override

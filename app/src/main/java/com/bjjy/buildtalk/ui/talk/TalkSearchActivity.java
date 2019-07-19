@@ -150,6 +150,7 @@ public class TalkSearchActivity extends BaseActivity<TalkSearchPresenter> implem
 
         mFlowLayout.setOnTagClickListener((view, position1, parent1) -> {
             mSearchEt.setFocusable(false);
+            page = 1;
             gotoSearchResult(page, historyDataList.get(position1).getData(), true);
             mSearchEt.setText(historyDataList.get(position1).getData());
             mSearchEt.setSelection(historyDataList.get(position1).getData().length());//将光标追踪到内容的最后

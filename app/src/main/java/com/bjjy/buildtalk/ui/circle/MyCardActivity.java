@@ -98,7 +98,7 @@ public class MyCardActivity extends BaseActivity<MyCardPresenter> implements MyC
                 DialogUtils.shareWebUrl(mUrl, mMyCardEntity.getName()+"的名片", mMyCardEntity.getCircle_image().getPic_url(), mMyCardEntity.getCircle_name(), this, SHARE_MEDIA.WEIXIN);
                 break;
             case R.id.wechat_circle_tv:
-                DialogUtils.shareWebUrl(mUrl, mMyCardEntity.getName()+"的名片", mMyCardEntity.getCircle_image().getPic_url(), mMyCardEntity.getCircle_name(), this, SHARE_MEDIA.WEIXIN);
+                DialogUtils.shareWebUrl(mUrl, mMyCardEntity.getName()+"的名片", mMyCardEntity.getCircle_image().getPic_url(), mMyCardEntity.getCircle_name(), this, SHARE_MEDIA.WEIXIN_CIRCLE);
                 break;
         }
     }

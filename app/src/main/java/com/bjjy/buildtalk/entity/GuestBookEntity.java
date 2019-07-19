@@ -69,7 +69,7 @@ public class GuestBookEntity {
         private String content;
         private String guestbook_time;
         private String name;
-        private String headimage;
+        private String headImage;
         private int countpraise;
         private int isPraise;
 
@@ -114,11 +114,11 @@ public class GuestBookEntity {
         }
 
         public String getHeadimage() {
-            return headimage;
+            return headImage;
         }
 
         public void setHeadimage(String headimage) {
-            this.headimage = headimage;
+            this.headImage = headimage;
         }
 
         public int getCountpraise() {
