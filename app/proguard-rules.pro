@@ -370,6 +370,10 @@
   #PictureSelector 2.0
   -keep class com.luck.picture.lib.** { *; }
 
+  #AVLoading
+  -keep class com.wang.avi.** { *; }
+  -keep class com.wang.avi.indicators.** { *; }
+
   # tencentSDK
   -keep class com.tencent.** { *; }
   -keep class com.easefun.polyvsdk.** { *; }

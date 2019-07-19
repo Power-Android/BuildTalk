@@ -22,7 +22,6 @@ public class OfflineCacheInterceptor implements Interceptor {
         Request request = chain.request();
         if (!NetworkUtils.isConnected()) {
             int offlineCacheTime = 60 * 60 * 24 * 28;//离线的时候的缓存的过期时间,4周
-            LogUtils.e("请求头");
             request = request.newBuilder()
                     .header("Cache-Control", "public, only-if-cached, max-stale=" + offlineCacheTime)
                     .removeHeader("Pragma")

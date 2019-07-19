@@ -1,8 +1,11 @@
 package com.bjjy.buildtalk.ui.circle;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -37,9 +40,12 @@ import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.PayOrderEntity;
 import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
+import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.GlideUtils;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
+import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
+import com.bjjy.buildtalk.utils.TimeUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bjjy.buildtalk.weight.BaseDialog;
 import com.bumptech.glide.Glide;
@@ -66,7 +72,8 @@ import cn.jzvd.JZDataSource;
 import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
 
-public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> implements CourseDetailContarct.View, OnRefreshLoadMoreListener, BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.RequestLoadMoreListener {
+public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> implements CourseDetailContarct.View, OnRefreshLoadMoreListener,
+        BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.RequestLoadMoreListener {
 
     @BindView(R.id.videoplayer)
     JzvdStd mVideoplayer;
@@ -129,10 +136,21 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
     private BaseDialog mMInputDialog, mEditDailog, mDeleteDialog, mPayDialog;
     private TextView mCollect_tv;
     private boolean isExpand = false;
-    private CourseListEntity.CourselistBean mData;
     private IWXAPI wxapi;
     private CircleInfoEntity mCircleInfoEntity;
     private String mPosition;
+    private String mVideo_url;
+    private String mArticle_title;
+    private String mContent;
+    private Bitmap mBitmap;
+
+    Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            Glide.with(CourseDetailActivity.this).load(mBitmap).into(mVideoplayer.thumbImageView);
+            return true;
+        }
+    });
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void event(PayEvent eventBean) {
@@ -158,18 +176,11 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
         StatusBarUtils.changeStatusBar(this, true, false);
         mTopTitleRl.setPadding(0, StatusBarUtils.getStatusBarHeight(), 0, 0);
 
-        mData = (CourseListEntity.CourselistBean) getIntent().getSerializableExtra("bean");
+        mVideo_url = getIntent().getStringExtra("video_url");
+        mArticle_title = getIntent().getStringExtra("article_title");
+        mContent = getIntent().getStringExtra("content");
         mPosition = getIntent().getStringExtra("position");
         mCircle_id = getIntent().getStringExtra("circle_id");
-        GlideUtils.loadVideoScreenshot(this, mData.getVideoInfo().getVideo_url(), mVideoplayer.thumbImageView);
-        mVideoplayer.setUp(new JZDataSource(mData.getVideoInfo().getVideo_url()), Jzvd.SCREEN_WINDOW_NORMAL);
-    }
-
-    @Override
-    protected void initEventAndData() {
-        EventBus.getDefault().register(this);
-        mPresenter.CircleInfo(mCircle_id);
-        mPresenter.themeInfo(mCircle_id, page, type, false);
         KeyboardUtils.registerSoftInputChangedListener(this, height -> {
             if (height == 0 && mMInputDialog != null) {
                 mMInputDialog.dismiss();
@@ -178,11 +189,31 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
     }
 
     @Override
-    public void handlerCircleInfo(CircleInfoEntity circleInfoEntity) {
-        this.mCircleInfoEntity = circleInfoEntity;
-
+    protected void initEventAndData() {
+        EventBus.getDefault().register(this);
+        mPresenter.CircleInfo(mCircle_id);
+        mPresenter.themeInfo(mCircle_id, page, type, false);
         mRefreshLayout.setOnRefreshLoadMoreListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new Thread(() -> {
+            mBitmap = GlideUtils.loadVideoScreenshot(mVideo_url);
+            if (mBitmap != null)
+                handler.sendEmptyMessage(1);
+        }).start();
+        mVideoplayer.setUp(new JZDataSource(mVideo_url), Jzvd.SCREEN_WINDOW_NORMAL);
+    }
+
+    @Override
+    public void handlerCircleInfo(CircleInfoEntity circleInfoEntity) {
+        this.mCircleInfoEntity = circleInfoEntity;
+        mIsJoin = circleInfoEntity.getIsJoin();
+
         mTopticAdapter = new CircleTopticAdapter(R.layout.adapter_article_toptic, mThemeInfoList, mIsJoin, this);
         mRecyclerView.setAdapter(mTopticAdapter);
         mTopticAdapter.setOnItemClickListener(this);
@@ -197,15 +228,14 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
 
         mPresenter.courseList(mCircleInfoEntity.getCircleInfo().getData_id() + "", coursePage);
 
-        mIsJoin = circleInfoEntity.getIsJoin();
-        mChapterTitleTv.setText(mData.getArticle_title());
+        mChapterTitleTv.setText(mArticle_title);
         WebSettings settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-        mWebView.loadData(getHtmlData(mData.getContent()), "text/html;charset=utf-8","utf-8");
+        mWebView.loadData(getHtmlData(mContent), "text/html;charset=utf-8", "utf-8");
         if (mIsJoin.equals("1")) {
             mJoinTv.setVisibility(View.GONE);
         } else {
@@ -227,13 +257,16 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
                 mList.get(j).setSelected(false);
             }
             mList.get(i).setSelected(true);
-            mData = mList.get(i);
             Jzvd.releaseAllVideos();
-            GlideUtils.loadVideoScreenshot(this, mList.get(i).getVideoInfo().getVideo_url(), mVideoplayer.thumbImageView);
+            new Thread(() -> {
+                mBitmap = GlideUtils.loadVideoScreenshot(mList.get(i).getVideoInfo().getVideo_url());
+                if (mBitmap != null)
+                    handler.sendEmptyMessage(1);
+            }).start();
             mVideoplayer.setUp(new JZDataSource(mList.get(i).getVideoInfo().getVideo_url()), Jzvd.SCREEN_WINDOW_NORMAL);
             mVideoplayer.startVideo();
-            mChapterTitleTv.setText(mData.getArticle_title());
-            mWebView.loadData(getHtmlData(mData.getContent()), "text/html;charset=utf-8","utf-8");
+            mChapterTitleTv.setText(mList.get(i).getArticle_title());
+            mWebView.loadData(getHtmlData(mList.get(i).getContent()), "text/html;charset=utf-8", "utf-8");
             mDirectoryAdapter.notifyDataSetChanged();
         });
     }
@@ -304,6 +337,8 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
                 finish();
                 break;
             case R.id.pre_share_iv:
+                String url = "https://jt.chinabim.com/share/#/course/" + mCircle_id + "?suid=" + mPresenter.mDataManager.getUser().getUser_id();
+                DialogUtils.showShareDialog(this,url,mArticle_title,mCircleInfoEntity.getCircleInfo().getCircle_image().getPic_url(), mCircleInfoEntity.getCircleInfo().getCircle_desc());
                 break;
             case R.id.share_iv:
                 break;

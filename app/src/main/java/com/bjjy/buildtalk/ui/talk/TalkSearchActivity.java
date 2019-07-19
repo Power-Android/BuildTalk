@@ -8,18 +8,17 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.SearchResultAdapter;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.core.greendao.HistoryData;
-import com.bjjy.buildtalk.entity.CircleListEntity;
 import com.bjjy.buildtalk.entity.SearchResultEntity;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
@@ -55,6 +54,8 @@ public class TalkSearchActivity extends BaseActivity<TalkSearchPresenter> implem
     RecyclerView mRecyclerView;
     @BindView(R.id.refresh_Layout)
     SmartRefreshLayout mRefreshLayout;
+    @BindView(R.id.emptyView)
+    RelativeLayout mEmptyView;
 
     private List<SearchResultEntity.AuthorInfoBean> mList = new ArrayList<>();
     private SearchResultAdapter mSearchResultAdapter;
@@ -98,12 +99,14 @@ public class TalkSearchActivity extends BaseActivity<TalkSearchPresenter> implem
 
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
-        if (hasFocus){
+        if (hasFocus) {
             mPresenter.getSearchData();
             mRefreshLayout.setVisibility(View.GONE);
+            mEmptyView.setVisibility(View.GONE);
             mSearchRl.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             mSearchRl.setVisibility(View.GONE);
+            mEmptyView.setVisibility(View.GONE);
             mRefreshLayout.setVisibility(View.VISIBLE);
         }
     }
@@ -121,8 +124,13 @@ public class TalkSearchActivity extends BaseActivity<TalkSearchPresenter> implem
         } else {
             mSearchResultAdapter.addData(mList);
         }
-        mSearchRl.setVisibility(View.GONE);
-        mRefreshLayout.setVisibility(View.VISIBLE);
+        if (searchResultEntity.getAuthorInfo().size() > 0) {
+            mSearchRl.setVisibility(View.GONE);
+            mEmptyView.setVisibility(View.GONE);
+            mRefreshLayout.setVisibility(View.VISIBLE);
+        } else {
+            showEmpty();
+        }
     }
 
     @Override
@@ -178,18 +186,18 @@ public class TalkSearchActivity extends BaseActivity<TalkSearchPresenter> implem
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         page = 1;
-        gotoSearchResult(page,mSearchEt.getText().toString().trim(), true);
+        gotoSearchResult(page, mSearchEt.getText().toString().trim(), true);
         refreshLayout.finishRefresh();
     }
 
     @Override
     public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
         List<SearchResultEntity.AuthorInfoBean> mList = baseQuickAdapter.getData();
-        if(mList.get(i).getIs_author() == 0){
+        if (mList.get(i).getIs_author() == 0) {
             Intent intent = new Intent(this, CircleManDetailActivity.class);
             intent.putExtra("user_id", mList.get(i).getUser_id() + "");
             startActivity(intent);
-        }else {
+        } else {
             Intent intent = new Intent(this, MasterDetailActivity.class);
             intent.putExtra("user_id", mList.get(i).getUser_id() + "");
             startActivity(intent);

@@ -8,6 +8,7 @@ import com.bjjy.buildtalk.core.rx.BaseObserver;
 import com.bjjy.buildtalk.core.rx.RxUtils;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.GuestBookEntity;
+import com.bjjy.buildtalk.entity.PayOrderEntity;
 import com.bjjy.buildtalk.entity.SaveRecordEntity;
 import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.utils.HeaderUtils;
@@ -51,7 +52,7 @@ public class EveryTalkDetailPresenter extends BasePresenter<EveryTalkDetailContr
         addSubscribe(mDataManager.everyTalkDetail(headers, paramas)
                 .compose(RxUtils.SchedulerTransformer())
                 .filter(everyTalkDetailEntity -> mView != null)
-                .subscribeWith(new BaseObserver<EveryTalkDetailEntity>(mView, false) {
+                .subscribeWith(new BaseObserver<EveryTalkDetailEntity>(mView, true) {
                     @Override
                     public void onSuccess(EveryTalkDetailEntity everyTalkDetailEntity) {
                         mView.handlerTalkDetail(everyTalkDetailEntity);
@@ -75,7 +76,7 @@ public class EveryTalkDetailPresenter extends BasePresenter<EveryTalkDetailContr
         addSubscribe(mDataManager.guestBookList(headers, paramas)
                 .compose(RxUtils.SchedulerTransformer())
                 .filter(guestBookEntityBaseResponse -> mView != null)
-                .subscribeWith(new BaseObserver<GuestBookEntity>(mView, false) {
+                .subscribeWith(new BaseObserver<GuestBookEntity>(mView, true) {
                     @Override
                     public void onSuccess(GuestBookEntity guestBookEntity) {
                         mView.handlerGuestBookList(guestBookEntity);
@@ -168,6 +169,33 @@ public class EveryTalkDetailPresenter extends BasePresenter<EveryTalkDetailContr
                             mView.collectSuccess(false, isCollect);
                         }
                         super.onFailure(code, message);
+                    }
+                }));
+    }
+
+    public void payOrder(String type_id, int data_id, String circle_name, String course_money) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        paramas.put("type_id", type_id);
+        paramas.put("data_id", data_id+"");
+        paramas.put("order_name", circle_name);
+        paramas.put("order_price", course_money);
+        paramas.put(Constants.SOURCE, Constants.ANDROID);
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.payOrder(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<PayOrderEntity>(mView, true) {
+                    @Override
+                    public void onSuccess(PayOrderEntity payOrderEntity) {
+                        mView.handlerWxOrder(payOrderEntity);
                     }
                 }));
     }

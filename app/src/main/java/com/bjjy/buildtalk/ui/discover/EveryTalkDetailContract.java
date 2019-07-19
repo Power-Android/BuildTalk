@@ -4,6 +4,7 @@ import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.base.view.IView;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.GuestBookEntity;
+import com.bjjy.buildtalk.entity.PayOrderEntity;
 
 /**
  * @author power
@@ -24,6 +25,8 @@ public class EveryTalkDetailContract {
         void collectSuccess(boolean isSuccess, boolean isCollect);
 
         void handlerGuestBookList(GuestBookEntity guestBookEntity);
+
+        void handlerWxOrder(PayOrderEntity payOrderEntity);
     }
 
     interface Presenter extends IPresenter<View>{

@@ -46,7 +46,7 @@ public class TopticDetailPresenter extends BasePresenter<TopticDetailContract.Vi
         addSubscribe(mDataManager.searchThemeDetail(headers, paramas)
                 .compose(RxUtils.SchedulerTransformer())
                 .filter(response -> mView != null)
-                .subscribeWith(new BaseObserver<ThemeInfoEntity.ThemeInfoBean>(mView, false) {
+                .subscribeWith(new BaseObserver<ThemeInfoEntity.ThemeInfoBean>(mView, true) {
                     @Override
                     public void onSuccess(ThemeInfoEntity.ThemeInfoBean themeInfoEntity) {
                         mView.handlerThemeInfo(themeInfoEntity);
@@ -71,7 +71,7 @@ public class TopticDetailPresenter extends BasePresenter<TopticDetailContract.Vi
         addSubscribe(mDataManager.commentPageHandle(headers, paramas)
                 .compose(RxUtils.SchedulerTransformer())
                 .filter(response -> mView != null)
-                .subscribeWith(new BaseObserver<ThemeInfoEntity.ThemeInfoBean>(mView, false) {
+                .subscribeWith(new BaseObserver<ThemeInfoEntity.ThemeInfoBean>(mView, true) {
                     @Override
                     public void onSuccess(ThemeInfoEntity.ThemeInfoBean themeInfoBean) {
                         mView.handlerCommentList(themeInfoBean, isRefresh);

@@ -12,14 +12,19 @@ import android.widget.TextView;
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.FansFocusAdapter;
 import com.bjjy.buildtalk.adapter.FocusAdapter;
+import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
+import com.bjjy.buildtalk.core.event.RefreshEvent;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.entity.FansFocusEntity;
 import com.bjjy.buildtalk.entity.IEntity;
+import com.bjjy.buildtalk.utils.LoginHelper;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,11 +71,11 @@ public class FansFocusActivity extends BaseActivity<FansFocusPresenter> implemen
         mRefreshLayout.setOnRefreshLoadMoreListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         if ("fans".equals(mType)){
-            mFansFocusAdapter = new FansFocusAdapter(R.layout.adapter_circle_list, mMyFansInfo);
+            mFansFocusAdapter = new FansFocusAdapter(R.layout.adapter_circle_list, mMyFansInfo, mPresenter.mDataManager.getUser().getUser_id());
             mRecyclerView.setAdapter(mFansFocusAdapter);
             mFansFocusAdapter.setOnItemChildClickListener((baseQuickAdapter, view, i) -> {
                 List<FansFocusEntity.MyFansInfoBean> mMyFansInfo = baseQuickAdapter.getData();
-                mPresenter.attention(mMyFansInfo.get(i).getUser_id(), mMyFansInfo, i);
+                LoginHelper.login(FansFocusActivity.this, mPresenter.mDataManager, () -> mPresenter.attention(mMyFansInfo.get(i).getUser_id(), mMyFansInfo, i));
             });
             mFansFocusAdapter.setOnItemClickListener((baseQuickAdapter, view, i) -> {
                 List<FansFocusEntity.MyFansInfoBean> data = baseQuickAdapter.getData();
@@ -85,21 +90,21 @@ public class FansFocusActivity extends BaseActivity<FansFocusPresenter> implemen
                 }
             });
         }else {
-            mFocusAdapter = new FocusAdapter(R.layout.adapter_circle_list, mAttentionInfoBeans);
+            mFocusAdapter = new FocusAdapter(R.layout.adapter_circle_list, mAttentionInfoBeans, mPresenter.mDataManager.getUser().getUser_id());
             mRecyclerView.setAdapter(mFocusAdapter);
             mFocusAdapter.setOnItemChildClickListener((baseQuickAdapter, view, i) -> {
                 List<FansFocusEntity.AttentionInfoBean> mAttentionInfoBeans = baseQuickAdapter.getData();
-                mPresenter.attention1(mAttentionInfoBeans.get(i).getUser_id(), mAttentionInfoBeans, i);
+                LoginHelper.login(FansFocusActivity.this, mPresenter.mDataManager, () -> mPresenter.attention1(mAttentionInfoBeans.get(i).getAttention_user(), mAttentionInfoBeans, i));
             });
             mFocusAdapter.setOnItemClickListener((baseQuickAdapter, view, i) -> {
                 List<FansFocusEntity.AttentionInfoBean> data = baseQuickAdapter.getData();
                 if (data.get(i).getIs_author() == 0){
                     Intent intent = new Intent(FansFocusActivity.this, CircleManDetailActivity.class);
-                    intent.putExtra("user_id", data.get(i).getUser_id() + "");
+                    intent.putExtra("user_id", data.get(i).getAttention_user() + "");
                     startActivity(intent);
                 }else {
                     Intent intent = new Intent(FansFocusActivity.this, MasterDetailActivity.class);
-                    intent.putExtra("user_id", data.get(i).getUser_id() + "");
+                    intent.putExtra("user_id", data.get(i).getAttention_user() + "");
                     startActivity(intent);
                 }
             });
@@ -145,16 +150,25 @@ public class FansFocusActivity extends BaseActivity<FansFocusPresenter> implemen
             mMyFansInfo.get(i).setIs_attention(0);
         }
         mFansFocusAdapter.notifyItemChanged(i);
+        EventBus.getDefault().post(new RefreshEvent(Constants.FANS_REFRESH));
     }
 
     @Override
     public void handlerAttrntion1(BaseResponse<IEntity> baseResponse, List<FansFocusEntity.AttentionInfoBean> mAttentionInfoBeans, int i) {
         if (TextUtils.equals("关注成功", baseResponse.getErrorMsg())){
             mAttentionInfoBeans.get(i).setIs_attention(1);
+            mFocusAdapter.notifyItemChanged(i);
         }else {
-            mAttentionInfoBeans.get(i).setIs_attention(0);
+            if (mUser_id.equals(mPresenter.mDataManager.getUser().getUser_id())){
+                mAttentionInfoBeans.get(i).setIs_attention(0);
+                mAttentionInfoBeans.remove(i);
+                mFocusAdapter.notifyDataSetChanged();
+            }else {
+                mAttentionInfoBeans.get(i).setIs_attention(0);
+                mFocusAdapter.notifyItemChanged(i);
+            }
         }
-        mFocusAdapter.notifyItemChanged(i);
+        EventBus.getDefault().post(new RefreshEvent(Constants.FANS_REFRESH));
     }
 
     @Override

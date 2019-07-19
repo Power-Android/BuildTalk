@@ -9,6 +9,7 @@ import com.bjjy.buildtalk.app.App;
 import com.bjjy.buildtalk.base.view.IView;
 import com.bjjy.buildtalk.core.http.exception.ServerException;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
+import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.NetworkUtils;
 
 import io.reactivex.observers.ResourceObserver;
@@ -103,9 +104,11 @@ public abstract class BaseObserver<T> extends ResourceObserver<BaseResponse<T>> 
             mView.hideLoading();
         }
         if (e instanceof HttpException) {
-            mView.showErrorMsg(App.getContext().getString(R.string.http_error));
+            LogUtils.e(((HttpException) e).message() + ((HttpException) e).response().toString());
             if (isShowStatusView) {
                 mView.showNoNetwork();
+            }else {
+                mView.showErrorMsg(App.getContext().getString(R.string.http_error));
             }
         } else if (e instanceof ServerException) {
             mView.showErrorMsg(e.toString());

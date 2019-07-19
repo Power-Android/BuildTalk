@@ -38,7 +38,7 @@ public class CircleSearchResultAdapter extends BaseQuickAdapter<SearchResultEnti
         }
         helper.setText(R.id.item_title_tv, item.getCircle_name())
                 .setText(R.id.item_name_tv, "圈主：" + item.getName());
-        helper.setGone(R.id.isCourse, "话题".equals(item.getType()) ? false : true)
+        helper.setGone(R.id.isCourse, "1".equals(item.getType()) ? false : true)
                 .setGone(R.id.isMaster, 1 == item.getIs_author() ? true : false);
         TagFlowLayout flowLayout = helper.getView(R.id.flow_layout);
         List<String> circle_tags = item.getCircle_tags();

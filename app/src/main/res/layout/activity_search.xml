@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/normalView"
     android:background="@color/white"
     tools:context="com.bjjy.buildtalk.ui.talk.TalkSearchActivity">
     <include layout="@layout/search_toolbar_layout"
@@ -67,4 +68,29 @@
             android:layout_height="match_parent"
             android:overScrollMode="never"/>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    <RelativeLayout
+        android:id="@+id/emptyView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/view1"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/empty_img"
+            android:layout_width="@dimen/dp_217"
+            android:layout_height="@dimen/dp_168"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:src="@drawable/empty_jinghua" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/empty_img"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/common_margin"
+            android:text="没有符合条件的内容"
+            android:textColor="@color/text_light"
+            android:textSize="@dimen/sp_15" />
+    </RelativeLayout>
 </RelativeLayout>

@@ -184,6 +184,7 @@ public class PublishActivity extends BaseActivity<PublishPresenter> implements P
                     return;
                 }
                 mPresenter.publishTheme(mCircle_id, mTheme_id , mPublishTv.getText().toString().trim(), mParts, isEdit, list);
+                showLoading();
                 break;
             case R.id.pic_rl:
                 if (list.size() >= 9){
@@ -222,6 +223,7 @@ public class PublishActivity extends BaseActivity<PublishPresenter> implements P
 
     @Override
     public void handlerPublishSuccess(IEntity iEntity) {
+        hideLoading();
         KeyboardUtils.hideSoftInput(this);
         EventBus.getDefault().post(new RefreshEvent(Constants.TOPTIC_REFRESH));
         finish();

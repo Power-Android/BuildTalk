@@ -2,12 +2,17 @@
 <RelativeLayout
     android:id="@+id/loadingView"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TextView
-        android:id="@+id/tv_loading"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.wang.avi.AVLoadingIndicatorView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/loading_text"
+        app:indicatorName="BallSpinFadeLoaderIndicator"
+        style="@style/AVLoadingIndicatorView"
+        app:indicatorColor="@color/colorAccent"
         android:layout_centerInParent="true"/>
+
 </RelativeLayout>

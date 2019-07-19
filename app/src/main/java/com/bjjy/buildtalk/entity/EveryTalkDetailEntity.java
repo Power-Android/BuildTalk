@@ -66,6 +66,24 @@ public class EveryTalkDetailEntity implements Serializable {
         private int countCollect;
         private String author_name;
         private String author_pic;
+        private int is_buy;
+        private String article_price;
+
+        public String getArticle_price() {
+            return article_price;
+        }
+
+        public void setArticle_price(String article_price) {
+            this.article_price = article_price;
+        }
+
+        public int getIs_buy() {
+            return is_buy;
+        }
+
+        public void setIs_buy(int is_buy) {
+            this.is_buy = is_buy;
+        }
 
         public int getArticle_id() {
             return article_id;

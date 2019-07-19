@@ -3,12 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <ImageView
-        android:id="@+id/toptic_bg"
+    <RelativeLayout
+        android:id="@+id/top_bg_rl"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_210"
-        android:src="@drawable/circle_bg_icon"
-        android:scaleType="centerCrop" />
+        android:layout_height="@dimen/dp_210">
+        <ImageView
+            android:id="@+id/toptic_bg"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_210"
+            android:src="@drawable/circle_bg_icon"
+            android:scaleType="centerCrop" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#020203"
+            android:alpha="0.1"/>
+    </RelativeLayout>
+
 
     <RelativeLayout
         android:id="@+id/pre_top_rl"

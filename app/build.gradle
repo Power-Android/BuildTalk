@@ -74,6 +74,7 @@ dependencies {
     implementation rootProject.ext.dependencies["ExoPlayer"]
     implementation rootProject.ext.dependencies["PictureSelector"]
     implementation rootProject.ext.dependencies["photoView"]
+    implementation rootProject.ext.dependencies["loadingView"]
 
     //net
     implementation rootProject.ext.dependencies["gson"]

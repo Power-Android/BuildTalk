@@ -20,8 +20,10 @@ import java.util.List;
  */
 public class FansFocusAdapter extends BaseQuickAdapter<FansFocusEntity.MyFansInfoBean, BaseViewHolder> {
 
-    public FansFocusAdapter(int layoutResId, @Nullable List<FansFocusEntity.MyFansInfoBean> data) {
+    private String user_id;
+    public FansFocusAdapter(int layoutResId, @Nullable List<FansFocusEntity.MyFansInfoBean> data, String user_id) {
         super(layoutResId, data);
+        this.user_id = user_id;
     }
 
     @Override
@@ -29,6 +31,7 @@ public class FansFocusAdapter extends BaseQuickAdapter<FansFocusEntity.MyFansInf
         Glide.with(mContext).load(item.getHeadImage()).into((ImageView) helper.getView(R.id.item_face_iv));
         helper.setText(R.id.item_name_tv, item.getName())
                 .setText(R.id.item_num_tv, item.getCountAttention()+"")
+                .setGone(R.id.item_focus_ll, String.valueOf(item.getUser_id()).equals(user_id) ? false : true)
                 .addOnClickListener(R.id.item_focus_ll);
 
         int is_attention = item.getIs_attention();

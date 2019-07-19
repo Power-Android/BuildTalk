@@ -40,9 +40,13 @@ import com.bjjy.buildtalk.entity.PayOrderEntity;
 import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.entity.ThemeTypeEntity;
+import com.bjjy.buildtalk.ui.mine.FeedBackActivity;
 import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
+import com.bjjy.buildtalk.utils.LogUtils;
+import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
+import com.bjjy.buildtalk.utils.TimeUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bjjy.buildtalk.weight.BaseDialog;
 import com.bjjy.buildtalk.weight.MyBadgeViewPagerAdapter;
@@ -292,7 +296,9 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
             }
             Intent intent = new Intent(CourseCircleActivity.this, CourseDetailActivity.class);
             if (mList.size() > 0) {
-                intent.putExtra("bean", mList.get(i));
+                intent.putExtra("video_url", mList.get(i).getVideoInfo().getVideo_url());
+                intent.putExtra("article_title", mList.get(i).getArticle_title());
+                intent.putExtra("content", mList.get(i).getContent());
                 intent.putExtra("position", i + "");
             }
             intent.putExtra("circle_id", mCircle_id);
@@ -462,7 +468,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
         int scrollRange = appBarLayout.getTotalScrollRange();
 
         if (offset > 0) {
-            mTitleTv.setText(mPreTitleTv.getText());
+            mTitleTv.setText(mCircleInfoEntity.getCircleInfo().getCircle_name());
             mTitleTv.setVisibility(View.VISIBLE);
             mTopTitleRl.setBackgroundColor(getResources().getColor(R.color.blue_mid));
         } else {
@@ -522,7 +528,9 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
             case R.id.ml_rl://预览 目录
                 mIntent = new Intent(this, CourseDetailActivity.class);
                 if (mList.size() > 0) {
-                    mIntent.putExtra("bean", mList.get(0));
+                    mIntent.putExtra("video_url", mList.get(0).getVideoInfo().getVideo_url());
+                    mIntent.putExtra("article_title", mList.get(0).getArticle_title());
+                    mIntent.putExtra("content", mList.get(0).getContent());
                     mIntent.putExtra("position", "0");
                 }
                 mIntent.putExtra("circle_id", mCircle_id);
@@ -531,7 +539,9 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
             case R.id.formal_ml_rl://正式 目录
                 mIntent = new Intent(this, CourseDetailActivity.class);
                 if (mList.size() > 0) {
-                    mIntent.putExtra("bean", mList.get(0));
+                    mIntent.putExtra("video_url", mList.get(0).getVideoInfo().getVideo_url());
+                    mIntent.putExtra("article_title", mList.get(0).getArticle_title());
+                    mIntent.putExtra("content", mList.get(0).getContent());
                     mIntent.putExtra("position", "0");
                 }
                 mIntent.putExtra("circle_id", mCircle_id);
@@ -545,7 +555,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
                 }
                 break;
             case R.id.join_tv:
-                showPayDialog();
+                LoginHelper.login(this, mPresenter.mDataManager, () -> showPayDialog());
                 break;
             case R.id.publis_rl:
                 mIntent = new Intent(this, PublishActivity.class);

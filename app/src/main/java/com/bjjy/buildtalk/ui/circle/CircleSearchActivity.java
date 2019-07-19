@@ -1,6 +1,7 @@
 package com.bjjy.buildtalk.ui.circle;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class CircleSearchActivity extends BaseActivity<CircleSearchPresenter> implements CircleSearchContract.View, TextView.OnEditorActionListener, OnRefreshLoadMoreListener, BaseQuickAdapter.OnItemClickListener, View.OnFocusChangeListener {
@@ -56,6 +58,8 @@ public class CircleSearchActivity extends BaseActivity<CircleSearchPresenter> im
     RecyclerView mRecyclerView;
     @BindView(R.id.refresh_Layout)
     SmartRefreshLayout mRefreshLayout;
+    @BindView(R.id.emptyView)
+    RelativeLayout mEmptyView;
 
     private List<SearchResultEntity.CircleInfoBean> mList = new ArrayList<>();
     private CircleSearchResultAdapter mSearchResultAdapter;
@@ -85,9 +89,9 @@ public class CircleSearchActivity extends BaseActivity<CircleSearchPresenter> im
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if (actionId == EditorInfo.IME_ACTION_SEARCH){
+        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
             mSearchEt.setFocusable(false);
-            if (TextUtils.isEmpty(mSearchEt.getText().toString().trim())){
+            if (TextUtils.isEmpty(mSearchEt.getText().toString().trim())) {
                 ToastUtils.showShort("请输入搜索内容");
                 return true;
             }
@@ -99,12 +103,14 @@ public class CircleSearchActivity extends BaseActivity<CircleSearchPresenter> im
 
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
-        if (hasFocus){
+        if (hasFocus) {
             mPresenter.getSearchData();
             mRefreshLayout.setVisibility(View.GONE);
+            mEmptyView.setVisibility(View.GONE);
             mSearchRl.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             mSearchRl.setVisibility(View.GONE);
+            mEmptyView.setVisibility(View.GONE);
             mRefreshLayout.setVisibility(View.VISIBLE);
         }
     }
@@ -122,8 +128,13 @@ public class CircleSearchActivity extends BaseActivity<CircleSearchPresenter> im
         } else {
             mSearchResultAdapter.addData(mList);
         }
-        mSearchRl.setVisibility(View.GONE);
-        mRefreshLayout.setVisibility(View.VISIBLE);
+        if (searchResultEntity.getCircleInfo().size() > 0) {
+            mSearchRl.setVisibility(View.GONE);
+            mEmptyView.setVisibility(View.GONE);
+            mRefreshLayout.setVisibility(View.VISIBLE);
+        } else {
+            showEmpty();
+        }
     }
 
     @Override
@@ -179,16 +190,20 @@ public class CircleSearchActivity extends BaseActivity<CircleSearchPresenter> im
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         page = 1;
-        gotoSearchResult(page,mSearchEt.getText().toString().trim(), true);
+        gotoSearchResult(page, mSearchEt.getText().toString().trim(), true);
         refreshLayout.finishRefresh();
     }
 
     @Override
     public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
         List<SearchResultEntity.CircleInfoBean> mList = baseQuickAdapter.getData();
-        if (TextUtils.equals("话题", mList.get(i).getType())){
+        if (TextUtils.equals("话题", mList.get(i).getType())) {
             Intent intent = new Intent(this, TopticCircleActivity.class);
-            intent.putExtra("circle_id", mList.get(i).getCircle_id()+"");
+            intent.putExtra("circle_id", mList.get(i).getCircle_id() + "");
+            startActivity(intent);
+        }else {
+            Intent intent = new Intent(this, CourseCircleActivity.class);
+            intent.putExtra("circle_id", mList.get(i).getCircle_id() + "");
             startActivity(intent);
         }
     }

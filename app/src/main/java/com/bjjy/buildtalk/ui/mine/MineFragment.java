@@ -13,8 +13,12 @@ import com.bjjy.buildtalk.app.User;
 import com.bjjy.buildtalk.base.fragment.BaseFragment;
 import com.bjjy.buildtalk.core.event.RefreshEvent;
 import com.bjjy.buildtalk.ui.main.LoginActivity;
+import com.bjjy.buildtalk.ui.talk.CircleManDetailActivity;
+import com.bjjy.buildtalk.ui.talk.FansFocusActivity;
+import com.bjjy.buildtalk.ui.talk.MasterDetailActivity;
 import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
+import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -106,7 +110,7 @@ public class MineFragment extends BaseFragment<MinePresenter> implements MineCon
 //        mPresenter.userInfo(user.getUser_id());
     }
 
-    @OnClick({R.id.info_iv, R.id.wallet_rl, R.id.set_rl, R.id.help_rl, R.id.service_rl, R.id.name_tv})
+    @OnClick({R.id.info_iv, R.id.wallet_rl, R.id.set_rl, R.id.help_rl, R.id.service_rl, R.id.name_tv, R.id.face_iv})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.info_iv:
@@ -122,11 +126,24 @@ public class MineFragment extends BaseFragment<MinePresenter> implements MineCon
                 LoginHelper.login(mContext, mPresenter.mDataManager, () -> startActivity(new Intent(mContext, FeedBackActivity.class)));
                 break;
             case R.id.service_rl:
+                ToastUtils.showShort("暂未开放");
                 break;
             case R.id.name_tv:
                 if (!mPresenter.mDataManager.getLoginStatus())
                     startActivity(new Intent(mContext, LoginActivity.class));
                 break;
+            case R.id.face_iv:
+                LoginHelper.login(mContext, mPresenter.mDataManager, () -> {
+                    if (TextUtils.equals("1", mPresenter.mDataManager.getUser().getUser_type())){
+                        Intent intent = new Intent(mContext, CircleManDetailActivity.class);
+                        intent.putExtra("user_id", mPresenter.mDataManager.getUser().getUser_id());
+                        startActivity(intent);
+                    }else {
+                        Intent intent = new Intent(mContext, MasterDetailActivity.class);
+                        intent.putExtra("user_id", mPresenter.mDataManager.getUser().getUser_id());
+                        startActivity(intent);
+                    }
+                });
         }
     }
 

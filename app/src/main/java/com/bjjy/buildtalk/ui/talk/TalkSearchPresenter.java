@@ -74,7 +74,7 @@ public class TalkSearchPresenter extends BasePresenter<TalkSearchContract.View> 
         addSubscribe(mDataManager.searchTalkHistory(headers, paramas)
                 .compose(RxUtils.SchedulerTransformer())
                 .filter(response -> mView != null)
-                .subscribeWith(new BaseObserver<SearchResultEntity>(mView, false) {
+                .subscribeWith(new BaseObserver<SearchResultEntity>(mView, true) {
                     @Override
                     public void onSuccess(SearchResultEntity searchResultEntity) {
                         mView.handlerResultSearchList(searchResultEntity, isRefresh);

@@ -21,6 +21,7 @@ import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.IndustryMasterEntity;
 import com.bjjy.buildtalk.entity.TalkEntity;
 import com.bjjy.buildtalk.utils.AnimatorUtils;
+import com.bjjy.buildtalk.utils.LoginHelper;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -73,8 +74,10 @@ public class TalkFragment extends BaseFragment<TalkPresnter> implements TalkCont
         headerView.setOnClickListener(v -> startActivity(new Intent(mContext, TalkSearchActivity.class)));
         mTalkAdapter.setOnItemChildClickListener(this);
         mTalkAdapter.setOnFocusClickListener((baseQuickAdapter, view, i) -> {
-            List<CircleMasterEntity> mList = baseQuickAdapter.getData();
-            mPresenter.attention(mList.get(i).getUser_id(),mList,i);
+            LoginHelper.login(mContext, mPresenter.mDataManager, (LoginHelper.CallBack) () -> {
+                List<CircleMasterEntity> mList = baseQuickAdapter.getData();
+                mPresenter.attention(mList.get(i).getUser_id(),mList,i);
+            });
         });
     }
 

@@ -32,7 +32,11 @@ public class MasterCollectPresenter extends BasePresenter<MasterCollectContract.
     public void myCollect(String user_id, int page, boolean isRefresh) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
-        paramas.put("examine_user", mDataManager.getUser().getUser_id());
+        if (mDataManager.getLoginStatus()){
+            paramas.put("examine_user", mDataManager.getUser().getUser_id());
+        }else {
+            paramas.put("examine_user", "");
+        }
         paramas.put(Constants.USER_ID, user_id);
         paramas.put(Constants.PAGE , page+"");
         paramas.put(Constants.PAGE_SIZE, "10");

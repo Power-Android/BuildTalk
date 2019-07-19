@@ -3,6 +3,7 @@ package com.bjjy.buildtalk.ui.main;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +17,7 @@ import com.bjjy.buildtalk.core.event.RefreshEvent;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
+import com.bjjy.buildtalk.utils.ToastUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -120,6 +122,9 @@ public class PhoneLoginActivity extends BaseActivity<PhoneLoginPresenter> implem
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.code_btn:
+                if (TextUtils.isEmpty(mPhoneEt.getText().toString().trim()) && mPhoneEt.getText().toString().trim().length() != 11){
+                    return;
+                }
                 if (this.isDestroyed())
                     return;
                 mTimer = new CountDownTimer(60000, 1000) {
@@ -140,6 +145,12 @@ public class PhoneLoginActivity extends BaseActivity<PhoneLoginPresenter> implem
                 mPresenter.senSms(mPhoneEt.getText().toString().trim());
                 break;
             case R.id.login_btn:
+                if (TextUtils.isEmpty(mPhoneEt.getText().toString().trim()) && mPhoneEt.getText().toString().trim().length() != 11){
+                    return;
+                }
+                if (TextUtils.isEmpty(mVerifyEt.getText().toString().trim())){
+                    return;
+                }
                 mPresenter.mobileRegister(mPhoneEt.getText().toString().trim(), mVerifyEt.getText().toString().trim());
                 break;
         }

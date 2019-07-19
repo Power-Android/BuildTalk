@@ -12,6 +12,7 @@ import com.bjjy.buildtalk.entity.TalkEntity;
 import com.bjjy.buildtalk.ui.talk.CircleManDetailActivity;
 import com.bjjy.buildtalk.ui.talk.MasterDetailActivity;
 import com.bjjy.buildtalk.ui.talk.TalkPresnter;
+import com.bjjy.buildtalk.utils.LoginHelper;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;

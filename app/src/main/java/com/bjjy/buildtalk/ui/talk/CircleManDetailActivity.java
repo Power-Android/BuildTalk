@@ -18,13 +18,16 @@ import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.CircleSearchResultAdapter;
+import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
+import com.bjjy.buildtalk.core.event.RefreshEvent;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.MasterDetailEntity;
 import com.bjjy.buildtalk.entity.SearchResultEntity;
 import com.bjjy.buildtalk.ui.circle.CourseCircleActivity;
 import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
+import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.SizeUtils;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
@@ -36,6 +39,10 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,6 +104,13 @@ public class CircleManDetailActivity extends BaseActivity<CircleManDetailPresent
     private Intent mIntent;
     private BaseDialog mDialog;
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void event(RefreshEvent eventBean) {
+        if (TextUtils.equals(eventBean.getMsg(), Constants.FANS_REFRESH)) {
+            recreate();
+        }
+    }
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_circle_man_detail;
@@ -116,11 +130,18 @@ public class CircleManDetailActivity extends BaseActivity<CircleManDetailPresent
 
     @Override
     protected void initEventAndData() {
+        EventBus.getDefault().register(this);
         mPresenter.tabData();
     }
 
     @Override
     public void handlerTab(List<String> titleList, List<View> views) {
+        if (mPresenter.mDataManager.getUser().getUser_id() != null && mPresenter.mDataManager.getUser().getUser_id().equals(mUser_id)){
+            mFocusLl.setVisibility(View.GONE);
+        }else {
+            mFocusLl.setVisibility(View.VISIBLE);
+        }
+
         MyViewPagerAdapter viewPagerAdapter = new MyViewPagerAdapter(titleList, views);
         mViewpager.setAdapter(viewPagerAdapter);
         mTablayout.setupWithViewPager(mViewpager);
@@ -239,11 +260,14 @@ public class CircleManDetailActivity extends BaseActivity<CircleManDetailPresent
             case R.id.face_iv:
                 break;
             case R.id.focus_ll:
-                if (1 == mMasterDetailEntity.getIs_attention()){
-                    showDialog();
-                }else {
-                    mPresenter.attention(mUser_id);
-                }
+                LoginHelper.login(this, mPresenter.mDataManager, () -> {
+                    if (1 == mMasterDetailEntity.getIs_attention()){
+                        showDialog();
+                    }else {
+                        mPresenter.attention(mUser_id);
+                    }
+                });
+
                 break;
             case R.id.fans_num_tv:
                 mIntent = new Intent(this, FansFocusActivity.class);
@@ -350,5 +374,11 @@ public class CircleManDetailActivity extends BaseActivity<CircleManDetailPresent
     @Override
     public void onPageScrollStateChanged(int i) {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

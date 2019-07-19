@@ -3,6 +3,8 @@ package com.bjjy.buildtalk.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
@@ -26,6 +28,8 @@ import static com.bumptech.glide.load.resource.bitmap.VideoDecoder.FRAME_OPTION;
  */
 public class GlideUtils extends ImageLoader {
 
+
+
     /**
      * @param context
      * @param path
@@ -46,23 +50,21 @@ public class GlideUtils extends ImageLoader {
      *  url 视频地址
      *  imageView 设置image
      */
-    public static void loadVideoScreenshot(final Context context, String url, ImageView imageView) {
+    public static Bitmap loadVideoScreenshot(String url) {
         Bitmap bitmap = null;
-
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         try {
             //根据url获取缩略图
             retriever.setDataSource(url, new HashMap());
             //获得第一帧图片
             bitmap = retriever.getFrameAtTime();
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             retriever.release();
         }
-        if (bitmap != null){
-            Glide.with(context).load(bitmap).into(imageView);
-        }
+        return bitmap;
     }
 
 }

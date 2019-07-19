@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -32,6 +33,8 @@ import com.bjjy.buildtalk.adapter.EveryTalkDetailAdapter;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.GuestBookEntity;
+import com.bjjy.buildtalk.entity.PayOrderEntity;
+import com.bjjy.buildtalk.ui.circle.CourseDetailActivity;
 import com.bjjy.buildtalk.ui.main.LoginActivity;
 import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.GlideUtils;
@@ -40,6 +43,7 @@ import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
+import com.bjjy.buildtalk.weight.BaseDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
@@ -54,6 +58,9 @@ import com.google.android.exoplayer2.util.Util;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.tencent.mm.opensdk.modelpay.PayReq;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import java.security.MessageDigest;
 import java.util.ArrayList;
@@ -134,6 +141,17 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     private int mPage_count = 1;
     private String mType;
     private String mUrl;
+    private BaseDialog mBuyDialog;
+    private IWXAPI wxapi;
+
+    Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            Glide.with(EveryTalkDetailActivity.this).load(mBitmap).into(mVideoplayer.thumbImageView);
+            return true;
+        }
+    });
+    private Bitmap mBitmap;
 
     @Override
     protected int getLayoutId() {
@@ -218,14 +236,25 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
         }
         if (!TextUtils.isEmpty(mMNewsInfo.getVideo_url())) {
             mFlVideoPlayer.setVisibility(View.VISIBLE);
-            GlideUtils.loadVideoScreenshot(this, mMNewsInfo.getVideo_url(), mVideoplayer.thumbImageView);
+            new Thread(() -> {
+                mBitmap = GlideUtils.loadVideoScreenshot(mMNewsInfo.getVideo_url());
+                if (mBitmap != null){
+                    handler.sendEmptyMessage(1);
+                }
+            }).start();
             mVideoplayer.setUp(new JZDataSource(mMNewsInfo.getVideo_url()), Jzvd.SCREEN_WINDOW_NORMAL);
-            if (!mPresenter.mDataManager.getLoginStatus()){
+            if (!mPresenter.mDataManager.getLoginStatus() || mMNewsInfo.getIs_buy() == 0){
                 misPlay.setVisibility(View.VISIBLE);
             }else {
                 misPlay.setVisibility(View.GONE);
             }
-            misPlay.setOnClickListener(v -> startActivity(new Intent(EveryTalkDetailActivity.this, LoginActivity.class)));
+            misPlay.setOnClickListener(v -> {
+                if (!mPresenter.mDataManager.getLoginStatus()){
+                    startActivity(new Intent(EveryTalkDetailActivity.this, LoginActivity.class));
+                }else if (mMNewsInfo.getIs_buy() == 0){
+                    showBuyDialog();
+                }
+            });
         }
 
         WebSettings settings = mWebView.getSettings();
@@ -258,6 +287,39 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
             }
             return false;
         });
+    }
+
+    private void showBuyDialog() {
+        mBuyDialog = new BaseDialog.Builder(this)
+                .setGravity(Gravity.CENTER)
+                .setAnimation(R.style.nomal_aniamtion)
+                .setViewId(R.layout.dialog_buy_layout)
+                .setWidthHeightdp((int) getResources().getDimension(R.dimen.dp_275), (int) getResources().getDimension(R.dimen.dp_138))
+                .isOnTouchCanceled(true)
+                .addViewOnClickListener(R.id.cancle_tv, v -> mBuyDialog.dismiss())
+                .addViewOnClickListener(R.id.query_tv, v -> {
+                    mPresenter.payOrder("1", mMNewsInfo.getArticle_id(), mMNewsInfo.getArticle_title(),
+                            mMNewsInfo.getArticle_price());
+                    mBuyDialog.dismiss();
+                })
+                .builder();
+        mBuyDialog.show();
+    }
+
+    @Override
+    public void handlerWxOrder(PayOrderEntity payOrderEntity) {
+        if (wxapi == null) {
+            wxapi = WXAPIFactory.createWXAPI(this, "wx24a51a57c203d22a", false);
+        }
+        PayReq request = new PayReq();
+        request.appId = payOrderEntity.getAppid();
+        request.partnerId = payOrderEntity.getPartnerid();
+        request.prepayId = payOrderEntity.getPrepayid();
+        request.packageValue = payOrderEntity.getPackageX();
+        request.nonceStr = payOrderEntity.getNoncestr();
+        request.timeStamp = payOrderEntity.getTimestamp();
+        request.sign = payOrderEntity.getSign();
+        wxapi.sendReq(request);
     }
 
     private String getHtmlData(String bodyHTML) {
@@ -304,6 +366,10 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
         switch (view.getId()) {
             case R.id.play_iv:
                 LoginHelper.login(this, mPresenter.mDataManager, () -> {
+                    if (mMNewsInfo.getIs_buy() == 0){
+                        showBuyDialog();
+                        return;
+                    }
                     if (simpleExoPlayer != null) {
                         simpleExoPlayer.setPlayWhenReady(!simpleExoPlayer.getPlayWhenReady());
                     }

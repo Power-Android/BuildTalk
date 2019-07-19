@@ -59,7 +59,11 @@ public class CircleManDetailPresenter extends BasePresenter<CircleManDetailContr
     public void userDetail(String user_id) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
-        paramas.put("examine_user", mDataManager.getUser().getUser_id());
+        if (mDataManager.getLoginStatus()){
+            paramas.put("examine_user", mDataManager.getUser().getUser_id());
+        }else {
+            paramas.put("examine_user", "");
+        }
         paramas.put(Constants.USER_ID, user_id);
         paramas.put("user_type", "2");
         paramas.put(App.getContext().getString(R.string.TIMESTAMP), timestamp);
@@ -83,7 +87,11 @@ public class CircleManDetailPresenter extends BasePresenter<CircleManDetailContr
     public void createList(String user_id, int create_page, boolean isRefresh) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
-        paramas.put("examine_user", mDataManager.getUser().getUser_id());
+        if (mDataManager.getLoginStatus()){
+            paramas.put("examine_user", mDataManager.getUser().getUser_id());
+        }else {
+            paramas.put("examine_user", "");
+        }
         paramas.put("circle_type", "1");
         paramas.put(Constants.USER_ID, user_id);
         paramas.put(Constants.PAGE , create_page+"");
@@ -109,7 +117,11 @@ public class CircleManDetailPresenter extends BasePresenter<CircleManDetailContr
     public void joinList(String user_id, int join_page, boolean isRefresh) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
-        paramas.put("examine_user", mDataManager.getUser().getUser_id());
+        if (mDataManager.getLoginStatus()){
+            paramas.put("examine_user", mDataManager.getUser().getUser_id());
+        }else {
+            paramas.put("examine_user", "");
+        }
         paramas.put("circle_type", "2");
         paramas.put(Constants.USER_ID, user_id);
         paramas.put(Constants.PAGE , join_page+"");

@@ -31,7 +31,6 @@ import com.bjjy.buildtalk.entity.PariseNickNameBean;
 import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.ThemeImageBean;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
-import com.bjjy.buildtalk.ui.discover.EveryTalkDetailActivity;
 import com.bjjy.buildtalk.ui.main.ViewPagerActivity;
 import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
@@ -110,6 +109,8 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
     RelativeLayout mIncludeToolbar;
     @BindView(R.id.record_ll)
     LinearLayout mRecordLl;
+    @BindView(R.id.emptyView)
+    RelativeLayout mEmptyView;
     private String mTheme_id;
     private ThemeInfoEntity.ThemeInfoBean themeInfoEntity;
     private int page = 1;
@@ -143,7 +144,7 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
         mToolbar.setNavigationOnClickListener(v -> finish());
         mToolbarTitle.setText(mTitle);
         KeyboardUtils.registerSoftInputChangedListener(this, height -> {
-            if (height <= 0){
+            if (height <= 0) {
                 mRecordLl.setVisibility(View.VISIBLE);
                 isGone = false;
             }
@@ -237,6 +238,13 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
             } else {
                 mCommentAdapter.addData(themeInfoBean.getComment_content());
             }
+            mEmptyView.setVisibility(View.GONE);
+            mLoadmoreLayout.setEnableLoadMore(true);
+            mRecyclerView.setVisibility(View.VISIBLE);
+        } else {
+            mRecyclerView.setVisibility(View.GONE);
+            mLoadmoreLayout.setEnableLoadMore(false);
+            mEmptyView.setVisibility(View.VISIBLE);
         }
 
         mRecordEt.setOnEditorActionListener((v, actionId, event) -> {
@@ -260,10 +268,10 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.item_more_iv:
-                showEditDialog(themeInfoEntity);
+                LoginHelper.login(this, mPresenter.mDataManager, () -> showEditDialog(themeInfoEntity));
                 break;
             case R.id.praise_ll:
-                mPresenter.praise(themeInfoEntity.getTheme_id() + "", "1", null);
+                LoginHelper.login(this, mPresenter.mDataManager, () -> mPresenter.praise(themeInfoEntity.getTheme_id() + "", "1", null));
                 break;
             case R.id.share_iv:
                 DialogUtils.showShareDialog(this, mUrl, mTitle,
@@ -271,7 +279,7 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
                 break;
             case R.id.record_ll:
                 LoginHelper.login(this, mPresenter.mDataManager, () -> {
-                    if (!isGone){
+                    if (!isGone) {
                         mRecordLl.setVisibility(View.GONE);
                         mRecordEt.setFocusable(true);
                         mRecordEt.setFocusableInTouchMode(true);
@@ -295,11 +303,11 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
         TextView edit_tv = mEditDailog.getView(R.id.edit_tv);
         TextView delete_tv = mEditDailog.getView(R.id.delete_tv);
 
-        if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())){
+        if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
             mCollect_tv.setVisibility(View.GONE);
             edit_tv.setVisibility(View.VISIBLE);
             delete_tv.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             mCollect_tv.setVisibility(View.VISIBLE);
             edit_tv.setVisibility(View.GONE);
             delete_tv.setVisibility(View.GONE);

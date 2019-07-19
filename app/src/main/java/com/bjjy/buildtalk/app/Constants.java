@@ -34,6 +34,7 @@ public class Constants {
     public static final int LOADING_STATE = 1;
     public static final int EMPTY_STATE = 2;
     public static final int ERROR_STATE = 3;
+    public static final int NONET_STATE = 4;
 
     public static final long DOUBLE_INTERVAL_TIME = 2000;
 
@@ -73,6 +74,7 @@ public class Constants {
     public static final String INFO_REFRESH = "info_refresh";
     public static final String PAY_SUCCESS = "pay_success";
     public static final String QUIT_CIRCLE = "quit_circle";
+    public static final String FANS_REFRESH = "fans_refresh";
     public static final String EVENT_BUS_TAG = "event_bus_tag";
     public static final String PROJECT_PAGER = "project_pager";
     public static final String KNOWLEDGE_PAGER = "knowledge_pager";

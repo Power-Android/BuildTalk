@@ -7,6 +7,7 @@
     android:background="@color/white"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
+    android:id="@+id/normalView"
     tools:context="com.bjjy.buildtalk.ui.circle.PublishActivity">
 
     <include

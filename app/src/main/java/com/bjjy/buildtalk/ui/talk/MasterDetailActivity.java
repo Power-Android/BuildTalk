@@ -17,12 +17,15 @@ import android.widget.TextView;
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.MasterArticleAdapter;
 import com.bjjy.buildtalk.app.App;
+import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
+import com.bjjy.buildtalk.core.event.RefreshEvent;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.MasterDetailEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.ui.discover.EveryTalkDetailActivity;
+import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.SizeUtils;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
@@ -32,6 +35,10 @@ import com.bjjy.buildtalk.weight.tablayout.TabLayout;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.zhy.view.flowlayout.FlowLayout;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,6 +99,13 @@ public class MasterDetailActivity extends BaseActivity<MasterDetailPresenter> im
     private Intent mIntent;
     private BaseDialog mDialog;
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void event(RefreshEvent eventBean) {
+        if (TextUtils.equals(eventBean.getMsg(), Constants.FANS_REFRESH)) {
+            recreate();
+        }
+    }
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_master_detail;
@@ -109,6 +123,7 @@ public class MasterDetailActivity extends BaseActivity<MasterDetailPresenter> im
 
     @Override
     protected void initEventAndData() {
+        EventBus.getDefault().register(this);
         mPresenter.tabData();
     }
 
@@ -196,11 +211,16 @@ public class MasterDetailActivity extends BaseActivity<MasterDetailPresenter> im
             case R.id.face_iv:
                 break;
             case R.id.focus_ll:
-                if (1 == mMasterDetailEntity.getIs_attention()){
-                    showDialog();
-                }else {
-                    mPresenter.attention(mUser_id);
-                }
+                LoginHelper.login(this, mPresenter.mDataManager, new LoginHelper.CallBack() {
+                    @Override
+                    public void onLogin() {
+                        if (1 == mMasterDetailEntity.getIs_attention()){
+                            showDialog();
+                        }else {
+                            mPresenter.attention(mUser_id);
+                        }
+                    }
+                });
                 break;
             case R.id.circle_num_tv:
                 mIntent = new Intent(this,MasterCircleActivity.class);
@@ -274,5 +294,11 @@ public class MasterDetailActivity extends BaseActivity<MasterDetailPresenter> im
         intent.putExtra("article_id", mArticleInfo.get(i).getArticle_id()+"");
         intent.putExtra("type","article");
         startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }
