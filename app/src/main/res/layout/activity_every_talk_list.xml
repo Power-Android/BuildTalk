@@ -1,67 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.scwang.smartrefresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/refresh_Layout">
-    <android.support.v4.widget.NestedScrollView
+    android:descendantFocusability="blocksDescendants">
+
+    <ImageView
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_212"
+        android:scaleType="fitXY"
+        android:src="@drawable/every_talk_bg" />
+
+    <ImageView
+        android:id="@+id/introduce_iv"
+        android:layout_width="@dimen/dp_35"
+        android:layout_height="@dimen/dp_35"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dp_160"
+        android:padding="@dimen/dp_10"
+        android:src="@drawable/every_talk_arrow_bottom" />
+
+    <ImageView
+        android:id="@+id/back_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="15dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="35dp"
+        android:src="@drawable/arrow_left_black_icon" />
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refresh_Layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:overScrollMode="never">
-        <RelativeLayout
+        android:layout_below="@+id/view1">
+
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:descendantFocusability="blocksDescendants">
-
-            <ImageView
-                android:id="@+id/view1"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_212"
-                android:scaleType="fitXY"
-                android:src="@drawable/every_talk_bg" />
-            <ImageView
-                android:id="@+id/introduce_iv"
-                android:layout_width="@dimen/dp_35"
-                android:layout_height="@dimen/dp_35"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/every_talk_arrow_bottom"
-                android:padding="@dimen/dp_10"
-                android:layout_marginTop="@dimen/dp_160"/>
-
-            <ImageView
-                android:id="@+id/back_iv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="15dp"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:paddingTop="35dp"
-                android:src="@drawable/arrow_left_black_icon" />
-            <TextView
-                android:id="@+id/num_tv"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_40"
-                android:text="已更新至105期"
-                android:textSize="@dimen/sp_12"
-                android:textColor="@color/text_light"
-                android:paddingLeft="@dimen/common_margin"
-                android:layout_below="@+id/view1"
-                android:gravity="center_vertical"
-                android:background="@color/white"/>
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view"
+            android:overScrollMode="never">
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:overScrollMode="never"
-                android:layout_below="@+id/num_tv"
-                android:background="@color/white"/>
-            <include
-                android:id="@+id/jieshao_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"
-                android:layout_below="@+id/view1"
-                layout="@layout/every_talk_jieshao_layout"/>
-        </RelativeLayout>
-    </android.support.v4.widget.NestedScrollView>
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/num_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_40"
+                    android:layout_below="@+id/view1"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/common_margin"
+                    android:text="已更新至105期"
+                    android:textColor="@color/text_light"
+                    android:textSize="@dimen/sp_12" />
 
-</com.scwang.smartrefresh.layout.SmartRefreshLayout>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/num_tv"
+                    android:background="@color/white"
+                    android:overScrollMode="never" />
+
+                <include
+                    android:id="@+id/jieshao_layout"
+                    layout="@layout/every_talk_jieshao_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/view1"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+</RelativeLayout>
+

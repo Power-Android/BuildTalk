@@ -3,6 +3,7 @@ package com.bjjy.buildtalk.ui.mine;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -57,7 +58,7 @@ public class SettingActivity extends BaseActivity<SettingPresenter> implements S
 
     @Override
     protected void initEventAndData() {
-        if (mPresenter.mDataManager.getUser().getBindStatus().equals("1")){
+        if (TextUtils.isEmpty(mPresenter.mDataManager.getUser().getBindStatus()) && mPresenter.mDataManager.getUser().getBindStatus().equals("1")){
             mNameTv.setText("已绑定");
         }else {
             mNameTv.setText("未绑定");

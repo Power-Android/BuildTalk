@@ -181,6 +181,7 @@ public class EditBindPhoneActivity extends BaseActivity<EditBindPhonePresenter> 
 
     @Override
     public void handlerBindPhone() {
+        EventBus.getDefault().post(new RefreshEvent(Constants.INFO_REFRESH));
         ToastUtils.showCollect("绑定成功", getResources().getDrawable(R.drawable.collect_success_icon));
         finish();
     }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -98,6 +99,8 @@ public class MasterDetailActivity extends BaseActivity<MasterDetailPresenter> im
     private TextView mIntroductionReceivedTv;
     private Intent mIntent;
     private BaseDialog mDialog;
+    private NestedScrollView mEmptyView;
+    private RecyclerView mArticleRecyclerView;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void event(RefreshEvent eventBean) {
@@ -131,11 +134,12 @@ public class MasterDetailActivity extends BaseActivity<MasterDetailPresenter> im
     public void handlerTab(List<String> list, List<View> views) {
         mViewpager.setAdapter(new MyViewPagerAdapter(list, views));
         mTablayout.setupWithViewPager(mViewpager);
-        RecyclerView articleRecyclerView = views.get(0).findViewById(R.id.recycler_view);
-        articleRecyclerView.setLayoutManager(new LinearLayoutManager(App.getContext()));
+        mArticleRecyclerView = views.get(0).findViewById(R.id.recycler_view);
+        mEmptyView = views.get(0).findViewById(R.id.emptyView);
+        mArticleRecyclerView.setLayoutManager(new LinearLayoutManager(App.getContext()));
         mMasterArticleAdapter = new MasterArticleAdapter(R.layout.adapter_master_article, mArticleInfo);
         mMasterArticleAdapter.setOnItemClickListener(this);
-        articleRecyclerView.setAdapter(mMasterArticleAdapter);
+        mArticleRecyclerView.setAdapter(mMasterArticleAdapter);
         mIntroductionNameTv = views.get(1).findViewById(R.id.name_tv);
         mIntroductionEduTv = views.get(1).findViewById(R.id.edu_tv);
         mIntroductionIntroTv = views.get(1).findViewById(R.id.intro_tv);
@@ -169,8 +173,15 @@ public class MasterDetailActivity extends BaseActivity<MasterDetailPresenter> im
         mCollectNumTv.setText(detailEntity.getCountMyCollect() + "\n收藏");
         mFocusNumTv.setText(detailEntity.getCountMyAttention() + "\n关注");
 
-        mArticleInfo = detailEntity.getArticleInfo();
-        mMasterArticleAdapter.setNewData(mArticleInfo);
+        if (mArticleInfo.size() > 0){
+            mEmptyView.setVisibility(View.GONE);
+            mArticleRecyclerView.setVisibility(View.VISIBLE);
+            mArticleInfo = detailEntity.getArticleInfo();
+            mMasterArticleAdapter.setNewData(mArticleInfo);
+        }else {
+            mArticleRecyclerView.setVisibility(View.GONE);
+            mEmptyView.setVisibility(View.VISIBLE);
+        }
 
         mIntroductionNameTv.setText(detailEntity.getName());
         if (detailEntity.getEducation() != null){

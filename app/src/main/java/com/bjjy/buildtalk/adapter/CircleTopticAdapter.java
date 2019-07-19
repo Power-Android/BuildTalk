@@ -70,42 +70,52 @@ public class CircleTopticAdapter extends BaseQuickAdapter<ThemeInfoEntity.ThemeI
                 .addOnClickListener(R.id.item_comment_iv)
                 .addOnClickListener(R.id.item_share_iv)
                 .addOnClickListener(R.id.more_tv);
-        List<ThemeImageBean> themeImageBeanList = item.getTheme_image();
+        ImageView singleImg = helper.getView(R.id.item_img_iv);
         NoScrollGridView gridView = helper.getView(R.id.item_grid_view);
-        if (themeImageBeanList.size() == 4) {
-            gridView.setNumColumns(2);
-        } else {
-            gridView.setNumColumns(3);
+
+        List<ThemeImageBean> themeImageBeanList = item.getTheme_image();
+        if (themeImageBeanList.size() == 1){
+            gridView.setVisibility(View.GONE);
+            Glide.with(mContext).load(themeImageBeanList.get(0).getPic_url()).into(singleImg);
+            singleImg.setVisibility(View.VISIBLE);
+        }else {
+            singleImg.setVisibility(View.GONE);
+            gridView.setVisibility(View.VISIBLE);
+            if (themeImageBeanList.size() == 4) {
+                gridView.setNumColumns(2);
+            } else {
+                gridView.setNumColumns(3);
+            }
+            gridView.setAdapter(new MyGridAdapter(themeImageBeanList, false));
+
+            gridView.setOnItemClickListener((parent, view, position, id) -> {
+                ArrayList<ImageView> imgDatas = new ArrayList<>();
+                for (int i = 0; i < gridView.getChildCount(); i++) {
+                    RelativeLayout relativeLayout = (RelativeLayout) gridView.getChildAt(i);
+                    ImageView imageView = relativeLayout.findViewById(R.id.image);
+                    imgDatas.add(imageView);
+                }
+                List<ImgOptionEntity> optionEntities = new ArrayList<>();
+                int[] screenLocationS = new int[2];
+                for (int i = 0; i < imgDatas.size(); i++) {
+                    ImageView img = imgDatas.get(i);
+                    //获取当前ImageView 在屏幕中的位置 宽高
+                    img.getLocationOnScreen(screenLocationS);
+                    ImgOptionEntity entity = new
+                            ImgOptionEntity(screenLocationS[0], screenLocationS[1], img.getWidth(), img.getHeight());
+                    entity.setImgUrl(themeImageBeanList.get(i).getPic_url());
+                    optionEntities.add(entity);
+                }
+
+                Intent bIntent = new Intent(mContext, ViewPagerActivity.class);
+                bIntent.putExtra("positon", position);
+                bIntent.putExtra("optionEntities", (Serializable) optionEntities);
+                mContext.startActivity(bIntent);
+
+                //取消原有默认的Activity到Activity的过渡动画
+                mActivity.overridePendingTransition(0, 0);
+            });
         }
-        gridView.setAdapter(new MyGridAdapter(themeImageBeanList, false));
-
-        gridView.setOnItemClickListener((parent, view, position, id) -> {
-            ArrayList<ImageView> imgDatas = new ArrayList<>();
-            for (int i = 0; i < gridView.getChildCount(); i++) {
-                RelativeLayout relativeLayout = (RelativeLayout) gridView.getChildAt(i);
-                ImageView imageView = relativeLayout.findViewById(R.id.image);
-                imgDatas.add(imageView);
-            }
-            List<ImgOptionEntity> optionEntities = new ArrayList<>();
-            int[] screenLocationS = new int[2];
-            for (int i = 0; i < imgDatas.size(); i++) {
-                ImageView img = imgDatas.get(i);
-                //获取当前ImageView 在屏幕中的位置 宽高
-                img.getLocationOnScreen(screenLocationS);
-                ImgOptionEntity entity = new
-                        ImgOptionEntity(screenLocationS[0], screenLocationS[1], img.getWidth(), img.getHeight());
-                entity.setImgUrl(themeImageBeanList.get(i).getPic_url());
-                optionEntities.add(entity);
-            }
-
-            Intent bIntent = new Intent(mContext, ViewPagerActivity.class);
-            bIntent.putExtra("positon", position);
-            bIntent.putExtra("optionEntities", (Serializable) optionEntities);
-            mContext.startActivity(bIntent);
-
-            //取消原有默认的Activity到Activity的过渡动画
-            mActivity.overridePendingTransition(0, 0);
-        });
 
         if (1 == item.getIs_parise()) {
             helper.setImageResource(R.id.item_praise_iv, R.drawable.praise_sel);

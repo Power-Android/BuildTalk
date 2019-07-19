@@ -17,6 +17,7 @@ public class GuestBookEntity {
 
     private int page;
     private int page_count;
+    private String countGuestbookNum;
     private List<GuestbookInfoBean> guestbookInfo;
 
     public int getPage() {
@@ -33,6 +34,14 @@ public class GuestBookEntity {
 
     public void setPage_count(int page_count) {
         this.page_count = page_count;
+    }
+
+    public String getCountGuestbookNum() {
+        return countGuestbookNum;
+    }
+
+    public void setCountGuestbookNum(String countGuestbookNum) {
+        this.countGuestbookNum = countGuestbookNum;
     }
 
     public List<GuestbookInfoBean> getGuestbookInfo() {

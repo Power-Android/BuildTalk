@@ -64,10 +64,10 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void event(RefreshEvent eventBean) {
-        if (TextUtils.equals(eventBean.getMsg(), Constants.TOPTIC_REFRESH_ALL)){
+        if (TextUtils.equals(eventBean.getMsg(), Constants.TOPTIC_REFRESH_ALL)) {
             onRefresh(mRefreshLayout);
         }
-        if (TextUtils.equals(eventBean.getMsg(), Constants.QUIT_CIRCLE)){
+        if (TextUtils.equals(eventBean.getMsg(), Constants.QUIT_CIRCLE)) {
             onRefresh(mRefreshLayout);
         }
         if (TextUtils.equals(eventBean.getMsg(), Constants.INFO_REFRESH)) {

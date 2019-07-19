@@ -7,15 +7,18 @@
         android:id="@+id/master_bg"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_350"
-        android:src="@drawable/test_course"
-        android:scaleType="centerCrop"
-        android:alpha="0.8"/>
+        android:scaleType="centerCrop" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_350"
+        android:background="#020203"
+        android:alpha="0.2"/>
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/face_iv"
         android:layout_width="@dimen/dp_80"
         android:layout_height="@dimen/dp_80"
         android:layout_marginTop="@dimen/dp_65"
-        android:src="@drawable/test_course"
+        android:src="@drawable/moren_face"
         app:civ_border_width="@dimen/dp_1"
         app:civ_border_color="@color/white"
         android:layout_below="@+id/back_iv"
@@ -45,7 +48,6 @@
         android:id="@+id/job_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="家具首席设计师"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_14"
         android:layout_below="@+id/name_tv"

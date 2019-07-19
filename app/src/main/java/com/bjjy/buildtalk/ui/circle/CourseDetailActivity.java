@@ -147,7 +147,9 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
     Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            Glide.with(CourseDetailActivity.this).load(mBitmap).into(mVideoplayer.thumbImageView);
+            if (!isDestroyed()){
+                Glide.with(CourseDetailActivity.this).load(mBitmap).into(mVideoplayer.thumbImageView);
+            }
             return true;
         }
     });
@@ -192,7 +194,6 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
     protected void initEventAndData() {
         EventBus.getDefault().register(this);
         mPresenter.CircleInfo(mCircle_id);
-        mPresenter.themeInfo(mCircle_id, page, type, false);
         mRefreshLayout.setOnRefreshLoadMoreListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -225,6 +226,7 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
         } else {
             mRefreshLayout.setEnableLoadMore(true);
         }
+        mPresenter.themeInfo(mCircle_id, page, type, false);
 
         mPresenter.courseList(mCircleInfoEntity.getCircleInfo().getData_id() + "", coursePage);
 

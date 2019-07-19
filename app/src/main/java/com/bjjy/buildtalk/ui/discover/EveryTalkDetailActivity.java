@@ -332,11 +332,10 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
 
     @Override
     public void handlerGuestBookList(GuestBookEntity guestBookEntity) {
-        mList = guestBookEntity.getGuestbookInfo();
+        mList.addAll(guestBookEntity.getGuestbookInfo());
         mPage_count = guestBookEntity.getPage_count();
-        mEveryTalkDetailAdapter.setNewData(mList);
-
-        mRecordNumTv.setText(String.valueOf(mList.size()));
+        mEveryTalkDetailAdapter.notifyDataSetChanged();
+        mRecordNumTv.setText(guestBookEntity.getCountGuestbookNum());
     }
 
     @Override
@@ -366,7 +365,7 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
         switch (view.getId()) {
             case R.id.play_iv:
                 LoginHelper.login(this, mPresenter.mDataManager, () -> {
-                    if (mMNewsInfo.getIs_buy() == 0){
+                    if (mMNewsInfo.getIs_buy() == 0 && !TextUtils.isEmpty(mType)){
                         showBuyDialog();
                         return;
                     }

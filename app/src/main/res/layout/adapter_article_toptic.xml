@@ -81,7 +81,6 @@
             android:layout_width="@dimen/dp_205"
             android:layout_height="@dimen/dp_205"
             android:visibility="gone"
-            android:src="@drawable/test_toptic"
             android:scaleType="centerCrop"
             android:layout_below="@+id/item_content_tv"
             android:layout_toRightOf="@+id/item_face_iv"
