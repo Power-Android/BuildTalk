@@ -69,7 +69,7 @@ public abstract class BaseFragment<T extends IPresenter> extends AbstractFragmen
          */
         ViewGroup parent = (ViewGroup) mNormalView.getParent();
         View.inflate(mContext, R.layout.error_view, parent);
-        View.inflate(mContext, R.layout.loaging_view, parent);
+        View.inflate(mContext, R.layout.loading_view, parent);
         View.inflate(mContext,R.layout.empty_view,parent);
         mErrorView = parent.findViewById(R.id.errorView);
         mLoadingView = parent.findViewById(R.id.loadingView);

@@ -78,6 +78,27 @@ public class CircleTopticAdapter extends BaseQuickAdapter<ThemeInfoEntity.ThemeI
             gridView.setVisibility(View.GONE);
             Glide.with(mContext).load(themeImageBeanList.get(0).getPic_url()).into(singleImg);
             singleImg.setVisibility(View.VISIBLE);
+            singleImg.setOnClickListener(v -> {
+                ArrayList<ImageView> imgDatas = new ArrayList<>();
+                    ImageView imageView = helper.getView(R.id.item_img_iv);
+                    imgDatas.add(imageView);
+                List<ImgOptionEntity> optionEntities = new ArrayList<>();
+                int[] screenLocationS = new int[2];
+                    ImageView img = imgDatas.get(0);
+                    //获取当前ImageView 在屏幕中的位置 宽高
+                    img.getLocationOnScreen(screenLocationS);
+                    ImgOptionEntity entity = new
+                            ImgOptionEntity(screenLocationS[0], screenLocationS[1], img.getWidth(), img.getHeight());
+                    entity.setImgUrl(themeImageBeanList.get(0).getPic_url());
+                    optionEntities.add(entity);
+
+                Intent bIntent = new Intent(mContext, ViewPagerActivity.class);
+                bIntent.putExtra("positon", 0);
+                bIntent.putExtra("optionEntities", (Serializable) optionEntities);
+                mContext.startActivity(bIntent);
+                //取消原有默认的Activity到Activity的过渡动画
+                mActivity.overridePendingTransition(0, 0);
+            });
         }else {
             singleImg.setVisibility(View.GONE);
             gridView.setVisibility(View.VISIBLE);

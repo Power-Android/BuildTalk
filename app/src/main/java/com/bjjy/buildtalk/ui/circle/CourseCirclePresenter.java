@@ -118,8 +118,6 @@ public class CourseCirclePresenter extends BasePresenter<CourseCircleContract.Vi
                     public void onSuccess(ThemeInfoEntity themeInfoEntity) {
                         if (themeInfoEntity.getThemeInfo().size() > 0){
                             mView.handlerThemeInfo(themeInfoEntity, isRefresh);
-                        }else {
-                            mView.handlerThemeInfoEmpty(themeInfoEntity.getThemeInfo());
                         }
                     }
                 }));

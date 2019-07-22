@@ -129,6 +129,7 @@ public class EveryTalkListActivity extends BaseActivity<EveryTalkListPresenter> 
                     mIntroduceIv.setImageDrawable(getResources().getDrawable(R.drawable.every_talk_arrow_top));
                     mRefreshLayout.setEnableRefresh(false);
                     mRefreshLayout.setEnableLoadMore(false);
+                    mNumTv.setVisibility(View.GONE);
                     mRecyclerView.setVisibility(View.GONE);
                     mJieshaoLayout.setVisibility(View.VISIBLE);
                 } else {
@@ -136,6 +137,7 @@ public class EveryTalkListActivity extends BaseActivity<EveryTalkListPresenter> 
                     mRefreshLayout.setEnableRefresh(true);
                     mRefreshLayout.setEnableLoadMore(true);
                     mJieshaoLayout.setVisibility(View.GONE);
+                    mNumTv.setVisibility(View.VISIBLE);
                     mRecyclerView.setVisibility(View.VISIBLE);
                 }
                 break;

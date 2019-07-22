@@ -75,6 +75,7 @@ public class CircleInfoActivity extends BaseActivity<CircleInfoPresenter> implem
     private BaseDialog mQuitDialog;
     private Intent mIntent;
     private String mUrl;
+    private String mJieshao;
 
     @Override
     protected int getLayoutId() {
@@ -86,6 +87,7 @@ public class CircleInfoActivity extends BaseActivity<CircleInfoPresenter> implem
         StatusBarUtils.changeStatusBar(this, true, false);
         mCircle_id = getIntent().getStringExtra("circle_id");
         mOperate_user = getIntent().getStringExtra("operate_user");
+        mJieshao = getIntent().getStringExtra("jieshao");
         mUrl = "https://jt.chinabim.com/share/#/topic/" + mCircle_id + "?suid=" + mPresenter.mDataManager.getUser().getUser_id();
     }
 
@@ -137,7 +139,7 @@ public class CircleInfoActivity extends BaseActivity<CircleInfoPresenter> implem
                 break;
             case R.id.share_iv:
                 DialogUtils.showShareDialog(this, mUrl, mMasterInfoEntity.getCircle_name(),
-                        mMasterInfoEntity.getCircle_image().getPic_url(), mMasterInfoEntity.getName());
+                        mMasterInfoEntity.getCircle_image().getPic_url(), mJieshao);
                 break;
             case R.id.member_rl:
                 mIntent = new Intent(this, CircleMemberActivity.class);

@@ -49,7 +49,7 @@ public class KeyboardUtils {
             view.setFocusableInTouchMode(true);
             view.requestFocus();
         }
-        imm.showSoftInput(view, InputMethodManager.SHOW_FORCED);
+        imm.showSoftInput(view, 0);
     }
 
     /**
@@ -65,7 +65,7 @@ public class KeyboardUtils {
         view.setFocusable(true);
         view.setFocusableInTouchMode(true);
         view.requestFocus();
-        imm.showSoftInput(view, InputMethodManager.SHOW_FORCED);
+        imm.showSoftInput(view, 0);
     }
 
     /**
@@ -90,14 +90,13 @@ public class KeyboardUtils {
      * @param view The view.
      */
     public static void hideSoftInput(final View view) {
-        InputMethodManager imm =
-                (InputMethodManager) App.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) App.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm == null) return;
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     /**
-     * 软键盘切换
+     * 软键盘切换 解决在dialog中dismiss时不隐藏软键盘的bug
      * Toggle the soft input display or not.
      */
     public static void toggleSoftInput() {

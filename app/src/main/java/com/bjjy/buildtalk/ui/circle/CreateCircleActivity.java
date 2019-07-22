@@ -334,6 +334,7 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
         mPic_url = infoEntity.getCircle_image().getPic_url();
         Glide.with(this).load(infoEntity.getCircle_image().getPic_url()).into(mCircleIv);
         mCircleTitleEt.setText(infoEntity.getCircle_name());
+        mCircleTitleEt.setSelection(infoEntity.getCircle_desc().length());//将光标追踪到内容的最后
         mEditText.setText(infoEntity.getCircle_desc());
         mEditText.setSelection(infoEntity.getCircle_desc().length());//将光标追踪到内容的最后
 

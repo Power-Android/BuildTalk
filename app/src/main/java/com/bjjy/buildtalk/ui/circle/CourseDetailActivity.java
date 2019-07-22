@@ -138,7 +138,7 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
     private boolean isExpand = false;
     private IWXAPI wxapi;
     private CircleInfoEntity mCircleInfoEntity;
-    private String mPosition;
+    private int mPosition;
     private String mVideo_url;
     private String mArticle_title;
     private String mContent;
@@ -181,7 +181,7 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
         mVideo_url = getIntent().getStringExtra("video_url");
         mArticle_title = getIntent().getStringExtra("article_title");
         mContent = getIntent().getStringExtra("content");
-        mPosition = getIntent().getStringExtra("position");
+        mPosition = getIntent().getIntExtra("position", 0);
         mCircle_id = getIntent().getStringExtra("circle_id");
         KeyboardUtils.registerSoftInputChangedListener(this, height -> {
             if (height == 0 && mMInputDialog != null) {
@@ -286,10 +286,12 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
         mDir_page_count = courseListEntity.getPage_count();
         int countUpdateCourse = courseListEntity.getCountUpdateCourse();
         int countCourse = courseListEntity.getCountCourse();
-        courseListEntity.getCourselist().get(Integer.parseInt(mPosition)).setSelected(true);
         mList = courseListEntity.getCourselist();
         mUpdateTv.setText("更新至" + countUpdateCourse + "讲/全" + countCourse + "讲");
         mDirectoryAdapter.addData(courseListEntity.getCourselist());
+        if (mDirectoryAdapter.getData().size() >= mPosition + 1){
+            mDirectoryAdapter.getData().get(mPosition).setSelected(true);
+        }
     }
 
     @Override
@@ -305,7 +307,7 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
         } else {
             mTopticAdapter.addData(mThemeInfoList);
         }
-        mNumTv.setText(mThemeInfoList.size() + "");
+        mNumTv.setText(themeInfoEntity.getCountTheme());
     }
 
     @Override
@@ -442,7 +444,9 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
                 showCommentDialog(data.get(i).getTheme_id(), i, data);
                 break;
             case R.id.item_share_iv:
-                ToastUtils.showShort("敬请期待");
+                String mUrl = "https://jt.chinabim.com/share/#/theme/" + data.get(i).getUser_id() + "/" + data.get(i).getTheme_id();
+                DialogUtils.showShareDialog(this, mUrl, mCircleInfoEntity.getCircleInfo().getCircle_name(),
+                        data.get(i).getHeadImage(), data.get(i).getTheme_content());
                 break;
             case R.id.more_tv:
                 Intent intent = new Intent(this, TopticDetailActivity.class);
@@ -596,7 +600,7 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
     public void onLoadMoreRequested() {
         if (coursePage < mDir_page_count) {
             coursePage++;
-            mPresenter.courseList(mCircle_id, coursePage);
+            mPresenter.courseList(mCircleInfoEntity.getCircleInfo().getData_id()+"", coursePage);
             mDirectoryAdapter.loadMoreEnd();
         } else {
             mDirectoryAdapter.loadMoreComplete();

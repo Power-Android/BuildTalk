@@ -233,7 +233,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void event(PayEvent eventBean) {
         if (TextUtils.equals(eventBean.getMsg(), Constants.PAY_SUCCESS)) {
-            recreate();
+            initEventAndData();
         }
     }
 
@@ -265,17 +265,17 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
         mAppBarLayout.addOnOffsetChangedListener(this);
         mParams = (AppBarLayout.LayoutParams) mMinRl.getLayoutParams();
         mUrl = "https://jt.chinabim.com/share/#/course/" + mCircle_id + "?suid=" + mPresenter.mDataManager.getUser().getUser_id();
-    }
-
-    @Override
-    protected void initEventAndData() {
         EventBus.getDefault().register(this);
-        mPresenter.CircleInfo(mCircle_id);
         KeyboardUtils.registerSoftInputChangedListener(this, height -> {
             if (height == 0 && mMInputDialog != null) {
                 mMInputDialog.dismiss();
             }
         });
+    }
+
+    @Override
+    protected void initEventAndData() {
+        mPresenter.CircleInfo(mCircle_id);
     }
 
     @Override
@@ -299,7 +299,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
                 intent.putExtra("video_url", mList.get(i).getVideoInfo().getVideo_url());
                 intent.putExtra("article_title", mList.get(i).getArticle_title());
                 intent.putExtra("content", mList.get(i).getContent());
-                intent.putExtra("position", i + "");
+                intent.putExtra("position", i);
             }
             intent.putExtra("circle_id", mCircle_id);
             startActivity(intent);
@@ -404,11 +404,6 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
         } else {
             mTopticAdapter.addData(mThemeInfoList);
         }
-    }
-
-    @Override
-    public void handlerThemeInfoEmpty(List<ThemeInfoEntity.ThemeInfoBean> themeInfo) {
-        mTopticAdapter.setNewData(themeInfo);
     }
 
     /**
@@ -523,6 +518,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
                 mIntent = new Intent(this, CircleInfoActivity.class);
                 mIntent.putExtra("circle_id", mCircle_id);
                 mIntent.putExtra("operate_user", mCircleInfoEntity.getCircleInfo().getUser_id() + "");
+                mIntent.putExtra("jieshao", mCircleInfoEntity.getCircleInfo().getCircle_desc());
                 startActivity(mIntent);
                 break;
             case R.id.ml_rl://预览 目录
@@ -787,7 +783,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
                 .setGravity(Gravity.BOTTOM)
                 .setViewId(R.layout.dialog_input_layout)
                 .setWidthHeightdp(ViewGroup.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.dp_129))
-                .isOnTouchCanceled(false)
+                .isOnTouchCanceled(true)
                 .builder();
         EditText mInputEt = mMInputDialog.getView(R.id.comment_et);
         TextView publishTv = mMInputDialog.getView(R.id.publish_tv);
@@ -797,7 +793,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
         }, 200));
         mMInputDialog.setOnDismissListener(dialog -> {
             mInputEt.getText().clear();
-            KeyboardUtils.hideSoftInput(mInputEt);
+            KeyboardUtils.toggleSoftInput();
         });
         mMInputDialog.show();
         publishTv.setOnClickListener(v -> {
@@ -853,7 +849,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     public void onLoadMoreRequested() {
         if (coursePage < mCourse_page_count) {
             coursePage++;
-            mPresenter.courseList(mCircle_id, coursePage);
+            mPresenter.courseList(mCircleInfoEntity.getCircleInfo().getData_id()+"", coursePage);
             mDirectoryAdapter.loadMoreEnd();
         } else {
             mDirectoryAdapter.loadMoreComplete();

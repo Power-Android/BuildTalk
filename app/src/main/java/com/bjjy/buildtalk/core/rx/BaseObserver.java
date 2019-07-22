@@ -27,6 +27,7 @@ public abstract class BaseObserver<T> extends ResourceObserver<BaseResponse<T>> 
     private IView mView;
     private String mErrorMsg;
     private boolean isShowStatusView = false;
+    private boolean isShowLoading = false;
 
     protected BaseObserver(IView view) {
         this.mView = view;
@@ -48,6 +49,13 @@ public abstract class BaseObserver<T> extends ResourceObserver<BaseResponse<T>> 
         this.isShowStatusView = isShowStatusView;
     }
 
+    protected BaseObserver(IView view, String errorMsg, boolean isShowStatusView, boolean isShowLoading) {
+        this.mView = view;
+        this.mErrorMsg = errorMsg;
+        this.isShowStatusView = isShowStatusView;
+        this.isShowLoading = isShowLoading;
+    }
+
     public abstract void onSuccess(T t);
 
     @CallSuper
@@ -58,7 +66,7 @@ public abstract class BaseObserver<T> extends ResourceObserver<BaseResponse<T>> 
     @Override
     protected void onStart() {
         Log.d(TAG, "onStart");
-        if (isShowStatusView) {
+        if (isShowStatusView && isShowLoading) {
             mView.showLoading();
         }
     }

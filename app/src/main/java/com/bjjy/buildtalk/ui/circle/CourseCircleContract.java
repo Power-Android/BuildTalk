@@ -40,8 +40,6 @@ public class CourseCircleContract {
 
         void handlerCommentSuccess(int i, List<ThemeInfoEntity.ThemeInfoBean> data, List<CommentContentBean> commentInfo);
 
-        void handlerThemeInfoEmpty(List<ThemeInfoEntity.ThemeInfoBean> themeInfo);
-
     }
 
     interface Presenyer extends IPresenter<View>{

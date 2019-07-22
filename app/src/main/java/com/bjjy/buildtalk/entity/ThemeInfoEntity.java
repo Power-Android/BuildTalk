@@ -19,7 +19,16 @@ public class ThemeInfoEntity implements Serializable {
 
     private String page;
     private int page_count;
+    private String countTheme;
     private List<ThemeInfoBean> themeInfo;
+
+    public String getCountTheme() {
+        return countTheme;
+    }
+
+    public void setCountTheme(String countTheme) {
+        this.countTheme = countTheme;
+    }
 
     public String getPage() {
         return page;

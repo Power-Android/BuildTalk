@@ -14,6 +14,7 @@ import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.core.event.RefreshEvent;
+import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.ToastUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -183,6 +184,9 @@ public class EditBindPhoneActivity extends BaseActivity<EditBindPhonePresenter> 
     public void handlerBindPhone() {
         EventBus.getDefault().post(new RefreshEvent(Constants.INFO_REFRESH));
         ToastUtils.showCollect("绑定成功", getResources().getDrawable(R.drawable.collect_success_icon));
+        if (LoginHelper.callBack != null) {
+            LoginHelper.callBack.onLogin();
+        }
         finish();
     }
 

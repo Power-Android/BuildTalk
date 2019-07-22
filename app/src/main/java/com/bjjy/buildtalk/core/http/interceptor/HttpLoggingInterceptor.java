@@ -2,6 +2,8 @@ package com.bjjy.buildtalk.core.http.interceptor;
 
 import com.bjjy.buildtalk.utils.LogUtils;
 
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -152,7 +154,7 @@ public class HttpLoggingInterceptor implements Interceptor {
                         byte[] bytes = toByteArray(responseBody.byteStream());
                         MediaType contentType = responseBody.contentType();
                         String body = new String(bytes, getCharset(contentType));
-                        log("\tbody:" + body);
+                        log("\tbody:" + new JSONObject(body.toString()).toString());
                         responseBody = ResponseBody.create(responseBody.contentType(), bytes);
                         return response.newBuilder().body(responseBody).build();
                     } else {

@@ -1,5 +1,6 @@
 package com.bjjy.buildtalk.ui.circle;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
@@ -183,17 +184,17 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
         mMinRl.setMinimumHeight(StatusBarUtils.getStatusBarHeight() + (int) getResources().getDimension(R.dimen.dp_44));
         mAppBarLayout.addOnOffsetChangedListener(this);
         mUrl = "https://jt.chinabim.com/share/#/topic/" + mCircle_id + "?suid=" + mPresenter.mDataManager.getUser().getUser_id();
-    }
-
-    @Override
-    protected void initEventAndData() {
         EventBus.getDefault().register(this);
-        mPresenter.CircleInfo(mCircle_id);
         KeyboardUtils.registerSoftInputChangedListener(this, height -> {
             if (height == 0 && mMInputDialog != null) {
                 mMInputDialog.dismiss();
             }
         });
+    }
+
+    @Override
+    protected void initEventAndData() {
+        mPresenter.CircleInfo(mCircle_id);
     }
 
     @Override
@@ -392,6 +393,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
                 mIntent = new Intent(this, CircleInfoActivity.class);
                 mIntent.putExtra("circle_id", mCircle_id);
                 mIntent.putExtra("operate_user", mCircleInfoEntity.getCircleInfo().getUser_id() + "");
+                mIntent.putExtra("jieshao", mCircleInfoEntity.getCircleInfo().getCircle_desc());
                 startActivity(mIntent);
                 break;
             case R.id.screen_rl:
@@ -411,7 +413,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
 
     @Override
     public void handlerJoinSuccess(IEntity iEntity) {
-        recreate();
+        initEventAndData();
     }
 
     private void showThemeTypeDialog() {
@@ -582,7 +584,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
                 .setGravity(Gravity.BOTTOM)
                 .setViewId(R.layout.dialog_input_layout)
                 .setWidthHeightdp(ViewGroup.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.dp_129))
-                .isOnTouchCanceled(false)
+                .isOnTouchCanceled(true)
                 .builder();
         EditText mInputEt = mMInputDialog.getView(R.id.comment_et);
         TextView publishTv = mMInputDialog.getView(R.id.publish_tv);
@@ -592,7 +594,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
         }, 200));
         mMInputDialog.setOnDismissListener(dialog -> {
             mInputEt.getText().clear();
-            KeyboardUtils.hideSoftInput(mInputEt);
+            KeyboardUtils.toggleSoftInput();
         });
         mMInputDialog.show();
         publishTv.setOnClickListener(v -> {

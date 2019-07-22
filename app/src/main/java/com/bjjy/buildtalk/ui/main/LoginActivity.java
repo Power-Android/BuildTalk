@@ -10,6 +10,7 @@ import com.bjjy.buildtalk.app.User;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.ui.mine.EditBindPhoneActivity;
 import com.bjjy.buildtalk.utils.LogUtils;
+import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.umeng.socialize.UMAuthListener;
@@ -69,6 +70,9 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
 
     @Override
     public void handlerSuccess(User user) {
+        if (LoginHelper.callBack != null) {
+            LoginHelper.callBack.onLogin();
+        }
         finish();
     }
 

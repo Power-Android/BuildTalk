@@ -4,20 +4,19 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.base.view.IView;
 import com.bjjy.buildtalk.utils.AnimatorUtils;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
-import com.bjjy.buildtalk.utils.SizeUtils;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
+import com.bjjy.buildtalk.weight.BaseDialog;
 
 import javax.inject.Inject;
 
@@ -51,6 +50,7 @@ public abstract class BaseActivity<T extends IPresenter> extends AbstractActivit
     private View mNoNetView;
     private int mCurrentState = NORMAL_STATE;
     private boolean isLoading = true;//是否使用状态布局
+    private BaseDialog mLoadingDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,12 +75,12 @@ public abstract class BaseActivity<T extends IPresenter> extends AbstractActivit
          */
         ViewGroup parent = (ViewGroup) mNormalView.getParent();
         View.inflate(this, R.layout.error_view, parent);
-        View.inflate(this, R.layout.loaging_view, parent);
         View.inflate(this, R.layout.no_net_view, parent);
         mEmptyView = findViewById(R.id.emptyView);
         mErrorView = parent.findViewById(R.id.errorView);
-        mLoadingView = parent.findViewById(R.id.loadingView);
         mNoNetView = parent.findViewById(R.id.noNetView);
+
+        initLoadingDialog();
 
         mErrorView.setOnClickListener(v -> recreate());
         View mErrorViewincludeToolbar = mErrorView.findViewById(R.id.include_toolbar);
@@ -103,29 +103,7 @@ public abstract class BaseActivity<T extends IPresenter> extends AbstractActivit
         //初始化View状态
         mNormalView.setVisibility(View.VISIBLE);
         mErrorView.setVisibility(View.INVISIBLE);
-        mLoadingView.setVisibility(View.INVISIBLE);
         mNoNetView.setVisibility(View.INVISIBLE);
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (mPresenter != null) {
-            mPresenter.detachView();
-            mPresenter = null;
-        }
-        hideLoading();
-        super.onDestroy();
-    }
-
-    @Override
-    public AndroidInjector<Fragment> supportFragmentInjector() {
-        return mFragmentDispatchingAndroidInjector;
-    }
-
-    @Override
-    public void onBackPressed() {
-        KeyboardUtils.hideSoftInput(this.getWindow().getDecorView().getRootView());
-        super.onBackPressed();
     }
 
     @Override
@@ -136,17 +114,16 @@ public abstract class BaseActivity<T extends IPresenter> extends AbstractActivit
     @Override
     public void showLoading() {
         if (!isLoading) return;
-        if(mCurrentState == LOADING_STATE) return;
-        mCurrentState = LOADING_STATE;
-        showCurrentViewByState();
+        if (mLoadingDialog != null){
+            mLoadingDialog.show();
+        }
     }
 
     @Override
     public void hideLoading() {
         if (!isLoading) return;
-        if(mCurrentState == LOADING_STATE){
-            mNormalView.setFocusable(true);
-            hideCurrentViewByState();
+        if (mLoadingDialog != null){
+            mLoadingDialog.dismiss();
         }
     }
 
@@ -183,6 +160,40 @@ public abstract class BaseActivity<T extends IPresenter> extends AbstractActivit
         hideCurrentViewByState();
         mCurrentState = NORMAL_STATE;
         showCurrentViewByState();
+    }
+
+    private void initLoadingDialog() {
+        if (mLoadingDialog == null){
+            mLoadingDialog = new BaseDialog.Builder(this)
+                    .setViewId(R.layout.loading_view)
+                    .setGravity(Gravity.CENTER)
+                    .setStyle(R.style.dialog_style1)
+                    .setAnimation(R.style.nomal_aniamtion)
+                    .setWidthHeightdp(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                    .isOnTouchCanceled(false)
+                    .builder();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mPresenter != null) {
+            mPresenter.detachView();
+            mPresenter = null;
+        }
+        hideLoading();
+        super.onDestroy();
+    }
+
+    @Override
+    public AndroidInjector<Fragment> supportFragmentInjector() {
+        return mFragmentDispatchingAndroidInjector;
+    }
+
+    @Override
+    public void onBackPressed() {
+        KeyboardUtils.hideSoftInput(this.getWindow().getDecorView().getRootView());
+        super.onBackPressed();
     }
 
     /**
