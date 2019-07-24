@@ -75,6 +75,7 @@ public class Constants {
     public static final String PAY_SUCCESS = "pay_success";
     public static final String QUIT_CIRCLE = "quit_circle";
     public static final String FANS_REFRESH = "fans_refresh";
+    public static final String NONET_REFRESH = "nonet_refresh";
     public static final String EVENT_BUS_TAG = "event_bus_tag";
     public static final String PROJECT_PAGER = "project_pager";
     public static final String KNOWLEDGE_PAGER = "knowledge_pager";

@@ -1,6 +1,7 @@
 package com.bjjy.buildtalk.ui.circle;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
@@ -10,7 +11,9 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
@@ -20,6 +23,7 @@ import com.bjjy.buildtalk.base.fragment.BaseFragment;
 import com.bjjy.buildtalk.core.event.RefreshEvent;
 import com.bjjy.buildtalk.entity.CircleEntity;
 import com.bjjy.buildtalk.utils.LoginHelper;
+import com.bjjy.buildtalk.utils.NetworkUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -34,6 +38,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * @author power
@@ -51,6 +57,11 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
     RecyclerView mCircleRecyclerView;
     @BindView(R.id.refresh_Layout)
     SmartRefreshLayout mRefreshLayout;
+    @BindView(R.id.tv_reload)
+    TextView mTvReload;
+    @BindView(R.id.noNetView)
+    RelativeLayout mNoNetView;
+    Unbinder unbinder;
 
     private List<CircleEntity.CircleInfoBean> circle_list = new ArrayList<>();
     private CircleAdapter mCircleAdapter;
@@ -86,6 +97,7 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
 
     @Override
     protected void initView() {
+        EventBus.getDefault().register(this);
         mToolbarTitle.setText(R.string.circle);
         mRefreshLayout.setOnRefreshLoadMoreListener(this);
         mCircleRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 2));
@@ -99,12 +111,19 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
         mCircleAdapter.addFooterView(mFooterView);
         mFooterView.setOnClickListener(v -> LoginHelper.login(mContext, mPresenter.mDataManager, () -> createCircle()));
         mCircleAdapter.setOnItemClickListener(this);
+        mTvReload.setOnClickListener(v -> onRefresh(mRefreshLayout));
     }
 
     @Override
     protected void initEventAndData() {
-        EventBus.getDefault().register(this);
-        mPresenter.circleList(page, false);
+        if (!NetworkUtils.isConnected()){
+            mRefreshLayout.setVisibility(View.GONE);
+            mNoNetView.setVisibility(View.VISIBLE);
+        }else {
+            mNoNetView.setVisibility(View.GONE);
+            mRefreshLayout.setVisibility(View.VISIBLE);
+            mPresenter.circleList(page, false);
+        }
     }
 
     @Override
@@ -121,8 +140,8 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         page = 1;
-        mPresenter.circleList(page, true);
-        refreshLayout.finishRefresh();
+        initEventAndData();
+        refreshLayout.finishRefresh(1500);
     }
 
     @Override
@@ -192,5 +211,11 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

@@ -16,6 +16,7 @@
         android:background="@drawable/selector_create_circle"
         android:gravity="center"
         android:includeFontPadding="false"
+        android:maxLength="10"
         android:paddingBottom="@dimen/dp_10"
         android:paddingLeft="@dimen/dp_30"
         android:paddingRight="@dimen/dp_30"

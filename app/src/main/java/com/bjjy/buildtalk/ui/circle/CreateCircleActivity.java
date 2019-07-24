@@ -65,13 +65,13 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
     EditText mAddEt;
     private MultipartBody.Part mFile;
     private List<CircleTagEntity> mTagList = new ArrayList<>();
-    private TagAdapter mTagAdapter;
     private List<CircleTagEntity> mSelList = new ArrayList<>();
+    private TagAdapter mTagAdapter;
     private String mType;
     private String mCircle_id;
     private List<String> mCircle_tags = new ArrayList<>();
     private String mPic_url;
-    private boolean isFiel;
+    private boolean isMax = false;
 
     @Override
     protected int getLayoutId() {
@@ -135,69 +135,25 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
                 }
                 delete.setOnClickListener(v -> {
                     mTagList.remove(position);
-                    mSelList.clear();
-                    for (int i = 0; i < mTagList.size(); i++) {
-                        if (mTagList.get(i).isSelected()){
-                            mSelList.add(mTagList.get(i));
-                        }
-                    }
-                    if (mSelList.size() < 5){
-                        mAddEt.setVisibility(View.VISIBLE);
-                    }
+                    vervify();
                     notifyDataChanged();
                 });
                 return view;
-            }
-
-            @Override
-            public void onSelected(int position, View view) {
-                mSelList.clear();
-                for (int i = 0; i < mTagList.size(); i++) {
-                    if (mTagList.get(i).isSelected()){
-                        mSelList.add(mTagList.get(i));
-                    }
-                }
-                if (mSelList.size() >= 5){
-                    return;
-                }
-                TextView tv = view.findViewById(R.id.tag_tv);
-                ImageView delete = view.findViewById(R.id.tag_delete);
-                tv.setBackground(getResources().getDrawable(R.drawable.shape_create_circle_sel));
-                tv.setTextColor(getResources().getColor(R.color.white));
-//                if (mTagList.get(position).isCustom()){
-//                    delete.setVisibility(View.VISIBLE);
-//                }
-            }
-
-            @Override
-            public void unSelected(int position, View view) {
-                TextView tv = view.findViewById(R.id.tag_tv);
-                ImageView delete = view.findViewById(R.id.tag_delete);
-                tv.setBackground(getResources().getDrawable(R.drawable.shape_create_circle_def));
-                tv.setTextColor(getResources().getColor(R.color.text_mid));
-//                delete.setVisibility(View.GONE);
             }
         };
         mFlowLayout.setAdapter(mTagAdapter);
 
         mFlowLayout.setOnTagClickListener((view, position, parent) -> {
-            mSelList.clear();
-            for (int i = 0; i < mTagList.size(); i++) {
-                if (mTagList.get(i).isSelected()){
-                    mSelList.add(mTagList.get(i));
-                }
-            }
-            if (mSelList.size() >= 5){
-                return true;
-            }
-            TextView tv = view.findViewById(R.id.tag_tv);
-            if (tv.isSelected()) {
+            if (mTagList.get(position).isSelected()) {
                 mTagList.get(position).setSelected(false);
-                tv.setSelected(false);
             } else {
+                if (isMax){
+                    ToastUtils.showShort("最多选中5个标签");
+                    return true;
+                }
                 mTagList.get(position).setSelected(true);
-                tv.setSelected(true);
             }
+            mTagAdapter.notifyDataChanged();
             vervify();
             return true;
         });
@@ -212,26 +168,32 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
                 mTagAdapter.notifyDataChanged();
                 mAddEt.getText().clear();
                 KeyboardUtils.hideSoftInput(CreateCircleActivity.this);
-                if (mTagList.size() >= 5){
-                    mAddEt.setVisibility(View.GONE);
-                }
-                vervify();
             }
+            vervify();
             return true;
         });
     }
 
     private void vervify(){
         mSelList.clear();
+        int a = 0;
         for (int i = 0; i < mTagList.size(); i++) {
             if (mTagList.get(i).isSelected()){
                 mSelList.add(mTagList.get(i));
             }
+            if (mTagList.get(i).isCustom()){
+                a++;
+            }
         }
         if (mSelList.size() >= 5){
+            isMax = true;
             mAddEt.setVisibility(View.GONE);
         }else {
+            isMax = false;
             mAddEt.setVisibility(View.VISIBLE);
+        }
+        if (a >= 5){
+            mAddEt.setVisibility(View.GONE);
         }
     }
 
@@ -241,25 +203,29 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
             ToastUtils.showShort("请填写圈子名称");
             return;
         }
-        if (mSelList.size() == 0 ){
+        if (mTagList.size() == 0 ){
             ToastUtils.showShort("请选择行业标签");
             return;
         }
         if (mFile == null){
             if (!TextUtils.isEmpty(mPic_url)){
-                mPresenter.updateCircleInfo(mCircle_id, mPic_url, mCircleTitleEt.getText().toString(), StringUtils.listToString(mSelList,','),mEditText.getText().toString().trim());
+                mPresenter.updateCircleInfo(mCircle_id, mPic_url, mCircleTitleEt.getText().toString(),
+                        StringUtils.listToString(mSelList,','),mEditText.getText().toString().trim());
             }else {
                 ToastUtils.showShort("请添加圈子封面");
             }
             return;
         }
         if (TextUtils.isEmpty(mType)){
-            mPresenter.upload(false, mCircle_id, mFile,mCircleTitleEt.getText().toString(), StringUtils.listToString(mSelList,','),mEditText.getText().toString().trim());
+            mPresenter.upload(false, mCircle_id, mFile,mCircleTitleEt.getText().toString(),
+                    StringUtils.listToString(mSelList,','),mEditText.getText().toString().trim());
         }else {
             if (mFile != null){
-                mPresenter.upload(true, mCircle_id, mFile,mCircleTitleEt.getText().toString(), StringUtils.listToString(mSelList,','),mEditText.getText().toString().trim());
+                mPresenter.upload(true, mCircle_id, mFile,mCircleTitleEt.getText().toString(),
+                        StringUtils.listToString(mSelList,','),mEditText.getText().toString().trim());
             }else {
-                mPresenter.updateCircleInfo(mCircle_id, mPic_url, mCircleTitleEt.getText().toString(), StringUtils.listToString(mSelList,','),mEditText.getText().toString().trim());
+                mPresenter.updateCircleInfo(mCircle_id, mPic_url, mCircleTitleEt.getText().toString(),
+                        StringUtils.listToString(mSelList,','),mEditText.getText().toString().trim());
             }
         }
     }
@@ -334,7 +300,7 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
         mPic_url = infoEntity.getCircle_image().getPic_url();
         Glide.with(this).load(infoEntity.getCircle_image().getPic_url()).into(mCircleIv);
         mCircleTitleEt.setText(infoEntity.getCircle_name());
-        mCircleTitleEt.setSelection(infoEntity.getCircle_desc().length());//将光标追踪到内容的最后
+        mCircleTitleEt.setSelection(infoEntity.getCircle_name().length());//将光标追踪到内容的最后
         mEditText.setText(infoEntity.getCircle_desc());
         mEditText.setSelection(infoEntity.getCircle_desc().length());//将光标追踪到内容的最后
 

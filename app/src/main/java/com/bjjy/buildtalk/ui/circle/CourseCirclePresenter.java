@@ -116,9 +116,7 @@ public class CourseCirclePresenter extends BasePresenter<CourseCircleContract.Vi
                 .subscribeWith(new BaseObserver<ThemeInfoEntity>(mView, false) {
                     @Override
                     public void onSuccess(ThemeInfoEntity themeInfoEntity) {
-                        if (themeInfoEntity.getThemeInfo().size() > 0){
-                            mView.handlerThemeInfo(themeInfoEntity, isRefresh);
-                        }
+                        mView.handlerThemeInfo(themeInfoEntity, isRefresh);
                     }
                 }));
     }

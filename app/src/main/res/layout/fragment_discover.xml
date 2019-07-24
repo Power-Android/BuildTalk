@@ -13,6 +13,7 @@
         android:id="@+id/refresh_Layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="visible"
         android:overScrollMode="never"
         app:srlEnableLoadMore="false"
         app:srlEnableOverScrollDrag="true">
@@ -25,5 +26,53 @@
             android:overScrollMode="never"/>
 
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+    <RelativeLayout
+        android:id="@+id/noNetView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="@color/white">
+        <ImageView
+            android:id="@+id/error_view_img"
+            android:layout_width="@dimen/dp_325"
+            android:layout_height="@dimen/dp_247"
+            android:src="@drawable/empty_404_icon"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dp_50"/>
+        <TextView
+            android:id="@+id/error_view_no_net"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/error_view_img"
+            android:text="无网络哦～"
+            android:layout_marginTop="@dimen/dp_10"
+            android:textSize="@dimen/sp_30"
+            android:textColor="@color/text_mid"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/error_view_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="请检查您的网络后重新加载..."
+            android:textSize="@dimen/sp_12"
+            android:textColor="@color/text_light"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/error_view_no_net"
+            android:layout_marginTop="@dimen/dp_10"/>
+        <TextView
+            android:id="@+id/tv_reload"
+            android:layout_width="@dimen/dp_245"
+            android:layout_height="@dimen/dp_44"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dp_20"
+            android:background="@drawable/shape_blue_light_25button"
+            android:text="重新加载"
+            android:gravity="center"
+            android:textColor="@color/blue_mid"
+            android:textSize="@dimen/sp_15"
+            android:layout_below="@+id/error_view_tv"/>
+    </RelativeLayout>
 
 </LinearLayout>

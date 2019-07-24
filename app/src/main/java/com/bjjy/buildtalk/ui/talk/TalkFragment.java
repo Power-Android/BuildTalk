@@ -1,6 +1,7 @@
 package com.bjjy.buildtalk.ui.talk;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,7 +10,9 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
@@ -22,6 +25,7 @@ import com.bjjy.buildtalk.entity.IndustryMasterEntity;
 import com.bjjy.buildtalk.entity.TalkEntity;
 import com.bjjy.buildtalk.utils.AnimatorUtils;
 import com.bjjy.buildtalk.utils.LoginHelper;
+import com.bjjy.buildtalk.utils.NetworkUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -31,6 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * @author power
@@ -48,6 +54,11 @@ public class TalkFragment extends BaseFragment<TalkPresnter> implements TalkCont
     RecyclerView mTalkRecyclerView;
     @BindView(R.id.refresh_Layout)
     SmartRefreshLayout mRefreshLayout;
+    @BindView(R.id.tv_reload)
+    TextView mTvReload;
+    @BindView(R.id.noNetView)
+    RelativeLayout mNoNetView;
+    Unbinder unbinder;
 
     private List<TalkEntity> mTalkEntityList = new ArrayList<>();
     private TalkAdapter mTalkAdapter;
@@ -69,23 +80,35 @@ public class TalkFragment extends BaseFragment<TalkPresnter> implements TalkCont
         mTalkRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mTalkAdapter = new TalkAdapter(mTalkEntityList);
         mTalkRecyclerView.setAdapter(mTalkAdapter);
-        View headerView = LayoutInflater.from(mContext).inflate(R.layout.talk_header_view,null);
+        View headerView = LayoutInflater.from(mContext).inflate(R.layout.talk_header_view, null);
         mTalkAdapter.addHeaderView(headerView);
         headerView.setOnClickListener(v -> startActivity(new Intent(mContext, TalkSearchActivity.class)));
         mTalkAdapter.setOnItemChildClickListener(this);
         mTalkAdapter.setOnFocusClickListener((baseQuickAdapter, view, i) -> {
             LoginHelper.login(mContext, mPresenter.mDataManager, (LoginHelper.CallBack) () -> {
                 List<CircleMasterEntity> mList = baseQuickAdapter.getData();
-                mPresenter.attention(mList.get(i).getUser_id(),mList,i);
+                mPresenter.attention(mList.get(i).getUser_id(), mList, i);
             });
         });
+        mTvReload.setOnClickListener(v -> onRefresh(mRefreshLayout));
     }
 
     @Override
     protected void initEventAndData() {
         mPresenter.talkType(mTalkEntityList);
-        mPresenter.talkMaster();
-        mPresenter.talkCircleMaster();
+        netWork();
+    }
+
+    private void netWork() {
+        if (!NetworkUtils.isConnected()){
+            mRefreshLayout.setVisibility(View.GONE);
+            mNoNetView.setVisibility(View.VISIBLE);
+        }else {
+            mNoNetView.setVisibility(View.GONE);
+            mRefreshLayout.setVisibility(View.VISIBLE);
+            mPresenter.talkMaster();
+            mPresenter.talkCircleMaster();
+        }
     }
 
     @Override
@@ -106,14 +129,13 @@ public class TalkFragment extends BaseFragment<TalkPresnter> implements TalkCont
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         PAGE = 1;
-        mPresenter.talkMaster();
-        mPresenter.talkCircleMaster();
-        refreshLayout.finishRefresh(2000);
+        netWork();
+        refreshLayout.finishRefresh(1500);
     }
 
     @Override
     public void onItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int position) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.master_all_tv://行业大咖-查看全部
                 startActivity(new Intent(mContext, MasterListActivity.class));
                 break;
@@ -135,11 +157,25 @@ public class TalkFragment extends BaseFragment<TalkPresnter> implements TalkCont
 
     @Override
     public void handlerAttrntion(BaseResponse<IEntity> baseResponse, List<CircleMasterEntity> mList, int i) {
-        if (TextUtils.equals("关注成功", baseResponse.getErrorMsg())){
+        if (TextUtils.equals("关注成功", baseResponse.getErrorMsg())) {
             mList.get(i).setIs_attention(1);
-        }else {
+        } else {
             mList.get(i).setIs_attention(0);
         }
         mTalkAdapter.setFocus(i);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // TODO: inflate a fragment view
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        unbinder = ButterKnife.bind(this, rootView);
+        return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

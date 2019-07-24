@@ -116,6 +116,7 @@ public class PublishActivity extends BaseActivity<PublishPresenter> implements P
         mGridView.setAdapter(mMyGridAdapter);
         mMyGridAdapter.setDeleteCallBack(position -> {
             list.remove(position);
+            mParts.remove(position);
             mMyGridAdapter.notifyDataSetChanged();
         });
     }

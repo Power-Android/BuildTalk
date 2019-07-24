@@ -1,14 +1,17 @@
 package com.bjjy.buildtalk.ui.discover;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
@@ -19,6 +22,7 @@ import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.DiscoverEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
 import com.bjjy.buildtalk.utils.AnimatorUtils;
+import com.bjjy.buildtalk.utils.NetworkUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -28,6 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * @author power
@@ -45,6 +51,11 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
     RecyclerView mDiscoverRecyclerView;
     @BindView(R.id.refresh_Layout)
     SmartRefreshLayout mRefreshLayout;
+    @BindView(R.id.tv_reload)
+    TextView mTvReload;
+    @BindView(R.id.noNetView)
+    RelativeLayout mNoNetView;
+    Unbinder unbinder;
 
     private List<DiscoverEntity> discoverEntityList = new ArrayList<>();
     private DiscoverAdapter mDiscoverAdapter;
@@ -68,16 +79,27 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
         mDiscoverAdapter = new DiscoverAdapter(discoverEntityList);
         mDiscoverRecyclerView.setAdapter(mDiscoverAdapter);
         mDiscoverAdapter.setOnItemChildClickListener(this);
+        mTvReload.setOnClickListener(v -> onRefresh(mRefreshLayout));
     }
 
     @Override
     protected void initEventAndData() {
         mPresenter.discoverType(discoverEntityList);
-        mPresenter.discoverBanner();
-        mPresenter.discoverEveryTalk();
-        mPresenter.discoverToptic();
-        mPresenter.discoverCourse();
+        netWork();
+    }
 
+    private void netWork() {
+        if (!NetworkUtils.isConnected()){
+            mRefreshLayout.setVisibility(View.GONE);
+            mNoNetView.setVisibility(View.VISIBLE);
+        }else {
+            mNoNetView.setVisibility(View.GONE);
+            mRefreshLayout.setVisibility(View.VISIBLE);
+            mPresenter.discoverBanner();
+            mPresenter.discoverEveryTalk();
+            mPresenter.discoverToptic();
+            mPresenter.discoverCourse();
+        }
     }
 
     @Override
@@ -113,11 +135,8 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         HOT_TOPTIC_PAGE = 1;
         COURSE_PAGE = 1;
-        mPresenter.discoverBanner();
-        mPresenter.discoverEveryTalk();
-        mPresenter.discoverToptic();
-        mPresenter.discoverCourse();
-        refreshLayout.finishRefresh(2000);
+        netWork();
+        refreshLayout.finishRefresh(1500);
     }
 
     @Override
@@ -155,4 +174,17 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
         }
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // TODO: inflate a fragment view
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        unbinder = ButterKnife.bind(this, rootView);
+        return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
 }

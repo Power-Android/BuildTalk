@@ -601,9 +601,9 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
         if (coursePage < mDir_page_count) {
             coursePage++;
             mPresenter.courseList(mCircleInfoEntity.getCircleInfo().getData_id()+"", coursePage);
-            mDirectoryAdapter.loadMoreEnd();
-        } else {
             mDirectoryAdapter.loadMoreComplete();
+        } else {
+            mDirectoryAdapter.loadMoreEnd();
         }
     }
 

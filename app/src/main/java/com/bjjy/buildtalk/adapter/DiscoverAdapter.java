@@ -64,7 +64,7 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
             case BODY_BANNER:
                 Banner banner = helper.getView(R.id.banner);
                 banner.setOnBannerListener(position -> {
-                    ToastUtils.showShort("轮播图" + position);
+//                    ToastUtils.showShort("轮播图" + position);
                 });
                 banner.setImages(mBannerImageList).setImageLoader(new GlideUtils()).start();
                 break;
@@ -116,7 +116,7 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
                 ProjectAdapter projectAdapter = new ProjectAdapter(R.layout.adapter_good_project, project_list);
                 project_RecyclerView.setAdapter(projectAdapter);
                 projectAdapter.setOnItemClickListener((adapter, view, position) -> {
-                    ToastUtils.showShort("精彩专题：" + position);
+//                    ToastUtils.showShort("精彩专题：" + position);
                 });
                 break;
         }

@@ -61,7 +61,7 @@ public class DiscoverPresenter extends BasePresenter<DiscoverContract.View> impl
         addSubscribe(mDataManager.discoverBanner(headers, paramas)
                 .compose(RxUtils.SchedulerTransformer())
                 .filter(bannerEntity -> mView != null)
-                .subscribeWith(new BaseObserver<List<BannerEntity>>(mView){
+                .subscribeWith(new BaseObserver<List<BannerEntity>>(mView, false){
                     @Override
                     public void onSuccess(List<BannerEntity> bannerEntities) {
                         mView.handlerBanner(bannerEntities);
@@ -83,7 +83,7 @@ public class DiscoverPresenter extends BasePresenter<DiscoverContract.View> impl
         addSubscribe(mDataManager.everyDayTalk(headers,paramas)
             .compose(RxUtils.SchedulerTransformer())
             .filter(EveryTalkEntity -> mView != null)
-            .subscribeWith(new BaseObserver<List<EveryTalkEntity>>(mView){
+            .subscribeWith(new BaseObserver<List<EveryTalkEntity>>(mView, false){
                 @Override
                 public void onSuccess(List<EveryTalkEntity> everyTalkEntities) {
                     mView.handlerEveryTalk(everyTalkEntities);

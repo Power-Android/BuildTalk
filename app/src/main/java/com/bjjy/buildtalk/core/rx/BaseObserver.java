@@ -49,9 +49,8 @@ public abstract class BaseObserver<T> extends ResourceObserver<BaseResponse<T>> 
         this.isShowStatusView = isShowStatusView;
     }
 
-    protected BaseObserver(IView view, String errorMsg, boolean isShowStatusView, boolean isShowLoading) {
+    protected BaseObserver(IView view, boolean isShowStatusView, boolean isShowLoading) {
         this.mView = view;
-        this.mErrorMsg = errorMsg;
         this.isShowStatusView = isShowStatusView;
         this.isShowLoading = isShowLoading;
     }

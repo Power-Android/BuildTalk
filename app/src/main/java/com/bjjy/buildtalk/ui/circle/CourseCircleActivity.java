@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -229,6 +230,8 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     private Intent mIntent;
     private int mViewpager_position;
     private String mUrl;
+    private RecyclerView mRecyclerView;
+    private NestedScrollView mEmptyView;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void event(PayEvent eventBean) {
@@ -373,12 +376,13 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
         mTablayout.setupWithViewPager(mViewpager);
         setUpTabBadge();
 
-        RecyclerView recyclerView = views.get(0).findViewById(R.id.recycler_view);
+        mRecyclerView = views.get(0).findViewById(R.id.recycler_view);
+        mEmptyView = views.get(0).findViewById(R.id.emptyView);
         mRefreshLayout = views.get(0).findViewById(R.id.refresh_Layout);
         mRefreshLayout.setOnRefreshLoadMoreListener(this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(App.getContext()));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(App.getContext()));
         mTopticAdapter = new CircleTopticAdapter(R.layout.adapter_article_toptic, mThemeInfoList, mIsJoin, this);
-        recyclerView.setAdapter(mTopticAdapter);
+        mRecyclerView.setAdapter(mTopticAdapter);
         mTopticAdapter.setOnItemClickListener(this);
         mTopticAdapter.setOnItemChildClickListener(this);
         if (TextUtils.equals("0", mIsJoin)) {
@@ -399,11 +403,19 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
         if ("0".equals(mIsJoin) && mThemeInfoList.size() > 5) {
             mThemeInfoList = mThemeInfoList.subList(0, 5);
         }
-        if (isRefresh) {
-            mTopticAdapter.setNewData(mThemeInfoList);
-        } else {
-            mTopticAdapter.addData(mThemeInfoList);
+        if (mThemeInfoList.size() > 0){
+            mEmptyView.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+            if (isRefresh) {
+                mTopticAdapter.setNewData(mThemeInfoList);
+            } else {
+                mTopticAdapter.addData(mThemeInfoList);
+            }
+        }else {
+            mRecyclerView.setVisibility(View.GONE);
+            mEmptyView.setVisibility(View.VISIBLE);
         }
+
     }
 
     /**
@@ -850,9 +862,9 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
         if (coursePage < mCourse_page_count) {
             coursePage++;
             mPresenter.courseList(mCircleInfoEntity.getCircleInfo().getData_id()+"", coursePage);
-            mDirectoryAdapter.loadMoreEnd();
-        } else {
             mDirectoryAdapter.loadMoreComplete();
+        } else {
+            mDirectoryAdapter.loadMoreEnd();
         }
     }
 
