@@ -36,7 +36,6 @@
             android:layout_marginLeft="@dimen/common_margin"
             android:layout_marginTop="@dimen/dp_75"
             android:scaleType="centerCrop"
-            android:src="@drawable/test_course"
             app:riv_corner_radius="@dimen/dp_10" />
 
         <TextView
@@ -47,7 +46,6 @@
             android:layout_marginLeft="@dimen/dp_20"
             android:layout_toRightOf="@+id/pre_face_iv"
             android:includeFontPadding="false"
-            android:text="建筑产业工业互联网"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_18" />
 
@@ -59,7 +57,6 @@
             android:layout_marginLeft="@dimen/dp_20"
             android:layout_marginTop="@dimen/dp_10"
             android:layout_toRightOf="@+id/pre_face_iv"
-            android:text="圈主：小地瓜"
             android:maxLength="15"
             android:singleLine="true"
             android:ellipsize="end"
@@ -74,7 +71,6 @@
             android:layout_marginLeft="@dimen/dp_15"
             android:layout_marginTop="@dimen/dp_10"
             android:layout_toRightOf="@+id/pre_name_tv"
-            android:text="创建 490天"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_10" />
 
@@ -128,7 +124,6 @@
                 android:layout_marginTop="@dimen/dp_10"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:text="加快Bim技术的推广与应用，对建筑业每个项目的所有参建方用三维仿真的形式表现出来对建筑业每个项目的所有参建方用三维仿真的形式表现出来，加快所有资源的整合"
                 android:textColor="@color/text_mid"
                 android:textSize="12sp" />
         </RelativeLayout>

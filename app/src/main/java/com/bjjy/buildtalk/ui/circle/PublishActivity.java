@@ -66,7 +66,6 @@ public class PublishActivity extends BaseActivity<PublishPresenter> implements P
 
     private List<ThemeImageBean> list = new ArrayList<>();
     private MyGridAdapter mMyGridAdapter;
-    private List<MultipartBody.Part> mParts = new ArrayList<>();
     private String mCircle_id;
     private ThemeInfoEntity.ThemeInfoBean mData;
     private boolean isEdit;
@@ -116,7 +115,6 @@ public class PublishActivity extends BaseActivity<PublishPresenter> implements P
         mGridView.setAdapter(mMyGridAdapter);
         mMyGridAdapter.setDeleteCallBack(position -> {
             list.remove(position);
-            mParts.remove(position);
             mMyGridAdapter.notifyDataSetChanged();
         });
     }
@@ -137,7 +135,7 @@ public class PublishActivity extends BaseActivity<PublishPresenter> implements P
                 .sizeMultiplier(0.5f)// glide 加载图片大小 0~1之间 如设置 .glideOverride()无效
                 .setOutputCameraPath("/CustomPath")// 自定义拍照保存路径,可不填
                 .enableCrop(false)// 是否裁剪 true or false
-                .compress(true)// 是否压缩 true or false
+                .compress(false)// 是否压缩 true or false
                 .isGif(false)// 是否显示gif图片 true or false
                 .circleDimmedLayer(false)// 是否圆形裁剪 true or false
                 .showCropFrame(false)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false   true or false
@@ -157,18 +155,11 @@ public class PublishActivity extends BaseActivity<PublishPresenter> implements P
             if (requestCode == PictureConfig.CHOOSE_REQUEST) {
                 List<LocalMedia> mLocalMedia = PictureSelector.obtainMultipleResult(data);
                 for (int i = 0; i < mLocalMedia.size(); i++) {
-                    ThemeImageBean imageBean = new ThemeImageBean();
-                    if (mLocalMedia.get(i).isCompressed()){
-                        imageBean.setPic_url(mLocalMedia.get(i).getCompressPath());
-                    }else {
-                        imageBean.setPic_url(mLocalMedia.get(i).getPath());
-                    }
                     if (list.size() < 9){
-                        list.add(imageBean);
                         File file = new File(mLocalMedia.get(i).getPath());
                         RequestBody body = RequestBody.create(MediaType.parse("image/*"), file);   //说明该文件为图片类型
                         MultipartBody.Part part = MultipartBody.Part.createFormData("file[]", file.getName(), body);
-                        mParts.add(part);
+                        list.add(new ThemeImageBean(mLocalMedia.get(i).getPath(), part));
                     }
                 }
                 mMyGridAdapter.notifyDataSetChanged();
@@ -180,11 +171,11 @@ public class PublishActivity extends BaseActivity<PublishPresenter> implements P
     public void onViewClicked(View v) {
         switch (v.getId()) {
             case R.id.toolbar_right_title:
-                if (TextUtils.isEmpty(mPublishTv.getText().toString().trim()) & mParts == null) {
+                if (TextUtils.isEmpty(mPublishTv.getText().toString().trim()) & list.size() <= 0) {
                     ToastUtils.showShort("请输入内容或图片");
                     return;
                 }
-                mPresenter.publishTheme(mCircle_id, mTheme_id , mPublishTv.getText().toString().trim(), mParts, isEdit, list);
+                mPresenter.publishTheme(mCircle_id, mTheme_id , mPublishTv.getText().toString().trim(), isEdit, list);
                 showLoading();
                 break;
             case R.id.pic_rl:

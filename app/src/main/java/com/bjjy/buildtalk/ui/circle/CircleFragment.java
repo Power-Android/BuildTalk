@@ -140,7 +140,14 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         page = 1;
-        initEventAndData();
+        if (!NetworkUtils.isConnected()){
+            mRefreshLayout.setVisibility(View.GONE);
+            mNoNetView.setVisibility(View.VISIBLE);
+        }else {
+            mNoNetView.setVisibility(View.GONE);
+            mRefreshLayout.setVisibility(View.VISIBLE);
+            mPresenter.circleList(page, true);
+        }
         refreshLayout.finishRefresh(1500);
     }
 

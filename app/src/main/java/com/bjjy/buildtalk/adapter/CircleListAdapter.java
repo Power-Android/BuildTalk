@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.bjjy.buildtalk.R;
+import com.bjjy.buildtalk.app.DataManager;
 import com.bjjy.buildtalk.entity.CircleListEntity;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -19,9 +20,11 @@ import java.util.List;
  * @description:
  */
 public class CircleListAdapter extends BaseQuickAdapter<CircleListEntity.CircleInfoBean, BaseViewHolder> {
+    private DataManager mDataManager;
 
-    public CircleListAdapter(int layoutResId, @Nullable List<CircleListEntity.CircleInfoBean> data) {
+    public CircleListAdapter(int layoutResId, @Nullable List<CircleListEntity.CircleInfoBean> data, DataManager dataManager) {
         super(layoutResId, data);
+        this.mDataManager = dataManager;
     }
 
     @Override
@@ -29,6 +32,7 @@ public class CircleListAdapter extends BaseQuickAdapter<CircleListEntity.CircleI
         Glide.with(mContext).load(item.getHeadImage()).into((ImageView) helper.getView(R.id.item_face_iv));
         helper.setText(R.id.item_name_tv, item.getName())
                 .setText(R.id.item_num_tv, item.getCountAttention()+"")
+                .setGone(R.id.item_focus_ll, mDataManager.getUser().getUser_id().equals(String.valueOf(item.getUser_id())) ? false : true)
                 .addOnClickListener(R.id.item_focus_ll);
         int is_attention = item.getIs_attention();
         if (TextUtils.equals("1", is_attention+"")){

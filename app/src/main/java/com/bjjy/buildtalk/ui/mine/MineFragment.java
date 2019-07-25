@@ -126,7 +126,7 @@ public class MineFragment extends BaseFragment<MinePresenter> implements MineCon
                 LoginHelper.login(mContext, mPresenter.mDataManager, () -> startActivity(new Intent(mContext, FeedBackActivity.class)));
                 break;
             case R.id.service_rl:
-                ToastUtils.showShort("暂未开放");
+                startActivity(new Intent(mContext, ServiceActivity.class));
                 break;
             case R.id.name_tv:
                 if (!mPresenter.mDataManager.getLoginStatus())

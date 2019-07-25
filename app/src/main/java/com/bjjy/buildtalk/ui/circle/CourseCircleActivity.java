@@ -42,6 +42,8 @@ import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.entity.ThemeTypeEntity;
 import com.bjjy.buildtalk.ui.mine.FeedBackActivity;
+import com.bjjy.buildtalk.ui.talk.CircleManDetailActivity;
+import com.bjjy.buildtalk.ui.talk.MasterDetailActivity;
 import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.LogUtils;
@@ -207,6 +209,8 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     ImageView mFormalItemSdIv;
     @BindView(R.id.screen_tv)
     TextView mScreenTv;
+    @BindView(R.id.pre_tag_iv)
+    ImageView mPreTagIv;
 
     private MyBadgeViewPagerAdapter mPagerAdapter;
     private List<View> mViews = new ArrayList<>();
@@ -317,6 +321,9 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
             mJoinTv.setVisibility(View.VISIBLE);
             mPublisRl.setVisibility(View.GONE);
             mScreenRl.setVisibility(View.GONE);
+            if (circleInfoEntity.getCircleInfo().getIs_author() == 1) {
+                mPreTagIv.setVisibility(View.VISIBLE);
+            }
             Glide.with(this).load(R.drawable.circle_bg_icon).into(mTopticBg);
             Glide.with(this).load(circleInfoEntity.getCircleInfo().getCircle_image().getPic_url()).into(mPreFaceIv);
             mPreTitleTv.setText(circleInfoEntity.getCircleInfo().getCircle_name());
@@ -446,13 +453,12 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
         mCourse_page_count = courseListEntity.getPage_count();
         int countUpdateCourse = courseListEntity.getCountUpdateCourse();
         int countCourse = courseListEntity.getCountCourse();
-        mList = courseListEntity.getCourselist();
         mMlNumTv.setText("更新至" + countUpdateCourse + "讲/全" + countCourse + "讲");
         mMcMlNumTv.setText("更新至" + countUpdateCourse + "讲/全" + countCourse + "讲");
         mFormalMlNumTv.setText("更新至" + countUpdateCourse + "讲/全" + countCourse + "讲");
-        mPreItemNameTv.setText(courseListEntity.getCourselist().get(0).getArticle_title());
         mDirectoryAdapter.addData(courseListEntity.getCourselist());
-        mFormalItemNameTv.setText(courseListEntity.getCourselist().get(0).getArticle_title());
+        mPreItemNameTv.setText(mDirectoryAdapter.getData().get(0).getArticle_title());
+        mFormalItemNameTv.setText(mDirectoryAdapter.getData().get(0).getArticle_title());
         if (mIsJoin.equals("1")) {
             mFormalItemFreeIv.setVisibility(View.GONE);
             mFormalItemSdIv.setVisibility(View.GONE);
@@ -487,7 +493,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     @OnClick({R.id.qz_expand_iv, R.id.ml_expand_iv, R.id.formal_ml_expand_iv, R.id.back_iv,
             R.id.pre_share_iv, R.id.share_iv, R.id.more_iv, R.id.join_tv, R.id.publis_rl,
             R.id.mc_qz_expand_iv, R.id.mc_ml_expand_iv, R.id.screen_rl, R.id.formal_ml_rl,
-            R.id.ml_rl})
+            R.id.ml_rl, R.id.formal_face_iv, R.id.mc_formal_face_iv})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.qz_expand_iv:
@@ -535,6 +541,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
                 break;
             case R.id.ml_rl://预览 目录
                 mIntent = new Intent(this, CourseDetailActivity.class);
+                mList = mDirectoryAdapter.getData();
                 if (mList.size() > 0) {
                     mIntent.putExtra("video_url", mList.get(0).getVideoInfo().getVideo_url());
                     mIntent.putExtra("article_title", mList.get(0).getArticle_title());
@@ -546,6 +553,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
                 break;
             case R.id.formal_ml_rl://正式 目录
                 mIntent = new Intent(this, CourseDetailActivity.class);
+                mList = mDirectoryAdapter.getData();
                 if (mList.size() > 0) {
                     mIntent.putExtra("video_url", mList.get(0).getVideoInfo().getVideo_url());
                     mIntent.putExtra("article_title", mList.get(0).getArticle_title());
@@ -587,6 +595,28 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
 
                 mMcTableRl.setVisibility(View.GONE);
                 mMcRl.setVisibility(View.GONE);
+                break;
+            case R.id.formal_face_iv:
+                if (mCircleInfoEntity.getCircleInfo().getIs_author() == 1){
+                    mIntent = new Intent(this, MasterDetailActivity.class);
+                    mIntent.putExtra("user_id", mCircleInfoEntity.getCircleInfo().getUser_id()+"");
+                    startActivity(mIntent);
+                }else {
+                    mIntent = new Intent(this, CircleManDetailActivity.class);
+                    mIntent.putExtra("user_id", mCircleInfoEntity.getCircleInfo().getUser_id()+"");
+                    startActivity(mIntent);
+                }
+                break;
+            case R.id.mc_formal_face_iv:
+                if (mCircleInfoEntity.getCircleInfo().getIs_author() == 1){
+                    mIntent = new Intent(this, MasterDetailActivity.class);
+                    mIntent.putExtra("user_id", mCircleInfoEntity.getCircleInfo().getUser_id()+"");
+                    startActivity(mIntent);
+                }else {
+                    mIntent = new Intent(this, CircleManDetailActivity.class);
+                    mIntent.putExtra("user_id", mCircleInfoEntity.getCircleInfo().getUser_id()+"");
+                    startActivity(mIntent);
+                }
                 break;
         }
     }

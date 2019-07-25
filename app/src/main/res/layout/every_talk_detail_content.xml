@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/relativelayout"
+<RelativeLayout android:id="@+id/relativelayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <FrameLayout
         android:id="@+id/fl_VideoPlayer"
         android:layout_width="match_parent"
@@ -68,13 +68,29 @@
         android:layout_margin="@dimen/common_margin"
         android:background="@drawable/shape_white_5radius"
         android:elevation="@dimen/dp_3">
-        <ImageView
-            android:id="@+id/play_iv"
-            android:layout_width="@dimen/dp_27"
-            android:layout_height="@dimen/dp_27"
-            android:src="@drawable/media_play_icon"
+        <RelativeLayout
+            android:id="@+id/play_rl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/dp_20"/>
+            android:layout_marginLeft="@dimen/dp_20">
+            <com.bjjy.buildtalk.weight.CircleProgressView
+                android:id="@+id/progress_bar"
+                android:layout_width="@dimen/dp_25"
+                android:layout_height="@dimen/dp_25"
+                android:layout_centerInParent="true"
+                app:progress_width="@dimen/dp_2"
+                app:progress_color="@color/orange"
+                app:location_start="top"/>
+            <ImageView
+                android:id="@+id/play_iv"
+                android:layout_width="@dimen/dp_27"
+                android:layout_height="@dimen/dp_27"
+                android:layout_centerInParent="true"
+                android:src="@drawable/media_play_icon"
+                android:layout_centerVertical="true" />
+        </RelativeLayout>
+
         <ImageView
             android:id="@+id/playing_iv"
             android:layout_width="@dimen/dp_16"
@@ -84,7 +100,6 @@
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/dp_20"/>
-
         <TextView
             android:id="@+id/media_name_tv"
             android:layout_width="match_parent"
@@ -93,7 +108,7 @@
             android:includeFontPadding="false"
             android:textColor="@color/text_drak"
             android:textSize="@dimen/sp_15"
-            android:layout_toRightOf="@+id/play_iv"
+            android:layout_toRightOf="@+id/play_rl"
             android:layout_marginTop="@dimen/dp_12"
             android:layout_marginLeft="@dimen/dp_20"
             android:layout_marginRight="@dimen/dp_20"
@@ -104,7 +119,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:gravity="center_vertical"
-            android:layout_toRightOf="@+id/play_iv"
+            android:layout_toRightOf="@+id/play_rl"
             android:layout_marginLeft="@dimen/dp_20"
             android:layout_marginBottom="@dimen/dp_12">
             <TextView

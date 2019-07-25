@@ -61,6 +61,7 @@ public class TimeUtils {
      getValueByCalendarField    : 根据日历字段获取值
      getChineseZodiac           : 获取生肖
      getZodiac                  : 获取星座
+     getMinuteBySecond          : 秒转分
      */
 
     /**
@@ -1548,4 +1549,28 @@ public class TimeUtils {
         }
         return sb.toString();
     }
+
+    /**
+     * @param seconds
+     * @return 秒转分
+     */
+    public static String getMinuteBySecond(int seconds) {
+
+        StringBuffer buffer = new StringBuffer();
+        int second = seconds % 60;
+        int minute = seconds / 60;
+
+        if (minute <= 9) {
+            buffer.append("0" + minute + "分");
+        } else {
+            buffer.append(minute + "分");
+        }
+        if (second <= 9) {
+            buffer.append("0" + second + "秒");
+        } else {
+            buffer.append(second + "秒");
+        }
+        return buffer.toString();
+    }
+
 }

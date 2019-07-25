@@ -85,6 +85,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:includeFontPadding="false"
+        android:autoLink="web"
+        android:textIsSelectable="true"
         android:text="一点新素材希望能帮到大家"
         android:textSize="@dimen/sp_11"
         android:textColor="@color/text_drak"

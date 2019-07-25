@@ -15,6 +15,7 @@ import com.bjjy.buildtalk.adapter.MasterListAdapter;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.entity.CollectEntity;
 import com.bjjy.buildtalk.ui.circle.TopticDetailActivity;
+import com.bjjy.buildtalk.utils.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -110,9 +111,13 @@ public class MasterCollectActivity extends BaseActivity<MasterCollectPresenter> 
     @Override
     public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
         List<CollectEntity.MyCollectInfoBean> mList = baseQuickAdapter.getData();
-        Intent intent = new Intent(this, TopticDetailActivity.class);
-        intent.putExtra("title", mList.get(i).getCircle_name());
-        intent.putExtra("theme_id", mList.get(i).getTheme_id()+"");
-        startActivity(intent);
+        if (mList.get(i).getTheme_status() == 1){
+            Intent intent = new Intent(this, TopticDetailActivity.class);
+            intent.putExtra("title", mList.get(i).getCircle_name());
+            intent.putExtra("theme_id", mList.get(i).getTheme_id()+"");
+            startActivity(intent);
+        }else {
+            ToastUtils.showShort("该主题已被删除");
+        }
     }
 }

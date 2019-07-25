@@ -58,7 +58,7 @@ public class CircleListActivity extends BaseActivity<CircleListPresenter> implem
 
         mRefreshLayout.setOnRefreshLoadMoreListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mCircleListAdapter = new CircleListAdapter(R.layout.adapter_circle_list,mCircleInfo);
+        mCircleListAdapter = new CircleListAdapter(R.layout.adapter_circle_list,mCircleInfo, mPresenter.mDataManager);
         mRecyclerView.setAdapter(mCircleListAdapter);
         mCircleListAdapter.setOnItemClickListener(this);
         mCircleListAdapter.setOnItemChildClickListener(this);

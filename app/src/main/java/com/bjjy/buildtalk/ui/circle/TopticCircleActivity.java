@@ -38,6 +38,8 @@ import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.entity.ThemeTypeEntity;
+import com.bjjy.buildtalk.ui.talk.CircleManDetailActivity;
+import com.bjjy.buildtalk.ui.talk.MasterDetailActivity;
 import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.LoginHelper;
@@ -359,7 +361,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
         }
     }
 
-    @OnClick({R.id.expand_iv, R.id.back_iv, R.id.share_iv, R.id.join_tv, R.id.pre_share_iv, R.id.more_iv, R.id.screen_rl, R.id.publis_rl})
+    @OnClick({R.id.expand_iv, R.id.back_iv, R.id.share_iv, R.id.join_tv, R.id.pre_share_iv, R.id.more_iv, R.id.screen_rl, R.id.publis_rl, R.id.formal_face_iv})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.expand_iv:
@@ -418,6 +420,17 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
                 mIntent = new Intent(this, PublishActivity.class);
                 mIntent.putExtra("circle_id", mCircle_id);
                 startActivity(mIntent);
+                break;
+            case R.id.formal_face_iv:
+                if (mCircleInfoEntity.getCircleInfo().getIs_author() == 1){
+                    mIntent = new Intent(this, MasterDetailActivity.class);
+                    mIntent.putExtra("user_id", mCircleInfoEntity.getCircleInfo().getUser_id()+"");
+                    startActivity(mIntent);
+                }else {
+                    mIntent = new Intent(this, CircleManDetailActivity.class);
+                    mIntent.putExtra("user_id", mCircleInfoEntity.getCircleInfo().getUser_id()+"");
+                    startActivity(mIntent);
+                }
                 break;
         }
     }
@@ -514,6 +527,9 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
                 intent.putExtra("title", mCircleInfoEntity.getCircleInfo().getCircle_name());
                 intent.putExtra("theme_id", data.get(i).getTheme_id()+"");
                 startActivity(intent);
+                break;
+            case R.id.item_face_iv:
+
                 break;
         }
     }

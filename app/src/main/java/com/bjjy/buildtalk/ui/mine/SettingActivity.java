@@ -92,7 +92,7 @@ public class SettingActivity extends BaseActivity<SettingPresenter> implements S
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bind_wechat:
-                if (mPresenter.mDataManager.getUser().getBindStatus().equals("1")) {
+                if (mPresenter.mDataManager.getUser().getBindStatus().equals("0")) {
                     UMShareAPI.get(this).getPlatformInfo(this, SHARE_MEDIA.WEIXIN, mUMAuthListener);
                 }
                 break;

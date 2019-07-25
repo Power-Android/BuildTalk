@@ -68,6 +68,8 @@
             android:id="@+id/item_content_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:textIsSelectable="true"
             android:layout_marginRight="@dimen/dp_15"
             android:layout_marginLeft="@dimen/dp_10"
             android:layout_toRightOf="@+id/item_face_iv"

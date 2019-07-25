@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context="com.bjjy.buildtalk.ui.mine.ServiceActivity">
+    <include layout="@layout/toolbar_layout"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background">
+        <TextView
+            android:id="@+id/phone_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="客服：13810696570"
+            android:textSize="@dimen/sp_16"
+            android:textColor="@color/blue_mid"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dp_140"/>
+        <TextView
+            android:id="@+id/time_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="在线时间：周一至周五  9:00-18:00"
+            android:textColor="@color/text_light"
+            android:textSize="@dimen/sp_12"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/phone_tv"
+            android:layout_marginTop="@dimen/dp_10"/>
+        <TextView
+            android:id="@+id/dial_tv"
+            android:layout_width="@dimen/dp_200"
+            android:layout_height="@dimen/dp_44"
+            android:text="拨打热线"
+            android:background="@drawable/shape_blue_5button"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:layout_below="@+id/time_tv"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dp_90"/>
+    </RelativeLayout>
+</LinearLayout>

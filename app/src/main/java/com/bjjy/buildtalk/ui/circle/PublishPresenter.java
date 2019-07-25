@@ -34,7 +34,13 @@ public class PublishPresenter extends BasePresenter<PublishContarct.View> {
 
     }
 
-    public void publishTheme(String circle_id, int theme_id, String theme_content, List<MultipartBody.Part> parts, boolean isEdit, List<ThemeImageBean> list) {
+    public void publishTheme(String circle_id, int theme_id, String theme_content, boolean isEdit, List<ThemeImageBean> list) {
+        List<MultipartBody.Part> parts = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getPart() != null){
+                parts.add(list.get(i).getPart());
+            }
+        }
         if (parts.size() > 0){
             String timestamp = String.valueOf(TimeUtils.getNowSeconds());
             Map<String, String> paramas = new HashMap<>();

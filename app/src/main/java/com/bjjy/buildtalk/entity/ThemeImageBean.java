@@ -2,6 +2,8 @@ package com.bjjy.buildtalk.entity;
 
 import java.io.Serializable;
 
+import okhttp3.MultipartBody;
+
 /**
  * @author power
  * @date 2019/6/14 3:07 PM
@@ -16,6 +18,7 @@ public class ThemeImageBean implements Serializable {
 
     private String pic_id;
     private String pic_url;
+    private MultipartBody.Part part;
 
     public String getPic_id() {
         return pic_id;
@@ -32,4 +35,18 @@ public class ThemeImageBean implements Serializable {
     public void setPic_url(String pic_url) {
         this.pic_url = pic_url;
     }
+
+    public MultipartBody.Part getPart() {
+        return part;
+    }
+
+    public void setPart(MultipartBody.Part part) {
+        this.part = part;
+    }
+
+    public ThemeImageBean(String pic_url, MultipartBody.Part part) {
+        this.pic_url = pic_url;
+        this.part = part;
+    }
+
 }

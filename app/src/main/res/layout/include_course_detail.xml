@@ -42,13 +42,23 @@
             android:layout_below="@+id/pre_title_tv"
             android:layout_marginLeft="@dimen/dp_20"
             android:layout_marginTop="@dimen/dp_10"/>
+        <ImageView
+            android:id="@+id/pre_tag_iv"
+            android:layout_width="@dimen/dp_9"
+            android:layout_height="@dimen/dp_9"
+            android:visibility="invisible"
+            android:src="@drawable/tag_icon"
+            android:layout_marginTop="@dimen/dp_13"
+            android:layout_marginLeft="@dimen/dp_5"
+            android:layout_toRightOf="@+id/pre_name_tv"
+            android:layout_below="@+id/pre_title_tv"/>
         <TextView
             android:id="@+id/pre_date_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/sp_10"
             android:textColor="@color/white"
-            android:layout_toRightOf="@+id/pre_name_tv"
+            android:layout_toRightOf="@+id/pre_tag_iv"
             android:layout_below="@+id/pre_title_tv"
             android:layout_marginTop="@dimen/dp_10"
             android:layout_marginLeft="@dimen/dp_15"/>
@@ -215,7 +225,7 @@
                 android:src="@drawable/tag_icon"
                 android:layout_toRightOf="@+id/formal_name_tv"
                 android:layout_below="@id/formal_title_tv"
-                android:layout_marginTop="@dimen/dp_7"
+                android:layout_marginTop="@dimen/dp_8"
                 android:layout_marginLeft="@dimen/dp_2"/>
             <TextView
                 android:id="@+id/formal_date_tv"

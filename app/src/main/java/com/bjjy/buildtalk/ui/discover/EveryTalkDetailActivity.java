@@ -3,8 +3,10 @@ package com.bjjy.buildtalk.ui.discover;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -25,6 +27,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -42,8 +45,10 @@ import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
+import com.bjjy.buildtalk.utils.TimeUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bjjy.buildtalk.weight.BaseDialog;
+import com.bjjy.buildtalk.weight.CircleProgressView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
@@ -72,7 +77,7 @@ import cn.jzvd.JZDataSource;
 import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
 
-public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresenter> implements EveryTalkDetailContract.View, BaseQuickAdapter.OnItemChildClickListener, OnLoadMoreListener {
+public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresenter> implements EveryTalkDetailContract.View, BaseQuickAdapter.OnItemChildClickListener, OnLoadMoreListener, Player.EventListener {
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
@@ -128,6 +133,8 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     LinearLayout mRecordLl;
     @BindView(R.id.is_play)
     View misPlay;
+    @BindView(R.id.progress_bar)
+    CircleProgressView mProgressBar;
 
     private SimpleExoPlayer simpleExoPlayer;
     private EveryTalkDetailAdapter mEveryTalkDetailAdapter;
@@ -143,6 +150,9 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     private String mUrl;
     private BaseDialog mBuyDialog;
     private IWXAPI wxapi;
+    private long curTime = 0;
+    private boolean isPause = false;
+    private boolean isEnd = false;
 
     Handler handler = new Handler(new Handler.Callback() {
         @Override
@@ -152,6 +162,12 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
         }
     });
     private Bitmap mBitmap;
+    private float mAllTime;
+    private float mSize;
+    private CountDownTimer mCountDownTimer;
+    private boolean b = true;
+    private ExtractorMediaSource.Factory mFactory;
+    private Uri mUri;
 
     @Override
     protected int getLayoutId() {
@@ -203,36 +219,22 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
         mMediaNameTv.setText(mMNewsInfo.getArticle_title());
         if (!TextUtils.isEmpty(mMNewsInfo.getAudio_duration())) {
             mMediaRl.setVisibility(View.VISIBLE);
-            float size = Float.parseFloat(mMNewsInfo.getAudio_duration());
-            int m = (int) (size / 60);
-            int s = (int) (size % 60);
-            String s1 = m + "分" + s + "秒";
-            mMediaTimeTv.setText(s1);
+            mSize = Float.parseFloat(mMNewsInfo.getAudio_duration());
+            float parseLong = Float.parseFloat(mMNewsInfo.getAudio_duration());
+            mAllTime = parseLong * 1000;
+
+            mMediaTimeTv.setText(TimeUtils.getMinuteBySecond((int) mSize));
+
             mMediaSizeTv.setText(mMNewsInfo.getAudio_size() + "M");
             Glide.with(this).load(R.drawable.playing).into(mPlayingIv);
             simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(this);
             DefaultDataSourceFactory defaultDataSourceFactory =
                     new DefaultDataSourceFactory(this, Util.getUserAgent(this, getString(R.string.app_name)));
-            ExtractorMediaSource.Factory factory = new ExtractorMediaSource.Factory(defaultDataSourceFactory);
-            Uri uri = Uri.parse(mMNewsInfo.getAudio_url());
-            simpleExoPlayer.prepare(factory.createMediaSource(uri));
+            mFactory = new ExtractorMediaSource.Factory(defaultDataSourceFactory);
+            mUri = Uri.parse(mMNewsInfo.getAudio_url());
+            simpleExoPlayer.prepare(mFactory.createMediaSource(mUri));
             simpleExoPlayer.setPlayWhenReady(false);
-            simpleExoPlayer.addListener(new Player.EventListener() {
-                @Override
-                public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-                    if (playWhenReady) {
-                        mPlayIv.setImageResource(R.drawable.media_stop_icon);
-                        mPlayingIv.setVisibility(View.VISIBLE);
-                        if (playbackState == Player.STATE_ENDED) {
-                            simpleExoPlayer.prepare(factory.createMediaSource(uri));
-                            simpleExoPlayer.setPlayWhenReady(!playWhenReady);
-                        }
-                    } else {
-                        mPlayIv.setImageResource(R.drawable.media_play_icon);
-                        mPlayingIv.setVisibility(View.INVISIBLE);
-                    }
-                }
-            });
+            simpleExoPlayer.addListener(this);
         }
         if (!TextUtils.isEmpty(mMNewsInfo.getVideo_url())) {
             mFlVideoPlayer.setVisibility(View.VISIBLE);
@@ -288,6 +290,31 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
             return false;
         });
     }
+
+    private void initCountDownTimer(long millisInFuture) {
+        //倒计时显示操作
+        // 进度条实现更新操作
+        mCountDownTimer = new CountDownTimer(millisInFuture, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                curTime = millisUntilFinished;
+                //倒计时显示操作
+                float second = curTime / 1000;
+                mMediaTimeTv.setText(TimeUtils.getMinuteBySecond((int) (millisUntilFinished / 1000)));
+                // 进度条实现更新操作
+                second = (mAllTime/1000 - second) / (mAllTime/1000) * 100;
+                mProgressBar.setCurrent((int) second);
+            }
+
+            @Override
+            public void onFinish() {
+                mProgressBar.setCurrent(0);
+                curTime = 0;
+                mMediaTimeTv.setText(TimeUtils.getMinuteBySecond((int) mSize));
+            }
+        };
+    }
+
 
     private void showBuyDialog() {
         mBuyDialog = new BaseDialog.Builder(this)
@@ -347,6 +374,9 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     @Override
     public void onPause() {
         super.onPause();
+        if (mCountDownTimer != null){
+            mCountDownTimer.cancel();
+        }
         Jzvd.releaseAllVideos();
     }
 
@@ -357,6 +387,40 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
         KeyboardUtils.hideSoftInput(this);
         if (simpleExoPlayer != null) {
             simpleExoPlayer.release();
+        }
+    }
+
+    @Override
+    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+        if (playWhenReady) {
+            LogUtils.e(playbackState);
+            if (curTime == 0 && playbackState == PlaybackState.STATE_PLAYING){
+                initCountDownTimer((long)mAllTime);
+                mCountDownTimer.start();
+            }
+            if (curTime != 0 && isPause) {
+                //将上次当前剩余时间作为新的时长
+                initCountDownTimer(curTime);
+                mCountDownTimer.start();
+            }
+            mPlayIv.setImageResource(R.drawable.media_stop_icon);
+            mPlayingIv.setVisibility(View.VISIBLE);
+            if (playbackState == Player.STATE_ENDED) {
+                simpleExoPlayer.prepare(mFactory.createMediaSource(mUri));
+                simpleExoPlayer.setPlayWhenReady(!playWhenReady);
+            }
+            isPause = false;
+        } else {
+            if (!b && mCountDownTimer != null && playbackState == PlaybackState.STATE_PLAYING){
+                mCountDownTimer.cancel();
+            }
+            mPlayIv.setImageResource(R.drawable.media_play_icon);
+            mPlayingIv.setVisibility(View.INVISIBLE);
+            if (b){
+                b = false;
+                return;
+            }
+            isPause = true;
         }
     }
 

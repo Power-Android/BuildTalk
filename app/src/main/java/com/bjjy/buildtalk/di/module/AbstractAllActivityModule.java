@@ -33,6 +33,7 @@ import com.bjjy.buildtalk.di.module.activity.MyCardActivityModule;
 import com.bjjy.buildtalk.di.module.activity.PersonInfoActivityModule;
 import com.bjjy.buildtalk.di.module.activity.PhoneLoginActivityModule;
 import com.bjjy.buildtalk.di.module.activity.PublishActivityModule;
+import com.bjjy.buildtalk.di.module.activity.ServiceActivityModule;
 import com.bjjy.buildtalk.di.module.activity.SetPictureActivityModule;
 import com.bjjy.buildtalk.di.module.activity.SettingActivityModule;
 import com.bjjy.buildtalk.di.module.activity.SplashActivtyModule;
@@ -71,6 +72,7 @@ import com.bjjy.buildtalk.ui.mine.EditBindPhoneActivity;
 import com.bjjy.buildtalk.ui.mine.EditNameActivity;
 import com.bjjy.buildtalk.ui.mine.FeedBackActivity;
 import com.bjjy.buildtalk.ui.mine.PersonInfoActivity;
+import com.bjjy.buildtalk.ui.mine.ServiceActivity;
 import com.bjjy.buildtalk.ui.mine.SetPictureActivity;
 import com.bjjy.buildtalk.ui.mine.SettingActivity;
 import com.bjjy.buildtalk.ui.mine.TransactionActivity;
@@ -209,4 +211,7 @@ public abstract class AbstractAllActivityModule {
 
     @ContributesAndroidInjector(modules = CourseDetailActivityModule.class)
     abstract CourseDetailActivity mCourseDetailActivity();
+
+    @ContributesAndroidInjector(modules = ServiceActivityModule.class)
+    abstract ServiceActivity mServiceActivity();
 }
