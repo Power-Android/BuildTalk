@@ -164,6 +164,12 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
                     ToastUtils.showShort("请输入标签内容");
                     return false;
                 }
+                for (int i = 0; i < mTagList.size(); i++) {
+                    if (TextUtils.equals(v.getText().toString(), mTagList.get(i).getTag_name())){
+                        ToastUtils.showShort("不能重复添加标签");
+                        return true;
+                    }
+                }
                 mTagList.add(new CircleTagEntity(v.getText().toString().trim(), true, true));
                 mTagAdapter.notifyDataChanged();
                 mAddEt.getText().clear();

@@ -275,14 +275,18 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.item_more_iv:
-                LoginHelper.login(this, mPresenter.mDataManager, () -> showEditDialog(themeInfoEntity));
+                if (themeInfoEntity != null)
+                    LoginHelper.login(this, mPresenter.mDataManager, () -> showEditDialog(themeInfoEntity));
                 break;
             case R.id.praise_ll:
-                LoginHelper.login(this, mPresenter.mDataManager, () -> mPresenter.praise(themeInfoEntity.getTheme_id() + "", "1", null));
+                if (themeInfoEntity != null) {
+                    LoginHelper.login(this, mPresenter.mDataManager, () -> mPresenter.praise(themeInfoEntity.getTheme_id() + "", "1", null));
+                }
                 break;
             case R.id.share_iv:
-                DialogUtils.showShareDialog(this, mUrl, mTitle,
-                        themeInfoEntity.getHeadImage(), themeInfoEntity.getTheme_content());
+                if (themeInfoEntity != null)
+                    DialogUtils.showShareDialog(this, mUrl, mTitle,
+                            themeInfoEntity.getHeadImage(), themeInfoEntity.getTheme_content());
                 break;
             case R.id.record_ll:
                 LoginHelper.login(this, mPresenter.mDataManager, () -> {

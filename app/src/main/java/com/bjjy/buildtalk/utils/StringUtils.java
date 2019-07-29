@@ -2,6 +2,7 @@ package com.bjjy.buildtalk.utils;
 
 import com.bjjy.buildtalk.entity.CircleTagEntity;
 import com.bjjy.buildtalk.entity.PariseNickNameBean;
+import com.bjjy.buildtalk.entity.ThemeImageBean;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 
 import java.util.List;
@@ -26,6 +27,14 @@ public class StringUtils {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < list.size(); i++) {
             sb.append(list.get(i).getName()).append(separator);
+        }
+        return list.isEmpty() ? "" : sb.toString().substring(0, sb.toString().length() - 1);
+    }
+
+    public static String listToString2(List<ThemeImageBean> list, char separator) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < list.size(); i++) {
+            sb.append(list.get(i).getPic_url()).append(separator);
         }
         return list.isEmpty() ? "" : sb.toString().substring(0, sb.toString().length() - 1);
     }

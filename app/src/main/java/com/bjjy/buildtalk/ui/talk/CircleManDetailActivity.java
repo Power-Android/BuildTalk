@@ -272,20 +272,26 @@ public class CircleManDetailActivity extends BaseActivity<CircleManDetailPresent
             case R.id.fans_num_tv:
                 mIntent = new Intent(this, FansFocusActivity.class);
                 mIntent.putExtra("user_id", mUser_id);
-                mIntent.putExtra("name", mMasterDetailEntity.getName());
+                if (!TextUtils.isEmpty(mMasterDetailEntity.getName())){
+                    mIntent.putExtra("name", mMasterDetailEntity.getName());
+                }
                 mIntent.putExtra("type", "fans");
                 startActivity(mIntent);
                 break;
             case R.id.collect_num_tv:
                 mIntent = new Intent(this,MasterCollectActivity.class);
                 mIntent.putExtra("user_id", mUser_id);
-                mIntent.putExtra("name", mMasterDetailEntity.getName());
+                if (!TextUtils.isEmpty(mMasterDetailEntity.getName())){
+                    mIntent.putExtra("name", mMasterDetailEntity.getName());
+                }
                 startActivity(mIntent);
                 break;
             case R.id.focus_num_tv:
                 mIntent = new Intent(this, FansFocusActivity.class);
                 mIntent.putExtra("user_id", mUser_id);
-                mIntent.putExtra("name", mMasterDetailEntity.getName());
+                if (!TextUtils.isEmpty(mMasterDetailEntity.getName())){
+                    mIntent.putExtra("name", mMasterDetailEntity.getName());
+                }
                 mIntent.putExtra("type", "focus");
                 startActivity(mIntent);
                 break;

@@ -170,7 +170,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
         if (TextUtils.equals(eventBean.getMsg(), Constants.TOPTIC_REFRESH_ALL)) {
             mPresenter.CircleInfo(mCircle_id);
         }
-        if (TextUtils.equals(eventBean.getMsg(), Constants.QUIT_CIRCLE)){
+        if (TextUtils.equals(eventBean.getMsg(), Constants.QUIT_CIRCLE)) {
             finish();
         }
     }
@@ -217,7 +217,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
             mPublisRl.setVisibility(View.GONE);
             mScreenRl.setVisibility(View.GONE);
             Glide.with(this).load(R.drawable.circle_bg_icon).into(mTopticBg);
-            if (circleInfoEntity.getCircleInfo().getCircle_image() != null){
+            if (circleInfoEntity.getCircleInfo().getCircle_image() != null) {
                 Glide.with(this).load(circleInfoEntity.getCircleInfo().getCircle_image().getPic_url()).into(mPreFaceIv);
             }
             mPreTitleTv.setText(circleInfoEntity.getCircleInfo().getCircle_name());
@@ -240,9 +240,9 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
             mRecommendTv.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override
                 public boolean onPreDraw() {
-                    if (mRecommendTv.getLineCount() < 2){
+                    if (mRecommendTv.getLineCount() < 2) {
                         mExpandIv.setVisibility(View.GONE);
-                    }else {
+                    } else {
                         mExpandIv.setVisibility(View.VISIBLE);
                     }
                     //这个回调会调用多次，获取完行数记得注销监听
@@ -259,7 +259,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
             mJoinTv.setVisibility(View.GONE);
             mPublisRl.setVisibility(View.VISIBLE);
             mScreenRl.setVisibility(View.VISIBLE);
-            if (circleInfoEntity.getCircleInfo().getCircle_image() != null){
+            if (circleInfoEntity.getCircleInfo().getCircle_image() != null) {
                 Glide.with(this).load(circleInfoEntity.getCircleInfo().getCircle_image().getPic_url()).into(mTopticBg);
             }
             Glide.with(this).load(circleInfoEntity.getCircleInfo().getMaster_pic()).into(mFormalFaceIv);
@@ -299,7 +299,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
 
     @Override
     public void handlerThemeInfo(ThemeInfoEntity themeInfoEntity, boolean isRefresh) {
-        if (mThemeInfoList != null){
+        if (mThemeInfoList != null) {
             mThemeInfoList.clear();
         }
         pageCount = themeInfoEntity.getPage_count();
@@ -308,7 +308,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
         if ("0".equals(mIsJoin) && mThemeInfoList.size() > 5) {
             mThemeInfoList = mThemeInfoList.subList(0, 5);
         }
-        if (mThemeInfoList.size() > 0){
+        if (mThemeInfoList.size() > 0) {
             mEmptyView.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.VISIBLE);
             if (isRefresh) {
@@ -316,7 +316,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
             } else {
                 mTopticAdapter.addData(mThemeInfoList);
             }
-        }else {
+        } else {
             mRecyclerView.setVisibility(View.GONE);
             mEmptyView.setVisibility(View.VISIBLE);
         }
@@ -352,7 +352,9 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
         //最大偏移距离
         int scrollRange = appBarLayout.getTotalScrollRange();
         if (offset > 0) {
-            mTitleTv.setText(mCircleInfoEntity.getCircleInfo().getCircle_name());
+            if (mCircleInfoEntity.getCircleInfo() != null) {
+                mTitleTv.setText(mCircleInfoEntity.getCircleInfo().getCircle_name());
+            }
             mTitleTv.setVisibility(View.VISIBLE);
             mTopTitleRl.setBackgroundColor(getResources().getColor(R.color.blue_mid));
         } else {
@@ -410,9 +412,9 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
                 startActivity(mIntent);
                 break;
             case R.id.screen_rl:
-                if (mViewpager_position == 0){
+                if (mViewpager_position == 0) {
                     showThemeTypeDialog();
-                }else {
+                } else {
                     ToastUtils.showShort("暂未开放");
                 }
                 break;
@@ -422,13 +424,13 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
                 startActivity(mIntent);
                 break;
             case R.id.formal_face_iv:
-                if (mCircleInfoEntity.getCircleInfo().getIs_author() == 1){
+                if (mCircleInfoEntity.getCircleInfo().getIs_author() == 1) {
                     mIntent = new Intent(this, MasterDetailActivity.class);
-                    mIntent.putExtra("user_id", mCircleInfoEntity.getCircleInfo().getUser_id()+"");
+                    mIntent.putExtra("user_id", mCircleInfoEntity.getCircleInfo().getUser_id() + "");
                     startActivity(mIntent);
-                }else {
+                } else {
                     mIntent = new Intent(this, CircleManDetailActivity.class);
-                    mIntent.putExtra("user_id", mCircleInfoEntity.getCircleInfo().getUser_id()+"");
+                    mIntent.putExtra("user_id", mCircleInfoEntity.getCircleInfo().getUser_id() + "");
                     startActivity(mIntent);
                 }
                 break;
@@ -456,7 +458,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
         List<ThemeTypeEntity> list = new ArrayList<>();
         list.add(new ThemeTypeEntity("全部主题", R.drawable.qbzt_icon));
         list.add(new ThemeTypeEntity("图片主题", R.drawable.tpzt_icon));
-        if (!mPresenter.mDataManager.getUser().getUser_id().equals(mCircleInfoEntity.getCircleInfo().getUser_id()+"")){
+        if (!mPresenter.mDataManager.getUser().getUser_id().equals(mCircleInfoEntity.getCircleInfo().getUser_id() + "")) {
             list.add(new ThemeTypeEntity("只看圈主", R.drawable.zkqz_icon));
         }
         list.add(new ThemeTypeEntity("我的主题", R.drawable.wdzt_icon));
@@ -499,7 +501,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
         if ("1".equals(mIsJoin)) {
             Intent intent = new Intent(this, TopticDetailActivity.class);
             intent.putExtra("title", mCircleInfoEntity.getCircleInfo().getCircle_name());
-            intent.putExtra("theme_id", data.get(i).getTheme_id()+"");
+            intent.putExtra("theme_id", data.get(i).getTheme_id() + "");
             startActivity(intent);
         }
     }
@@ -525,7 +527,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
             case R.id.more_tv:
                 Intent intent = new Intent(this, TopticDetailActivity.class);
                 intent.putExtra("title", mCircleInfoEntity.getCircleInfo().getCircle_name());
-                intent.putExtra("theme_id", data.get(i).getTheme_id()+"");
+                intent.putExtra("theme_id", data.get(i).getTheme_id() + "");
                 startActivity(intent);
                 break;
             case R.id.item_face_iv:
@@ -546,11 +548,11 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
         TextView edit_tv = mEditDailog.getView(R.id.edit_tv);
         TextView delete_tv = mEditDailog.getView(R.id.delete_tv);
 
-        if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())){
+        if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
             mCollect_tv.setVisibility(View.GONE);
             edit_tv.setVisibility(View.VISIBLE);
             delete_tv.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             mCollect_tv.setVisibility(View.VISIBLE);
             edit_tv.setVisibility(View.GONE);
             delete_tv.setVisibility(View.GONE);
@@ -645,9 +647,9 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
 
     @Override
     public void handlerPraiseSuccess(List<ThemeInfoEntity.ThemeInfoBean> data, int i, PraiseEntity praiseEntity) {
-        if (data.get(i).getIs_parise() == 0){
+        if (data.get(i).getIs_parise() == 0) {
             data.get(i).setIs_parise(1);
-        }else {
+        } else {
             data.get(i).setIs_parise(0);
         }
         data.get(i).setParise_nickName(praiseEntity.getNickName());
@@ -688,10 +690,13 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
     @Override
     public void onPageSelected(int i) {
         mViewpager_position = i;
-        if (i == 0){
+        if (i == 0) {
             mScreenTv.setText("全部主题");
-        }else {
+            if (TextUtils.equals("1", mIsJoin))
+                mPublisRl.setVisibility(View.VISIBLE);
+        } else {
             mScreenTv.setText("全部精华");
+            mPublisRl.setVisibility(View.GONE);
         }
     }
 

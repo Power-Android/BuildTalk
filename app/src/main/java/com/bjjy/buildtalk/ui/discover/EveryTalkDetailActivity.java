@@ -157,7 +157,9 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            Glide.with(EveryTalkDetailActivity.this).load(mBitmap).into(mVideoplayer.thumbImageView);
+            if (!isDestroyed()){
+                Glide.with(EveryTalkDetailActivity.this).load(mBitmap).into(mVideoplayer.thumbImageView);
+            }
             return true;
         }
     });
