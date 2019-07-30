@@ -103,12 +103,17 @@ public class PublishPresenter extends BasePresenter<PublishContarct.View> {
     }
 
     private void editTheme(String circle_id, int theme_id, String theme_content, String picUrl, List<ThemeImageBean> list) {
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getPic_url().contains("https") && !TextUtils.isEmpty(picUrl)){
-                picUrl = list.get(i).getPic_url() + "," + picUrl;
-            }else if (list.get(i).getPic_url().contains("https") && TextUtils.isEmpty(picUrl)){
-                picUrl = StringUtils.listToString2(list, ',');
-            }
+//        for (int i = 0; i < list.size(); i++) {
+//            if (list.get(i).getPic_url().contains("https") && !TextUtils.isEmpty(picUrl)){
+//                picUrl = list.get(i).getPic_url() + "," + picUrl;
+//            }else if (list.get(i).getPic_url().contains("https") && TextUtils.isEmpty(picUrl)){
+//                picUrl = StringUtils.listToString2(list, ',');
+//            }
+//        }
+        if (TextUtils.isEmpty(picUrl)){
+            picUrl = StringUtils.listToString2(list, ',');
+        }else {
+            picUrl = StringUtils.listToString2(list, ',');
         }
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();

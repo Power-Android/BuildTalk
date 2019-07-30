@@ -845,7 +845,6 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
             }
             mPresenter.publishComment(mInputEt.getText().toString().trim(), String.valueOf(theme_id), i, data);
             if (mMInputDialog != null) {
-                KeyboardUtils.hideSoftInput(mInputEt);
                 mMInputDialog.dismiss();
             }
         });

@@ -36,6 +36,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import butterknife.BindView;
@@ -101,9 +102,6 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
     @Override
     protected void initEventAndData() {
         mPresenter.circleTags();
-        if (!TextUtils.isEmpty(mType)){
-            mPresenter.searchCircleInfo(mCircle_id);
-        }
     }
 
     @Override
@@ -178,6 +176,11 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
             vervify();
             return true;
         });
+        if (!TextUtils.isEmpty(mType)){
+            mPresenter.searchCircleInfo(mCircle_id);
+        }else {
+            mTagAdapter.notifyDataChanged();
+        }
     }
 
     private void vervify(){
@@ -209,7 +212,7 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
             ToastUtils.showShort("请填写圈子名称");
             return;
         }
-        if (mTagList.size() == 0 ){
+        if (mSelList.size() == 0 ){
             ToastUtils.showShort("请选择行业标签");
             return;
         }
@@ -238,6 +241,7 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
 
     @Override
     public void handlerCreateSuccess(String iEntity) {
+        EventBus.getDefault().post(new RefreshEvent(Constants.TOPTIC_REFRESH_ALL));
         Intent intent = new Intent(this, TopticCircleActivity.class);
         intent.putExtra("circle_id", iEntity);
         startActivity(intent);
@@ -312,14 +316,29 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
 
         String circle_tags = infoEntity.getCircle_tags();
         mCircle_tags = Arrays.asList(circle_tags.split(","));
-        for (int i = 0; i <mCircle_tags.size(); i++) {
-            if (mTagList.size() > 0 && i < 3 && mTagList.get(i).getTag_name().equals(mCircle_tags.get(i))){
-                mTagList.get(i).setSelected(true);
-            }else {
-                mTagList.add(new CircleTagEntity(mCircle_tags.get(i), true, true));
+        for (int i = 0; i < mTagList.size(); i++) {
+            for (int j = 0; j < mCircle_tags.size(); j++) {
+                if (mTagList.size() > 0 && mCircle_tags.size() > 0 && mTagList.get(i).getTag_name().equals(mCircle_tags.get(j))){
+                    mTagList.get(i).setSelected(true);
+                }
             }
         }
+        for (int i = 0; i < mCircle_tags.size(); i++) {
+            mTagList.add(new CircleTagEntity(mCircle_tags.get(i), true, true));
+        }
+        removeDuplicate(mTagList);
         vervify();
         mTagAdapter.notifyDataChanged();
+    }
+
+    public static List removeDuplicate(List<CircleTagEntity> list){
+        for (int i = 0; i < list.size() - 1; i++ ){
+            for (int j = list.size() - 1; j > i; j-- ){
+                if (list.get(j).getTag_name().equals(list.get(i).getTag_name())){
+                    list.remove(j);
+                }
+            }
+        }
+        return list;
     }
 }
