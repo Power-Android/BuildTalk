@@ -236,6 +236,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     private String mUrl;
     private RecyclerView mRecyclerView;
     private NestedScrollView mEmptyView;
+    private boolean isMlExpand = false;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void event(PayEvent eventBean) {
@@ -463,7 +464,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
             mFormalItemFreeIv.setVisibility(View.GONE);
             mFormalItemSdIv.setVisibility(View.GONE);
         } else {
-            if (courseListEntity.getCourselist().get(0).getIs_audition() == 1) {
+            if (mDirectoryAdapter.getData().get(0).getIs_audition() == 1) {
                 mPreItemFreeIv.setVisibility(View.VISIBLE);
                 mPreItemSdIv.setVisibility(View.GONE);
             } else {
@@ -496,22 +497,22 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
             R.id.ml_rl, R.id.formal_face_iv, R.id.mc_formal_face_iv})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.qz_expand_iv:
+            case R.id.qz_expand_iv://预览-----展开圈子介绍
                 mMcRl.setVisibility(View.VISIBLE);
                 mMcQzExpandIv.setImageResource(R.drawable.sanjiao_top_icon);
                 mParams.setScrollFlags(0);//不能伸缩
                 mMinRl.setLayoutParams(mParams);
-
                 mExpandRl.setVisibility(View.VISIBLE);
                 break;
-            case R.id.ml_expand_iv:
+            case R.id.ml_expand_iv://预览-----展开目录
                 mParams.setScrollFlags(0);//不能伸缩
                 mMinRl.setLayoutParams(mParams);
                 mMcMlExpandIv.setImageResource(R.drawable.sanjiao_top_icon);
                 mMcRl.setVisibility(View.VISIBLE);
                 mMcTableRl.setVisibility(View.VISIBLE);
+                isMlExpand = true;
                 break;
-            case R.id.formal_ml_expand_iv:
+            case R.id.formal_ml_expand_iv://加入-----展开目录
                 mParams.setScrollFlags(0);//不能伸缩
                 mMinRl.setLayoutParams(mParams);
                 mMcMlExpandIv.setImageResource(R.drawable.sanjiao_top_icon);
@@ -520,6 +521,33 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
                 mMcFormalFaceIv.setVisibility(View.VISIBLE);
                 mMcRl.setVisibility(View.VISIBLE);
                 mMcTableRl.setVisibility(View.VISIBLE);
+                break;
+            case R.id.mc_qz_expand_iv://蒙层----收起圈子介绍
+                if (!isMlExpand){
+                    mMcQzExpandIv.setImageResource(R.drawable.sanjiao_icon);
+                    mParams.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED);
+                    mMinRl.setLayoutParams(mParams);
+                    mMcTableRl.setVisibility(View.GONE);
+                    mExpandRl.setVisibility(View.GONE);
+                    mMcRl.setVisibility(View.GONE);
+                }else {//如果蒙层的目录展开，点击时应该是展开圈子介绍
+                    mMcRl.setVisibility(View.VISIBLE);
+                    mMcTableRl.setVisibility(View.GONE);
+                    mMcQzExpandIv.setImageResource(R.drawable.sanjiao_top_icon);
+                    mParams.setScrollFlags(0);//不能伸缩
+                    mMinRl.setLayoutParams(mParams);
+                    mExpandRl.setVisibility(View.VISIBLE);
+                    isMlExpand = false;
+                }
+                break;
+            case R.id.mc_ml_expand_iv://蒙层-----收起目录
+                mMcQzExpandIv.setImageResource(R.drawable.sanjiao_icon);
+                mMcMlExpandIv.setImageResource(R.drawable.sanjiao_icon);
+                mParams.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED);
+                mMinRl.setLayoutParams(mParams);
+                mMcTableRl.setVisibility(View.GONE);
+                mMcRl.setVisibility(View.GONE);
+                isMlExpand = false;
                 break;
             case R.id.back_iv:
                 finish();
@@ -577,24 +605,6 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
                 mIntent = new Intent(this, PublishActivity.class);
                 mIntent.putExtra("circle_id", mCircle_id);
                 startActivity(mIntent);
-                break;
-            case R.id.mc_qz_expand_iv:
-                mMcQzExpandIv.setImageResource(R.drawable.sanjiao_icon);
-
-                mParams.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED);
-                mMinRl.setLayoutParams(mParams);
-
-                mExpandRl.setVisibility(View.GONE);
-                mMcRl.setVisibility(View.GONE);
-                break;
-            case R.id.mc_ml_expand_iv:
-                mMcQzExpandIv.setImageResource(R.drawable.sanjiao_icon);
-                mMcMlExpandIv.setImageResource(R.drawable.sanjiao_icon);
-                mParams.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED);
-                mMinRl.setLayoutParams(mParams);
-
-                mMcTableRl.setVisibility(View.GONE);
-                mMcRl.setVisibility(View.GONE);
                 break;
             case R.id.formal_face_iv:
                 if (mCircleInfoEntity.getCircleInfo().getIs_author() == 1){
