@@ -14,7 +14,7 @@
         android:id="@+id/project_iv"
         android:layout_width="@dimen/dp_165"
         android:layout_height="@dimen/dp_64"
-        android:src="@drawable/test_project"
+        android:src="@drawable/zhuanti_icon"
         app:riv_corner_radius="@dimen/dp_5" />
     <TextView
         android:id="@+id/course_title_tv"
@@ -27,7 +27,7 @@
         android:maxLength="15"
         android:singleLine="true"
         android:ellipsize="end"
-        android:text="2019年中国数字产业峰会"
+        android:text="建筑工业互联网峰会"
         android:textColor="@color/text_drak"
         android:textSize="@dimen/sp_12" />
 

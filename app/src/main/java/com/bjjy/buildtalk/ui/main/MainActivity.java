@@ -1,6 +1,7 @@
 package com.bjjy.buildtalk.ui.main;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
@@ -9,14 +10,18 @@ import android.text.TextUtils;
 import android.widget.FrameLayout;
 
 import com.bjjy.buildtalk.R;
+import com.bjjy.buildtalk.app.App;
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.ui.circle.CircleFragment;
+import com.bjjy.buildtalk.ui.circle.CourseCircleActivity;
+import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
+import com.bjjy.buildtalk.ui.circle.TopticDetailActivity;
 import com.bjjy.buildtalk.ui.discover.DiscoverFragment;
+import com.bjjy.buildtalk.ui.discover.EveryTalkDetailActivity;
 import com.bjjy.buildtalk.ui.mine.MineFragment;
 import com.bjjy.buildtalk.ui.talk.TalkFragment;
 import com.bjjy.buildtalk.utils.LogUtils;
-import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.ToastUtils;
 
 import butterknife.BindView;
@@ -34,7 +39,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     private CircleFragment mCircleFragment;
     private TalkFragment mTalkFragment;
     private MineFragment mMineFragment;
-
+    private Uri data;
     private long clickTime;
 
     @Override
@@ -60,6 +65,12 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     protected void initView() {
         showFragment(mCurrentFgIndex);
         initNavigationView();
+        String s = getIntent().getStringExtra("data");
+        LogUtils.e(s);
+        if (!TextUtils.isEmpty(s)){
+            data = Uri.parse(s);
+            scheme();
+        }
     }
 
     private void initNavigationView() {
@@ -167,6 +178,60 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
             clickTime = System.currentTimeMillis();
         } else {
             finish();
+        }
+    }
+
+    private void scheme() {
+        if (data != null) {
+            //获得参数值
+            String type = data.getQueryParameter("type");
+            String circleId = data.getQueryParameter("circleId");
+            String articleOrNewsId = data.getQueryParameter("articleOrNewsId");
+            String themeId = data.getQueryParameter("themeId");
+            String circleName = data.getQueryParameter("circleName");
+            LogUtils.e("type: " + type + "circleId: " + circleId + "articleOrNewsId: " + articleOrNewsId + "themeId: " + themeId + "circleName:" + circleName);
+            if (TextUtils.isEmpty(type)) {
+                return;
+            }
+            switch (type) {
+                case "1"://话题圈
+                    if (!TextUtils.isEmpty(circleId)) {
+                        Intent intent = new Intent(App.getContext(), TopticCircleActivity.class);
+                        intent.putExtra("circle_id", circleId);
+                        startActivity(intent);
+                    }
+                    break;
+                case "2"://每日一谈
+                    if (!TextUtils.isEmpty(articleOrNewsId)) {
+                        Intent intent = new Intent(App.getContext(), EveryTalkDetailActivity.class);
+                        intent.putExtra("article_id", articleOrNewsId);
+                        startActivity(intent);
+                    }
+                    break;
+                case "3"://主题详情
+                    if (!TextUtils.isEmpty(themeId)) {
+                        Intent intent = new Intent(App.getContext(), TopticDetailActivity.class);
+                        intent.putExtra("title", circleName);
+                        intent.putExtra("theme_id", themeId);
+                        startActivity(intent);
+                    }
+                    break;
+                case "4"://课程圈
+                    if (!TextUtils.isEmpty(circleId)) {
+                        Intent intent = new Intent(App.getContext(), CourseCircleActivity.class);
+                        intent.putExtra("circle_id", circleId);
+                        startActivity(intent);
+                    }
+                    break;
+                case "5"://精品文章
+                    if (!TextUtils.isEmpty(articleOrNewsId)) {
+                        Intent intent = new Intent(App.getContext(), EveryTalkDetailActivity.class);
+                        intent.putExtra("type", "article");
+                        intent.putExtra("circle_id", circleId);
+                        startActivity(intent);
+                    }
+                    break;
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 package com.bjjy.buildtalk.ui.main;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.User;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
+import com.bjjy.buildtalk.ui.circle.CircleAgreementActvity;
 import com.bjjy.buildtalk.ui.mine.EditBindPhoneActivity;
 import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.LoginHelper;
@@ -20,6 +22,7 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 import java.util.Map;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LoginActivity extends BaseActivity<LoginPresenter> implements LoginContract.View {
@@ -28,6 +31,11 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
     TextView mPhoneTv;
     @BindView(R.id.wechat_tv)
     TextView mWechatTv;
+    @BindView(R.id.yhxy_tv)
+    TextView mYhxyTv;
+    @BindView(R.id.yszc_tv)
+    TextView mYszcTv;
+    private Intent mIntent;
 
     @Override
     protected int getLayoutId() {
@@ -44,14 +52,26 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
 
     }
 
-    @OnClick({R.id.phone_tv, R.id.wechat_tv})
+    @OnClick({R.id.phone_tv, R.id.wechat_tv,R.id.yhxy_tv, R.id.yszc_tv})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.phone_tv:
-                startActivityForResult(new Intent(this, PhoneLoginActivity.class),101);
+                startActivityForResult(new Intent(this, PhoneLoginActivity.class), 101);
                 break;
             case R.id.wechat_tv:
                 UMShareAPI.get(this).getPlatformInfo(this, SHARE_MEDIA.WEIXIN, mUMAuthListener);
+                break;
+            case R.id.yhxy_tv:
+                mIntent = new Intent(this, CircleAgreementActvity.class);
+                mIntent.putExtra("type","yhxy");
+                mIntent.putExtra("url", "https://jt.chinabim.com/yh");
+                startActivity(mIntent);
+                break;
+            case R.id.yszc_tv:
+                mIntent = new Intent(this, CircleAgreementActvity.class);
+                mIntent.putExtra("type","yszc");
+                mIntent.putExtra("url", "https://jt.chinabim.com/ys");
+                startActivity(mIntent);
                 break;
         }
     }
@@ -99,7 +119,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
             String openid = data.get("openid");
             String name = data.get("name");
             String iconurl = data.get("iconurl");
-            mPresenter.checkIsBind(unionid,openid,name,iconurl);
+            mPresenter.checkIsBind(unionid, openid, name, iconurl);
         }
 
         /**
@@ -127,8 +147,8 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK){
-            if (requestCode == 101){
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 101) {
                 finish();
             }
         }

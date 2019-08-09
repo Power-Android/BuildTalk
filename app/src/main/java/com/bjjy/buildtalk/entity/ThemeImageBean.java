@@ -19,6 +19,15 @@ public class ThemeImageBean implements Serializable {
     private String pic_id;
     private String pic_url;
     private MultipartBody.Part part;
+    private int position = -1;
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
 
     public String getPic_id() {
         return pic_id;
@@ -44,9 +53,10 @@ public class ThemeImageBean implements Serializable {
         this.part = part;
     }
 
-    public ThemeImageBean(String pic_url, MultipartBody.Part part) {
+    public ThemeImageBean(String pic_url, MultipartBody.Part part, int position) {
         this.pic_url = pic_url;
         this.part = part;
+        this.position = position;
     }
 
 }

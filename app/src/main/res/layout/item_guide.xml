@@ -16,15 +16,15 @@
         android:layout_height="@dimen/dp_50"
         android:visibility="invisible"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="@dimen/dp_57"
-        android:background="@drawable/shape_blue_25button"
+        android:layout_marginBottom="@dimen/dp_40"
+        android:background="@drawable/shape_white_25radius"
         android:gravity="center">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="立即体验"
-            android:textColor="@color/white"
+            android:textColor="#41A8F1"
             android:textSize="@dimen/sp_18"
             android:textStyle="bold" />
     </RelativeLayout>

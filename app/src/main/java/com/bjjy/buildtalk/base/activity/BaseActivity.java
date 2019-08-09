@@ -1,5 +1,9 @@
 package com.bjjy.buildtalk.base.activity;
 
+import android.app.ActivityManager;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,6 +21,8 @@ import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bjjy.buildtalk.weight.BaseDialog;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -51,6 +57,7 @@ public abstract class BaseActivity<T extends IPresenter> extends AbstractActivit
     private int mCurrentState = NORMAL_STATE;
     private boolean isLoading = true;//是否使用状态布局
     private BaseDialog mLoadingDialog;
+    private Uri data;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -244,5 +251,23 @@ public abstract class BaseActivity<T extends IPresenter> extends AbstractActivit
         }
         if(hideView == null) return;
         AnimatorUtils.hideByAlpha(hideView);
+    }
+
+    public boolean isExistMainActivity(Class<?> activity) {
+        Intent intent = new Intent(this, activity);
+        ComponentName cmpName = intent.resolveActivity(getPackageManager());
+        boolean flag = false;
+        if (cmpName != null) { // 说明系统中存在这个activity    
+            ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+            List<ActivityManager.RunningTaskInfo> taskInfoList =am.getRunningTasks(10);
+            for (ActivityManager.RunningTaskInfo taskInfo : taskInfoList) {
+                if (taskInfo.baseActivity.equals(cmpName)) {// 说明它已经启动了
+                    flag = true;
+                    break;//跳出循环，优化效率
+                }
+            }
+        }
+        return flag;
+
     }
 }

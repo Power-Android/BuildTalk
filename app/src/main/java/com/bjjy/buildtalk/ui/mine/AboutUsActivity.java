@@ -2,7 +2,8 @@ package com.bjjy.buildtalk.ui.mine;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -24,6 +25,8 @@ public class AboutUsActivity extends BaseActivity<AboutUsPresenter> implements A
     Toolbar mToolbar;
     @BindView(R.id.include_toolbar)
     RelativeLayout mIncludeToolbar;
+    @BindView(R.id.webview)
+    WebView mWebview;
 
     @Override
     protected int getLayoutId() {
@@ -39,6 +42,13 @@ public class AboutUsActivity extends BaseActivity<AboutUsPresenter> implements A
 
     @Override
     protected void initEventAndData() {
-
+        WebSettings settings = mWebview.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setDomStorageEnabled(true);
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
+        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        mWebview.loadUrl("https://jt.chinabim.com/we");
     }
+
 }

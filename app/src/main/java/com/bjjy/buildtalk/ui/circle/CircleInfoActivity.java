@@ -22,6 +22,7 @@ import com.bumptech.glide.Glide;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.net.URLEncoder;
 import java.util.List;
 
 import butterknife.BindView;
@@ -76,6 +77,8 @@ public class CircleInfoActivity extends BaseActivity<CircleInfoPresenter> implem
     private Intent mIntent;
     private String mUrl;
     private String mJieshao;
+    private String mEndUrl;
+    private String mType;
 
     @Override
     protected int getLayoutId() {
@@ -85,10 +88,16 @@ public class CircleInfoActivity extends BaseActivity<CircleInfoPresenter> implem
     @Override
     protected void initView() {
         StatusBarUtils.changeStatusBar(this, true, false);
+        mType = getIntent().getStringExtra("type");
         mCircle_id = getIntent().getStringExtra("circle_id");
         mOperate_user = getIntent().getStringExtra("operate_user");
         mJieshao = getIntent().getStringExtra("jieshao");
-        mUrl = "https://jt.chinabim.com/share/#/topic/" + mCircle_id + "?suid=" + mPresenter.mDataManager.getUser().getUser_id();
+        mUrl = Constants.BASE_URL + "jtfwhgetopenid" + "?user_id=" + mPresenter.mDataManager.getUser().getUser_id() + "&circle_id=" + mCircle_id;
+        if (TextUtils.equals(mType, "toptic")){
+            mEndUrl = Constants.END_URL + "&redirect_uri=" + URLEncoder.encode(mUrl) + "&response_type=code&scope=snsapi_userinfo&state=topic#wechat_redirect";
+        }else {
+            mEndUrl = Constants.END_URL + "&redirect_uri=" + URLEncoder.encode(mUrl) + "&response_type=code&scope=snsapi_userinfo&state=coursePay#wechat_redirect";
+        }
     }
 
     @Override
@@ -138,7 +147,7 @@ public class CircleInfoActivity extends BaseActivity<CircleInfoPresenter> implem
                 finish();
                 break;
             case R.id.share_iv:
-                DialogUtils.showShareDialog(this, mUrl, mMasterInfoEntity.getCircle_name(),
+                DialogUtils.showShareDialog(this, mEndUrl, mMasterInfoEntity.getCircle_name(),
                         mMasterInfoEntity.getCircle_image().getPic_url(), mJieshao);
                 break;
             case R.id.member_rl:

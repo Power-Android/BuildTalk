@@ -62,6 +62,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -159,6 +160,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
     private BaseDialog mDeleteDialog;
     private int mViewpager_position;
     private String mUrl;
+    private String mEndUrl;
     private NestedScrollView mEmptyView;
     private RecyclerView mRecyclerView;
 
@@ -188,7 +190,8 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
         //设置appbar滚动布局的最小高度 因为getHeight可能为0，所以直接加上导航栏和tablayout的高度
         mMinRl.setMinimumHeight(StatusBarUtils.getStatusBarHeight() + (int) getResources().getDimension(R.dimen.dp_44));
         mAppBarLayout.addOnOffsetChangedListener(this);
-        mUrl = "https://jt.chinabim.com/share/#/topic/" + mCircle_id + "?suid=" + mPresenter.mDataManager.getUser().getUser_id();
+        mUrl = Constants.BASE_URL + "jtfwhgetopenid" + "?user_id=" + mPresenter.mDataManager.getUser().getUser_id() + "&circle_id=" + mCircle_id;
+        mEndUrl = Constants.END_URL + "&redirect_uri=" + URLEncoder.encode(mUrl) + "&response_type=code&scope=snsapi_userinfo&state=topic#wechat_redirect";
         EventBus.getDefault().register(this);
         KeyboardUtils.registerSoftInputChangedListener(this, height -> {
             if (height == 0 && mMInputDialog != null) {
@@ -394,18 +397,19 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
                 finish();
                 break;
             case R.id.share_iv:
-                DialogUtils.showShareDialog(this, mUrl, mCircleInfoEntity.getCircleInfo().getCircle_name(),
+                DialogUtils.showShareDialog(this, mEndUrl, mCircleInfoEntity.getCircleInfo().getCircle_name(),
                         mCircleInfoEntity.getCircleInfo().getCircle_image().getPic_url(), mCircleInfoEntity.getCircleInfo().getCircle_desc());
                 break;
             case R.id.join_tv:
                 LoginHelper.login(this, mPresenter.mDataManager, () -> mPresenter.joinCircle(mCircle_id));
                 break;
             case R.id.pre_share_iv:
-                DialogUtils.showShareDialog(this, mUrl, mCircleInfoEntity.getCircleInfo().getCircle_name(),
+                DialogUtils.showShareDialog(this, mEndUrl, mCircleInfoEntity.getCircleInfo().getCircle_name(),
                         mCircleInfoEntity.getCircleInfo().getCircle_image().getPic_url(), mCircleInfoEntity.getCircleInfo().getCircle_desc());
                 break;
             case R.id.more_iv:
                 mIntent = new Intent(this, CircleInfoActivity.class);
+                mIntent.putExtra("type", "toptic");
                 mIntent.putExtra("circle_id", mCircle_id);
                 mIntent.putExtra("operate_user", mCircleInfoEntity.getCircleInfo().getUser_id() + "");
                 mIntent.putExtra("jieshao", mCircleInfoEntity.getCircleInfo().getCircle_desc());
@@ -520,8 +524,9 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
                 showCommentDialog(data.get(i).getTheme_id(), i, data);
                 break;
             case R.id.item_share_iv:
-                String mUrl = "https://jt.chinabim.com/share/#/theme/" + data.get(i).getUser_id() + "/" + data.get(i).getTheme_id();
-                DialogUtils.showShareDialog(this, mUrl, mCircleInfoEntity.getCircleInfo().getCircle_name(),
+                String mUrl = Constants.BASE_URL + "jtfwhgetopenid" + "?user_id=" + mPresenter.mDataManager.getUser().getUser_id() + "&theme_id=" + data.get(i).getTheme_id();
+                String mEndUrl = Constants.END_URL + "&redirect_uri=" + URLEncoder.encode(mUrl) + "&response_type=code&scope=snsapi_userinfo&state=theme#wechat_redirect";
+                DialogUtils.showShareDialog(this, mEndUrl, mCircleInfoEntity.getCircleInfo().getCircle_name(),
                         data.get(i).getHeadImage(), data.get(i).getTheme_content());
                 break;
             case R.id.more_tv:

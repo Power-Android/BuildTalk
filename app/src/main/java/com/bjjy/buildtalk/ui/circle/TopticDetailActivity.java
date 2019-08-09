@@ -52,6 +52,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.Serializable;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -127,6 +128,7 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
     private int mCountCommentNum = 0;
     private boolean isGone = false;
     private String mUrl;
+    private String mEndUrl;
 
     @Override
     protected int getLayoutId() {
@@ -173,7 +175,8 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
     @Override
     public void handlerThemeInfo(ThemeInfoEntity.ThemeInfoBean themeInfoEntity) {
         this.themeInfoEntity = themeInfoEntity;
-        mUrl = "https://jt.chinabim.com/share/#/theme/" + themeInfoEntity.getUser_id() + "/" + mTheme_id;
+        mUrl = Constants.BASE_URL + "jtfwhgetopenid" + "?user_id=" + mPresenter.mDataManager.getUser().getUser_id() + "&theme_id=" + mTheme_id;
+        mEndUrl = Constants.END_URL + "&redirect_uri=" + URLEncoder.encode(mUrl) + "&response_type=code&scope=snsapi_userinfo&state=theme#wechat_redirect";
         Glide.with(this).load(themeInfoEntity.getHeadImage()).into(mItemFaceIv);
         mItemNameTv.setText(themeInfoEntity.getName());
         mThemeCountParise = themeInfoEntity.getThemeCountParise();
@@ -285,7 +288,7 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
                 break;
             case R.id.share_iv:
                 if (themeInfoEntity != null)
-                    DialogUtils.showShareDialog(this, mUrl, mTitle,
+                    DialogUtils.showShareDialog(this, mEndUrl, mTitle,
                             themeInfoEntity.getHeadImage(), themeInfoEntity.getTheme_content());
                 break;
             case R.id.record_ll:

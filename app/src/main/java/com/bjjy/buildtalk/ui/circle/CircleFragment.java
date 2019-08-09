@@ -192,7 +192,10 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
         });
         agreement.setOnClickListener(v -> {
             mBottomSheetDialog.dismiss();
-            startActivity(new Intent(mContext, CircleAgreementActvity.class));
+            Intent intent = new Intent(mContext, CircleAgreementActvity.class);
+            intent.putExtra("type", "qzgz");
+            intent.putExtra("url", "https://jt.chinabim.com/qz.html");
+            startActivity(intent);
         });
         next.setOnClickListener(v -> {
             mBottomSheetDialog.dismiss();

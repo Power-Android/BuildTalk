@@ -33,6 +33,7 @@ import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.EveryTalkDetailAdapter;
+import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.GuestBookEntity;
@@ -67,6 +68,8 @@ import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +79,7 @@ import butterknife.OnClick;
 import cn.jzvd.JZDataSource;
 import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
+import retrofit2.http.Url;
 
 public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresenter> implements EveryTalkDetailContract.View, BaseQuickAdapter.OnItemChildClickListener, OnLoadMoreListener, Player.EventListener {
 
@@ -148,6 +152,7 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     private int mPage_count = 1;
     private String mType;
     private String mUrl;
+    private String mEndUrl;
     private BaseDialog mBuyDialog;
     private IWXAPI wxapi;
     private long curTime = 0;
@@ -448,11 +453,13 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
                 break;
             case R.id.share_iv:
                 if (TextUtils.isEmpty(mType)){
-                    mUrl = "https://jt.chinabim.com/share/#/news/" + mArticle_id;
-                    DialogUtils.showShareDialog(this, mUrl, mMNewsInfo.getArticle_title(), mMNewsInfo.getAuthor_pic(), "每日一谈");
+                    mUrl = Constants.BASE_URL + "jtfwhgetopenid" + "?user_id=" + mPresenter.mDataManager.getUser().getUser_id() + "&news_id=" + mArticle_id;
+                    mEndUrl = Constants.END_URL + "&redirect_uri=" + URLEncoder.encode(mUrl) + "&response_type=code&scope=snsapi_userinfo&state=news#wechat_redirect";
+                    DialogUtils.showShareDialog(this, mEndUrl, mMNewsInfo.getArticle_title(), mMNewsInfo.getAuthor_pic(), "每日一谈");
                 }else {
-                    mUrl = "https://jt.chinabim.com/share/#/article/" + mArticle_id;
-                    DialogUtils.showShareDialog(this, mUrl, mMNewsInfo.getArticle_title(), mMNewsInfo.getAuthor_pic(), mMNewsInfo.getArticle_title());
+                    mUrl = Constants.BASE_URL + "jtfwhgetopenid" + "?user_id=" + mPresenter.mDataManager.getUser().getUser_id() + "&article_id=" + mArticle_id;
+                    mEndUrl = Constants.END_URL + "&redirect_uri=" + URLEncoder.encode(mUrl) + "&response_type=code&scope=snsapi_userinfo&state=articlePay#wechat_redirect";
+                    DialogUtils.showShareDialog(this, mEndUrl, mMNewsInfo.getArticle_title(), mMNewsInfo.getAuthor_pic(), mMNewsInfo.getArticle_title());
                 }
                 break;
             case R.id.record_ll:

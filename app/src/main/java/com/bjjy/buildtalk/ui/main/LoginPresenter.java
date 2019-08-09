@@ -52,8 +52,9 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> {
                 .filter(iEntityBaseResponse -> mView != null)
                 .subscribeWith(new BaseObserver<User>(mView, false) {
                     @Override
-                    public void onSuccess(User user) {
+                    public void onSuccess(User user) {//微信登录已经绑定手机号
                         user.setLoginStatus(true);
+//                        user.setBindStatus("1");
                         mDataManager.addUser(user);
                         mView.handlerSuccess(user);
                         EventBus.getDefault().post(new RefreshEvent(Constants.INFO_REFRESH));
@@ -62,7 +63,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> {
                     @Override
                     public void onNext(BaseResponse<User> baseResponse) {
                         super.onNext(baseResponse);
-                        if (baseResponse.getErrorCode() == 0){
+                        if (baseResponse.getErrorCode() == 0){//微信登录没有绑定手机号
                             mView.handlerBindPhone("1",unionid, openid, iconurl, name);
                         }
                     }

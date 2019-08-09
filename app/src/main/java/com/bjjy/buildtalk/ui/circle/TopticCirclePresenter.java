@@ -125,6 +125,7 @@ public class TopticCirclePresenter extends BasePresenter<TopticCircleContract.Vi
         paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
         paramas.put("circle_id", circle_id);
         paramas.put(Constants.TIMESTAMP, timestamp);
+        paramas.put(Constants.SOURCE, Constants.ANDROID);
         String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
 
         Map<String, String> headers = new HashMap<>();

@@ -159,7 +159,7 @@ public class PublishActivity extends BaseActivity<PublishPresenter> implements P
                         File file = new File(mLocalMedia.get(i).getPath());
                         RequestBody body = RequestBody.create(MediaType.parse("image/*"), file);   //说明该文件为图片类型
                         MultipartBody.Part part = MultipartBody.Part.createFormData("file[]", file.getName(), body);
-                        list.add(new ThemeImageBean(mLocalMedia.get(i).getPath(), part));
+                        list.add(new ThemeImageBean(mLocalMedia.get(i).getPath(), part, i));
                     }
                 }
                 mMyGridAdapter.notifyDataSetChanged();

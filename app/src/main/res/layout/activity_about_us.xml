@@ -9,13 +9,8 @@
     android:background="@color/white"
     tools:context="com.bjjy.buildtalk.ui.mine.AboutUsActivity">
     <include layout="@layout/toolbar_layout"/>
-    <TextView
+    <WebView
+        android:id="@+id/webview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="建谈是一款主打建筑行业知识服务的APP，旨在打造建筑行业第一内容分享平台及社交平台，实现建筑从业者聊建筑,上建谈。
-建谈推行碎片化学习方式，通过订阅专栏、付费音、视频课程等形式为广大建筑行业爱好者及从业者提供知识发声、知识共享、学习聆听、沟通交流等服务。将建筑领域不同类型的知识经验传授给用户，使建筑行业用户快速获取高质量、专业性内容，最大化解决了目前建筑行业知识不能很好流通、业内从业人员信息获取困难的局面。"
-        android:padding="@dimen/common_margin"
-        android:textColor="@color/text_drak"
-        android:textSize="@dimen/sp_14"
-        android:lineSpacingExtra="2.0px"/>
+        android:layout_height="match_parent"/>
 </LinearLayout>

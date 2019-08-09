@@ -23,7 +23,8 @@
         android:roundIcon="@mipmap/app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.main.SplashActivity"
+        <activity
+            android:name=".ui.main.SplashActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -95,9 +96,12 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <!-- Activity配置 -->
-        <activity android:name=".ui.main.MainActivity"
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:launchMode="singleTask"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait">
+        </activity>
         <activity android:name=".ui.main.GuideActivity" />
         <activity android:name=".ui.discover.EveryTalkListActivity" />
         <activity android:name=".ui.discover.TopticListActivity" />

@@ -110,13 +110,15 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
             case BODY_PROJECT:
                 List<String> project_list = new ArrayList<>();
                 project_list.add("");
-                project_list.add("");
                 RecyclerView project_RecyclerView = helper.getView(R.id.project_recyclerView);
                 project_RecyclerView.setLayoutManager(new GridLayoutManager(mContext, 2));
                 ProjectAdapter projectAdapter = new ProjectAdapter(R.layout.adapter_good_project, project_list);
                 project_RecyclerView.setAdapter(projectAdapter);
                 projectAdapter.setOnItemClickListener((adapter, view, position) -> {
-//                    ToastUtils.showShort("精彩专题：" + position);
+                    Intent intent = new Intent(mContext, EveryTalkDetailActivity.class);
+                    intent.putExtra("article_id", "87");
+                    intent.putExtra("type","article");
+                    mContext.startActivity(intent);
                 });
                 break;
         }

@@ -14,6 +14,7 @@ import com.bjjy.buildtalk.utils.StringUtils;
 import com.bjjy.buildtalk.utils.TimeUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +59,15 @@ public class PublishPresenter extends BasePresenter<PublishContarct.View> {
                     .subscribeWith(new BaseObserver<String>(mView, false) {
                         @Override
                         public void onSuccess(String picUrl) {
+                            List<String> result = Arrays.asList(picUrl.split(","));
+                            for (int i = 0; i < result.size(); i++) {
+                                for (int j = 0; j < list.size(); j++) {
+                                    if (!list.get(j).getPic_url().contains("https")){
+                                        list.get(j).setPic_url(result.get(i));
+                                        break;
+                                    }
+                                }
+                            }
                             publish(circle_id, theme_id, theme_content, picUrl, isEdit, list);
                         }
                     }));
@@ -110,9 +120,11 @@ public class PublishPresenter extends BasePresenter<PublishContarct.View> {
 //                picUrl = StringUtils.listToString2(list, ',');
 //            }
 //        }
-        if (TextUtils.isEmpty(picUrl)){
-            picUrl = StringUtils.listToString2(list, ',');
-        }else {
+//        List<String> result = Arrays.asList(picUrl.split(","));
+//        for (int i = 0; i < result.size(); i++) {
+//            list.get(i).setPic_url(result.get(i));
+//        }
+        if (!TextUtils.isEmpty(picUrl)){
             picUrl = StringUtils.listToString2(list, ',');
         }
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
