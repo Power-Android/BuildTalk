@@ -106,6 +106,7 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
                     intent.putExtra("circle_id", String.valueOf(mCourseEntities.get(position).getCircle_id()));
                     mContext.startActivity(intent);
                 });
+
                 break;
             case BODY_PROJECT:
                 List<String> project_list = new ArrayList<>();
