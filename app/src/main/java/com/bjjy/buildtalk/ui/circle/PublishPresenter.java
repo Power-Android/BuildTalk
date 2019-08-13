@@ -124,9 +124,7 @@ public class PublishPresenter extends BasePresenter<PublishContarct.View> {
 //        for (int i = 0; i < result.size(); i++) {
 //            list.get(i).setPic_url(result.get(i));
 //        }
-        if (!TextUtils.isEmpty(picUrl)){
-            picUrl = StringUtils.listToString2(list, ',');
-        }
+        picUrl = StringUtils.listToString2(list, ',');
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
         paramas.put(Constants.TIMESTAMP, timestamp);

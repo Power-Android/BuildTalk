@@ -48,6 +48,11 @@ public class CourseCirclePresenter extends BasePresenter<CourseCircleContract.Vi
     }
 
     public void tabData() {
+        if (mTitleList.size() > 0 && mBadgeCountList.size() > 0 && mViews.size() > 0){
+            mTitleList.clear();
+            mBadgeCountList.clear();
+            mViews.clear();
+        }
         mTitleList.add(App.getContext().getString(R.string.theme));
         mTitleList.add(App.getContext().getString(R.string.essence));
 
@@ -66,9 +71,9 @@ public class CourseCirclePresenter extends BasePresenter<CourseCircleContract.Vi
     public void CircleInfo(String circle_id) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
-        if (mDataManager.getLoginStatus()){
+        if (mDataManager.getLoginStatus()) {
             paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
-        }else {
+        } else {
             paramas.put(Constants.USER_ID, "");
         }
         paramas.put(Constants.SOURCE, Constants.ANDROID);
@@ -94,9 +99,9 @@ public class CourseCirclePresenter extends BasePresenter<CourseCircleContract.Vi
     public void themeInfo(String circle_id, int page, String type, boolean isRefresh) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
-        if (mDataManager.getLoginStatus()){
+        if (mDataManager.getLoginStatus()) {
             paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
-        }else {
+        } else {
             paramas.put(Constants.USER_ID, "");
         }
         paramas.put(Constants.PAGE, String.valueOf(page));
@@ -125,7 +130,7 @@ public class CourseCirclePresenter extends BasePresenter<CourseCircleContract.Vi
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
         paramas.put("course_id", circle_id);
-        paramas.put(Constants.PAGE, coursePage+"");
+        paramas.put(Constants.PAGE, coursePage + "");
         paramas.put(Constants.PAGE_SIZE, "10");
 
         paramas.put(Constants.TIMESTAMP, timestamp);
@@ -141,7 +146,7 @@ public class CourseCirclePresenter extends BasePresenter<CourseCircleContract.Vi
                 .subscribeWith(new BaseObserver<CourseListEntity>(mView, false) {
                     @Override
                     public void onSuccess(CourseListEntity courseListEntity) {
-                        if (courseListEntity.getCourselist().size() > 0){
+                        if (courseListEntity.getCourselist().size() > 0) {
                             mView.handlerCourseList(courseListEntity);
                         }
                     }
@@ -153,7 +158,7 @@ public class CourseCirclePresenter extends BasePresenter<CourseCircleContract.Vi
         Map<String, String> paramas = new HashMap<>();
         paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
         paramas.put("type_id", type_id);
-        paramas.put("data_id", data_id+"");
+        paramas.put("data_id", data_id + "");
         paramas.put("order_name", circle_name);
         paramas.put("order_price", course_money);
         paramas.put(Constants.SOURCE, Constants.ANDROID);
@@ -180,7 +185,7 @@ public class CourseCirclePresenter extends BasePresenter<CourseCircleContract.Vi
         Map<String, String> paramas = new HashMap<>();
         paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
         paramas.put(Constants.SOURCE, Constants.ANDROID);
-        paramas.put("data_id", data.get(i).getTheme_id()+"");
+        paramas.put("data_id", data.get(i).getTheme_id() + "");
         paramas.put("type_id", "1");
         paramas.put(Constants.TIMESTAMP, timestamp);
         String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
@@ -195,7 +200,7 @@ public class CourseCirclePresenter extends BasePresenter<CourseCircleContract.Vi
                 .subscribeWith(new BaseObserver<PraiseEntity>(mView, false) {
                     @Override
                     public void onSuccess(PraiseEntity praiseEntity) {
-                        mView.handlerPraiseSuccess(data,i,praiseEntity);
+                        mView.handlerPraiseSuccess(data, i, praiseEntity);
                     }
                 }));
     }
@@ -204,7 +209,7 @@ public class CourseCirclePresenter extends BasePresenter<CourseCircleContract.Vi
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
         paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
-        paramas.put("theme_id", data.getTheme_id()+"");
+        paramas.put("theme_id", data.getTheme_id() + "");
         paramas.put(Constants.SOURCE, Constants.ANDROID);
         paramas.put(Constants.TIMESTAMP, timestamp);
         String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
@@ -219,7 +224,7 @@ public class CourseCirclePresenter extends BasePresenter<CourseCircleContract.Vi
                 .subscribeWith(new BaseObserver<IEntity>(mView, false) {
                     @Override
                     public void onSuccess(IEntity iEntity) {
-                        mView.handlerCollectSuccess(iEntity,data, i);
+                        mView.handlerCollectSuccess(iEntity, data, i);
                     }
                 }));
     }
@@ -228,7 +233,7 @@ public class CourseCirclePresenter extends BasePresenter<CourseCircleContract.Vi
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
         paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
-        paramas.put("theme_id", data.getTheme_id()+"");
+        paramas.put("theme_id", data.getTheme_id() + "");
         paramas.put(Constants.TIMESTAMP, timestamp);
         String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
 
@@ -242,7 +247,7 @@ public class CourseCirclePresenter extends BasePresenter<CourseCircleContract.Vi
                 .subscribeWith(new BaseObserver<IEntity>(mView, false) {
                     @Override
                     public void onSuccess(IEntity iEntity) {
-                        mView.handlerDeleteSuccess(iEntity,data, i, list);
+                        mView.handlerDeleteSuccess(iEntity, data, i, list);
                     }
                 }));
     }
@@ -267,7 +272,7 @@ public class CourseCirclePresenter extends BasePresenter<CourseCircleContract.Vi
                 .subscribeWith(new BaseObserver<CommentSuccessEntity>(mView, false) {
                     @Override
                     public void onSuccess(CommentSuccessEntity commentSuccessEntity) {
-                        mView.handlerCommentSuccess(i,data, commentSuccessEntity.getCommentInfo());
+                        mView.handlerCommentSuccess(i, data, commentSuccessEntity.getCommentInfo());
                     }
                 }));
     }

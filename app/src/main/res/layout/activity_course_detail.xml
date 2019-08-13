@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/normalView"
     tools:context="com.bjjy.buildtalk.ui.circle.CourseDetailActivity">
     <FrameLayout
         android:id="@+id/fl_VideoPlayer"
@@ -117,6 +118,35 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:overScrollMode="never"/>
+                <android.support.v4.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/emptyView"
+                    android:visibility="gone">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/view1">
+
+                        <ImageView
+                            android:id="@+id/empty_img"
+                            android:layout_width="@dimen/dp_217"
+                            android:layout_height="@dimen/dp_168"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/empty_jinghua" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/empty_img"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/common_margin"
+                            android:text="无内容"
+                            android:textColor="@color/text_light"
+                            android:textSize="@dimen/sp_15" />
+                    </RelativeLayout>
+                </android.support.v4.widget.NestedScrollView>
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>

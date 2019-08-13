@@ -243,6 +243,8 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void event(PayEvent eventBean) {
         if (TextUtils.equals(eventBean.getMsg(), Constants.PAY_SUCCESS)) {
+            mList.clear();
+            mThemeInfoList.clear();
             initEventAndData();
         }
     }

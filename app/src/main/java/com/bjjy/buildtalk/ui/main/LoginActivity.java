@@ -119,6 +119,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
             String openid = data.get("openid");
             String name = data.get("name");
             String iconurl = data.get("iconurl");
+            mPresenter.mDataManager.getUser().setBindStatus("1");
             mPresenter.checkIsBind(unionid, openid, name, iconurl);
         }
 

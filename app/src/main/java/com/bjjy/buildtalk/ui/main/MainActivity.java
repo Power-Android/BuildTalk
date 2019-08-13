@@ -196,21 +196,21 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
             switch (type) {
                 case "1"://话题圈
                     if (!TextUtils.isEmpty(circleId)) {
-                        Intent intent = new Intent(App.getContext(), TopticCircleActivity.class);
+                        Intent intent = new Intent(this, TopticCircleActivity.class);
                         intent.putExtra("circle_id", circleId);
                         startActivity(intent);
                     }
                     break;
                 case "2"://每日一谈
                     if (!TextUtils.isEmpty(articleOrNewsId)) {
-                        Intent intent = new Intent(App.getContext(), EveryTalkDetailActivity.class);
+                        Intent intent = new Intent(this, EveryTalkDetailActivity.class);
                         intent.putExtra("article_id", articleOrNewsId);
                         startActivity(intent);
                     }
                     break;
                 case "3"://主题详情
                     if (!TextUtils.isEmpty(themeId)) {
-                        Intent intent = new Intent(App.getContext(), TopticDetailActivity.class);
+                        Intent intent = new Intent(this, TopticDetailActivity.class);
                         intent.putExtra("title", circleName);
                         intent.putExtra("theme_id", themeId);
                         startActivity(intent);
@@ -218,14 +218,14 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                     break;
                 case "4"://课程圈
                     if (!TextUtils.isEmpty(circleId)) {
-                        Intent intent = new Intent(App.getContext(), CourseCircleActivity.class);
+                        Intent intent = new Intent(this, CourseCircleActivity.class);
                         intent.putExtra("circle_id", circleId);
                         startActivity(intent);
                     }
                     break;
                 case "5"://精品文章
                     if (!TextUtils.isEmpty(articleOrNewsId)) {
-                        Intent intent = new Intent(App.getContext(), EveryTalkDetailActivity.class);
+                        Intent intent = new Intent(this, EveryTalkDetailActivity.class);
                         intent.putExtra("type", "article");
                         intent.putExtra("circle_id", circleId);
                         startActivity(intent);

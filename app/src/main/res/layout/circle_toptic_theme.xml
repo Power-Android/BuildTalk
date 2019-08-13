@@ -41,6 +41,5 @@
                     android:textSize="@dimen/sp_15" />
             </RelativeLayout>
         </android.support.v4.widget.NestedScrollView>
-
     </RelativeLayout>
 </com.scwang.smartrefresh.layout.SmartRefreshLayout>

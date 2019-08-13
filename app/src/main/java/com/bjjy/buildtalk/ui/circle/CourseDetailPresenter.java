@@ -85,13 +85,7 @@ public class CourseDetailPresenter extends BasePresenter<CourseDetailContarct.Vi
                 .subscribeWith(new BaseObserver<ThemeInfoEntity>(mView, false) {
                     @Override
                     public void onSuccess(ThemeInfoEntity themeInfoEntity) {
-                        if (themeInfoEntity.getThemeInfo().size() > 0){
                             mView.handlerThemeInfo(themeInfoEntity, isRefresh);
-                        }else {
-                            if ("4".equals(type)){
-                                mView.handlerThemeInfoEmpty(themeInfoEntity.getThemeInfo());
-                            }
-                        }
                     }
                 }));
     }

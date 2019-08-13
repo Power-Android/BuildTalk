@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -43,14 +42,10 @@ import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.GlideUtils;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
-import com.bjjy.buildtalk.utils.LogUtils;
-import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
-import com.bjjy.buildtalk.utils.TimeUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bjjy.buildtalk.weight.BaseDialog;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -124,6 +119,8 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
     RelativeLayout mDirRl;
     @BindView(R.id.collapse_tv)
     RelativeLayout mCollapseTv;
+    @BindView(R.id.emptyView)
+    NestedScrollView mEmptyView;
 
     private int coursePage = 1, page = 1;
     private DirectoryAdapter mDirectoryAdapter;
@@ -148,7 +145,7 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
     Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            if (!isDestroyed()){
+            if (!isDestroyed()) {
                 Glide.with(CourseDetailActivity.this).load(mBitmap).into(mVideoplayer.thumbImageView);
             }
             return true;
@@ -290,25 +287,34 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
         mList = courseListEntity.getCourselist();
         mUpdateTv.setText("更新至" + countUpdateCourse + "讲/全" + countCourse + "讲");
         mDirectoryAdapter.addData(courseListEntity.getCourselist());
-        if (mDirectoryAdapter.getData().size() >= mPosition + 1){
+        if (mDirectoryAdapter.getData().size() >= mPosition + 1) {
             mDirectoryAdapter.getData().get(mPosition).setSelected(true);
         }
     }
 
     @Override
     public void handlerThemeInfo(ThemeInfoEntity themeInfoEntity, boolean isRefresh) {
-        mTheme_page_count = themeInfoEntity.getPage_count();
-        mThemeInfoList = themeInfoEntity.getThemeInfo();
+        if (themeInfoEntity.getThemeInfo().size() > 0){
+            mTheme_page_count = themeInfoEntity.getPage_count();
+            mThemeInfoList = themeInfoEntity.getThemeInfo();
+            mNumTv.setText(themeInfoEntity.getCountTheme());
+        }
 
         if ("0".equals(mIsJoin) && mThemeInfoList.size() > 5) {
             mThemeInfoList = mThemeInfoList.subList(0, 5);
         }
-        if (isRefresh) {
-            mTopticAdapter.setNewData(mThemeInfoList);
+        if (mThemeInfoList.size() > 0) {
+            mEmptyView.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+            if (isRefresh) {
+                mTopticAdapter.setNewData(mThemeInfoList);
+            } else {
+                mTopticAdapter.addData(mThemeInfoList);
+            }
         } else {
-            mTopticAdapter.addData(mThemeInfoList);
+            mRecyclerView.setVisibility(View.GONE);
+            mEmptyView.setVisibility(View.VISIBLE);
         }
-        mNumTv.setText(themeInfoEntity.getCountTheme());
     }
 
     @Override
@@ -343,7 +349,7 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
                 break;
             case R.id.pre_share_iv:
                 String url = "https://jt.chinabim.com/share/#/course/" + mCircle_id + "?suid=" + mPresenter.mDataManager.getUser().getUser_id();
-                DialogUtils.showShareDialog(this,url,mArticle_title,mCircleInfoEntity.getCircleInfo().getCircle_image().getPic_url(), mCircleInfoEntity.getCircleInfo().getCircle_desc());
+                DialogUtils.showShareDialog(this, url, mArticle_title, mCircleInfoEntity.getCircleInfo().getCircle_image().getPic_url(), mCircleInfoEntity.getCircleInfo().getCircle_desc());
                 break;
             case R.id.share_iv:
                 break;
@@ -601,11 +607,10 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
     public void onLoadMoreRequested() {
         if (coursePage < mDir_page_count) {
             coursePage++;
-            mPresenter.courseList(mCircleInfoEntity.getCircleInfo().getData_id()+"", coursePage);
+            mPresenter.courseList(mCircleInfoEntity.getCircleInfo().getData_id() + "", coursePage);
             mDirectoryAdapter.loadMoreComplete();
         } else {
             mDirectoryAdapter.loadMoreEnd();
         }
     }
-
 }

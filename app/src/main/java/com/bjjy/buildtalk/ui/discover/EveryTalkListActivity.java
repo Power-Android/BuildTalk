@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -57,6 +58,8 @@ public class EveryTalkListActivity extends BaseActivity<EveryTalkListPresenter> 
     TextView mReceivedTv;
     @BindView(R.id.num_tv)
     TextView mNumTv;
+    @BindView(R.id.remark_tv)
+    TextView mRemarkTv;
 
     private EveryTalkListAdapter mTalkListAdapter;
     private int page = 1;
@@ -89,6 +92,7 @@ public class EveryTalkListActivity extends BaseActivity<EveryTalkListPresenter> 
         mPage_count = everyTalkListEntity.getPage_count();
         int countupdate = everyTalkListEntity.getAuthorInfo().getCountupdate();
         mNumTv.setText("已更新至" + countupdate + "期");
+        mRemarkTv.setText(Html.fromHtml(everyTalkListEntity.getAuthorInfo().getRemark()));
         introduce(everyTalkListEntity.getAuthorInfo());
         mNewsInfoBeanList = everyTalkListEntity.getNewsInfo();
         if (isRefresh) {
@@ -169,5 +173,4 @@ public class EveryTalkListActivity extends BaseActivity<EveryTalkListPresenter> 
         intent.putExtra("article_id", data.get(position).getArticle_id() + "");
         startActivity(intent);
     }
-
 }

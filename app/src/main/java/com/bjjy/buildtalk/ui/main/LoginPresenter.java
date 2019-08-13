@@ -54,7 +54,6 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> {
                     @Override
                     public void onSuccess(User user) {//微信登录已经绑定手机号
                         user.setLoginStatus(true);
-//                        user.setBindStatus("1");
                         mDataManager.addUser(user);
                         mView.handlerSuccess(user);
                         EventBus.getDefault().post(new RefreshEvent(Constants.INFO_REFRESH));
