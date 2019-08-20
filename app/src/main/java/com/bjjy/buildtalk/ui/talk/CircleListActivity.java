@@ -117,9 +117,14 @@ public class CircleListActivity extends BaseActivity<CircleListPresenter> implem
 
     @Override
     public void handlerAttrntion(BaseResponse<IEntity> baseResponse, List<CircleListEntity.CircleInfoBean> mList, int i) {
+        int countAttention = mList.get(i).getCountAttention();
         if (TextUtils.equals("关注成功", baseResponse.getErrorMsg())) {
+            mList.get(i).setCountAttention(++countAttention);
             mList.get(i).setIs_attention(1);
         } else {
+            if (countAttention > 1){
+                mList.get(i).setCountAttention(--countAttention);
+            }
             mList.get(i).setIs_attention(0);
         }
         mCircleListAdapter.notifyItemChanged(i);

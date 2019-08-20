@@ -55,7 +55,6 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
     TextView mTvReload;
     @BindView(R.id.noNetView)
     RelativeLayout mNoNetView;
-    Unbinder unbinder;
 
     private List<DiscoverEntity> discoverEntityList = new ArrayList<>();
     private DiscoverAdapter mDiscoverAdapter;
@@ -172,11 +171,5 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
                 }, 1000);
                 break;
         }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 }

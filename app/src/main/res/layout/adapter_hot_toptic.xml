@@ -35,26 +35,25 @@
             android:layout_marginRight="@dimen/dp_5"
             android:gravity="center"
             android:ellipsize="end"
-            android:text="建筑结构"
             android:singleLine="true"
             android:textSize="@dimen/sp_14"
             android:textColor="@color/text_drak"
             android:layout_marginTop="@dimen/dp_10"/>
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:layout_marginTop="@dimen/dp_5">
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginLeft="@dimen/dp_5"
+            android:layout_marginRight="@dimen/dp_5">
             <TextView
                 android:id="@+id/item_name_tv"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"
-                android:text="刘新科"
+                android:gravity="center"
+                android:layout_centerInParent="true"
                 android:singleLine="true"
-                android:maxLength="6"
+                android:ellipsize="end"
                 android:textColor="@color/text_mid"
                 android:textSize="@dimen/sp_11" />
             <ImageView
@@ -62,9 +61,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:src="@drawable/tag_icon"
                 android:layout_marginLeft="@dimen/dp_4"/>
-        </LinearLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 

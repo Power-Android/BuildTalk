@@ -72,7 +72,7 @@ public class App extends Application implements HasActivityInjector {
 
     public void initLog() {
         final LogUtils.Config config = LogUtils.getConfig()
-                .setLogSwitch(false)// 设置 log 总开关，包括输出到控制台和文件，默认开
+                .setLogSwitch(true)// 设置 log 总开关，包括输出到控制台和文件，默认开
                 .setConsoleSwitch(true)// 设置是否输出到控制台开关，默认开
                 .setGlobalTag("POWER")// 设置 log 全局标签，默认为空
                 // 当全局标签不为空时，我们输出的 log 全部为该 tag，
@@ -117,7 +117,7 @@ public class App extends Application implements HasActivityInjector {
 
     private void initUM() {
         UMConfigure.init(this, "5cee26353fc195979000144c", "Umeng", UMConfigure.DEVICE_TYPE_PHONE, null);
-        UMConfigure.setLogEnabled(false);
+        UMConfigure.setLogEnabled(true);
         UMConfigure.setEncryptEnabled(true);
 
         MobclickAgent.setScenarioType(context, MobclickAgent.EScenarioType.E_UM_NORMAL);
