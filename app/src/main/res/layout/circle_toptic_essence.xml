@@ -1,28 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <ImageView
-            android:id="@+id/view1"
-            android:layout_width="@dimen/dp_217"
-            android:layout_height="@dimen/dp_168"
-            android:src="@drawable/empty_jinghua"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/dp_30"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="无内容"
-            android:textColor="@color/text_light"
-            android:textSize="@dimen/sp_15"
-            android:layout_below="@+id/view1"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/common_margin"/>
-    </RelativeLayout>
 
-</android.support.v4.widget.NestedScrollView>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/jh_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/jh_emptyView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/view1">
+
+            <ImageView
+                android:id="@+id/empty_img"
+                android:layout_width="@dimen/dp_217"
+                android:layout_height="@dimen/dp_168"
+                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/dp_30"
+                android:src="@drawable/empty_jinghua" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/empty_img"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/common_margin"
+                android:text="无内容"
+                android:textColor="@color/text_light"
+                android:textSize="@dimen/sp_15" />
+        </RelativeLayout>
+    </android.support.v4.widget.NestedScrollView>
+</RelativeLayout>

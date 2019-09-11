@@ -11,10 +11,12 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.App;
@@ -57,7 +59,7 @@ public class CircleTopticAdapter extends BaseQuickAdapter<ThemeInfoEntity.ThemeI
     protected void convert(BaseViewHolder helper, ThemeInfoEntity.ThemeInfoBean item) {
         Glide.with(mContext).load(item.getHeadImage()).into((ImageView) helper.getView(R.id.item_face_iv));
         helper.setText(R.id.item_name_tv, item.getName())
-                .setGone(R.id.item_content_tv, TextUtils.isEmpty(item.getTheme_content())? false : true)
+                .setGone(R.id.content_ll, TextUtils.isEmpty(item.getTheme_content())? false : true)
                 .setGone(R.id.item_job_tv, "1".equals(item.getIs_circleMaster()) ? true : false)
                 .setGone(R.id.item_more_iv, "1".equals(isJoin) ? true : false)
                 .setGone(R.id.column_rl, "1".equals(isJoin) ? true : false)
@@ -70,9 +72,25 @@ public class CircleTopticAdapter extends BaseQuickAdapter<ThemeInfoEntity.ThemeI
                 .addOnClickListener(R.id.item_praise_iv)
                 .addOnClickListener(R.id.item_comment_iv)
                 .addOnClickListener(R.id.item_share_iv)
+                .addOnClickListener(R.id.content_more_tv)
                 .addOnClickListener(R.id.more_tv);
         ImageView singleImg = helper.getView(R.id.item_img_iv);
         NoScrollGridView gridView = helper.getView(R.id.item_grid_view);
+        TextView itemCotentTv = helper.getView(R.id.item_content_tv);
+        TextView contentMoreTv = helper.getView(R.id.content_more_tv);
+        itemCotentTv.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                if (itemCotentTv.getLineCount() < 18) {
+                    contentMoreTv.setVisibility(View.GONE);
+                } else {
+                    contentMoreTv.setVisibility(View.VISIBLE);
+                }
+                //这个回调会调用多次，获取完行数记得注销监听
+                itemCotentTv.getViewTreeObserver().removeOnPreDrawListener(this);
+                return true;
+            }
+        });
 
         List<ThemeImageBean> themeImageBeanList = item.getTheme_image();
         if (themeImageBeanList.size() == 1){

@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +18,21 @@ import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.DiscoverAdapter;
+import com.bjjy.buildtalk.adapter.ThemeTypeAdapter;
 import com.bjjy.buildtalk.base.fragment.BaseFragment;
+import com.bjjy.buildtalk.entity.ActivityEntity;
 import com.bjjy.buildtalk.entity.BannerEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.DiscoverEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
+import com.bjjy.buildtalk.entity.ThemeTypeEntity;
+import com.bjjy.buildtalk.ui.mine.AboutUsActivity;
 import com.bjjy.buildtalk.utils.AnimatorUtils;
 import com.bjjy.buildtalk.utils.NetworkUtils;
+import com.bjjy.buildtalk.weight.BaseDialog;
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -60,6 +69,7 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
     private DiscoverAdapter mDiscoverAdapter;
     public static int HOT_TOPTIC_PAGE = 1;
     public static int COURSE_PAGE = 1;
+    private BaseDialog mDialog;
 
     public static DiscoverFragment newInstance() {
         return new DiscoverFragment();
@@ -84,6 +94,7 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
     @Override
     protected void initEventAndData() {
         mPresenter.discoverType(discoverEntityList);
+        mPresenter.getActivity();
         netWork();
     }
 
@@ -131,6 +142,34 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
     }
 
     @Override
+    public void handlerActivitySuccess(ActivityEntity activityEntity) {
+        if (1 == activityEntity.getIs_show()){
+            mDialog = new BaseDialog.Builder(mContext)
+                    .setViewId(R.layout.dialog_activity_layout)
+                    //设置显示位置
+                    .setGravity(Gravity.CENTER)
+                    //设置动画
+                    .setAnimation(R.style.nomal_aniamtion)
+                    //设置dialog的宽高
+                    .setWidthHeightpx((int) getResources().getDimension(R.dimen.dp_280), (int) getResources().getDimension(R.dimen.dp_380))
+                    //设置触摸dialog外围是否关闭
+                    .isOnTouchCanceled(false)
+                    .addViewOnClickListener(R.id.iv, v -> {
+                        Intent intent = new Intent(mContext, AboutUsActivity.class);
+                        intent.putExtra("url", activityEntity.getActivity_url());
+                        intent.putExtra("title", activityEntity.getActivity_title());
+                        startActivity(intent);
+                        mDialog.dismiss();
+                    })
+                    .addViewOnClickListener(R.id.close, v -> mDialog.dismiss())
+                    //设置监听事件
+                    .builder();
+            Glide.with(mContext).load(activityEntity.getPic_url()).into((RoundedImageView) mDialog.getView(R.id.iv));
+            mDialog.show();
+        }
+    }
+
+    @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         HOT_TOPTIC_PAGE = 1;
         COURSE_PAGE = 1;
@@ -141,13 +180,13 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
         switch (view.getId()) {
-            case R.id.et_all_tv:
+            case R.id.et_all_tv://每日一谈----查看全部
                 startActivity(new Intent(mContext, EveryTalkListActivity.class));
                 break;
-            case R.id.toptic_all_tv:
+            case R.id.toptic_all_tv://热门话题圈----查看全部
                 startActivity(new Intent(mContext, TopticListActivity.class));
                 break;
-            case R.id.toptic_change_ll:
+            case R.id.toptic_change_ll://热门话题圈----换一换
                 ImageView topticChangeIv = view.findViewById(R.id.toptic_change_iv);
                 AnimatorUtils.setRotateAnimation(topticChangeIv);
                 view.setClickable(false);
@@ -157,10 +196,10 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
                     view.setClickable(true);
                 }, 2000);
                 break;
-            case R.id.course_all_tv:
+            case R.id.course_all_tv://精品课程----查看全部
                 startActivity(new Intent(mContext, CourseListActivity.class));
                 break;
-            case R.id.course_change_ll:
+            case R.id.course_change_ll://精品课程----换一换
                 ImageView courseChangeIv = view.findViewById(R.id.course_change_iv);
                 AnimatorUtils.setRotateAnimation(courseChangeIv);
                 view.setClickable(false);

@@ -6,6 +6,7 @@ import com.bjjy.buildtalk.core.greendao.HistoryData;
 import com.bjjy.buildtalk.core.http.helper.HttpHelper;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.core.preference.PreferenceHelper;
+import com.bjjy.buildtalk.entity.ActivityEntity;
 import com.bjjy.buildtalk.entity.AleadyBuyEntity;
 import com.bjjy.buildtalk.entity.BannerEntity;
 import com.bjjy.buildtalk.entity.CircleEntity;
@@ -35,6 +36,7 @@ import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.SearchCircleInfoEntity;
 import com.bjjy.buildtalk.entity.SearchResultEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
+import com.bjjy.buildtalk.entity.VersionRecordEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -420,5 +422,30 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     @Override
     public Observable<BaseResponse<String>> updateCircleInfo(Map<String, String> headers, Map<String, String> params) {
         return mHttpHelper.updateCircleInfo(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<List<VersionRecordEntity>>> versionRecord() {
+        return mHttpHelper.versionRecord();
+    }
+
+    @Override
+    public Observable<BaseResponse<ActivityEntity>> getActivity() {
+        return mHttpHelper.getActivity();
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> addChoiceness(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.addChoiceness(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<String>> getThumb(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.getThumb(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> userShieldRecord(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.userShieldRecord(headers, params);
     }
 }

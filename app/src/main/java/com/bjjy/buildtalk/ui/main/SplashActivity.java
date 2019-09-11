@@ -125,6 +125,7 @@ public class SplashActivity extends BaseActivity<SplashPresenter> implements Spl
                         Intent intent = new Intent(this, TopticDetailActivity.class);
                         intent.putExtra("title", circleName);
                         intent.putExtra("theme_id", themeId);
+                        intent.putExtra("circle_id", "");
                         startActivity(intent);
                     }
                     break;

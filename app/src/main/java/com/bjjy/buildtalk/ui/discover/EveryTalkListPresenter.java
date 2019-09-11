@@ -29,11 +29,12 @@ public class EveryTalkListPresenter extends BasePresenter<EveryTalkContract.View
     }
 
     @Override
-    public void talkList(int page, boolean isRefresh) {
+    public void talkList(int page, boolean isRefresh, String type) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
         paramas.put(Constants.PAGE, page + "");
         paramas.put(Constants.PAGE_SIZE, "10");
+        paramas.put("type", type);
         paramas.put(Constants.TIMESTAMP, timestamp);
         String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
 

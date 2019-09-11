@@ -2,6 +2,7 @@ package com.bjjy.buildtalk.core.http.helper;
 
 import com.bjjy.buildtalk.app.User;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
+import com.bjjy.buildtalk.entity.ActivityEntity;
 import com.bjjy.buildtalk.entity.AleadyBuyEntity;
 import com.bjjy.buildtalk.entity.BannerEntity;
 import com.bjjy.buildtalk.entity.CircleEntity;
@@ -31,6 +32,7 @@ import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.SearchCircleInfoEntity;
 import com.bjjy.buildtalk.entity.SearchResultEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
+import com.bjjy.buildtalk.entity.VersionRecordEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -159,6 +161,16 @@ public interface HttpHelper {
 
     Observable<BaseResponse<PayOrderEntity>> payOrder(Map<String, String> headers, Map<String, String> params);
 
-    Observable<BaseResponse<String>> updateCircleInfo(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+    Observable<BaseResponse<String>> updateCircleInfo(Map<String, String> headers, Map<String, String> params);
+
+    Observable<BaseResponse<List<VersionRecordEntity>>> versionRecord();
+
+    Observable<BaseResponse<ActivityEntity>> getActivity();
+
+    Observable<BaseResponse<IEntity>> addChoiceness(Map<String, String> headers, Map<String, String> params);
+
+    Observable<BaseResponse<String>> getThumb(Map<String, String> headers, Map<String, String> params);
+
+    Observable<BaseResponse<IEntity>> userShieldRecord(Map<String, String> headers, Map<String, String> params);
 
 }

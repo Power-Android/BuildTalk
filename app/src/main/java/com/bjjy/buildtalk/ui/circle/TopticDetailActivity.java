@@ -129,6 +129,9 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
     private boolean isGone = false;
     private String mUrl;
     private String mEndUrl;
+    private String mPath1;//主题
+    private String themePath;//主题拼接完成url
+    private String mCircle_id;
 
     @Override
     protected int getLayoutId() {
@@ -143,6 +146,7 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
         mIncludeToolbar.setLayoutParams(lp);
         mTitle = getIntent().getStringExtra("title");
         mTheme_id = getIntent().getStringExtra("theme_id");
+        mCircle_id = getIntent().getStringExtra("circle_id");
         mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
         mToolbar.setNavigationOnClickListener(v -> finish());
         mToolbarTitle.setText(mTitle);
@@ -152,6 +156,8 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
                 isGone = false;
             }
         });
+        mPath1 = "pages/sub_circle/pages/subjectDetails/subjectDetails?";
+
     }
 
     @Override
@@ -287,9 +293,13 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
                 }
                 break;
             case R.id.share_iv:
-                if (themeInfoEntity != null)
-                    DialogUtils.showShareDialog(this, mEndUrl, mTitle,
-                            themeInfoEntity.getHeadImage(), themeInfoEntity.getTheme_content());
+                if (themeInfoEntity != null){
+                    if (themeInfoEntity.getTheme_image().size() > 0){
+                        mPresenter.getThumb(themeInfoEntity.getTheme_image().get(0).getPic_url(), themeInfoEntity);
+                    }else {
+                        mPresenter.getThumb(themeInfoEntity.getHeadImage(), themeInfoEntity);
+                    }
+                }
                 break;
             case R.id.record_ll:
                 LoginHelper.login(this, mPresenter.mDataManager, () -> {
@@ -303,6 +313,14 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
                     }
                 });
         }
+    }
+
+    @Override
+    public void handlerThumbSuccess(String thumb_url, ThemeInfoEntity.ThemeInfoBean themeInfoEntity) {
+        themePath = mPath1 + "theme_id=" + themeInfoEntity.getTheme_id() + "&circle_id=" + mCircle_id;
+        DialogUtils.showShareDialog(this, themePath, mEndUrl,
+                TextUtils.isEmpty(themeInfoEntity.getTheme_content()) ? mTitle : themeInfoEntity.getTheme_content(),
+                thumb_url, themeInfoEntity.getTheme_content(), true);
     }
 
     private void showEditDialog(ThemeInfoEntity.ThemeInfoBean data) {

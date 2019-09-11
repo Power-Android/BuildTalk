@@ -66,7 +66,6 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         showFragment(mCurrentFgIndex);
         initNavigationView();
         String s = getIntent().getStringExtra("data");
-        LogUtils.e(s);
         if (!TextUtils.isEmpty(s)){
             data = Uri.parse(s);
             scheme();
@@ -213,6 +212,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                         Intent intent = new Intent(this, TopticDetailActivity.class);
                         intent.putExtra("title", circleName);
                         intent.putExtra("theme_id", themeId);
+                        intent.putExtra("circle_id", "");
                         startActivity(intent);
                     }
                     break;

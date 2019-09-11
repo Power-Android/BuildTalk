@@ -2,6 +2,7 @@ package com.bjjy.buildtalk.ui.mine;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
@@ -27,6 +28,8 @@ public class AboutUsActivity extends BaseActivity<AboutUsPresenter> implements A
     RelativeLayout mIncludeToolbar;
     @BindView(R.id.webview)
     WebView mWebview;
+    private String mUrl;
+    private String mTitle;
 
     @Override
     protected int getLayoutId() {
@@ -37,7 +40,13 @@ public class AboutUsActivity extends BaseActivity<AboutUsPresenter> implements A
     protected void initView() {
         mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
         mToolbar.setNavigationOnClickListener(v -> finish());
-        mToolbarTitle.setText(R.string.about_us);
+        mTitle = getIntent().getStringExtra("title");
+        mUrl = getIntent().getStringExtra("url");
+        if (TextUtils.isEmpty(mTitle)){
+            mToolbarTitle.setText(R.string.about_us);
+        }else {
+            mToolbarTitle.setText(mTitle);
+        }
     }
 
     @Override
@@ -48,7 +57,11 @@ public class AboutUsActivity extends BaseActivity<AboutUsPresenter> implements A
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-        mWebview.loadUrl("https://jt.chinabim.com/we");
+        if (TextUtils.isEmpty(mUrl)){
+            mWebview.loadUrl("https://jt.chinabim.com/we");
+        }else {
+            mWebview.loadUrl(mUrl);
+        }
     }
 
 }

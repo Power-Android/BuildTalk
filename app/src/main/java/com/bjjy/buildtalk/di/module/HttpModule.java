@@ -82,9 +82,9 @@ public class HttpModule {
         builder.addInterceptor(new OfflineCacheInterceptor());
         builder.cache(cache);
         //设置超时
-        builder.connectTimeout(10, TimeUnit.SECONDS);   //全局的连接超时时间
-        builder.readTimeout(20, TimeUnit.SECONDS);      //全局的读取超时时间
-        builder.writeTimeout(20, TimeUnit.SECONDS);     //全局的写入超时时间
+        builder.connectTimeout(30, TimeUnit.SECONDS);   //全局的连接超时时间
+        builder.readTimeout(30, TimeUnit.SECONDS);      //全局的读取超时时间
+        builder.writeTimeout(30, TimeUnit.SECONDS);     //全局的写入超时时间
         //错误重连
         builder.retryOnConnectionFailure(true);
         //cookie认证

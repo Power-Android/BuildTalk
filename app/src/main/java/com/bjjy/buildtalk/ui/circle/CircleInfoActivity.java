@@ -120,6 +120,11 @@ public class CircleInfoActivity extends BaseActivity<CircleInfoPresenter> implem
         if (masterInfoEntity.getIs_circleMaster().equals("1") && Integer.parseInt(masterInfoEntity.getCountUser()) > 1) {
             mQuitTv.setVisibility(View.GONE);
         }
+        if (masterInfoEntity.getIs_circleMaster().equals("1") && Integer.parseInt(masterInfoEntity.getCountUser()) == 1){
+            mQuitTv.setText("解散圈子");
+        }else {
+            mQuitTv.setText("退出圈子");
+        }
         mTitleTv.setText(masterInfoEntity.getCircle_name());
         mNameTv.setText("圈主：" + masterInfoEntity.getName());
         mCreateDateTv.setText(masterInfoEntity.getCreate_day());
@@ -147,8 +152,8 @@ public class CircleInfoActivity extends BaseActivity<CircleInfoPresenter> implem
                 finish();
                 break;
             case R.id.share_iv:
-                DialogUtils.showShareDialog(this, mEndUrl, mMasterInfoEntity.getCircle_name(),
-                        mMasterInfoEntity.getCircle_image().getPic_url(), mJieshao);
+                DialogUtils.showShareDialog(this, "", mEndUrl, mMasterInfoEntity.getCircle_name(),
+                        mMasterInfoEntity.getCircle_image().getPic_url(), mJieshao, false);
                 break;
             case R.id.member_rl:
                 mIntent = new Intent(this, CircleMemberActivity.class);
@@ -192,6 +197,12 @@ public class CircleInfoActivity extends BaseActivity<CircleInfoPresenter> implem
                     mQuitDialog.dismiss();
                 })
                 .builder();
+        TextView textView = mQuitDialog.getView(R.id.text);
+        if (mMasterInfoEntity != null && mMasterInfoEntity.getIs_circleMaster().equals("1") && Integer.parseInt(mMasterInfoEntity.getCountUser()) == 1){
+            textView.setText("确定解散圈子？");
+        }else {
+            textView.setText("确定退出圈子?");
+        }
         mQuitDialog.show();
     }
 

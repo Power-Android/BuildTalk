@@ -93,9 +93,17 @@
             android:id="@+id/version_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="V2.0"
+            android:text="V2.0.0"
             android:textSize="@dimen/sp_15"
             android:textColor="@color/text_mid"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/view2"
+            android:layout_marginRight="@dimen/common_margin"/>
+        <ImageView
+            android:id="@+id/view2"
+            android:layout_width="@dimen/dp_13"
+            android:layout_height="@dimen/dp_13"
+            android:src="@drawable/arrow_right_black"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/common_margin"/>

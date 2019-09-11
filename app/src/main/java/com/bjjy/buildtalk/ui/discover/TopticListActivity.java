@@ -6,12 +6,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.TopticListAdapter;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.entity.CourseEntity;
+import com.bjjy.buildtalk.ui.circle.CircleSearchActivity;
 import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
 import com.bjjy.buildtalk.utils.LogUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -28,6 +30,8 @@ public class TopticListActivity extends BaseActivity<TopticListPresenter> implem
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
+    @BindView(R.id.toolbar_right_search)
+    ImageView mToolbarRightSearch;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
     @BindView(R.id.recycler_view)
@@ -50,6 +54,8 @@ public class TopticListActivity extends BaseActivity<TopticListPresenter> implem
         mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
         mToolbar.setNavigationOnClickListener(v -> finish());
         mToolbarTitle.setText(getString(R.string.top_tic));
+        mToolbarRightSearch.setVisibility(View.VISIBLE);
+        mToolbarRightSearch.setOnClickListener(v -> startActivity(new Intent(TopticListActivity.this, CircleSearchActivity.class)));
 
         mRefreshLayout.setOnRefreshLoadMoreListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));

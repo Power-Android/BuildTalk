@@ -359,9 +359,9 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     private String getHtmlData(String bodyHTML) {
         String head = "<head>" +
                 "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\"> " +
-                "<style>html{padding:15px;} body{word-wrap:break-word;font-size:13px;padding:0px;margin:0px} p{padding:0px;margin:0px;font-size:13px;color:FF656565;line-height:1.3;} img{padding:0px,margin:0px;max-width:100%; width:100%; height:auto;}</style>" +
+                "<style>html{padding:15px;} body{word-wrap:break-word;font-size:13px;padding:0px;margin:0px;line-height:2.0;} p{padding:0px;margin:0px;font-size:13px;color:FF656565;line-height:2.0;} img{padding:0px,margin:0px;max-width:100%; width:100%; height:auto;}</style>" +
                 "</head>";
-        return "<html>" + head + "<body>" + bodyHTML + "</body></html>";
+        return "<html>" + head + "<body>" + ""+ bodyHTML + "</body></html>";
     }
 
     @Override
@@ -455,11 +455,11 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
                 if (TextUtils.isEmpty(mType)){
                     mUrl = Constants.BASE_URL + "jtfwhgetopenid" + "?user_id=" + mPresenter.mDataManager.getUser().getUser_id() + "&news_id=" + mArticle_id;
                     mEndUrl = Constants.END_URL + "&redirect_uri=" + URLEncoder.encode(mUrl) + "&response_type=code&scope=snsapi_userinfo&state=news#wechat_redirect";
-                    DialogUtils.showShareDialog(this, mEndUrl, mMNewsInfo.getArticle_title(), mMNewsInfo.getAuthor_pic(), "每日一谈");
+                    DialogUtils.showShareDialog(this, mEndUrl, mEndUrl, mMNewsInfo.getArticle_title(), mMNewsInfo.getAuthor_pic(), "每日一谈", false);
                 }else {
                     mUrl = Constants.BASE_URL + "jtfwhgetopenid" + "?user_id=" + mPresenter.mDataManager.getUser().getUser_id() + "&article_id=" + mArticle_id;
                     mEndUrl = Constants.END_URL + "&redirect_uri=" + URLEncoder.encode(mUrl) + "&response_type=code&scope=snsapi_userinfo&state=articlePay#wechat_redirect";
-                    DialogUtils.showShareDialog(this, mEndUrl, mMNewsInfo.getArticle_title(), mMNewsInfo.getAuthor_pic(), mMNewsInfo.getArticle_title());
+                    DialogUtils.showShareDialog(this, mEndUrl, mEndUrl, mMNewsInfo.getArticle_title(), mMNewsInfo.getAuthor_pic(), mMNewsInfo.getArticle_title(),false);
                 }
                 break;
             case R.id.record_ll:

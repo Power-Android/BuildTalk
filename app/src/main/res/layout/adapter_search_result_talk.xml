@@ -43,23 +43,25 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/view1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/item_face_iv"
+        android:text="粉丝  "
+        android:textSize="@dimen/sp_9"
+        android:layout_marginTop="@dimen/dp_5"
+        android:layout_below="@+id/ll_name" />
+    <TextView
         android:id="@+id/item_num_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="200"
         android:textColor="@color/orange"
+        android:layout_toRightOf="@+id/view1"
         android:textSize="@dimen/sp_9"
         android:layout_below="@+id/ll_name"
-        android:layout_toRightOf="@+id/item_face_iv"
         android:layout_marginTop="@dimen/dp_5"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="人已关注"
-        android:textSize="@dimen/sp_9"
-        android:layout_marginTop="@dimen/dp_5"
-        android:layout_toRightOf="@+id/item_num_tv"
-        android:layout_below="@+id/ll_name" />
+
    <ImageView
        android:layout_width="@dimen/dp_13"
        android:layout_height="@dimen/dp_13"

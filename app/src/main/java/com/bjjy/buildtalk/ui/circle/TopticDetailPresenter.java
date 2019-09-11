@@ -199,4 +199,26 @@ public class TopticDetailPresenter extends BasePresenter<TopticDetailContract.Vi
                     }
                 }));
     }
+
+    public void getThumb(String pic_url, ThemeInfoEntity.ThemeInfoBean themeInfoEntity) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put("pic_url", pic_url);
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.getThumb(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<String>(mView, true, true) {
+                    @Override
+                    public void onSuccess(String thumb_url) {
+                        mView.handlerThumbSuccess(thumb_url, themeInfoEntity);
+                    }
+                }));
+    }
 }

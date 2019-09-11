@@ -39,6 +39,8 @@ public class CourseDetailContarct {
         void handlerWxOrder(PayOrderEntity payOrderEntity);
 
         void handlerCircleInfo(CircleInfoEntity circleInfoEntity);
+
+        void handlerThumbSuccess(String thumb_url, List<ThemeInfoEntity.ThemeInfoBean> data, int i);
     }
 
     interface Presenter extends IPresenter<View>{

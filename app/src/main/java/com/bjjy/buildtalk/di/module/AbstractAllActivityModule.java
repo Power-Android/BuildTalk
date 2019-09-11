@@ -29,6 +29,7 @@ import com.bjjy.buildtalk.di.module.activity.MasterCircleActivityModule;
 import com.bjjy.buildtalk.di.module.activity.MasterCollectActivityModule;
 import com.bjjy.buildtalk.di.module.activity.MasterDetailActivityModule;
 import com.bjjy.buildtalk.di.module.activity.MasterListActivityModule;
+import com.bjjy.buildtalk.di.module.activity.MasterVerifyActivityModule;
 import com.bjjy.buildtalk.di.module.activity.MyCardActivityModule;
 import com.bjjy.buildtalk.di.module.activity.PersonInfoActivityModule;
 import com.bjjy.buildtalk.di.module.activity.PhoneLoginActivityModule;
@@ -42,6 +43,7 @@ import com.bjjy.buildtalk.di.module.activity.TopticCircleActivityModule;
 import com.bjjy.buildtalk.di.module.activity.TopticDetailActivityMudule;
 import com.bjjy.buildtalk.di.module.activity.TopticListActivityModule;
 import com.bjjy.buildtalk.di.module.activity.TransactionActivityModule;
+import com.bjjy.buildtalk.di.module.activity.VersionRecordActivityModule;
 import com.bjjy.buildtalk.di.module.activity.ViewpagerActivityModule;
 import com.bjjy.buildtalk.di.module.activity.WalletActivityModule;
 import com.bjjy.buildtalk.ui.circle.CircleAgreementActvity;
@@ -71,11 +73,13 @@ import com.bjjy.buildtalk.ui.mine.BindPhoneActivity;
 import com.bjjy.buildtalk.ui.mine.EditBindPhoneActivity;
 import com.bjjy.buildtalk.ui.mine.EditNameActivity;
 import com.bjjy.buildtalk.ui.mine.FeedBackActivity;
+import com.bjjy.buildtalk.ui.mine.MasterVerifyActivity;
 import com.bjjy.buildtalk.ui.mine.PersonInfoActivity;
 import com.bjjy.buildtalk.ui.mine.ServiceActivity;
 import com.bjjy.buildtalk.ui.mine.SetPictureActivity;
 import com.bjjy.buildtalk.ui.mine.SettingActivity;
 import com.bjjy.buildtalk.ui.mine.TransactionActivity;
+import com.bjjy.buildtalk.ui.mine.VersionRecordActivity;
 import com.bjjy.buildtalk.ui.mine.WalletActivity;
 import com.bjjy.buildtalk.ui.talk.CircleListActivity;
 import com.bjjy.buildtalk.ui.talk.CircleManDetailActivity;
@@ -214,4 +218,10 @@ public abstract class AbstractAllActivityModule {
 
     @ContributesAndroidInjector(modules = ServiceActivityModule.class)
     abstract ServiceActivity mServiceActivity();
+
+    @ContributesAndroidInjector(modules = MasterVerifyActivityModule.class)
+    abstract MasterVerifyActivity mMasterVerifyActivity();
+
+    @ContributesAndroidInjector(modules = VersionRecordActivityModule.class)
+    abstract VersionRecordActivity mVersionRecordActivity();
 }

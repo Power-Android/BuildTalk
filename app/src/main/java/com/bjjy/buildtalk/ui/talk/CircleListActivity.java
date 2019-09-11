@@ -12,7 +12,9 @@ import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.CircleListAdapter;
+import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
+import com.bjjy.buildtalk.core.event.RefreshEvent;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.entity.CircleListEntity;
 import com.bjjy.buildtalk.entity.IEntity;
@@ -22,6 +24,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,5 +132,6 @@ public class CircleListActivity extends BaseActivity<CircleListPresenter> implem
             mList.get(i).setIs_attention(0);
         }
         mCircleListAdapter.notifyItemChanged(i);
+        EventBus.getDefault().post(new RefreshEvent(Constants.FANS_REFRESH));
     }
 }

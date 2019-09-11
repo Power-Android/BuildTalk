@@ -10,6 +10,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
@@ -60,10 +61,17 @@ public class EveryTalkListActivity extends BaseActivity<EveryTalkListPresenter> 
     TextView mNumTv;
     @BindView(R.id.remark_tv)
     TextView mRemarkTv;
+    @BindView(R.id.paixu_tv)
+    TextView mPaiXuTv;
+    @BindView(R.id.scrollView)
+    NestedScrollView mScrollView;
+    @BindView(R.id.view3)
+    RelativeLayout mLayout;
 
     private EveryTalkListAdapter mTalkListAdapter;
     private int page = 1;
     private int mPage_count = 1;
+    private int type = 1;//1是倒叙，2是正序
     private List<EveryTalkListEntity.NewsInfoBean> mNewsInfoBeanList = new ArrayList<>();
 
     @Override
@@ -84,7 +92,7 @@ public class EveryTalkListActivity extends BaseActivity<EveryTalkListPresenter> 
 
     @Override
     protected void initEventAndData() {
-        mPresenter.talkList(page, false);
+        mPresenter.talkList(page, false, type + "");
     }
 
     @Override
@@ -122,7 +130,7 @@ public class EveryTalkListActivity extends BaseActivity<EveryTalkListPresenter> 
         mReceivedTv.setText(authorInfo.getReceived());
     }
 
-    @OnClick({R.id.back_iv, R.id.introduce_iv})
+    @OnClick({R.id.back_iv, R.id.introduce_iv, R.id.paixu_tv})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back_iv:
@@ -133,7 +141,7 @@ public class EveryTalkListActivity extends BaseActivity<EveryTalkListPresenter> 
                     mIntroduceIv.setImageDrawable(getResources().getDrawable(R.drawable.every_talk_arrow_top));
                     mRefreshLayout.setEnableRefresh(false);
                     mRefreshLayout.setEnableLoadMore(false);
-                    mNumTv.setVisibility(View.GONE);
+                    mLayout.setVisibility(View.GONE);
                     mRecyclerView.setVisibility(View.GONE);
                     mJieshaoLayout.setVisibility(View.VISIBLE);
                 } else {
@@ -141,9 +149,23 @@ public class EveryTalkListActivity extends BaseActivity<EveryTalkListPresenter> 
                     mRefreshLayout.setEnableRefresh(true);
                     mRefreshLayout.setEnableLoadMore(true);
                     mJieshaoLayout.setVisibility(View.GONE);
-                    mNumTv.setVisibility(View.VISIBLE);
+                    mLayout.setVisibility(View.VISIBLE);
                     mRecyclerView.setVisibility(View.VISIBLE);
                 }
+                break;
+            case R.id.paixu_tv:
+                page = 1;
+                if (type == 1){
+                    type = 2;
+                    mPaiXuTv.setText("倒序");
+                }else {
+                    type = 1;
+                    mPaiXuTv.setText("正序");
+                }
+
+                mScrollView.smoothScrollTo(0, 0);
+                mRecyclerView.scrollToPosition(0);
+                onRefresh(mRefreshLayout);
                 break;
         }
     }
@@ -152,7 +174,7 @@ public class EveryTalkListActivity extends BaseActivity<EveryTalkListPresenter> 
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
         if (page < mPage_count) {
             page++;
-            mPresenter.talkList(page, false);
+            mPresenter.talkList(page, false, type + "");
             refreshLayout.finishLoadMore();
         } else {
             refreshLayout.finishLoadMoreWithNoMoreData();
@@ -162,7 +184,7 @@ public class EveryTalkListActivity extends BaseActivity<EveryTalkListPresenter> 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         page = 1;
-        mPresenter.talkList(page, true);
+        mPresenter.talkList(page, true, type + "");
         refreshLayout.finishRefresh();
     }
 

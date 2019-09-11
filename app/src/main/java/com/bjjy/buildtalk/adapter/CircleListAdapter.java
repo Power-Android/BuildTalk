@@ -3,6 +3,7 @@ package com.bjjy.buildtalk.adapter;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.DataManager;
@@ -37,14 +38,18 @@ public class CircleListAdapter extends BaseQuickAdapter<CircleListEntity.CircleI
         if (mDataManager.getUser() != null && !TextUtils.isEmpty(mDataManager.getUser().getUser_id())){
             helper.setGone(R.id.item_focus_ll, mDataManager.getUser().getUser_id().equals(String.valueOf(item.getUser_id())) ? false : true);
         }
-
+        LinearLayout itemFocusLl = helper.getView(R.id.item_focus_ll);
         int is_attention = item.getIs_attention();
         if (TextUtils.equals("1", is_attention+"")){
+            itemFocusLl.setBackgroundResource(R.drawable.shape_gray_13radius);
             helper.setGone(R.id.item_focus_iv, true);
             helper.setText(R.id.item_focus_tv, "已关注");
+            helper.setTextColor(R.id.item_focus_tv, mContext.getResources().getColor(R.color.text_drak));
         }else {
+            itemFocusLl.setBackgroundResource(R.drawable.shape_orange_13radius);
             helper.setGone(R.id.item_focus_iv, false);
             helper.setText(R.id.item_focus_tv, "+关注");
+            helper.setTextColor(R.id.item_focus_tv, mContext.getResources().getColor(R.color.orange));
         }
     }
 }

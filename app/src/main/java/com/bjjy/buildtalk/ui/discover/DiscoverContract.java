@@ -2,6 +2,7 @@ package com.bjjy.buildtalk.ui.discover;
 
 import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.base.view.IView;
+import com.bjjy.buildtalk.entity.ActivityEntity;
 import com.bjjy.buildtalk.entity.BannerEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.DiscoverEntity;
@@ -26,6 +27,8 @@ public class DiscoverContract {
         void handlerToptic(CourseEntity courseEntities);
 
         void handlerCourse(CourseEntity courseEntities);
+
+        void handlerActivitySuccess(ActivityEntity activityEntity);
     }
 
     interface Presenter extends IPresenter<View>{

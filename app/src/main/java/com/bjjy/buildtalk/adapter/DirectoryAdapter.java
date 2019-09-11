@@ -30,9 +30,11 @@ public class DirectoryAdapter extends BaseQuickAdapter<CourseListEntity.Courseli
         helper.setText(R.id.item_name_tv, item.getArticle_title());
         TextView nameTv = helper.getView(R.id.item_name_tv);
         if (item.isSelected()){
-            nameTv.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+//            nameTv.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+            nameTv.setTextColor(mContext.getResources().getColor(R.color.orange));
         }else {
-            nameTv.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+//            nameTv.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+            nameTv.setTextColor(mContext.getResources().getColor(R.color.text_drak));
         }
         if (mIsJoin.equals("1")){
             helper.setGone(R.id.item_sk_iv, false);

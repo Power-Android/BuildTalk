@@ -17,7 +17,9 @@ import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.TalkAdapter;
+import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.fragment.BaseFragment;
+import com.bjjy.buildtalk.core.event.RefreshEvent;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.entity.CircleMasterEntity;
 import com.bjjy.buildtalk.entity.IEntity;
@@ -30,6 +32,10 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +70,13 @@ public class TalkFragment extends BaseFragment<TalkPresnter> implements TalkCont
     private TalkAdapter mTalkAdapter;
     public static int PAGE = 1;
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void event(RefreshEvent eventBean) {
+        if (TextUtils.equals(eventBean.getMsg(), Constants.FANS_REFRESH)) {
+            mPresenter.talkCircleMaster();
+        }
+    }
+
     public static TalkFragment newInstance() {
         return new TalkFragment();
     }
@@ -75,6 +88,7 @@ public class TalkFragment extends BaseFragment<TalkPresnter> implements TalkCont
 
     @Override
     protected void initView() {
+        EventBus.getDefault().register(this);
         mToolbarTitle.setText(R.string.talk);
         mRefreshLayout.setOnRefreshListener(this);
         mTalkRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
@@ -157,9 +171,14 @@ public class TalkFragment extends BaseFragment<TalkPresnter> implements TalkCont
 
     @Override
     public void handlerAttrntion(BaseResponse<IEntity> baseResponse, List<CircleMasterEntity> mList, int i) {
+        int countAttention = mList.get(i).getCountAttention();
         if (TextUtils.equals("关注成功", baseResponse.getErrorMsg())) {
+            mList.get(i).setCountAttention(++countAttention);
             mList.get(i).setIs_attention(1);
         } else {
+            if (countAttention > 0){
+                mList.get(i).setCountAttention(--countAttention);
+            }
             mList.get(i).setIs_attention(0);
         }
         mTalkAdapter.setFocus(i);
@@ -169,5 +188,11 @@ public class TalkFragment extends BaseFragment<TalkPresnter> implements TalkCont
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

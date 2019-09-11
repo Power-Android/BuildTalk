@@ -32,6 +32,8 @@ public class TopticDetailContract {
         void handlerDeleteComment(List<CommentContentBean> mComment_content);
 
         void handlerCommentSuccess(List<CommentContentBean> commentInfo);
+
+        void handlerThumbSuccess(String thumb_url, ThemeInfoEntity.ThemeInfoBean themeInfoEntity);
     }
 
     interface Presenter extends IPresenter<View>{

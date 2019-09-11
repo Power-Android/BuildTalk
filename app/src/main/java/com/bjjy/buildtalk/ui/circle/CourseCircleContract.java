@@ -40,6 +40,13 @@ public class CourseCircleContract {
 
         void handlerCommentSuccess(int i, List<ThemeInfoEntity.ThemeInfoBean> data, List<CommentContentBean> commentInfo);
 
+        void handlerEssenceInfo(ThemeInfoEntity themeInfoEntity, boolean isRefresh);
+
+        void handlerChoicenessSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i);
+
+        void handlerThumbSuccess(String thumb_url, List<ThemeInfoEntity.ThemeInfoBean> data, int i);
+
+        void handleruserShieldRecordSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list);
     }
 
     interface Presenyer extends IPresenter<View>{

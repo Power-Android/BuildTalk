@@ -15,6 +15,7 @@ public class Constants {
 
     //Test base_url
     public static final String BASE_URL = "https://www.51jiantan.com/";
+    public static final String DEBUG_URL = "https://jt.chinabim.com/";
     //分享公众号的url
     public static final String END_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx94063ed8ba6128d5";
 

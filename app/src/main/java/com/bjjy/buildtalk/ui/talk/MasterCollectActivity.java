@@ -115,6 +115,7 @@ public class MasterCollectActivity extends BaseActivity<MasterCollectPresenter> 
             Intent intent = new Intent(this, TopticDetailActivity.class);
             intent.putExtra("title", mList.get(i).getCircle_name());
             intent.putExtra("theme_id", mList.get(i).getTheme_id()+"");
+            intent.putExtra("circle_id", "");
             startActivity(intent);
         }else {
             ToastUtils.showShort("该主题已被删除");

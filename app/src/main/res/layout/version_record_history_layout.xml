@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:id="@+id/expand_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/common_margin">
+        <TextView
+            android:id="@+id/history_version_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="V2.0.0"
+            android:textColor="@color/text_drak"
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/arrow_iv"
+            android:layout_width="@dimen/dp_13"
+            android:layout_height="@dimen/dp_13"
+            android:src="@drawable/arrow_down_icon"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_1"
+        android:background="@color/border2"/>
+    <TextView
+        android:id="@+id/content_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:padding="@dimen/common_margin"
+        android:text="新增圈子板块"
+        android:textColor="@color/text_drak"
+        android:textSize="@dimen/sp_13"/>
+</LinearLayout>

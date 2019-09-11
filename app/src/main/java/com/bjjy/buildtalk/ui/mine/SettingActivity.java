@@ -69,7 +69,7 @@ public class SettingActivity extends BaseActivity<SettingPresenter> implements S
         } else {
             mNameTv.setText("未绑定");
         }
-        mVersionTv.setText("V" + getAppVersionName(this));
+        mVersionTv.setText("当前版本V" + getAppVersionName(this));
     }
 
     /**
@@ -100,6 +100,7 @@ public class SettingActivity extends BaseActivity<SettingPresenter> implements S
                 startActivity(new Intent(this, AboutUsActivity.class));
                 break;
             case R.id.version_info:
+                startActivity(new Intent(this, VersionRecordActivity.class));
                 break;
             case R.id.quit_tv:
                 showDialog();

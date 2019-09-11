@@ -86,6 +86,7 @@ public class ThemeInfoEntity implements Serializable {
         private String is_circleMaster;
         private int is_parise;
         private int is_collect;
+        private int is_choiceness;
         private String is_author;
         private List<ThemeImageBean> theme_image;
         private List<CommentContentBean> comment_content;
@@ -141,6 +142,14 @@ public class ThemeInfoEntity implements Serializable {
 
         public void setIs_collect(int is_collect) {
             this.is_collect = is_collect;
+        }
+
+        public int getIs_choiceness() {
+            return is_choiceness;
+        }
+
+        public void setIs_choiceness(int is_choiceness) {
+            this.is_choiceness = is_choiceness;
         }
 
         public int getTheme_id() {

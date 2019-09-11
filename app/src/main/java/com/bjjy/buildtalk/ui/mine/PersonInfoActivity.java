@@ -94,6 +94,8 @@ public class PersonInfoActivity extends BaseActivity<PersonInfoPresenter> implem
                 startActivity(mIntent);
                 break;
             case R.id.master_verify:
+//                mIntent = new Intent(this, MasterVerifyActivity.class);
+//                startActivity(mIntent);
                 break;
             case R.id.bg_rl:
                 mIntent = new Intent(this, SetPictureActivity.class);

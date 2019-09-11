@@ -3,6 +3,8 @@ package com.bjjy.buildtalk.adapter;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.App;
@@ -44,12 +46,17 @@ public class TalkCircleAdapter extends BaseQuickAdapter<CircleMasterEntity,BaseV
                 .setText(R.id.item_num_tv, item.getCountAttention()+"")
                 .setGone(R.id.item_tag_iv, 1 == item.getIs_author() ? true : false)
                 .addOnClickListener(R.id.item_focus_ll);
+        LinearLayout itemFocusLl = helper.getView(R.id.item_focus_ll);
         if (1 == item.getIs_attention()){
+            itemFocusLl.setBackgroundResource(R.drawable.shape_gray_13radius);
             helper.setGone(R.id.item_focus_iv, true);
             helper.setText(R.id.item_focus_tv, "已关注");
+            helper.setTextColor(R.id.item_focus_tv, mContext.getResources().getColor(R.color.text_drak));
         }else {
+            itemFocusLl.setBackgroundResource(R.drawable.shape_orange_13radius);
             helper.setGone(R.id.item_focus_iv, false);
             helper.setText(R.id.item_focus_tv, "+关注");
+            helper.setTextColor(R.id.item_focus_tv, mContext.getResources().getColor(R.color.orange));
         }
     }
 }

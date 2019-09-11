@@ -58,6 +58,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -141,6 +142,10 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
     private String mArticle_title;
     private String mContent;
     private Bitmap mBitmap;
+    private String mPath;
+    private String circlePath;//话题圈拼接完成的url
+    private String mPath1;//主题
+    private String themePath;//主题拼接完成url
 
     Handler handler = new Handler(new Handler.Callback() {
         @Override
@@ -151,6 +156,7 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
             return true;
         }
     });
+    private String mArticle_id;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void event(PayEvent eventBean) {
@@ -180,12 +186,16 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
         mArticle_title = getIntent().getStringExtra("article_title");
         mContent = getIntent().getStringExtra("content");
         mPosition = getIntent().getIntExtra("position", 0);
+        mArticle_id = getIntent().getStringExtra("article_id");
         mCircle_id = getIntent().getStringExtra("circle_id");
         KeyboardUtils.registerSoftInputChangedListener(this, height -> {
             if (height == 0 && mMInputDialog != null) {
                 mMInputDialog.dismiss();
             }
         });
+
+        mPath = "pages/sub_circle/pages/courseCircleDetails/courseCircleDetails?";
+        mPath1 = "pages/sub_circle/pages/subjectDetails/subjectDetails?";
     }
 
     @Override
@@ -284,7 +294,6 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
         mDir_page_count = courseListEntity.getPage_count();
         int countUpdateCourse = courseListEntity.getCountUpdateCourse();
         int countCourse = courseListEntity.getCountCourse();
-        mList = courseListEntity.getCourselist();
         mUpdateTv.setText("更新至" + countUpdateCourse + "讲/全" + countCourse + "讲");
         mDirectoryAdapter.addData(courseListEntity.getCourselist());
         if (mDirectoryAdapter.getData().size() >= mPosition + 1) {
@@ -348,8 +357,13 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
                 finish();
                 break;
             case R.id.pre_share_iv:
-                String url = "https://jt.chinabim.com/share/#/course/" + mCircle_id + "?suid=" + mPresenter.mDataManager.getUser().getUser_id();
-                DialogUtils.showShareDialog(this, url, mArticle_title, mCircleInfoEntity.getCircleInfo().getCircle_image().getPic_url(), mCircleInfoEntity.getCircleInfo().getCircle_desc());
+                String mUrl = Constants.BASE_URL + "jtfwhgetopenid" + "?user_id=" + mPresenter.mDataManager.getUser().getUser_id() + "&circle_id=" + mCircle_id;
+                String mEndUrl = Constants.END_URL + "&redirect_uri=" + URLEncoder.encode(mUrl) + "&response_type=code&scope=snsapi_userinfo&state=coursePay#wechat_redirect";
+//                String url = "https://jt.chinabim.com/share/#/course/" + mCircle_id + "?suid=" + mPresenter.mDataManager.getUser().getUser_id();
+                circlePath = mPath + "article_id=" + mArticle_id + "circle_id=" + mCircle_id;
+                DialogUtils.showShareDialog(this, circlePath, mEndUrl, mArticle_title,
+                        mCircleInfoEntity.getCircleInfo().getCircle_image().getPic_url(),
+                        mCircleInfoEntity.getCircleInfo().getCircle_desc(), true);
                 break;
             case R.id.share_iv:
                 break;
@@ -433,6 +447,7 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
             Intent intent = new Intent(this, TopticDetailActivity.class);
             intent.putExtra("title", mCircleInfoEntity.getCircleInfo().getCircle_name());
             intent.putExtra("theme_id", data.get(i).getTheme_id() + "");
+            intent.putExtra("circle_id", mCircle_id);
             startActivity(intent);
         }
     }
@@ -451,17 +466,30 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
                 showCommentDialog(data.get(i).getTheme_id(), i, data);
                 break;
             case R.id.item_share_iv:
-                String mUrl = "https://jt.chinabim.com/share/#/theme/" + data.get(i).getUser_id() + "/" + data.get(i).getTheme_id();
-                DialogUtils.showShareDialog(this, mUrl, mCircleInfoEntity.getCircleInfo().getCircle_name(),
-                        data.get(i).getHeadImage(), data.get(i).getTheme_content());
+                if (data.get(i).getTheme_image().size() > 0){
+                    mPresenter.getThumb(data.get(i).getTheme_image().get(0).getPic_url(), data, i);
+                }else {
+                    mPresenter.getThumb(data.get(i).getHeadImage(), data, i);
+                }
                 break;
             case R.id.more_tv:
                 Intent intent = new Intent(this, TopticDetailActivity.class);
                 intent.putExtra("title", mCircleInfoEntity.getCircleInfo().getCircle_name());
                 intent.putExtra("theme_id", data.get(i).getTheme_id() + "");
+                intent.putExtra("circle_id", mCircle_id);
                 startActivity(intent);
                 break;
         }
+    }
+
+    @Override
+    public void handlerThumbSuccess(String thumb_url, List<ThemeInfoEntity.ThemeInfoBean> data, int i) {
+        String mUrl = Constants.BASE_URL + "jtfwhgetopenid" + "?user_id=" + mPresenter.mDataManager.getUser().getUser_id() + "&theme_id=" + data.get(i).getTheme_id();
+        String mEndUrl = Constants.END_URL + "&redirect_uri=" + URLEncoder.encode(mUrl) + "&response_type=code&scope=snsapi_userinfo&state=theme#wechat_redirect";
+        themePath = mPath1 + "theme_id=" + data.get(i).getTheme_id() + "&circle_id=" + mCircle_id ;
+        DialogUtils.showShareDialog(this, themePath, mEndUrl,
+                TextUtils.isEmpty(data.get(i).getTheme_content()) ? mCircleInfoEntity.getCircleInfo().getCircle_name() : data.get(i).getTheme_content(),
+                thumb_url, data.get(i).getTheme_content(), true);
     }
 
     private void showEditDialog(ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list) {

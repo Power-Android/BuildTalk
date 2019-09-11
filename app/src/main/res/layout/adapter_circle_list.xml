@@ -37,32 +37,34 @@
         android:layout_toRightOf="@+id/item_name_tv"
         android:layout_marginTop="@dimen/dp_10"/>
     <TextView
+        android:id="@+id/view1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="粉丝  "
+        android:textSize="@dimen/sp_9"
+        android:layout_marginTop="@dimen/dp_5"
+        android:layout_toRightOf="@+id/item_face_iv"
+        android:layout_below="@+id/item_name_tv" />
+    <TextView
         android:id="@+id/item_num_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/view1"
         android:text="200"
         android:textColor="@color/orange"
         android:textSize="@dimen/sp_9"
         android:layout_below="@+id/item_name_tv"
-        android:layout_toRightOf="@+id/item_face_iv"
         android:layout_marginTop="@dimen/dp_5"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="人已关注"
-        android:textSize="@dimen/sp_9"
-        android:layout_marginTop="@dimen/dp_5"
-        android:layout_toRightOf="@+id/item_num_tv"
-        android:layout_below="@+id/item_name_tv" />
+
     <LinearLayout
         android:id="@+id/item_focus_ll"
-        android:layout_width="@dimen/dp_59"
+        android:layout_width="@dimen/dp_69"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
         android:paddingTop="@dimen/dp_6"
         android:paddingBottom="@dimen/dp_6"
-        android:background="@drawable/shape_course_5radius"
+        android:background="@drawable/shape_orange_13radius"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true">
         <ImageView
@@ -77,6 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:textColor="@color/orange"
             android:text="+关注"
             android:textSize="@dimen/sp_11"/>
     </LinearLayout>

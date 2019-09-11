@@ -18,6 +18,6 @@ public class EveryTalkContract {
 
     interface Presenter extends IPresenter<View>{
 
-        void talkList(int page, boolean isRefresh);
+        void talkList(int page, boolean isRefresh, String type);
     }
 }

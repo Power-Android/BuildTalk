@@ -91,4 +91,9 @@ public class MyBadgeViewPagerAdapter extends PagerAdapter {
         // my own policy
         return "99+";
     }
+
+    public void setCount(int count){
+        mBadgeCountList.set(1, count);
+        notifyDataSetChanged();
+    }
 }

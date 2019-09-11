@@ -4,6 +4,7 @@ package com.bjjy.buildtalk.core.http.api;
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.app.User;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
+import com.bjjy.buildtalk.entity.ActivityEntity;
 import com.bjjy.buildtalk.entity.AleadyBuyEntity;
 import com.bjjy.buildtalk.entity.BannerEntity;
 import com.bjjy.buildtalk.entity.CircleEntity;
@@ -33,6 +34,7 @@ import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.SearchCircleInfoEntity;
 import com.bjjy.buildtalk.entity.SearchResultEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
+import com.bjjy.buildtalk.entity.VersionRecordEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -41,11 +43,13 @@ import io.reactivex.Observable;
 import okhttp3.MultipartBody;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.HeaderMap;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.QueryMap;
 
 public interface ApiService {
 
@@ -495,8 +499,40 @@ public interface ApiService {
     @FormUrlEncoded
     Observable<BaseResponse<PayOrderEntity>> payOrder(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
+    /**
+     * @return 版本记录
+     */
+    @GET("searchUpdateRecord")
+    Observable<BaseResponse<List<VersionRecordEntity>>> versionRecord();
 
+    /**
+     * @return 首页活动弹框
+     */
+    @GET("getActivity")
+    Observable<BaseResponse<ActivityEntity>> getActivity();
 
+    /**
+     * @return 主题加精
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("themeChoicenessOperate")
+    @FormUrlEncoded
+    Observable<BaseResponse<IEntity>> addChoiceness(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
+    /**
+     * @return 主题不喜欢
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("userShieldRecord")
+    @FormUrlEncoded
+    Observable<BaseResponse<IEntity>> userShieldRecord(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 获取缩略图
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("getThumb")
+    @FormUrlEncoded
+    Observable<BaseResponse<String>> getThumb(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
 }

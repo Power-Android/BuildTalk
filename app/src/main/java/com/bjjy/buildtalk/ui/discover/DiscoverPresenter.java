@@ -6,10 +6,13 @@ import com.bjjy.buildtalk.app.App;
 import com.bjjy.buildtalk.base.presenter.BasePresenter;
 import com.bjjy.buildtalk.core.rx.BaseObserver;
 import com.bjjy.buildtalk.core.rx.RxUtils;
+import com.bjjy.buildtalk.entity.ActivityEntity;
 import com.bjjy.buildtalk.entity.BannerEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.DiscoverEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
+import com.bjjy.buildtalk.entity.IEntity;
+import com.bjjy.buildtalk.entity.VersionRecordEntity;
 import com.bjjy.buildtalk.utils.HeaderUtils;
 import com.bjjy.buildtalk.utils.TimeUtils;
 
@@ -149,6 +152,18 @@ public class DiscoverPresenter extends BasePresenter<DiscoverContract.View> impl
                     public void onSuccess(CourseEntity courseEntities) {
                         mCoursePageCount = courseEntities.getPage_count();
                         mView.handlerCourse(courseEntities);
+                    }
+                }));
+    }
+
+    public void getActivity() {
+        addSubscribe(mDataManager.getActivity()
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<ActivityEntity>(mView,false){
+                    @Override
+                    public void onSuccess(ActivityEntity activityEntity) {
+                        mView.handlerActivitySuccess(activityEntity);
                     }
                 }));
     }
