@@ -1,5 +1,6 @@
 package com.bjjy.buildtalk.ui.discover;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,10 +25,12 @@ import com.bjjy.buildtalk.entity.ActivityEntity;
 import com.bjjy.buildtalk.entity.BannerEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.DiscoverEntity;
+import com.bjjy.buildtalk.entity.DissertationEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
 import com.bjjy.buildtalk.entity.ThemeTypeEntity;
 import com.bjjy.buildtalk.ui.mine.AboutUsActivity;
 import com.bjjy.buildtalk.utils.AnimatorUtils;
+import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.NetworkUtils;
 import com.bjjy.buildtalk.weight.BaseDialog;
 import com.bumptech.glide.Glide;
@@ -109,6 +112,7 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
             mPresenter.discoverEveryTalk();
             mPresenter.discoverToptic();
             mPresenter.discoverCourse();
+            mPresenter.discoverDissertation();
         }
     }
 
@@ -142,30 +146,14 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
     }
 
     @Override
+    public void handlerDissertation(List<DissertationEntity> dissertationEntities) {
+        mDiscoverAdapter.setDissertationEntities(dissertationEntities);
+    }
+
+    @Override
     public void handlerActivitySuccess(ActivityEntity activityEntity) {
         if (1 == activityEntity.getIs_show()){
-            mDialog = new BaseDialog.Builder(mContext)
-                    .setViewId(R.layout.dialog_activity_layout)
-                    //设置显示位置
-                    .setGravity(Gravity.CENTER)
-                    //设置动画
-                    .setAnimation(R.style.nomal_aniamtion)
-                    //设置dialog的宽高
-                    .setWidthHeightpx((int) getResources().getDimension(R.dimen.dp_280), (int) getResources().getDimension(R.dimen.dp_380))
-                    //设置触摸dialog外围是否关闭
-                    .isOnTouchCanceled(false)
-                    .addViewOnClickListener(R.id.iv, v -> {
-                        Intent intent = new Intent(mContext, AboutUsActivity.class);
-                        intent.putExtra("url", activityEntity.getActivity_url());
-                        intent.putExtra("title", activityEntity.getActivity_title());
-                        startActivity(intent);
-                        mDialog.dismiss();
-                    })
-                    .addViewOnClickListener(R.id.close, v -> mDialog.dismiss())
-                    //设置监听事件
-                    .builder();
-            Glide.with(mContext).load(activityEntity.getPic_url()).into((RoundedImageView) mDialog.getView(R.id.iv));
-            mDialog.show();
+            DialogUtils.showActivityDialog(mContext, activityEntity);
         }
     }
 

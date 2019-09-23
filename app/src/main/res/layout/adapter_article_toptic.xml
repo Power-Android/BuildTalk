@@ -42,6 +42,20 @@
             android:paddingBottom="@dimen/dp_1"
             android:paddingLeft="@dimen/dp_5"
             android:paddingRight="@dimen/dp_5"/>
+        <TextView
+            android:id="@+id/item_top_tv"
+            android:layout_width="@dimen/dp_25"
+            android:layout_height="@dimen/dp_14"
+            android:visibility="gone"
+            android:text="置顶"
+            android:includeFontPadding="false"
+            android:textSize="@dimen/sp_10"
+            android:textColor="#8F8F8F"
+            android:background="@drawable/shape_gray_1radius"
+            android:gravity="center"
+            android:layout_toRightOf="@+id/item_job_tv"
+            android:layout_alignTop="@id/item_face_iv"
+            android:layout_marginLeft="@dimen/dp_5"/>
         <ImageView
             android:id="@+id/item_more_iv"
             android:layout_width="@dimen/dp_30"

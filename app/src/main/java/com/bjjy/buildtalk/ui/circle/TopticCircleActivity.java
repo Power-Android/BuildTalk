@@ -1,6 +1,7 @@
 package com.bjjy.buildtalk.ui.circle;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -26,7 +27,9 @@ import com.bjjy.buildtalk.adapter.ThemeTypeAdapter;
 import com.bjjy.buildtalk.app.App;
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
+import com.bjjy.buildtalk.core.event.PublishEvent;
 import com.bjjy.buildtalk.core.event.RefreshEvent;
+import com.bjjy.buildtalk.entity.ActivityEntity;
 import com.bjjy.buildtalk.entity.CircleInfoEntity;
 import com.bjjy.buildtalk.entity.CommentContentBean;
 import com.bjjy.buildtalk.entity.IEntity;
@@ -180,6 +183,22 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
         }
         if (TextUtils.equals(eventBean.getMsg(), Constants.QUIT_CIRCLE)) {
             finish();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void event(PublishEvent eventBean) {
+        if (TextUtils.equals(eventBean.getType(), Constants.PUBLISH_ACTIVITY)) {
+            ActivityEntity entity = new ActivityEntity();
+            entity.setIs_show(1);
+            entity.setPic_url(eventBean.getUrl());
+            entity.setType_name("发表");
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    DialogUtils.showActivityDialog(TopticCircleActivity.this, entity);
+                }
+            }, 1500);
         }
     }
 
@@ -441,7 +460,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
                 finish();
                 break;
             case R.id.share_iv:
-                circlePath = mPath + "circle_id=" + mCircle_id;
+                circlePath = mPath + "circle_id=" + mCircle_id + "&num=1";
                 DialogUtils.showShareDialog(this, circlePath, mEndUrl, mCircleInfoEntity.getCircleInfo().getCircle_name(),
                         mCircleInfoEntity.getCircleInfo().getCircle_image().getPic_url(), mCircleInfoEntity.getCircleInfo().getCircle_desc(), true);
                 break;
@@ -449,7 +468,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
                 LoginHelper.login(this, mPresenter.mDataManager, () -> mPresenter.joinCircle(mCircle_id));
                 break;
             case R.id.pre_share_iv:
-                circlePath = mPath + "circle_id=" + mCircle_id;
+                circlePath = mPath + "circle_id=" + mCircle_id + "&num=1";
                 DialogUtils.showShareDialog(this, circlePath, mEndUrl, mCircleInfoEntity.getCircleInfo().getCircle_name(),
                         mCircleInfoEntity.getCircleInfo().getCircle_image().getPic_url(), mCircleInfoEntity.getCircleInfo().getCircle_desc(), true);
                 break;
@@ -630,7 +649,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
     public void handlerThumbSuccess(String thumb_url, List<ThemeInfoEntity.ThemeInfoBean> data, int i) {
         String mUrl = Constants.BASE_URL + "jtfwhgetopenid" + "?user_id=" + mPresenter.mDataManager.getUser().getUser_id() + "&theme_id=" + data.get(i).getTheme_id();
         String mEndUrl = Constants.END_URL + "&redirect_uri=" + URLEncoder.encode(mUrl) + "&response_type=code&scope=snsapi_userinfo&state=theme#wechat_redirect";
-        themePath = mPath1 + "theme_id=" + data.get(i).getTheme_id() + "&circle_id=" + mCircle_id;
+        themePath = mPath1 + "theme_id=" + data.get(i).getTheme_id() + "&circle_id=" + mCircle_id + "&num=1";
         DialogUtils.showShareDialog(this, themePath, mEndUrl,
                 TextUtils.isEmpty(data.get(i).getTheme_content()) ? mCircleInfoEntity.getCircleInfo().getCircle_name() : data.get(i).getTheme_content(),
                 thumb_url, data.get(i).getTheme_content(), true);
@@ -735,19 +754,19 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
     public void handlerDeleteSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list) {
         list.remove(i);
         if (mViewpager_position == 0) {//主题列表
-            mTopticAdapter.notifyItemChanged(i);
+            mTopticAdapter.notifyItemRemoved(i);
             //如果点赞的这条主题是精华，那么刷新精华列表数据
             if (data.getIs_choiceness() == 1) {
                 refreshChoiceness();
             }
         } else {//精华列表,局部刷新主题数据
-            mTopticAdapter1.notifyItemChanged(i);
+            mTopticAdapter1.notifyItemRemoved(i);
             int theme_id = data.getTheme_id();
             List<ThemeInfoEntity.ThemeInfoBean> topticAdapterData = mTopticAdapter.getData();
             for (int j = 0; j < topticAdapterData.size(); j++) {
                 if (theme_id == topticAdapterData.get(j).getTheme_id()) {
                     topticAdapterData.remove(j);
-                    mTopticAdapter.notifyItemChanged(j);
+                    mTopticAdapter.notifyItemRemoved(j);
                 }
             }
         }
@@ -785,19 +804,19 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
     public void handleruserShieldRecordSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list) {
         list.remove(i);
         if (mViewpager_position == 0) {//主题列表
-            mTopticAdapter.notifyItemChanged(i);
+            mTopticAdapter.notifyItemRemoved(i);
             //如果点赞的这条主题是精华，那么刷新精华列表数据
             if (data.getIs_choiceness() == 1) {
                 refreshChoiceness();
             }
         } else {//精华列表,局部刷新主题数据
-            mTopticAdapter1.notifyItemChanged(i);
+            mTopticAdapter1.notifyItemRemoved(i);
             int theme_id = data.getTheme_id();
             List<ThemeInfoEntity.ThemeInfoBean> topticAdapterData = mTopticAdapter.getData();
             for (int j = 0; j < topticAdapterData.size(); j++) {
                 if (theme_id == topticAdapterData.get(j).getTheme_id()) {
                     topticAdapterData.remove(j);
-                    mTopticAdapter.notifyItemChanged(j);
+                    mTopticAdapter.notifyItemRemoved(j);
                 }
             }
         }

@@ -64,6 +64,7 @@
         android:id="@+id/media_rl"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_60"
+        android:visibility="gone"
         android:layout_below="@+id/face_iv"
         android:layout_margin="@dimen/common_margin"
         android:background="@drawable/shape_white_5radius"

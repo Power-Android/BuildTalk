@@ -2,7 +2,6 @@ package com.bjjy.buildtalk.ui.circle;
 
 import android.Manifest;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -16,13 +15,12 @@ import android.widget.Toast;
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
+import com.bjjy.buildtalk.core.event.PublishEvent;
 import com.bjjy.buildtalk.core.event.RefreshEvent;
-import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.ThemeImageBean;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
-import com.bjjy.buildtalk.weight.BaseDialog;
 import com.bjjy.buildtalk.weight.MyGridAdapter;
 import com.bjjy.buildtalk.weight.NoScrollGridView;
 import com.luck.picture.lib.PictureSelector;
@@ -39,7 +37,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
@@ -214,10 +211,13 @@ public class PublishActivity extends BaseActivity<PublishPresenter> implements P
     }
 
     @Override
-    public void handlerPublishSuccess(IEntity iEntity) {
+    public void handlerPublishSuccess(String pic) {
         hideLoading();
         KeyboardUtils.hideSoftInput(this);
         EventBus.getDefault().post(new RefreshEvent(Constants.TOPTIC_REFRESH));
+        if (!TextUtils.isEmpty(pic)){
+            EventBus.getDefault().post(new PublishEvent(Constants.PUBLISH_ACTIVITY, pic));
+        }
         finish();
     }
 

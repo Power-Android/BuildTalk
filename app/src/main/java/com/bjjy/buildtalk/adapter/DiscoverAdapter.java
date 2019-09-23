@@ -9,10 +9,13 @@ import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.entity.BannerEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.DiscoverEntity;
+import com.bjjy.buildtalk.entity.DissertationEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
 import com.bjjy.buildtalk.ui.circle.CourseCircleActivity;
 import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
+import com.bjjy.buildtalk.ui.discover.DissertationActivity;
 import com.bjjy.buildtalk.ui.discover.EveryTalkDetailActivity;
+import com.bjjy.buildtalk.ui.talk.MasterDetailActivity;
 import com.bjjy.buildtalk.utils.GlideUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
@@ -42,6 +45,8 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
     private List<CourseEntity.CircleInfoBean> mTopticEntities = new ArrayList<>();
     private CourseEntity mCourseEntity;
     private List<CourseEntity.CircleInfoBean> mCourseEntities = new ArrayList<>();
+    private List<DissertationEntity> dissertationEntities = new ArrayList<>();
+    private Intent mIntent;
 
     /**
      * Same as QuickAdapter#QuickAdapter(Context,int) but with
@@ -64,7 +69,35 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
             case BODY_BANNER:
                 Banner banner = helper.getView(R.id.banner);
                 banner.setOnBannerListener(position -> {
-//                    ToastUtils.showShort("轮播图" + position);
+                    switch (mBannerEntities.get(position).getType_id()){
+                        case 1:
+                            if ("1".equals(mBannerEntities.get(position).getCircle_type())){
+                                Intent intent = new Intent(mContext, TopticCircleActivity.class);
+                                intent.putExtra("circle_id", mBannerEntities.get(position).getData_id()+"");
+                                mContext.startActivity(intent);
+                            }else {
+                                Intent intent = new Intent(mContext, CourseCircleActivity.class);
+                                intent.putExtra("circle_id", mBannerEntities.get(position).getData_id()+"");
+                                mContext.startActivity(intent);
+                            }
+                            break;
+                        case 2:
+                            mIntent = new Intent(mContext, EveryTalkDetailActivity.class);
+                            mIntent.putExtra("article_id",mBannerEntities.get(position).getData_id()+"");
+                            mIntent.putExtra("type","article");
+                            mContext.startActivity(mIntent);
+                            break;
+                        case 3:
+                            mIntent = new Intent(mContext, MasterDetailActivity.class);
+                            mIntent.putExtra("user_id", mBannerEntities.get(position).getData_id() + "");
+                            mContext.startActivity(mIntent);
+                            break;
+                        case 4:
+                            mIntent = new Intent(mContext, DissertationActivity.class);
+                            mIntent.putExtra("id",mBannerEntities.get(position).getData_id()+"");
+                            mContext.startActivity(mIntent);
+                            break;
+                    }
                 });
                 banner.setImages(mBannerImageList).setImageLoader(new GlideUtils()).start();
                 break;
@@ -109,16 +142,14 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
 
                 break;
             case BODY_PROJECT:
-                List<String> project_list = new ArrayList<>();
-                project_list.add("");
                 RecyclerView project_RecyclerView = helper.getView(R.id.project_recyclerView);
                 project_RecyclerView.setLayoutManager(new GridLayoutManager(mContext, 2));
-                ProjectAdapter projectAdapter = new ProjectAdapter(R.layout.adapter_good_project, project_list);
+                ProjectAdapter projectAdapter = new ProjectAdapter(R.layout.adapter_good_project, dissertationEntities);
                 project_RecyclerView.setAdapter(projectAdapter);
                 projectAdapter.setOnItemClickListener((adapter, view, position) -> {
-                    Intent intent = new Intent(mContext, EveryTalkDetailActivity.class);
-                    intent.putExtra("article_id", "87");
-                    intent.putExtra("type","article");
+                    List<DissertationEntity> data = adapter.getData();
+                    Intent intent = new Intent(mContext, DissertationActivity.class);
+                    intent.putExtra("id", data.get(position).getDissertation_id()+"");
                     mContext.startActivity(intent);
                 });
                 break;
@@ -147,6 +178,11 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
         this.mCourseEntity = courseEntities;
         List<CourseEntity.CircleInfoBean> courseList = courseEntities.getCircleInfo();
         this.mCourseEntities = courseList;
+        notifyDataSetChanged();
+    }
+
+    public void setDissertationEntities(List<DissertationEntity> dissertationEntities) {
+        this.dissertationEntities = dissertationEntities;
         notifyDataSetChanged();
     }
 

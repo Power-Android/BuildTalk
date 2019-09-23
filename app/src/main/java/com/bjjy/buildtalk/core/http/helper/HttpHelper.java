@@ -15,6 +15,8 @@ import com.bjjy.buildtalk.entity.CollectEntity;
 import com.bjjy.buildtalk.entity.CommentSuccessEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.CourseListEntity;
+import com.bjjy.buildtalk.entity.DissertationDetailEntity;
+import com.bjjy.buildtalk.entity.DissertationEntity;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
 import com.bjjy.buildtalk.entity.EveryTalkListEntity;
@@ -97,7 +99,7 @@ public interface HttpHelper {
 
     Observable<BaseResponse<PraiseEntity>> themeParise(Map<String, String> headers, Map<String, String> params);
 
-    Observable<BaseResponse<IEntity>> publishTheme(Map<String, String> headers, Map<String, String> params);
+    Observable<BaseResponse<String>> publishTheme(Map<String, String> headers, Map<String, String> params);
 
     Observable<BaseResponse<IEntity>> updateTheme(Map<String, String> headers, Map<String, String> params);
 
@@ -172,5 +174,9 @@ public interface HttpHelper {
     Observable<BaseResponse<String>> getThumb(Map<String, String> headers, Map<String, String> params);
 
     Observable<BaseResponse<IEntity>> userShieldRecord(Map<String, String> headers, Map<String, String> params);
+
+    Observable<BaseResponse<List<DissertationEntity>>> searchDissertation();
+
+    Observable<BaseResponse<DissertationDetailEntity>> searchDissertationDetail(Map<String, String> headers, Map<String, String> params);
 
 }

@@ -16,6 +16,7 @@ import com.bjjy.buildtalk.di.module.activity.CourseCircleActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CourseDetailActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CourseListActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CreateCircleActivityModule;
+import com.bjjy.buildtalk.di.module.activity.DissertationActivityModule;
 import com.bjjy.buildtalk.di.module.activity.EditBindPhoneActivityModule;
 import com.bjjy.buildtalk.di.module.activity.EditNameActivityModule;
 import com.bjjy.buildtalk.di.module.activity.EverTalkListActivityModule;
@@ -59,6 +60,7 @@ import com.bjjy.buildtalk.ui.circle.PublishActivity;
 import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
 import com.bjjy.buildtalk.ui.circle.TopticDetailActivity;
 import com.bjjy.buildtalk.ui.discover.CourseListActivity;
+import com.bjjy.buildtalk.ui.discover.DissertationActivity;
 import com.bjjy.buildtalk.ui.discover.EveryTalkDetailActivity;
 import com.bjjy.buildtalk.ui.discover.EveryTalkListActivity;
 import com.bjjy.buildtalk.ui.discover.TopticListActivity;
@@ -224,4 +226,7 @@ public abstract class AbstractAllActivityModule {
 
     @ContributesAndroidInjector(modules = VersionRecordActivityModule.class)
     abstract VersionRecordActivity mVersionRecordActivity();
+
+    @ContributesAndroidInjector(modules = DissertationActivityModule.class)
+    abstract DissertationActivity mDissertationActivity();
 }

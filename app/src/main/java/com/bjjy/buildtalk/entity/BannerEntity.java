@@ -23,6 +23,7 @@ public class BannerEntity implements Serializable {
     private int type_id;
     private String pic_url;
     private String type_name;
+    private String circle_type;
 
     public int getPic_id() {
         return pic_id;
@@ -62,5 +63,13 @@ public class BannerEntity implements Serializable {
 
     public void setType_name(String type_name) {
         this.type_name = type_name;
+    }
+
+    public String getCircle_type() {
+        return circle_type;
+    }
+
+    public void setCircle_type(String circle_type) {
+        this.circle_type = circle_type;
     }
 }

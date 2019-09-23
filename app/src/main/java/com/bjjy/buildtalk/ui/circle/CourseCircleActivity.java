@@ -604,12 +604,12 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
                 finish();
                 break;
             case R.id.pre_share_iv:
-                circlePath = mPath + "circle_id=" + mCircle_id;
+                circlePath = mPath + "circle_id=" + mCircle_id + "&num=1";
                 DialogUtils.showShareDialog(this, circlePath, mEndUrl, mCircleInfoEntity.getCircleInfo().getCircle_name(),
                         mCircleInfoEntity.getCircleInfo().getCircle_image().getPic_url(), mCircleInfoEntity.getCircleInfo().getCircle_desc(),true);
                 break;
             case R.id.share_iv:
-                circlePath = mPath + "circle_id=" + mCircle_id;
+                circlePath = mPath + "circle_id=" + mCircle_id + "&num=1";
                 DialogUtils.showShareDialog(this, circlePath, mEndUrl, mCircleInfoEntity.getCircleInfo().getCircle_name(),
                         mCircleInfoEntity.getCircleInfo().getCircle_image().getPic_url(), mCircleInfoEntity.getCircleInfo().getCircle_desc(), true);
                 break;
@@ -843,7 +843,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     public void handlerThumbSuccess(String thumb_url, List<ThemeInfoEntity.ThemeInfoBean> data, int i) {
         String mUrl = Constants.BASE_URL + "jtfwhgetopenid" + "?user_id=" + mPresenter.mDataManager.getUser().getUser_id() + "&theme_id=" + data.get(i).getTheme_id();
         String mEndUrl = Constants.END_URL + "&redirect_uri=" + URLEncoder.encode(mUrl) + "&response_type=code&scope=snsapi_userinfo&state=theme#wechat_redirect";
-        themePath = mPath1 + "theme_id=" + data.get(i).getTheme_id() + "&circle_id=" + mCircle_id ;
+        themePath = mPath1 + "theme_id=" + data.get(i).getTheme_id() + "&circle_id=" + mCircle_id +"&num=1";
         DialogUtils.showShareDialog(this, themePath, mEndUrl,
                 TextUtils.isEmpty(data.get(i).getTheme_content()) ? mCircleInfoEntity.getCircleInfo().getCircle_name() : data.get(i).getTheme_content(),
                 thumb_url, data.get(i).getTheme_content(), true);

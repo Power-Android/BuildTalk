@@ -6,6 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -21,6 +25,7 @@ import android.widget.TextView;
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.ThemeTypeAdapter;
 import com.bjjy.buildtalk.base.presenter.IPresenter;
+import com.bjjy.buildtalk.entity.ActivityEntity;
 import com.bjjy.buildtalk.entity.CircleInfoEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.entity.ThemeTypeEntity;
@@ -29,7 +34,16 @@ import com.bjjy.buildtalk.ui.circle.CourseCirclePresenter;
 import com.bjjy.buildtalk.ui.circle.PublishActivity;
 import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
 import com.bjjy.buildtalk.ui.circle.TopticCirclePresenter;
+import com.bjjy.buildtalk.ui.discover.DissertationActivity;
+import com.bjjy.buildtalk.ui.discover.EveryTalkDetailActivity;
+import com.bjjy.buildtalk.ui.mine.AboutUsActivity;
+import com.bjjy.buildtalk.ui.talk.MasterDetailActivity;
 import com.bjjy.buildtalk.weight.BaseDialog;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.Transformation;
+import com.bumptech.glide.load.engine.Resource;
+import com.bumptech.glide.request.RequestOptions;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -37,6 +51,10 @@ import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMMin;
 import com.umeng.socialize.media.UMWeb;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +70,125 @@ public class DialogUtils {
     private static BaseDialog mEditDailog;
     private static BaseDialog mDeleteDialog;
     private static BaseDialog mMInputDialog;
+    private static BaseDialog mActivityDialog;
+
+    public static void showActivityDialog(Context context, ActivityEntity activityEntity){
+        mActivityDialog = new BaseDialog.Builder(context)
+                .setViewId(R.layout.dialog_activity_layout)
+                //设置显示位置
+                .setGravity(Gravity.CENTER)
+                //设置动画
+                .setAnimation(R.style.nomal_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx((int) context.getResources().getDimension(R.dimen.dp_280), (int) context.getResources().getDimension(R.dimen.dp_380))
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(false)
+                .addViewOnClickListener(R.id.iv, v -> {
+                    if (TextUtils.equals("发表", activityEntity.getType_name())){
+                        return;
+                    }
+                    if (!TextUtils.isEmpty(activityEntity.getActivity_url())){
+                        Intent intent = new Intent(context, AboutUsActivity.class);
+                        intent.putExtra("url", activityEntity.getActivity_url());
+                        intent.putExtra("title", activityEntity.getActivity_title());
+                        context.startActivity(intent);
+                    }else {
+                        switch (activityEntity.getType_id()){
+                            case "1":
+                                if ("1".equals(activityEntity.getCircle_type())){
+                                    Intent intent = new Intent(context, TopticCircleActivity.class);
+                                    intent.putExtra("circle_id", activityEntity.getData_id()+"");
+                                    context.startActivity(intent);
+                                }else {
+                                    Intent intent = new Intent(context, CourseCircleActivity.class);
+                                    intent.putExtra("circle_id", activityEntity.getData_id()+"");
+                                    context.startActivity(intent);
+                                }
+                                break;
+                            case "2":
+                                Intent intent1 = new Intent(context, EveryTalkDetailActivity.class);
+                                intent1.putExtra("article_id",activityEntity.getData_id()+"");
+                                intent1.putExtra("type","article");
+                                context.startActivity(intent1);
+                                break;
+                            case "3":
+                                Intent intent2 = new Intent(context, MasterDetailActivity.class);
+                                intent2.putExtra("user_id", activityEntity.getData_id() + "");
+                                context.startActivity(intent2);
+                                break;
+                            case "4":
+                                Intent intent3 = new Intent(context, DissertationActivity.class);
+                                intent3.putExtra("id",activityEntity.getData_id()+"");
+                                context.startActivity(intent3);
+                                break;
+                        }
+                    }
+
+                    mActivityDialog.dismiss();
+                })
+                .addViewOnClickListener(R.id.close, v -> mActivityDialog.dismiss())
+                //设置监听事件
+                .builder();
+
+        final Bitmap[] mBitmap = new Bitmap[1];
+        Glide.with(context).load(activityEntity.getPic_url()).apply(new RequestOptions()
+                        .transform(new Transformation<Bitmap>() {
+            @NonNull
+            @Override
+            public Resource<Bitmap> transform(@NonNull Context context, @NonNull Resource<Bitmap> resource, int outWidth, int outHeight) {
+                mBitmap[0] = resource.get();
+                return resource;
+            }
+
+            @Override
+            public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+
+            }
+        })).into((RoundedImageView) mActivityDialog.getView(R.id.iv));
+        if (TextUtils.equals("发表", activityEntity.getType_name())) {
+            ToastUtils.showShort("长按可保存图片~");
+            mActivityDialog.getView(R.id.iv).setOnLongClickListener(v1 -> {
+                saveImageToGallery(context, mBitmap[0]);
+                return true;
+            });
+        }
+        mActivityDialog.show();
+    }
+
+    public static void saveImageToGallery(Context context, Bitmap bmp) {
+        // 首先保存图片 创建文件夹
+        File appDir = new File(Environment.getExternalStorageDirectory(), "jt");
+        if (!appDir.exists()) {
+            appDir.mkdir();
+        }
+        //图片文件名称
+        String fileName = "jt_"+System.currentTimeMillis() + ".jpg";
+        File file = new File(appDir, fileName);
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+        } catch (Exception e) {
+            Log.e("111",e.getMessage());
+            e.printStackTrace();
+        }
+
+        // 其次把文件插入到系统图库
+        String path = file.getAbsolutePath();
+        try {
+            MediaStore.Images.Media.insertImage(context.getContentResolver(), path, fileName, null);
+        } catch (FileNotFoundException e) {
+            Log.e("333",e.getMessage());
+            e.printStackTrace();
+        }
+        // 最后通知图库更新
+        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        Uri uri = Uri.fromFile(file);
+        intent.setData(uri);
+        context.sendBroadcast(intent);
+        ToastUtils.showShort("图片保存成功");
+    }
 
     /**
      * @param activity

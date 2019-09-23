@@ -1,19 +1,20 @@
-package com.bjjy.buildtalk.ui.circle;
+package com.bjjy.buildtalk.ui.discover;
 
 import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.base.view.IView;
+import com.bjjy.buildtalk.entity.DissertationDetailEntity;
 
 /**
  * @author power
- * @date 2019/6/13 9:39 AM
+ * @date 2019-09-16 10:51
  * @project BuildTalk
  * @description:
  */
-public class PublishContarct {
+public class DissertationContract {
 
     interface View extends IView{
 
-        void handlerPublishSuccess(String iEntity);
+        void handlerDetail(DissertationDetailEntity detailEntity);
     }
 
     interface Presenter extends IPresenter<View>{

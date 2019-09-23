@@ -6,6 +6,7 @@ import com.bjjy.buildtalk.entity.ActivityEntity;
 import com.bjjy.buildtalk.entity.BannerEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.DiscoverEntity;
+import com.bjjy.buildtalk.entity.DissertationEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
 
 import java.util.List;
@@ -29,6 +30,8 @@ public class DiscoverContract {
         void handlerCourse(CourseEntity courseEntities);
 
         void handlerActivitySuccess(ActivityEntity activityEntity);
+
+        void handlerDissertation(List<DissertationEntity> dissertationEntities);
     }
 
     interface Presenter extends IPresenter<View>{

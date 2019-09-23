@@ -10,6 +10,7 @@ import com.bjjy.buildtalk.entity.ActivityEntity;
 import com.bjjy.buildtalk.entity.BannerEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.DiscoverEntity;
+import com.bjjy.buildtalk.entity.DissertationEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
 import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.VersionRecordEntity;
@@ -164,6 +165,18 @@ public class DiscoverPresenter extends BasePresenter<DiscoverContract.View> impl
                     @Override
                     public void onSuccess(ActivityEntity activityEntity) {
                         mView.handlerActivitySuccess(activityEntity);
+                    }
+                }));
+    }
+
+    public void discoverDissertation() {
+        addSubscribe(mDataManager.searchDissertation()
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<List<DissertationEntity>>(mView, false){
+                    @Override
+                    public void onSuccess(List<DissertationEntity> dissertationEntities) {
+                        mView.handlerDissertation(dissertationEntities);
                     }
                 }));
     }

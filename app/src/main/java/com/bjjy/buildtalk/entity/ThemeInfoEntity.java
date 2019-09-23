@@ -95,6 +95,15 @@ public class ThemeInfoEntity implements Serializable {
         private int page_count;
         private int countCommentNum;
         private int themeCountParise;
+        private int is_top;
+
+        public int getIs_top() {
+            return is_top;
+        }
+
+        public void setIs_top(int is_top) {
+            this.is_top = is_top;
+        }
 
         public int getThemeCountParise() {
             return themeCountParise;

@@ -46,5 +46,12 @@
             android:visibility="gone"
             android:src="@drawable/titile_search_icon"
             android:layout_gravity="right" />
+        <ImageView
+            android:id="@+id/toolbar_right_share"
+            android:layout_width="@dimen/dp_20"
+            android:layout_height="@dimen/dp_20"
+            android:visibility="gone"
+            android:src="@drawable/share_blue_icon"
+            android:layout_gravity="right" />
     </android.support.v7.widget.Toolbar>
 </RelativeLayout>

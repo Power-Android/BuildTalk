@@ -1,9 +1,14 @@
 package com.bjjy.buildtalk.adapter;
 
 import android.support.annotation.Nullable;
+import android.widget.ImageView;
 
+import com.bjjy.buildtalk.R;
+import com.bjjy.buildtalk.entity.DissertationEntity;
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
 
@@ -13,14 +18,15 @@ import java.util.List;
  * @project BuildTalk
  * @description: 精彩专题 adapter
  */
-public class ProjectAdapter extends BaseQuickAdapter<String,BaseViewHolder> {
+public class ProjectAdapter extends BaseQuickAdapter<DissertationEntity,BaseViewHolder> {
 
-    public ProjectAdapter(int layoutResId, @Nullable List<String> data) {
+    public ProjectAdapter(int layoutResId, @Nullable List<DissertationEntity> data) {
         super(layoutResId, data);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, String item) {
-
+    protected void convert(BaseViewHolder helper, DissertationEntity item) {
+        Glide.with(mContext).load(item.getPic_url()).into((RoundedImageView) helper.getView(R.id.project_iv));
+        helper.setText(R.id.course_title_tv, item.getDissertation_title());
     }
 }

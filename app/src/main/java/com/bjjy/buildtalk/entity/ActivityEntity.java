@@ -26,6 +26,10 @@ public class ActivityEntity implements Serializable {
     private String publish_time;
     private int is_show;
     private String pic_url;
+    private String type_id;
+    private String data_id;
+    private String circle_type;
+    private String type_name;
 
     public int getActivity_id() {
         return activity_id;
@@ -81,5 +85,37 @@ public class ActivityEntity implements Serializable {
 
     public void setPic_url(String pic_url) {
         this.pic_url = pic_url;
+    }
+
+    public String getType_id() {
+        return type_id;
+    }
+
+    public void setType_id(String type_id) {
+        this.type_id = type_id;
+    }
+
+    public String getData_id() {
+        return data_id;
+    }
+
+    public void setData_id(String data_id) {
+        this.data_id = data_id;
+    }
+
+    public String getCircle_type() {
+        return circle_type;
+    }
+
+    public void setCircle_type(String circle_type) {
+        this.circle_type = circle_type;
+    }
+
+    public String getType_name() {
+        return type_name;
+    }
+
+    public void setType_name(String type_name) {
+        this.type_name = type_name;
     }
 }

@@ -104,10 +104,10 @@ public class PublishPresenter extends BasePresenter<PublishContarct.View> {
         addSubscribe(mDataManager.publishTheme(headers, paramas)
                 .compose(RxUtils.SchedulerTransformer())
                 .filter(baseResponse -> mView != null)
-                .subscribeWith(new BaseObserver<IEntity>(mView, false) {
+                .subscribeWith(new BaseObserver<String>(mView, false) {
                     @Override
-                    public void onSuccess(IEntity iEntity) {
-                        mView.handlerPublishSuccess(iEntity);
+                    public void onSuccess(String pic) {
+                        mView.handlerPublishSuccess(pic);
                     }
                 }));
     }
@@ -146,7 +146,7 @@ public class PublishPresenter extends BasePresenter<PublishContarct.View> {
                 .subscribeWith(new BaseObserver<IEntity>(mView, false) {
                     @Override
                     public void onSuccess(IEntity iEntity) {
-                        mView.handlerPublishSuccess(iEntity);
+                        mView.handlerPublishSuccess("");
                     }
                 }));
     }

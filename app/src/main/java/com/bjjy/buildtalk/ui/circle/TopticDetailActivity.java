@@ -317,7 +317,7 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
 
     @Override
     public void handlerThumbSuccess(String thumb_url, ThemeInfoEntity.ThemeInfoBean themeInfoEntity) {
-        themePath = mPath1 + "theme_id=" + themeInfoEntity.getTheme_id() + "&circle_id=" + mCircle_id;
+        themePath = mPath1 + "theme_id=" + themeInfoEntity.getTheme_id() + "&circle_id=" + mCircle_id + "&num=1";
         DialogUtils.showShareDialog(this, themePath, mEndUrl,
                 TextUtils.isEmpty(themeInfoEntity.getTheme_content()) ? mTitle : themeInfoEntity.getTheme_content(),
                 thumb_url, themeInfoEntity.getTheme_content(), true);

@@ -65,6 +65,7 @@ public class CircleTopticAdapter extends BaseQuickAdapter<ThemeInfoEntity.ThemeI
                 .setGone(R.id.column_rl, "1".equals(isJoin) ? true : false)
                 .setGone(R.id.praise_rl, "1".equals(isJoin) ? true : false)
                 .setGone(R.id.comment_rl, "1".equals(isJoin) ? true : false)
+                .setGone(R.id.item_top_tv, 1 == item.getIs_top() ? true : false)
                 .setText(R.id.item_time_tv, item.getPublish_time())
                 .setText(R.id.item_content_tv, item.getTheme_content())
                 .addOnClickListener(R.id.item_face_iv)

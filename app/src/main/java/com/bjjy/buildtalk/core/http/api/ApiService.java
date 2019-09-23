@@ -17,6 +17,8 @@ import com.bjjy.buildtalk.entity.CollectEntity;
 import com.bjjy.buildtalk.entity.CommentSuccessEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.CourseListEntity;
+import com.bjjy.buildtalk.entity.DissertationDetailEntity;
+import com.bjjy.buildtalk.entity.DissertationEntity;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
 import com.bjjy.buildtalk.entity.EveryTalkListEntity;
@@ -249,7 +251,7 @@ public interface ApiService {
     @Headers(Constants.HEADER_PASSID)
     @POST("publishTheme")
     @FormUrlEncoded
-    Observable<BaseResponse<IEntity>> publishTheme(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+    Observable<BaseResponse<String>> publishTheme(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
     /**
      * @return 修改主题
@@ -534,5 +536,46 @@ public interface ApiService {
     @POST("getThumb")
     @FormUrlEncoded
     Observable<BaseResponse<String>> getThumb(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 获取所有专题
+     */
+    @GET("searchDissertation")
+    Observable<BaseResponse<List<DissertationEntity>>> searchDissertation();
+
+    /**
+     * @return 查询专题详情
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("searchDissertationDetail")
+    @FormUrlEncoded
+    Observable<BaseResponse<DissertationDetailEntity>> searchDissertationDetail(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
