@@ -10,6 +10,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -314,10 +315,12 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
         mRecyclerView.setLayoutManager(new LinearLayoutManager(App.getContext()));
         mTopticAdapter = new CircleTopticAdapter(R.layout.adapter_article_toptic, mThemeInfoList, mIsJoin, this);
         mRecyclerView.setAdapter(mTopticAdapter);
+        ((SimpleItemAnimator)mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
         mJhRecyclerView.setLayoutManager(new LinearLayoutManager(App.getContext()));
         mTopticAdapter1 = new CircleTopticAdapter(R.layout.adapter_article_toptic, mEssenceInfoList, mIsJoin, this);
         mJhRecyclerView.setAdapter(mTopticAdapter1);
+        ((SimpleItemAnimator)mJhRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
         mTopticAdapter.setOnItemClickListener(this);
         mTopticAdapter.setOnItemChildClickListener(this);

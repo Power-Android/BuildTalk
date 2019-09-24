@@ -3,6 +3,7 @@ package com.bjjy.buildtalk.adapter;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.view.View;
 
 import com.bjjy.buildtalk.R;
@@ -79,6 +80,8 @@ public class TalkAdapter extends BaseMultiItemQuickAdapter<TalkEntity, BaseViewH
                 circle_recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
                 mCircleAdapter = new TalkCircleAdapter(R.layout.adapter_talk_circle, mCircleMasterEntities);
                 circle_recyclerView.setAdapter(mCircleAdapter);
+                ((SimpleItemAnimator)circle_recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+
                 mCircleAdapter.setOnItemClickListener((baseQuickAdapter, view, position) -> {
                     Intent intent = new Intent(mContext, CircleManDetailActivity.class);
                     intent.putExtra("user_id", mCircleMasterEntities.get(position).getUser_id() + "");

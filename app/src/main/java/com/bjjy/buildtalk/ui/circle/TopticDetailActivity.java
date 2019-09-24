@@ -8,6 +8,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -175,6 +176,7 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mCommentAdapter = new CommentAdapter(R.layout.adapter_circle_detail_comment, mComment_content);
         mRecyclerView.setAdapter(mCommentAdapter);
+        ((SimpleItemAnimator)mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         mCommentAdapter.setOnItemChildClickListener(this);
     }
 

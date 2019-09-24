@@ -11,8 +11,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.Spanned;
@@ -139,6 +141,10 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     View misPlay;
     @BindView(R.id.progress_bar)
     CircleProgressView mProgressBar;
+    @BindView(R.id.emptyView)
+    NestedScrollView mEmptyView;
+    @BindView(R.id.play_content_ll)
+    LinearLayout mPlayContentLl;
 
     private SimpleExoPlayer simpleExoPlayer;
     private EveryTalkDetailAdapter mEveryTalkDetailAdapter;
@@ -195,6 +201,7 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mEveryTalkDetailAdapter = new EveryTalkDetailAdapter(R.layout.adapter_every_talk_detail, mList);
         mRecyclerView.setAdapter(mEveryTalkDetailAdapter);
+        ((SimpleItemAnimator)mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         mEveryTalkDetailAdapter.setOnItemChildClickListener(this);
         KeyboardUtils.registerSoftInputChangedListener(this, height -> {
             if (height <= 0){
@@ -224,15 +231,21 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
         mNameTv.setText(mMNewsInfo.getAuthor_name());
         mTimeTv.setText(mMNewsInfo.getPublish_time());
         mMediaNameTv.setText(mMNewsInfo.getArticle_title());
-        if (!TextUtils.isEmpty(mMNewsInfo.getAudio_duration())) {
+        if (!TextUtils.isEmpty(mMNewsInfo.getAudio_url())) {
             mMediaRl.setVisibility(View.VISIBLE);
-            mSize = Float.parseFloat(mMNewsInfo.getAudio_duration());
-            float parseLong = Float.parseFloat(mMNewsInfo.getAudio_duration());
-            mAllTime = parseLong * 1000;
+            if (!TextUtils.isEmpty(mMNewsInfo.getAudio_duration())){
+                mSize = Float.parseFloat(mMNewsInfo.getAudio_duration());
+                float parseLong = Float.parseFloat(mMNewsInfo.getAudio_duration());
+                mAllTime = parseLong * 1000;
 
-            mMediaTimeTv.setText(TimeUtils.getMinuteBySecond((int) mSize));
+                mMediaTimeTv.setText(TimeUtils.getMinuteBySecond((int) mSize));
 
-            mMediaSizeTv.setText(mMNewsInfo.getAudio_size() + "M");
+                mMediaSizeTv.setText(mMNewsInfo.getAudio_size() + "M");
+                mPlayContentLl.setVisibility(View.VISIBLE);
+            }else {
+                mPlayContentLl.setVisibility(View.INVISIBLE);
+            }
+
             Glide.with(this).load(R.drawable.playing).into(mPlayingIv);
             simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(this);
             DefaultDataSourceFactory defaultDataSourceFactory =
@@ -366,10 +379,19 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
 
     @Override
     public void handlerGuestBookList(GuestBookEntity guestBookEntity) {
-        mList.addAll(guestBookEntity.getGuestbookInfo());
-        mPage_count = guestBookEntity.getPage_count();
-        mEveryTalkDetailAdapter.notifyDataSetChanged();
-        mRecordNumTv.setText(guestBookEntity.getCountGuestbookNum());
+        if (guestBookEntity.getGuestbookInfo().size() > 0){
+            mList.addAll(guestBookEntity.getGuestbookInfo());
+            mPage_count = guestBookEntity.getPage_count();
+            mEveryTalkDetailAdapter.notifyDataSetChanged();
+            mRecordNumTv.setText(guestBookEntity.getCountGuestbookNum());
+            mEmptyView.setVisibility(View.GONE);
+            mLoadMoreLayout.setEnableLoadMore(true);
+            mRecyclerView.setVisibility(View.VISIBLE);
+        }else {
+            mRecyclerView.setVisibility(View.GONE);
+            mLoadMoreLayout.setEnableLoadMore(false);
+            mEmptyView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

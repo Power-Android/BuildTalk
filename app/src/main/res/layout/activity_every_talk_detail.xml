@@ -72,12 +72,44 @@
                     android:layout_height="match_parent"
                     android:layout_marginBottom="@dimen/dp_44"
                     app:srlEnableRefresh="false">
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/recycler_view"
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:overScrollMode="never" />
+                        android:layout_height="match_parent">
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/recycler_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:overScrollMode="never" />
+                        <android.support.v4.widget.NestedScrollView
+                            android:id="@+id/emptyView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:overScrollMode="never"
+                            android:visibility="gone">
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <ImageView
+                                    android:id="@+id/empty_img"
+                                    android:layout_width="@dimen/dp_217"
+                                    android:layout_height="@dimen/dp_168"
+                                    android:layout_centerHorizontal="true"
+                                    android:layout_marginTop="@dimen/dp_20"
+                                    android:src="@drawable/empty_comment_icon" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/empty_img"
+                                    android:layout_centerHorizontal="true"
+                                    android:layout_marginTop="@dimen/common_margin"
+                                    android:text="成为评论第一人"
+                                    android:textColor="@color/text_light"
+                                    android:textSize="@dimen/sp_15" />
+                            </RelativeLayout>
+                        </android.support.v4.widget.NestedScrollView>
+                    </RelativeLayout>
                 </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
             </RelativeLayout>

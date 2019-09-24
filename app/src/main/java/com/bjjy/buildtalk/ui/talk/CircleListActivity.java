@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
@@ -65,6 +66,7 @@ public class CircleListActivity extends BaseActivity<CircleListPresenter> implem
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mCircleListAdapter = new CircleListAdapter(R.layout.adapter_circle_list, mCircleInfo, mPresenter.mDataManager);
         mRecyclerView.setAdapter(mCircleListAdapter);
+        ((SimpleItemAnimator)mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         mCircleListAdapter.setOnItemClickListener(this);
         mCircleListAdapter.setOnItemChildClickListener(this);
     }
