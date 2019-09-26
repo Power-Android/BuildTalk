@@ -102,6 +102,7 @@ public class MasterDetailActivity extends BaseActivity<MasterDetailPresenter> im
     private NestedScrollView mEmptyView;
     private RecyclerView mArticleRecyclerView;
 
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void event(RefreshEvent eventBean) {
         if (TextUtils.equals(eventBean.getMsg(), Constants.FANS_REFRESH)) {
