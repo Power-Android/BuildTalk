@@ -37,8 +37,8 @@
         android:layout_marginTop="@dimen/dp_10"/>
     <ImageView
         android:id="@+id/tag_iv"
-        android:layout_width="@dimen/dp_8"
-        android:layout_height="@dimen/dp_8"
+        android:layout_width="@dimen/dp_14"
+        android:layout_height="@dimen/dp_14"
         android:src="@drawable/tag_icon"
         android:layout_toRightOf="@+id/name_tv"
         android:layout_below="@+id/face_iv"

@@ -70,6 +70,12 @@ public class PublishPresenter extends BasePresenter<PublishContarct.View> {
                             }
                             publish(circle_id, theme_id, theme_content, picUrl, isEdit, list);
                         }
+
+                        @Override
+                        public void onFailure(int code, String message) {
+                            super.onFailure(code, message);
+                            mView.hideLoading();
+                        }
                     }));
         }else {
             publish(circle_id, theme_id, theme_content, null, isEdit, list);
@@ -109,6 +115,12 @@ public class PublishPresenter extends BasePresenter<PublishContarct.View> {
                     public void onSuccess(String pic) {
                         mView.handlerPublishSuccess(pic);
                     }
+
+                    @Override
+                    public void onFailure(int code, String message) {
+                        super.onFailure(code, message);
+                        mView.hideLoading();
+                    }
                 }));
     }
 
@@ -147,6 +159,12 @@ public class PublishPresenter extends BasePresenter<PublishContarct.View> {
                     @Override
                     public void onSuccess(IEntity iEntity) {
                         mView.handlerPublishSuccess("");
+                    }
+
+                    @Override
+                    public void onFailure(int code, String message) {
+                        super.onFailure(code, message);
+                        mView.hideLoading();
                     }
                 }));
     }

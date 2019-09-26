@@ -152,12 +152,10 @@ public class ViewPagerActivity extends BaseActivity<ViewpagerPresenter> implemen
         mWidthScale = (float) startWidth / curPhotoView.getWidth();
         mHeightScale = (float) startHeight / curPhotoView.getHeight();
 
-        exitAnimation(new Runnable() {
-            public void run() {
-                //结束动画要做的操作
-                finish();
-                overridePendingTransition(0, 0);
-            }
+        exitAnimation(() -> {
+            //结束动画要做的操作
+            finish();
+            overridePendingTransition(0, 0);
         });
     }
 
@@ -181,6 +179,8 @@ public class ViewPagerActivity extends BaseActivity<ViewpagerPresenter> implemen
 
     private void addItemPhotoView(String imgUrlStr) {
         PhotoView photoView = new PhotoView(this);
+        photoView.setAdjustViewBounds(true);
+        photoView.setMaximumScale(4.0f);
         Glide.with(this)
                 .load(imgUrlStr)
                 .apply(new RequestOptions()
@@ -193,12 +193,7 @@ public class ViewPagerActivity extends BaseActivity<ViewpagerPresenter> implemen
 //                onBackPressed();
 //            }
 //        });
-        photoView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        photoView.setOnClickListener(v -> onBackPressed());
         photoViewList.add(photoView);
     }
 
