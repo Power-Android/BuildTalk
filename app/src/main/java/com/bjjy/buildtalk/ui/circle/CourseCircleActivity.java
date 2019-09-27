@@ -950,19 +950,19 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     public void handlerDeleteSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list) {
         list.remove(i);
         if (mViewpager_position == 0){//主题列表
-            mTopticAdapter.notifyItemChanged(i);
+            mTopticAdapter.notifyItemRemoved(i);
             //如果点赞的这条主题是精华，那么刷新精华列表数据
             if (data.getIs_choiceness() == 1){
                 refreshChoiceness();
             }
         }else {//精华列表,局部刷新主题数据
-            mTopticAdapter1.notifyItemChanged(i);
+            mTopticAdapter1.notifyItemRemoved(i);
             int theme_id = data.getTheme_id();
             List<ThemeInfoEntity.ThemeInfoBean> topticAdapterData = mTopticAdapter.getData();
             for (int j = 0; j < topticAdapterData.size(); j++) {
                 if (theme_id == topticAdapterData.get(j).getTheme_id()){
                     topticAdapterData.remove(j);
-                    mTopticAdapter.notifyItemChanged(j);
+                    mTopticAdapter.notifyItemRemoved(j);
                 }
             }
         }
@@ -1000,19 +1000,19 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     public void handleruserShieldRecordSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list) {
         list.remove(i);
         if (mViewpager_position == 0) {//主题列表
-            mTopticAdapter.notifyItemChanged(i);
+            mTopticAdapter.notifyItemRemoved(i);
             //如果点赞的这条主题是精华，那么刷新精华列表数据
             if (data.getIs_choiceness() == 1) {
                 refreshChoiceness();
             }
         } else {//精华列表,局部刷新主题数据
-            mTopticAdapter1.notifyItemChanged(i);
+            mTopticAdapter1.notifyItemRemoved(i);
             int theme_id = data.getTheme_id();
             List<ThemeInfoEntity.ThemeInfoBean> topticAdapterData = mTopticAdapter.getData();
             for (int j = 0; j < topticAdapterData.size(); j++) {
                 if (theme_id == topticAdapterData.get(j).getTheme_id()) {
                     topticAdapterData.remove(j);
-                    mTopticAdapter.notifyItemChanged(j);
+                    mTopticAdapter.notifyItemRemoved(j);
                 }
             }
         }

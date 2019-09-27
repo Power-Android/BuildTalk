@@ -23,7 +23,7 @@
         android:roundIcon="@mipmap/app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".ui.main.ImagePagerActivity"></activity>
         <activity
             android:name=".ui.main.SplashActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -41,8 +41,7 @@
 
                 <data android:scheme="jiantanapp" />
             </intent-filter>
-        </activity>
-        <!-- 腾讯bugly -->
+        </activity> <!-- 腾讯bugly -->
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
@@ -152,7 +151,7 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity android:name=".ui.mine.ServiceActivity" />
-        <activity android:name=".ui.discover.DissertationActivity"/>
+        <activity android:name=".ui.discover.DissertationActivity" />
         <activity android:name=".ui.mine.VersionRecordActivity" />
         <activity android:name=".ui.mine.MasterVerifyActivity" />
     </application>

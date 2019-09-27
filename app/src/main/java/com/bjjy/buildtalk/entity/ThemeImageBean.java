@@ -59,4 +59,12 @@ public class ThemeImageBean implements Serializable {
         this.position = position;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (getPic_id() != null && getPic_url() != null && obj instanceof ThemeImageBean) {
+            ThemeImageBean dcl = (ThemeImageBean) obj;
+            return getPic_id().equals(dcl.getPic_id()) && getPic_url().equals(dcl.getPic_url());
+        }
+        return super.equals(obj);
+    }
 }

@@ -79,6 +79,8 @@ dependencies {
     implementation rootProject.ext.dependencies["PictureSelector"]
     implementation rootProject.ext.dependencies["photoView"]
     implementation rootProject.ext.dependencies["loadingView"]
+    implementation rootProject.ext.dependencies["subsampling-scale-image-view"]
+    implementation rootProject.ext.dependencies["gesture-views"]
 
     //net
     implementation rootProject.ext.dependencies["gson"]

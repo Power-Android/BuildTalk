@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -36,6 +38,7 @@ import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
 import com.bjjy.buildtalk.ui.circle.TopticCirclePresenter;
 import com.bjjy.buildtalk.ui.discover.DissertationActivity;
 import com.bjjy.buildtalk.ui.discover.EveryTalkDetailActivity;
+import com.bjjy.buildtalk.ui.main.ViewPagerActivity;
 import com.bjjy.buildtalk.ui.mine.AboutUsActivity;
 import com.bjjy.buildtalk.ui.talk.MasterDetailActivity;
 import com.bjjy.buildtalk.weight.BaseDialog;
@@ -43,6 +46,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.Transformation;
 import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
@@ -71,6 +76,44 @@ public class DialogUtils {
     private static BaseDialog mDeleteDialog;
     private static BaseDialog mMInputDialog;
     private static BaseDialog mActivityDialog;
+    private static BaseDialog mSaveImageDialog;
+
+    public static void showSaveImageDialog(Context context, String imgUrl){
+        mSaveImageDialog = new BaseDialog.Builder(context)
+                .setViewId(R.layout.dialog_select_layout)
+                .setGravity(Gravity.BOTTOM)
+                .setAnimation(R.style.bottom_aniamtion)
+                .setWidthHeightpx(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                .builder();
+        mSaveImageDialog.setCancelable(true);
+        mSaveImageDialog.getView(R.id.cancle_tv).setOnClickListener(v -> mSaveImageDialog.dismiss());
+        mSaveImageDialog.getView(R.id.save_tv).setOnClickListener(view -> {
+            final Bitmap[] mBitmap = new Bitmap[1];
+            Glide.with(context).load(imgUrl).apply(new RequestOptions()
+                    .transform(new Transformation<Bitmap>() {
+                        @NonNull
+                        @Override
+                        public Resource<Bitmap> transform(@NonNull Context context1, @NonNull Resource<Bitmap> resource, int outWidth, int outHeight) {
+                            mBitmap[0] = resource.get();
+                            saveImageToGallery(context1, mBitmap[0]);
+                            return resource;
+                        }
+
+                        @Override
+                        public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+
+                        }
+                    })).into(new SimpleTarget<Drawable>() {
+                @Override
+                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+
+                }
+            });
+            mSaveImageDialog.dismiss();
+        });
+        mSaveImageDialog.setCanceledOnTouchOutside(true);
+        mSaveImageDialog.show();
+    }
 
     public static void showActivityDialog(Context context, ActivityEntity activityEntity){
         mActivityDialog = new BaseDialog.Builder(context)

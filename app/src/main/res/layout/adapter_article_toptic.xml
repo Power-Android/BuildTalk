@@ -110,27 +110,10 @@
                 android:drawablePadding="@dimen/dp_3"
                 android:layout_marginTop="@dimen/dp_10"/>
         </LinearLayout>
-
-        <ImageView
-            android:id="@+id/item_img_iv"
-            android:layout_width="@dimen/dp_205"
-            android:layout_height="@dimen/dp_205"
-            android:visibility="gone"
-            android:scaleType="centerCrop"
-            android:layout_below="@+id/content_ll"
-            android:layout_toRightOf="@+id/item_face_iv"
-            android:layout_marginLeft="@dimen/dp_10"
-            android:layout_marginTop="@dimen/dp_10"/>
-        <com.bjjy.buildtalk.weight.NoScrollGridView
+        <com.bjjy.buildtalk.weight.MultiImageView
             android:id="@+id/item_grid_view"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:numColumns="3"
-            android:stretchMode="none"
-            android:background="@color/white"
-            android:columnWidth="@dimen/dp_104"
-            android:gravity="center"
-            android:listSelector="@android:color/transparent"
             android:layout_below="@+id/content_ll"
             android:layout_marginTop="@dimen/dp_5"
             android:layout_toRightOf="@+id/item_face_iv"

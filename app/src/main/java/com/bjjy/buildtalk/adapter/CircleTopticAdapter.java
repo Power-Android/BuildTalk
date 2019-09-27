@@ -27,8 +27,10 @@ import com.bjjy.buildtalk.entity.ThemeImageBean;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
 import com.bjjy.buildtalk.ui.main.ViewPagerActivity;
+import com.bjjy.buildtalk.utils.AllUtils;
 import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.StringUtils;
+import com.bjjy.buildtalk.weight.MultiImageView;
 import com.bjjy.buildtalk.weight.MyGridAdapter;
 import com.bjjy.buildtalk.weight.NoScrollGridView;
 import com.bumptech.glide.Glide;
@@ -37,6 +39,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -59,7 +62,7 @@ public class CircleTopticAdapter extends BaseQuickAdapter<ThemeInfoEntity.ThemeI
     protected void convert(BaseViewHolder helper, ThemeInfoEntity.ThemeInfoBean item) {
         Glide.with(mContext).load(item.getHeadImage()).into((ImageView) helper.getView(R.id.item_face_iv));
         helper.setText(R.id.item_name_tv, item.getName())
-                .setGone(R.id.content_ll, TextUtils.isEmpty(item.getTheme_content())? false : true)
+                .setGone(R.id.content_ll, TextUtils.isEmpty(item.getTheme_content()) ? false : true)
                 .setGone(R.id.item_job_tv, "1".equals(item.getIs_circleMaster()) ? true : false)
                 .setGone(R.id.item_more_iv, "1".equals(isJoin) ? true : false)
                 .setGone(R.id.column_rl, "1".equals(isJoin) ? true : false)
@@ -75,8 +78,7 @@ public class CircleTopticAdapter extends BaseQuickAdapter<ThemeInfoEntity.ThemeI
                 .addOnClickListener(R.id.item_share_iv)
                 .addOnClickListener(R.id.content_more_tv)
                 .addOnClickListener(R.id.more_tv);
-        ImageView singleImg = helper.getView(R.id.item_img_iv);
-        NoScrollGridView gridView = helper.getView(R.id.item_grid_view);
+        MultiImageView multiImageView = helper.getView(R.id.item_grid_view);
         TextView itemCotentTv = helper.getView(R.id.item_content_tv);
         TextView contentMoreTv = helper.getView(R.id.content_more_tv);
         itemCotentTv.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
@@ -94,69 +96,12 @@ public class CircleTopticAdapter extends BaseQuickAdapter<ThemeInfoEntity.ThemeI
         });
 
         List<ThemeImageBean> themeImageBeanList = item.getTheme_image();
-        if (themeImageBeanList.size() == 1){
-            gridView.setVisibility(View.GONE);
-            Glide.with(mContext).load(themeImageBeanList.get(0).getPic_url()).into(singleImg);
-            singleImg.setVisibility(View.VISIBLE);
-            singleImg.setOnClickListener(v -> {
-                ArrayList<ImageView> imgDatas = new ArrayList<>();
-                    ImageView imageView = helper.getView(R.id.item_img_iv);
-                    imgDatas.add(imageView);
-                List<ImgOptionEntity> optionEntities = new ArrayList<>();
-                int[] screenLocationS = new int[2];
-                    ImageView img = imgDatas.get(0);
-                    //获取当前ImageView 在屏幕中的位置 宽高
-                    img.getLocationOnScreen(screenLocationS);
-                    ImgOptionEntity entity = new
-                            ImgOptionEntity(screenLocationS[0], screenLocationS[1], img.getWidth(), img.getHeight());
-                    entity.setImgUrl(themeImageBeanList.get(0).getPic_url());
-                    optionEntities.add(entity);
-
-                Intent bIntent = new Intent(mContext, ViewPagerActivity.class);
-                bIntent.putExtra("positon", 0);
-                bIntent.putExtra("optionEntities", (Serializable) optionEntities);
-                mContext.startActivity(bIntent);
-                //取消原有默认的Activity到Activity的过渡动画
-                mActivity.overridePendingTransition(0, 0);
-            });
-        }else {
-            singleImg.setVisibility(View.GONE);
-            gridView.setVisibility(View.VISIBLE);
-            if (themeImageBeanList.size() == 4) {
-                gridView.setNumColumns(2);
-            } else {
-                gridView.setNumColumns(3);
-            }
-            gridView.setAdapter(new MyGridAdapter(themeImageBeanList, false));
-
-            gridView.setOnItemClickListener((parent, view, position, id) -> {
-                ArrayList<ImageView> imgDatas = new ArrayList<>();
-                for (int i = 0; i < gridView.getChildCount(); i++) {
-                    RelativeLayout relativeLayout = (RelativeLayout) gridView.getChildAt(i);
-                    ImageView imageView = relativeLayout.findViewById(R.id.image);
-                    imgDatas.add(imageView);
-                }
-                List<ImgOptionEntity> optionEntities = new ArrayList<>();
-                int[] screenLocationS = new int[2];
-                for (int i = 0; i < imgDatas.size(); i++) {
-                    ImageView img = imgDatas.get(i);
-                    //获取当前ImageView 在屏幕中的位置 宽高
-                    img.getLocationOnScreen(screenLocationS);
-                    ImgOptionEntity entity = new
-                            ImgOptionEntity(screenLocationS[0], screenLocationS[1], img.getWidth(), img.getHeight());
-                    entity.setImgUrl(themeImageBeanList.get(i).getPic_url());
-                    optionEntities.add(entity);
-                }
-
-                Intent bIntent = new Intent(mContext, ViewPagerActivity.class);
-                bIntent.putExtra("positon", position);
-                bIntent.putExtra("optionEntities", (Serializable) optionEntities);
-                mContext.startActivity(bIntent);
-
-                //取消原有默认的Activity到Activity的过渡动画
-                mActivity.overridePendingTransition(0, 0);
-            });
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < themeImageBeanList.size(); i++) {
+            list.add(themeImageBeanList.get(i).getPic_url());
         }
+        multiImageView.setList(list);
+        multiImageView.setOnItemClickListener((view, position, imageViews) -> AllUtils.startImagePage(mActivity, list, Arrays.asList(imageViews), position));
 
         if (1 == item.getIs_parise()) {
             helper.setImageResource(R.id.item_praise_iv, R.drawable.praise_sel);
@@ -191,7 +136,7 @@ public class CircleTopticAdapter extends BaseQuickAdapter<ThemeInfoEntity.ThemeI
             String content = item.getName() + "：" + item.getContent();
             SpannableString spannableString = new SpannableString(content);
             ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#656565"));
-            spannableString.setSpan(colorSpan,0,content.indexOf("："), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            spannableString.setSpan(colorSpan, 0, content.indexOf("："), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
             helper.setText(R.id.comment_content_tv, spannableString);
         }
     }

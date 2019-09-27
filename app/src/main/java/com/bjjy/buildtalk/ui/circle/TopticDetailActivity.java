@@ -34,6 +34,7 @@ import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.ThemeImageBean;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.ui.main.ViewPagerActivity;
+import com.bjjy.buildtalk.utils.AllUtils;
 import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.LoginHelper;
@@ -41,6 +42,7 @@ import com.bjjy.buildtalk.utils.StatusBarUtils;
 import com.bjjy.buildtalk.utils.StringUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bjjy.buildtalk.weight.BaseDialog;
+import com.bjjy.buildtalk.weight.MultiImageView;
 import com.bjjy.buildtalk.weight.MyGridAdapter;
 import com.bjjy.buildtalk.weight.NoScrollGridView;
 import com.bumptech.glide.Glide;
@@ -55,6 +57,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.Serializable;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -83,7 +86,7 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
     @BindView(R.id.item_img_iv)
     ImageView mItemImgIv;
     @BindView(R.id.item_grid_view)
-    NoScrollGridView mItemGridView;
+    MultiImageView mItemGridView;
     @BindView(R.id.praise_str_tv)
     TextView mPraiseStrTv;
     @BindView(R.id.praise_rl)
@@ -190,43 +193,18 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
         mThemeCountParise = themeInfoEntity.getThemeCountParise();
         if ("1".equals(themeInfoEntity.getIs_circleMaster())) {
             mItemJobTv.setVisibility(View.VISIBLE);
+        }else{
+            mItemJobTv.setVisibility(View.GONE);
         }
         mItemTimeTv.setText(themeInfoEntity.getPublish_time());
         mItemContentTv.setText(themeInfoEntity.getTheme_content());
         List<ThemeImageBean> themeImageBeanList = themeInfoEntity.getTheme_image();
-        if (themeImageBeanList.size() == 4) {
-            mItemGridView.setNumColumns(2);
-        } else {
-            mItemGridView.setNumColumns(3);
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < themeImageBeanList.size(); i++) {
+            list.add(themeImageBeanList.get(i).getPic_url());
         }
-        mItemGridView.setAdapter(new MyGridAdapter(themeImageBeanList, false));
-
-        mItemGridView.setOnItemClickListener((parent, view, position, id) -> {
-            ArrayList<ImageView> imgDatas = new ArrayList<>();
-            for (int i = 0; i < mItemGridView.getChildCount(); i++) {
-                RelativeLayout relativeLayout = (RelativeLayout) mItemGridView.getChildAt(i);
-                ImageView imageView = relativeLayout.findViewById(R.id.image);
-                imgDatas.add(imageView);
-            }
-            List<ImgOptionEntity> optionEntities = new ArrayList<>();
-            int[] screenLocationS = new int[2];
-            for (int i = 0; i < imgDatas.size(); i++) {
-                ImageView img = imgDatas.get(i);
-                //获取当前ImageView 在屏幕中的位置 宽高
-                img.getLocationOnScreen(screenLocationS);
-                ImgOptionEntity entity = new
-                        ImgOptionEntity(screenLocationS[0], screenLocationS[1], img.getWidth(), img.getHeight());
-                entity.setImgUrl(themeImageBeanList.get(i).getPic_url());
-                optionEntities.add(entity);
-            }
-
-            Intent bIntent = new Intent(this, ViewPagerActivity.class);
-            bIntent.putExtra("positon", position);
-            bIntent.putExtra("optionEntities", (Serializable) optionEntities);
-            startActivity(bIntent);
-            //取消原有默认的Activity到Activity的过渡动画
-            overridePendingTransition(0, 0);
-        });
+        mItemGridView.setList(list);
+        mItemGridView.setOnItemClickListener((view, position, imageViews) -> AllUtils.startImagePage(this, list, Arrays.asList(imageViews), position));
 
         List<PariseNickNameBean> praiseList = themeInfoEntity.getParise_nickName();
         if (praiseList.size() > 0) {

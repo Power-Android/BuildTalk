@@ -38,7 +38,7 @@ public class HttpModule {
     @Singleton
     @Provides
     Retrofit provideRetrofit(Retrofit.Builder builder, OkHttpClient client) {
-        return createRetrofit(builder, client, Constants.DEBUG_URL);
+        return createRetrofit(builder, client, Constants.BASE_URL);
     }
 
     @Singleton
