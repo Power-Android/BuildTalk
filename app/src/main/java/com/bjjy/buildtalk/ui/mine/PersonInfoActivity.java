@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.app.User;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.core.event.RefreshEvent;
+import com.bjjy.buildtalk.weight.BaseDialog;
 import com.bumptech.glide.Glide;
 
 import org.greenrobot.eventbus.EventBus;
@@ -50,6 +52,7 @@ public class PersonInfoActivity extends BaseActivity<PersonInfoPresenter> implem
     RelativeLayout mPhoneRl;
     private User mUser;
     private Intent mIntent;
+    private BaseDialog mVerifyDialog;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void event(RefreshEvent eventBean) {
@@ -82,6 +85,27 @@ public class PersonInfoActivity extends BaseActivity<PersonInfoPresenter> implem
         }else {
             mVerifyTv.setText("已认证");
         }
+        showVerifyDialog();
+    }
+
+    private void showVerifyDialog() {
+        mVerifyDialog = new BaseDialog.Builder(this)
+                .setViewId(R.layout.dialog_master_verify_layout)
+                //设置显示位置
+                .setGravity(Gravity.CENTER)
+                //设置动画
+                .setAnimation(R.style.nomal_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx((int)getResources().getDimension(R.dimen.dp_300), (int)getResources().getDimension(R.dimen.dp_345))
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                .addViewOnClickListener(R.id.close_iv, v -> mVerifyDialog.dismiss())
+                .addViewOnClickListener(R.id.angin_tv, v -> {
+                    startActivity(new Intent(PersonInfoActivity.this, MasterVerifyActivity.class));
+                    mVerifyDialog.dismiss();
+                })
+                .builder();
+        mVerifyDialog.show();
     }
 
     @OnClick({R.id.person_page, R.id.master_verify, R.id.bg_rl, R.id.name_rl, R.id.phone_rl})
@@ -94,8 +118,8 @@ public class PersonInfoActivity extends BaseActivity<PersonInfoPresenter> implem
                 startActivity(mIntent);
                 break;
             case R.id.master_verify:
-//                mIntent = new Intent(this, MasterVerifyActivity.class);
-//                startActivity(mIntent);
+                mIntent = new Intent(this, MasterVerifyActivity.class);
+                startActivity(mIntent);
                 break;
             case R.id.bg_rl:
                 mIntent = new Intent(this, SetPictureActivity.class);
@@ -105,6 +129,7 @@ public class PersonInfoActivity extends BaseActivity<PersonInfoPresenter> implem
                 break;
             case R.id.name_rl:
                 mIntent = new Intent(this, EditNameActivity.class);
+                mIntent.putExtra("type", "name");
                 mIntent.putExtra("name", mUser.getNickName());
                 startActivity(mIntent);
                 break;

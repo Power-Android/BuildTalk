@@ -2,9 +2,15 @@ package com.bjjy.buildtalk.ui.mine;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
@@ -21,7 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class EditNameActivity extends BaseActivity<EditNamePresenter> implements EditNameContract.View, TextView.OnEditorActionListener {
+public class EditNameActivity extends BaseActivity<EditNamePresenter> implements EditNameContract.View, TextView.OnEditorActionListener, View.OnClickListener {
 
     @BindView(R.id.toolbar_left_title)
     TextView mToolbarLeftTitle;
@@ -31,6 +37,17 @@ public class EditNameActivity extends BaseActivity<EditNamePresenter> implements
     Toolbar mToolbar;
     @BindView(R.id.name_et)
     ClearEditText mNameEt;
+    @BindView(R.id.toolbar_right_title)
+    TextView mToolbarRightTitle;
+    @BindView(R.id.content_et)
+    EditText mContentEt;
+    @BindView(R.id.edit_num_tv)
+    TextView mEditNumTv;
+    @BindView(R.id.frame_layout)
+    FrameLayout mFrameLayout;
+    @BindView(R.id.relativelayout)
+    RelativeLayout mRelativelayout;
+    private String mType;
 
     @Override
     protected int getLayoutId() {
@@ -39,16 +56,46 @@ public class EditNameActivity extends BaseActivity<EditNamePresenter> implements
 
     @Override
     protected void initView() {
+        mType = getIntent().getStringExtra("type");
+        if ("name".equals(mType)) {
+            mToolbarTitle.setText("修改名字");
+        } else if ("zhicheng".equals(mType)) {
+            mToolbarTitle.setText("职称");
+        } else {
+            mRelativelayout.setVisibility(View.GONE);
+            mFrameLayout.setVisibility(View.VISIBLE);
+            mToolbarTitle.setText("个人介绍");
+        }
         String name = getIntent().getStringExtra("name");
         mToolbarLeftTitle.setText("取消");
-        mToolbarTitle.setText("修改名字");
+        mToolbarRightTitle.setText("完成");
         mNameEt.setText(name);
         mNameEt.setOnEditorActionListener(this);
+        mToolbarRightTitle.setOnClickListener(this);
     }
 
     @Override
     protected void initEventAndData() {
+        mContentEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 2000) {
+                    s.delete(2000, s.length());
+                }
+                int num = s.length();
+                mEditNumTv.setText(String.valueOf(num) + "/2000个字");
+            }
+        });
     }
 
     @OnClick(R.id.toolbar_left_title)
@@ -60,10 +107,20 @@ public class EditNameActivity extends BaseActivity<EditNamePresenter> implements
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_DONE) {
             if (TextUtils.isEmpty(mNameEt.getText().toString().trim())) {
-                ToastUtils.showShort("请输入昵称");
+                if (TextUtils.equals("name", mType)) {
+                    ToastUtils.showShort("请输入昵称");
+                } else if (TextUtils.equals("zhicheng", mType)) {
+                    ToastUtils.showShort("请输入职称");
+                }else {
+                    ToastUtils.showShort("请输入个人介绍");
+                }
                 return true;
             }
-            mPresenter.editName(mNameEt.getText().toString().trim());
+            if (TextUtils.equals("name", mType)) {
+                mPresenter.editName(mNameEt.getText().toString().trim());
+            } else if (TextUtils.equals("zhicheng", mType)) {
+
+            }
             KeyboardUtils.hideSoftInput(this);
         }
         return false;
@@ -72,6 +129,30 @@ public class EditNameActivity extends BaseActivity<EditNamePresenter> implements
     @Override
     public void handlerUpData(String nickName) {
         EventBus.getDefault().post(new RefreshEvent(Constants.INFO_REFRESH));
+        finish();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (TextUtils.equals("name", mType)) {
+            if (TextUtils.isEmpty(mNameEt.getText().toString().trim())){
+                ToastUtils.showShort("请输入昵称");
+                return;
+            }
+            mPresenter.editName(mNameEt.getText().toString().trim());
+        }
+        if (TextUtils.equals("zhicheng", mType)) {
+            if (TextUtils.isEmpty(mNameEt.getText().toString().trim())){
+                ToastUtils.showShort("请输入职称");
+                return;
+            }
+        }
+        if (TextUtils.equals("jieshao", mType)) {
+            if (TextUtils.isEmpty(mNameEt.getText().toString().trim())){
+                ToastUtils.showShort("请输入个人介绍");
+                return;
+            }
+        }
         finish();
     }
 }

@@ -36,7 +36,7 @@
             android:layout_width="@dimen/dp_45"
             android:layout_height="@dimen/dp_45"
             android:layout_toLeftOf="@+id/view1"
-            android:src="@drawable/test_course"
+            android:src="@drawable/moren_face"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/common_margin"/>
         <View
@@ -172,8 +172,12 @@
             android:layout_marginRight="@dimen/common_margin"/>
         <TextView
             android:id="@+id/verify_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dp_77"
+            android:layout_height="@dimen/dp_27"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/dp_6"
+            android:background="@drawable/shape_wrz_2radius"
+            android:drawableLeft="@drawable/def_verify"
             android:layout_toLeftOf="@+id/view5"
             android:text="未认证"
             android:textSize="@dimen/sp_15"

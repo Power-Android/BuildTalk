@@ -24,6 +24,7 @@ import com.bjjy.buildtalk.di.module.activity.EveryTalkDetailModule;
 import com.bjjy.buildtalk.di.module.activity.FansFocusActivityModule;
 import com.bjjy.buildtalk.di.module.activity.FeedBackActivityModule;
 import com.bjjy.buildtalk.di.module.activity.GuideActivityModule;
+import com.bjjy.buildtalk.di.module.activity.IDCardActivityModule;
 import com.bjjy.buildtalk.di.module.activity.LoginActivityModule;
 import com.bjjy.buildtalk.di.module.activity.MainActivityModule;
 import com.bjjy.buildtalk.di.module.activity.MasterCircleActivityModule;
@@ -75,6 +76,7 @@ import com.bjjy.buildtalk.ui.mine.BindPhoneActivity;
 import com.bjjy.buildtalk.ui.mine.EditBindPhoneActivity;
 import com.bjjy.buildtalk.ui.mine.EditNameActivity;
 import com.bjjy.buildtalk.ui.mine.FeedBackActivity;
+import com.bjjy.buildtalk.ui.mine.IDCardActivity;
 import com.bjjy.buildtalk.ui.mine.MasterVerifyActivity;
 import com.bjjy.buildtalk.ui.mine.PersonInfoActivity;
 import com.bjjy.buildtalk.ui.mine.ServiceActivity;
@@ -229,4 +231,7 @@ public abstract class AbstractAllActivityModule {
 
     @ContributesAndroidInjector(modules = DissertationActivityModule.class)
     abstract DissertationActivity mDissertationActivity();
+
+    @ContributesAndroidInjector(modules = IDCardActivityModule.class)
+    abstract IDCardActivity mIDCardActivity();
 }

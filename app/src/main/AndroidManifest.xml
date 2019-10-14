@@ -23,7 +23,6 @@
         android:roundIcon="@mipmap/app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.main.ImagePagerActivity"></activity>
         <activity
             android:name=".ui.main.SplashActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -154,6 +153,8 @@
         <activity android:name=".ui.discover.DissertationActivity" />
         <activity android:name=".ui.mine.VersionRecordActivity" />
         <activity android:name=".ui.mine.MasterVerifyActivity" />
+        <activity android:name=".ui.mine.IDCardActivity"/>
+        <activity android:name=".ui.main.ImagePagerActivity" />
     </application>
 
 </manifest>

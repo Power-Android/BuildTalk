@@ -31,7 +31,7 @@ public class SplashActivity extends BaseActivity<SplashPresenter> implements Spl
     protected void initView() {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏
 
-        String action = getIntent().getAction();
+//        String action = getIntent().getAction();
         String scheme = getIntent().getScheme();
         if (isExistMainActivity(MainActivity.class)) {
             isExist = true;
@@ -39,13 +39,14 @@ public class SplashActivity extends BaseActivity<SplashPresenter> implements Spl
             isExist = false;
         }
         if (isExist) {//如果存在，就直接跳转后finish掉
-            if (!TextUtils.isEmpty(action) && TextUtils.equals(action, Intent.ACTION_VIEW) &&
-                    !TextUtils.isEmpty(scheme) && TextUtils.equals(scheme, "jiantanapp")) {
+            if (!TextUtils.isEmpty(scheme) && TextUtils.equals(scheme, "jiantanapp")) {
                 scheme();
                 finish();
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            }else {
+                initAnimation();
             }
-        } else {//如果不存在，直接运行动画后进入mainactivity
+        }else {//如果不存在，直接运行动画后进入mainactivity
             initAnimation();
         }
     }

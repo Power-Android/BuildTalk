@@ -372,7 +372,7 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     private String getHtmlData(String bodyHTML) {
         String head = "<head>" +
                 "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\"> " +
-                "<style>html{padding:15px;} body{word-wrap:break-word;font-size:13px;padding:0px;margin:0px;line-height:2.0;} p{padding:0px;margin:0px;font-size:13px;color:FF656565;line-height:2.0;} img{padding:0px,margin:0px;max-width:100%; width:100%; height:auto;}</style>" +
+                "<style>html{padding:15px;} body{word-wrap:break-word;font-size:15px;padding:0px;margin:0px;line-height:2.0;} p{padding:0px;margin:0px;font-size:15px;color:FF656565;line-height:2.0;} img{padding:0px,margin:0px;max-width:100%; width:100%; height:auto;}</style>" +
                 "</head>";
         return "<html>" + head + "<body>" + ""+ bodyHTML + "</body></html>";
     }
