@@ -102,10 +102,10 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
     }
 
     private void netWork() {
-        if (!NetworkUtils.isConnected()){
-            mRefreshLayout.setVisibility(View.GONE);
-            mNoNetView.setVisibility(View.VISIBLE);
-        }else {
+//        if (!NetworkUtils.isConnected()){
+//            mRefreshLayout.setVisibility(View.GONE);
+//            mNoNetView.setVisibility(View.VISIBLE);
+//        }else {
             mNoNetView.setVisibility(View.GONE);
             mRefreshLayout.setVisibility(View.VISIBLE);
             mPresenter.discoverBanner();
@@ -113,7 +113,7 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
             mPresenter.discoverToptic();
             mPresenter.discoverCourse();
             mPresenter.discoverDissertation();
-        }
+//        }
     }
 
     @Override

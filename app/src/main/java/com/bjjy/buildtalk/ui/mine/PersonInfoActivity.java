@@ -85,7 +85,7 @@ public class PersonInfoActivity extends BaseActivity<PersonInfoPresenter> implem
         }else {
             mVerifyTv.setText("已认证");
         }
-        showVerifyDialog();
+//        showVerifyDialog();
     }
 
     private void showVerifyDialog() {
@@ -118,8 +118,8 @@ public class PersonInfoActivity extends BaseActivity<PersonInfoPresenter> implem
                 startActivity(mIntent);
                 break;
             case R.id.master_verify:
-                mIntent = new Intent(this, MasterVerifyActivity.class);
-                startActivity(mIntent);
+//                mIntent = new Intent(this, MasterVerifyActivity.class);
+//                startActivity(mIntent);
                 break;
             case R.id.bg_rl:
                 mIntent = new Intent(this, SetPictureActivity.class);

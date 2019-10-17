@@ -22,6 +22,7 @@ public class DissertationDetailEntity implements Serializable {
     private int dissertation_id;
     private String dissertation_title;
     private String dissertation_desc;
+    private String type;
     private List<DissertationPicBean> dissertation_pic;
     private List<DissertationAuthorBean> dissertationAuthor;
 
@@ -47,6 +48,14 @@ public class DissertationDetailEntity implements Serializable {
 
     public void setDissertation_desc(String dissertation_desc) {
         this.dissertation_desc = dissertation_desc;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public List<DissertationPicBean> getDissertation_pic() {

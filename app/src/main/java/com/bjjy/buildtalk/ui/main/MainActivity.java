@@ -25,6 +25,11 @@ import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
 
 import butterknife.BindView;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class MainActivity extends BaseActivity<MainPresenter> implements MainContract.View {
 
@@ -70,6 +75,33 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
             data = Uri.parse(s);
             scheme();
         }
+
+        Observable.create((ObservableOnSubscribe<Integer>) e -> {
+            e.onNext(1);
+            e.onNext(2);
+            e.onNext(3);
+            e.onComplete();
+        }).subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                LogUtils.e("onSubscribe");
+            }
+
+            @Override
+            public void onNext(Integer o) {
+                LogUtils.e(o);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                LogUtils.e("onError");
+            }
+
+            @Override
+            public void onComplete() {
+                LogUtils.e("onComplete");
+            }
+        });
     }
 
     private void initNavigationView() {

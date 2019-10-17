@@ -6,6 +6,8 @@ import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.GuestBookEntity;
 import com.bjjy.buildtalk.entity.PayOrderEntity;
 
+import java.util.List;
+
 /**
  * @author power
  * @date 2019/5/7 1:34 PM
@@ -24,9 +26,11 @@ public class EveryTalkDetailContract {
 
         void collectSuccess(boolean isSuccess, boolean isCollect);
 
-        void handlerGuestBookList(GuestBookEntity guestBookEntity);
+        void handlerGuestBookList(GuestBookEntity guestBookEntity, boolean isRefresh);
 
         void handlerWxOrder(PayOrderEntity payOrderEntity);
+
+        void handlerDeleteComment(List<GuestBookEntity.GuestbookInfoBean> mComment_content, int i);
     }
 
     interface Presenter extends IPresenter<View>{

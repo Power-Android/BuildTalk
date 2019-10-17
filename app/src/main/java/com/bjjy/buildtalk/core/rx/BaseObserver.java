@@ -8,9 +8,15 @@ import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.App;
 import com.bjjy.buildtalk.base.view.IView;
 import com.bjjy.buildtalk.core.http.exception.ServerException;
+import com.bjjy.buildtalk.core.http.interceptor.ACache;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
+import com.bjjy.buildtalk.utils.EncryptUtils;
 import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.NetworkUtils;
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import io.reactivex.observers.ResourceObserver;
 import retrofit2.HttpException;
@@ -28,6 +34,9 @@ public abstract class BaseObserver<T> extends ResourceObserver<BaseResponse<T>> 
     private String mErrorMsg;
     private boolean isShowStatusView = false;
     private boolean isShowLoading = false;
+    private boolean isCache = false;
+    private String cacheKey;
+    private Gson gson = new Gson();
 
     protected BaseObserver(IView view) {
         this.mView = view;
@@ -41,6 +50,13 @@ public abstract class BaseObserver<T> extends ResourceObserver<BaseResponse<T>> 
     protected BaseObserver(IView view, boolean isShowStatusView) {
         this.mView = view;
         this.isShowStatusView = isShowStatusView;
+    }
+
+    protected BaseObserver(boolean isCache, String cacheKey, IView view, boolean isShowStatusView) {
+        this.mView = view;
+        this.isShowStatusView = isShowStatusView;
+        this.isCache = isCache;
+        this.cacheKey = cacheKey;
     }
 
     protected BaseObserver(IView view, String errorMsg, boolean isShowStatusView) {
@@ -62,6 +78,11 @@ public abstract class BaseObserver<T> extends ResourceObserver<BaseResponse<T>> 
         mView.showErrorMsg(message);
     }
 
+    @CallSuper
+    public void onCache(String cacheString) {
+
+    }
+
     @Override
     protected void onStart() {
         Log.d(TAG, "onStart");
@@ -77,6 +98,9 @@ public abstract class BaseObserver<T> extends ResourceObserver<BaseResponse<T>> 
             if (isShowStatusView) {
                 mView.hideLoading();
                 mView.showNormal();
+            }
+            if (isCache){
+                ACache.get(App.getContext()).put(cacheKey, gson.toJson(baseResponse.getData()), 2 * ACache.TIME_DAY);
             }
             onSuccess(baseResponse.getData());
         } else {
@@ -112,6 +136,12 @@ public abstract class BaseObserver<T> extends ResourceObserver<BaseResponse<T>> 
         }
         if (e instanceof HttpException) {
             LogUtils.e(((HttpException) e).message() + ((HttpException) e).response().toString());
+            if (!NetworkUtils.isConnected() && isCache){
+                String s = ACache.get(App.getContext()).getAsString(cacheKey);
+                Log.d(TAG, "onCache");
+                onCache(s);
+                return;
+            }
             if (isShowStatusView) {
                 mView.showNoNetwork();
             }else {

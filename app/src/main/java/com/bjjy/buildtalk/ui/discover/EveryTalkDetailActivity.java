@@ -2,10 +2,8 @@ package com.bjjy.buildtalk.ui.discover;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.media.session.PlaybackState;
 import android.net.Uri;
-import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
@@ -16,11 +14,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.WebSettings;
@@ -29,7 +25,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -40,7 +35,6 @@ import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.GuestBookEntity;
 import com.bjjy.buildtalk.entity.PayOrderEntity;
-import com.bjjy.buildtalk.ui.circle.CourseDetailActivity;
 import com.bjjy.buildtalk.ui.main.LoginActivity;
 import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.GlideUtils;
@@ -53,8 +47,6 @@ import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bjjy.buildtalk.weight.BaseDialog;
 import com.bjjy.buildtalk.weight.CircleProgressView;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -70,9 +62,7 @@ import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,7 +71,6 @@ import butterknife.OnClick;
 import cn.jzvd.JZDataSource;
 import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
-import retrofit2.http.Url;
 
 public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresenter> implements EveryTalkDetailContract.View, BaseQuickAdapter.OnItemChildClickListener, OnLoadMoreListener, Player.EventListener {
 
@@ -164,6 +153,7 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     private long curTime = 0;
     private boolean isPause = false;
     private boolean isEnd = false;
+    private BaseDialog mDeleteDialog;
 
     Handler handler = new Handler(new Handler.Callback() {
         @Override
@@ -181,6 +171,8 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     private boolean b = true;
     private ExtractorMediaSource.Factory mFactory;
     private Uri mUri;
+    private String mType_zhuanti;
+    private String mCountGuestbookNum;
 
     @Override
     protected int getLayoutId() {
@@ -191,6 +183,7 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     protected void initView() {
         mArticle_id = getIntent().getStringExtra("article_id");
         mType = getIntent().getStringExtra("type");
+        mType_zhuanti = getIntent().getStringExtra("type_zhuanti");
         StatusBarUtils.changeStatusBar(this, true, true);
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(mIncludeToolbar.getLayoutParams());
         lp.setMargins(0, StatusBarUtils.getStatusBarHeight(), 0, 0);
@@ -214,8 +207,8 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
 
     @Override
     protected void initEventAndData() {
-        mPresenter.everyTalkDetail(mArticle_id);
-        mPresenter.guestbook(mArticle_id, page);
+        mPresenter.everyTalkDetail(mArticle_id, mType_zhuanti);
+        mPresenter.guestbook(mArticle_id, page, false);
     }
 
     @Override
@@ -279,13 +272,15 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
             });
         }
 
-        WebSettings settings = mWebView.getSettings();
-        settings.setJavaScriptEnabled(true);
-        settings.setDomStorageEnabled(true);
-        settings.setUseWideViewPort(true);
-        settings.setLoadWithOverviewMode(true);
-        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-        mWebView.loadData(getHtmlData(mMNewsInfo.getContent()), "text/html;charset=utf-8","utf-8");
+        if (!TextUtils.isEmpty(mMNewsInfo.getContent())){
+            WebSettings settings = mWebView.getSettings();
+            settings.setJavaScriptEnabled(true);
+            settings.setDomStorageEnabled(true);
+            settings.setUseWideViewPort(true);
+            settings.setLoadWithOverviewMode(true);
+            settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+            mWebView.loadData(getHtmlData(mMNewsInfo.getContent()), "text/html;charset=utf-8","utf-8");
+        }
 
         if ("0".equals(String.valueOf(mMNewsInfo.getIsCollect()))){
             mPraiseIv.setImageResource(R.drawable.praise_def);
@@ -300,7 +295,7 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
                     ToastUtils.showShort("请输入评论内容");
                     return false;
                 }
-                mPresenter.saveRecord(mMNewsInfo.getArticle_id(),mRecordEt.getText().toString().trim());
+                mPresenter.saveRecord(mMNewsInfo.getArticle_id(),mRecordEt.getText().toString().trim(), mType_zhuanti);
                 mRecordEt.clearFocus();
                 mRecordEt.getText().clear();
                 mRecordLl.setVisibility(View.VISIBLE);
@@ -378,12 +373,16 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     }
 
     @Override
-    public void handlerGuestBookList(GuestBookEntity guestBookEntity) {
+    public void handlerGuestBookList(GuestBookEntity guestBookEntity, boolean isRefresh) {
         if (guestBookEntity.getGuestbookInfo().size() > 0){
-            mList.addAll(guestBookEntity.getGuestbookInfo());
             mPage_count = guestBookEntity.getPage_count();
-            mEveryTalkDetailAdapter.notifyDataSetChanged();
-            mRecordNumTv.setText(guestBookEntity.getCountGuestbookNum());
+            if (isRefresh) {
+                mEveryTalkDetailAdapter.setNewData(guestBookEntity.getGuestbookInfo());
+            } else {
+                mEveryTalkDetailAdapter.addData(guestBookEntity.getGuestbookInfo());
+            }
+            mCountGuestbookNum = guestBookEntity.getCountGuestbookNum();
+            mRecordNumTv.setText(mCountGuestbookNum);
             mEmptyView.setVisibility(View.GONE);
             mLoadMoreLayout.setEnableLoadMore(true);
             mRecyclerView.setVisibility(View.VISIBLE);
@@ -396,7 +395,7 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
 
     @Override
     public void handlerSaveRecord() {
-        mPresenter.guestbook(mArticle_id, 1);
+        mPresenter.guestbook(mArticle_id, 1, true);
         mRecyclerView.scrollToPosition(0);
     }
 
@@ -470,7 +469,7 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
             case R.id.praise_ll:
                 LoginHelper.login(this, mPresenter.mDataManager, () -> {
                     boolean isCollect = "1".equals(String.valueOf(mMNewsInfo.getIsCollect()));
-                    mPresenter.collectArticle(mArticle_id,isCollect);
+                    mPresenter.collectArticle(mArticle_id,isCollect,mType_zhuanti);
                 });
                 break;
             case R.id.share_iv:
@@ -518,26 +517,63 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
 
     @Override
     public void onItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int position) {
-        if (view.getId() == R.id.item_parise_ll){
-            LoginHelper.login(this, mPresenter.mDataManager, () -> {
-                boolean isPraise = "1".equals(mEveryTalkDetailAdapter.getData().get(position).getIsPraise()+"");
-                mPresenter.praiseRecord(mList.get(position).getGuestbook_id(),position,isPraise);
-            });
+        List<GuestBookEntity.GuestbookInfoBean> data = mEveryTalkDetailAdapter.getData();
+        switch (view.getId()) {
+            case R.id.item_praise_ll:
+                LoginHelper.login(this, mPresenter.mDataManager, () -> {
+                    boolean isPraise = "1".equals(mEveryTalkDetailAdapter.getData().get(position).getIsPraise()+"");
+                    mPresenter.praiseRecord(mType_zhuanti, data.get(position).getGuestbook_id(),position,isPraise);
+                });
+                break;
+            case R.id.item_delete_iv:
+                showDeleteDialog(data, position);
+                break;
+        }
+    }
+
+    private void showDeleteDialog(List<GuestBookEntity.GuestbookInfoBean> mComment_content, int i) {
+        mDeleteDialog = new BaseDialog.Builder(this)
+                .setGravity(Gravity.CENTER)
+                .setAnimation(R.style.nomal_aniamtion)
+                .setViewId(R.layout.dialog_quit_layout)
+                .setWidthHeightdp((int) getResources().getDimension(R.dimen.dp_275), (int) getResources().getDimension(R.dimen.dp_138))
+                .isOnTouchCanceled(true)
+                .addViewOnClickListener(R.id.cancle_tv, v -> mDeleteDialog.dismiss())
+                .addViewOnClickListener(R.id.query_tv, v -> {
+                    mPresenter.deleteComment(mType_zhuanti, mComment_content.get(i).getGuestbook_id() + "", mComment_content, i);
+                    mDeleteDialog.dismiss();
+                })
+                .builder();
+        TextView textView = mDeleteDialog.getView(R.id.text);
+        textView.setText("确定删除此条评论？");
+        mDeleteDialog.show();
+    }
+
+    @Override
+    public void handlerDeleteComment(List<GuestBookEntity.GuestbookInfoBean> mComment_content, int i) {
+        mComment_content.remove(i);
+        mEveryTalkDetailAdapter.notifyItemRemoved(i);
+        int count = Integer.parseInt(mCountGuestbookNum);
+        if (count > 0) {
+            count--;
+            mCountGuestbookNum = String.valueOf(count);
+            mRecordNumTv.setText(count + "");
         }
     }
 
     @Override
     public void praiseSuccess(boolean isSuccess, int position, boolean isPraise) {
-        int countpraise = mList.get(position).getCountpraise();
+        List<GuestBookEntity.GuestbookInfoBean> data = mEveryTalkDetailAdapter.getData();
+        int countpraise = data.get(position).getCountpraise();
         if (isPraise){
             mEveryTalkDetailAdapter.getData().get(position).setIsPraise(0);
             if (countpraise > 0){
-                mList.get(position).setCountpraise(--countpraise);
+                data.get(position).setCountpraise(--countpraise);
             }
             mEveryTalkDetailAdapter.setData(position,mEveryTalkDetailAdapter.getData().get(position));
         }else {
             mEveryTalkDetailAdapter.getData().get(position).setIsPraise(1);
-            mList.get(position).setCountpraise(++countpraise);
+            data.get(position).setCountpraise(++countpraise);
             mEveryTalkDetailAdapter.setData(position,mEveryTalkDetailAdapter.getData().get(position));
         }
     }
@@ -546,7 +582,7 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
         if (page < mPage_count){
             page++;
-            mPresenter.guestbook(mArticle_id, page);
+            mPresenter.guestbook(mArticle_id, page, false);
             refreshLayout.finishLoadMore();
         }else {
             refreshLayout.finishLoadMoreWithNoMoreData();

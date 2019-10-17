@@ -3,7 +3,9 @@ package com.bjjy.buildtalk.ui.discover;
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.DiscoverAdapter;
 import com.bjjy.buildtalk.app.App;
+import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.presenter.BasePresenter;
+import com.bjjy.buildtalk.core.http.interceptor.ACache;
 import com.bjjy.buildtalk.core.rx.BaseObserver;
 import com.bjjy.buildtalk.core.rx.RxUtils;
 import com.bjjy.buildtalk.entity.ActivityEntity;
@@ -14,9 +16,18 @@ import com.bjjy.buildtalk.entity.DissertationEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
 import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.VersionRecordEntity;
+import com.bjjy.buildtalk.utils.EncryptUtils;
 import com.bjjy.buildtalk.utils.HeaderUtils;
+import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.TimeUtils;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,10 +76,18 @@ public class DiscoverPresenter extends BasePresenter<DiscoverContract.View> impl
         addSubscribe(mDataManager.discoverBanner(headers, paramas)
                 .compose(RxUtils.SchedulerTransformer())
                 .filter(bannerEntity -> mView != null)
-                .subscribeWith(new BaseObserver<List<BannerEntity>>(mView, false){
+                .subscribeWith(new BaseObserver<List<BannerEntity>>(true,"discoverBanner", mView, false){
                     @Override
                     public void onSuccess(List<BannerEntity> bannerEntities) {
                         mView.handlerBanner(bannerEntities);
+                    }
+
+                    @Override
+                    public void onCache(String cacheString) {
+                        super.onCache(cacheString);
+                        Gson gson = new Gson();
+                        List<BannerEntity> list = gson.fromJson(cacheString, new TypeToken<List<BannerEntity>>(){}.getType());
+                        mView.handlerBanner(list);
                     }
                 }));
     }
@@ -87,10 +106,18 @@ public class DiscoverPresenter extends BasePresenter<DiscoverContract.View> impl
         addSubscribe(mDataManager.everyDayTalk(headers,paramas)
             .compose(RxUtils.SchedulerTransformer())
             .filter(EveryTalkEntity -> mView != null)
-            .subscribeWith(new BaseObserver<List<EveryTalkEntity>>(mView, false){
+            .subscribeWith(new BaseObserver<List<EveryTalkEntity>>(true, "everyDayTalk", mView, false){
                 @Override
                 public void onSuccess(List<EveryTalkEntity> everyTalkEntities) {
                     mView.handlerEveryTalk(everyTalkEntities);
+                }
+
+                @Override
+                public void onCache(String cacheString) {
+                    super.onCache(cacheString);
+                    Gson gson = new Gson();
+                    List<EveryTalkEntity> list = gson.fromJson(cacheString, new TypeToken<List<EveryTalkEntity>>(){}.getType());
+                    mView.handlerEveryTalk(list);
                 }
             }));
     }
@@ -117,11 +144,20 @@ public class DiscoverPresenter extends BasePresenter<DiscoverContract.View> impl
         addSubscribe(mDataManager.courseInfo(headers,paramas)
                 .compose(RxUtils.SchedulerTransformer())
                 .filter(courseEntity -> mView != null)
-                .subscribeWith(new BaseObserver<CourseEntity>(mView,false){
+                .subscribeWith(new BaseObserver<CourseEntity>(true, "courseInfo", mView,false){
                     @Override
                     public void onSuccess(CourseEntity courseEntities) {
                         mTpoticPageCount = courseEntities.getPage_count();
                         mView.handlerToptic(courseEntities);
+                    }
+
+                    @Override
+                    public void onCache(String cacheString) {
+                        super.onCache(cacheString);
+                        Gson gson = new Gson();
+                        CourseEntity courseEntity = gson.fromJson(cacheString, new TypeToken<CourseEntity>(){}.getType());
+                        mTpoticPageCount = courseEntity.getPage_count();
+                        mView.handlerToptic(courseEntity);
                     }
                 }));
     }
@@ -148,11 +184,20 @@ public class DiscoverPresenter extends BasePresenter<DiscoverContract.View> impl
         addSubscribe(mDataManager.courseInfo(headers,paramas)
                 .compose(RxUtils.SchedulerTransformer())
                 .filter(courseEntity -> mView != null)
-                .subscribeWith(new BaseObserver<CourseEntity>(mView,false){
+                .subscribeWith(new BaseObserver<CourseEntity>(true, "courseInfo", mView,false){
                     @Override
                     public void onSuccess(CourseEntity courseEntities) {
                         mCoursePageCount = courseEntities.getPage_count();
                         mView.handlerCourse(courseEntities);
+                    }
+
+                    @Override
+                    public void onCache(String cacheString) {
+                        super.onCache(cacheString);
+                        Gson gson = new Gson();
+                        CourseEntity courseEntity = gson.fromJson(cacheString, new TypeToken<CourseEntity>(){}.getType());
+                        mCoursePageCount = courseEntity.getPage_count();
+                        mView.handlerCourse(courseEntity);
                     }
                 }));
     }

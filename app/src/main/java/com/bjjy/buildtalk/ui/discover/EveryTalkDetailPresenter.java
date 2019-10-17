@@ -1,5 +1,7 @@
 package com.bjjy.buildtalk.ui.discover;
 
+import android.text.TextUtils;
+
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.App;
 import com.bjjy.buildtalk.app.Constants;
@@ -32,13 +34,16 @@ public class EveryTalkDetailPresenter extends BasePresenter<EveryTalkDetailContr
     public EveryTalkDetailPresenter() {
     }
 
-    public void everyTalkDetail(String article_id) {
+    public void everyTalkDetail(String article_id, String type_zhuanti) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
-        if (mDataManager.getLoginStatus()){
+        if (mDataManager.getLoginStatus()) {
             paramas.put("user_id", mDataManager.getUser().getUser_id());
-        }else {
+        } else {
             paramas.put("user_id", "");
+        }
+        if (!TextUtils.isEmpty(type_zhuanti)) {
+            paramas.put("type", type_zhuanti);
         }
         paramas.put("article_id", article_id);
         paramas.put("source", "android");
@@ -60,10 +65,11 @@ public class EveryTalkDetailPresenter extends BasePresenter<EveryTalkDetailContr
                 }));
     }
 
-    public void guestbook(String article_id, int page) {
+    public void guestbook(String article_id, int page, boolean isRefresh) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
         paramas.put("article_id", article_id);
+        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
         paramas.put(Constants.PAGE, String.valueOf(page));
         paramas.put(Constants.PAGE_SIZE, "20");
         paramas.put(Constants.TIMESTAMP, timestamp);
@@ -79,16 +85,19 @@ public class EveryTalkDetailPresenter extends BasePresenter<EveryTalkDetailContr
                 .subscribeWith(new BaseObserver<GuestBookEntity>(mView, true) {
                     @Override
                     public void onSuccess(GuestBookEntity guestBookEntity) {
-                        mView.handlerGuestBookList(guestBookEntity);
+                        mView.handlerGuestBookList(guestBookEntity, isRefresh);
                     }
                 }));
     }
 
-    public void saveRecord(int article_id, String content) {
+    public void saveRecord(int article_id, String content, String type_zhuanti) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
         paramas.put("user_id", mDataManager.getUser().getUser_id());
         paramas.put("article_id", article_id + "");
+        if (!TextUtils.isEmpty(type_zhuanti)) {
+            paramas.put("type", type_zhuanti);
+        }
         paramas.put("source", "android");
         paramas.put("content", content);
         paramas.put(App.getContext().getString(R.string.TIMESTAMP), timestamp);
@@ -109,11 +118,14 @@ public class EveryTalkDetailPresenter extends BasePresenter<EveryTalkDetailContr
                 }));
     }
 
-    public void praiseRecord(int guestbook_id, int position, boolean isPraise) {
+    public void praiseRecord(String type_zhuanti, int guestbook_id, int position, boolean isPraise) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
         paramas.put("user_id", mDataManager.getUser().getUser_id());
-        paramas.put("guestbook_id", guestbook_id+"");
+        paramas.put("guestbook_id", guestbook_id + "");
+        if (!TextUtils.isEmpty(type_zhuanti)) {
+            paramas.put("type", type_zhuanti);
+        }
         paramas.put("source", "android");
         paramas.put(App.getContext().getString(R.string.TIMESTAMP), timestamp);
         String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
@@ -141,11 +153,14 @@ public class EveryTalkDetailPresenter extends BasePresenter<EveryTalkDetailContr
                 }));
     }
 
-    public void collectArticle(String article_id, boolean isCollect) {
+    public void collectArticle(String article_id, boolean isCollect, String type_zhuanti) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
         paramas.put("user_id", mDataManager.getUser().getUser_id());
-        paramas.put("article_id", article_id+"");
+        paramas.put("article_id", article_id + "");
+        if (!TextUtils.isEmpty(type_zhuanti)) {
+            paramas.put("type", type_zhuanti);
+        }
         paramas.put("source", "android");
         paramas.put(App.getContext().getString(R.string.TIMESTAMP), timestamp);
         String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
@@ -173,12 +188,40 @@ public class EveryTalkDetailPresenter extends BasePresenter<EveryTalkDetailContr
                 }));
     }
 
+    public void deleteComment(String type_zhuanti, String comment_id, List<GuestBookEntity.GuestbookInfoBean> mComment_content, int i) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        paramas.put("guestbook_id", comment_id);
+        if (TextUtils.isEmpty(type_zhuanti)){
+            paramas.put("type", "1");
+        } else if (TextUtils.equals("2", type_zhuanti)) {
+            paramas.put("type", "3");
+        }
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.deleteGuestbook(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<IEntity>(mView, false) {
+                    @Override
+                    public void onSuccess(IEntity iEntity) {
+                        mView.handlerDeleteComment(mComment_content, i);
+                    }
+                }));
+    }
+
     public void payOrder(String type_id, int data_id, String circle_name, String course_money) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
         paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
         paramas.put("type_id", type_id);
-        paramas.put("data_id", data_id+"");
+        paramas.put("data_id", data_id + "");
         paramas.put("order_name", circle_name);
         paramas.put("order_price", course_money);
         paramas.put(Constants.SOURCE, Constants.ANDROID);

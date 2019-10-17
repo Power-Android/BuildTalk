@@ -33,12 +33,14 @@ public class EveryTalkDetailAdapter extends BaseQuickAdapter<GuestBookEntity.Gue
         helper.setText(R.id.item_name_tv, item.getNickname())
                 .setText(R.id.item_time_tv, item.getGuestbook_time())
                 .setText(R.id.item_content_tv, item.getContent())
-                .setText(R.id.item_praise_tv, String.valueOf(item.getCountpraise()));
+                .setText(R.id.item_praise_tv, String.valueOf(item.getCountpraise()))
+                .setGone(R.id.item_delete_iv, 1 == item.getIsDelete() ? true : false)
+                .addOnClickListener(R.id.item_praise_ll)
+                .addOnClickListener(R.id.item_delete_iv);
         if ("1".equals(String.valueOf(item.getIsPraise()))){
             helper.setImageResource(R.id.item_praise_iv, R.drawable.praise_sel);
         }else {
             helper.setImageResource(R.id.item_praise_iv, R.drawable.praise_def);
         }
-        helper.addOnClickListener(R.id.item_parise_ll);
     }
 }

@@ -19,10 +19,7 @@ public class Constants {
     //分享公众号的url
     public static final String END_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx94063ed8ba6128d5";
 
-    //base_url
-//    public static final String BASE_URL = "https://www.51jiantan.com";
-
-    public static final String PASS_ID = "pass_id";
+    public static final String PASS_ID = "passId";
 
     public static final String HEADER_PASSID = "passid:z7gcawmtu4g1blzgnzftns5435638tdl";
 

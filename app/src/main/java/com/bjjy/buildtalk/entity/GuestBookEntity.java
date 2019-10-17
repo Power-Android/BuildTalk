@@ -72,6 +72,31 @@ public class GuestBookEntity {
         private String headImage;
         private int countpraise;
         private int isPraise;
+        private int isDelete;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getHeadImage() {
+            return headImage;
+        }
+
+        public void setHeadImage(String headImage) {
+            this.headImage = headImage;
+        }
+
+        public int getIsDelete() {
+            return isDelete;
+        }
+
+        public void setIsDelete(int isDelete) {
+            this.isDelete = isDelete;
+        }
 
         public int getGuestbook_id() {
             return guestbook_id;

@@ -72,4 +72,9 @@ public class BannerEntity implements Serializable {
     public void setCircle_type(String circle_type) {
         this.circle_type = circle_type;
     }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

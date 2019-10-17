@@ -68,6 +68,15 @@ public class EveryTalkDetailEntity implements Serializable {
         private String author_pic;
         private int is_buy;
         private String article_price;
+        private String type;
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
 
         public String getArticle_price() {
             return article_price;

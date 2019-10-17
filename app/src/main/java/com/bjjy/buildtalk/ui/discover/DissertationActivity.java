@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -55,8 +56,8 @@ public class DissertationActivity extends BaseActivity<DissertationPresenter> im
         mId = getIntent().getStringExtra("id");
         mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
         mToolbar.setNavigationOnClickListener(v -> finish());
-        mToolbarRightShare.setVisibility(View.VISIBLE);
-        mToolbarRightShare.setOnClickListener(this);
+//        mToolbarRightShare.setVisibility(View.VISIBLE);
+//        mToolbarRightShare.setOnClickListener(this);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new DissertationAdapter(R.layout.adapter_dissertation_layout, mList);
@@ -86,6 +87,7 @@ public class DissertationActivity extends BaseActivity<DissertationPresenter> im
         Intent intent = new Intent(this, EveryTalkDetailActivity.class);
         intent.putExtra("article_id", data.get(position).getArticle_id() + "");
         intent.putExtra("type", "article");
+        intent.putExtra("type_zhuanti", mEntity.getType());
         startActivity(intent);
     }
 
