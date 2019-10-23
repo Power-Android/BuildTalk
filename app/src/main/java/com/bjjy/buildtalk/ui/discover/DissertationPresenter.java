@@ -1,5 +1,8 @@
 package com.bjjy.buildtalk.ui.discover;
 
+import android.view.LayoutInflater;
+import android.view.View;
+
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.App;
 import com.bjjy.buildtalk.base.presenter.BasePresenter;
@@ -11,6 +14,7 @@ import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.utils.HeaderUtils;
 import com.bjjy.buildtalk.utils.TimeUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,9 +29,23 @@ import javax.inject.Inject;
  */
 public class DissertationPresenter extends BasePresenter<DissertationContract.View> {
 
+    private List<String> list = new ArrayList<>();
+    private List<View> views = new ArrayList<>();
+
     @Inject
     public DissertationPresenter() {
 
+    }
+
+    public void tabData() {
+        list.add("详情");
+        list.add("视频");
+        View detailView = LayoutInflater.from(App.getContext()).inflate(R.layout.dissertation_detail_layout, null, false);
+        View videoView = LayoutInflater.from(App.getContext()).inflate(R.layout.dissertation_video_layout, null, false);
+        views.add(detailView);
+        views.add(videoView);
+
+        mView.handlerTabData(list, views);
     }
 
     public void dissertation(String id) {
@@ -51,4 +69,6 @@ public class DissertationPresenter extends BasePresenter<DissertationContract.Vi
                     }
                 }));
     }
+
+
 }

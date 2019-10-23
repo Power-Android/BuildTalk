@@ -2,14 +2,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/shape_blue_2radius"
-    android:layout_marginBottom="@dimen/dp_25">
+    android:layout_marginTop="@dimen/common_margin"
+    android:layout_marginBottom="@dimen/dp_5"
+    android:layout_marginLeft="@dimen/common_margin"
+    android:layout_marginRight="@dimen/common_margin">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/item_img_iv"
         android:layout_width="@dimen/dp_60"
         android:layout_height="@dimen/dp_60"
         android:layout_centerVertical="true"
+        app:civ_border_color="@color/blue_light"
+        app:civ_border_width="@dimen/dp_1"
         android:layout_marginLeft="@dimen/dp_10"
         android:layout_marginTop="@dimen/common_margin"
         android:layout_marginBottom="@dimen/common_margin"

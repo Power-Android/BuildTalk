@@ -1,6 +1,7 @@
 package com.bjjy.buildtalk.adapter;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.bjjy.buildtalk.R;
@@ -28,6 +29,6 @@ public class DissertationAdapter extends BaseQuickAdapter<DissertationDetailEnti
         Glide.with(mContext).load(item.getAuthor_pic()).into((ImageView) helper.getView(R.id.item_img_iv));
         helper.setText(R.id.item_title_tv, item.getArticle_title())
                 .setText(R.id.item_name_tv, item.getAuthor_name() + "/" + item.getAuthor_desc())
-                .setText(R.id.item_time_tv, item.getPublish_time());
+                .setText(R.id.item_time_tv, TextUtils.isEmpty(item.getVideo_duration()) ? item.getPublish_time() : "时长："+item.getVideo_duration());
     }
 }

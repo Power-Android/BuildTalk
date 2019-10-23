@@ -23,6 +23,7 @@ public class DissertationDetailEntity implements Serializable {
     private String dissertation_title;
     private String dissertation_desc;
     private String type;
+    private String copyrightYear;
     private List<DissertationPicBean> dissertation_pic;
     private List<DissertationAuthorBean> dissertationAuthor;
 
@@ -56,6 +57,14 @@ public class DissertationDetailEntity implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getCopyrightYear() {
+        return copyrightYear;
+    }
+
+    public void setCopyrightYear(String copyrightYear) {
+        this.copyrightYear = copyrightYear;
     }
 
     public List<DissertationPicBean> getDissertation_pic() {
@@ -118,6 +127,7 @@ public class DissertationDetailEntity implements Serializable {
         private String author_pic;
         private String article_title;
         private String publish_time;
+        private String video_duration;
 
         public String getAuthor_id() {
             return author_id;
@@ -173,6 +183,14 @@ public class DissertationDetailEntity implements Serializable {
 
         public void setPublish_time(String publish_time) {
             this.publish_time = publish_time;
+        }
+
+        public String getVideo_duration() {
+            return video_duration;
+        }
+
+        public void setVideo_duration(String video_duration) {
+            this.video_duration = video_duration;
         }
     }
 }

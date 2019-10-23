@@ -47,6 +47,7 @@
             android:id="@+id/view2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:text="曾获得"
             android:textSize="@dimen/sp_14"
             android:textColor="@color/text_drak"
@@ -55,6 +56,7 @@
             android:layout_marginTop="@dimen/dp_20"/>
         <TextView
             android:id="@+id/received_tv"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2002-2003年度北京优秀企业家
