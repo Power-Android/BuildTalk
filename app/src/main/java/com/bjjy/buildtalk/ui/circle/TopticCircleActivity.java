@@ -466,17 +466,13 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
                 finish();
                 break;
             case R.id.share_iv:
+            case R.id.pre_share_iv:
                 circlePath = mPath + "circle_id=" + mCircle_id + "&num=1";
                 DialogUtils.showShareDialog(this, circlePath, mEndUrl, mCircleInfoEntity.getCircleInfo().getCircle_name(),
                         mCircleInfoEntity.getCircleInfo().getCircle_image().getPic_url(), mCircleInfoEntity.getCircleInfo().getCircle_desc(), true);
                 break;
             case R.id.join_tv:
                 LoginHelper.login(this, mPresenter.mDataManager, () -> mPresenter.joinCircle(mCircle_id));
-                break;
-            case R.id.pre_share_iv:
-                circlePath = mPath + "circle_id=" + mCircle_id + "&num=1";
-                DialogUtils.showShareDialog(this, circlePath, mEndUrl, mCircleInfoEntity.getCircleInfo().getCircle_name(),
-                        mCircleInfoEntity.getCircleInfo().getCircle_image().getPic_url(), mCircleInfoEntity.getCircleInfo().getCircle_desc(), true);
                 break;
             case R.id.more_iv:
                 mIntent = new Intent(this, CircleInfoActivity.class);

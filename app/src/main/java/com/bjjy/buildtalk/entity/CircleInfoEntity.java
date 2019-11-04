@@ -21,6 +21,15 @@ public class CircleInfoEntity implements Serializable {
     private int countChoiceness_themeInfo;
     private CircleInfoBean circleInfo;
     private List<ThemeInfoBean> themeInfo;
+    private int countTheme;
+
+    public int getCountTheme() {
+        return countTheme;
+    }
+
+    public void setCountTheme(int countTheme) {
+        this.countTheme = countTheme;
+    }
 
     public String getIsJoin() {
         return isJoin;

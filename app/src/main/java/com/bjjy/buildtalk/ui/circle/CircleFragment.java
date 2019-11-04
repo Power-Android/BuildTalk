@@ -62,7 +62,6 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
     TextView mTvReload;
     @BindView(R.id.noNetView)
     RelativeLayout mNoNetView;
-    Unbinder unbinder;
 
     private List<CircleEntity.CircleInfoBean> circle_list = new ArrayList<>();
     private CircleAdapter mCircleAdapter;
@@ -225,9 +224,4 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
         EventBus.getDefault().unregister(this);
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
 }

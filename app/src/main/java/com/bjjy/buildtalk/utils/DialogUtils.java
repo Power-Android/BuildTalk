@@ -83,6 +83,7 @@ public class DialogUtils {
                 .setViewId(R.layout.dialog_select_layout)
                 .setGravity(Gravity.BOTTOM)
                 .setAnimation(R.style.bottom_aniamtion)
+                .isOnTouchCanceled(true)
                 .setWidthHeightpx(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 .builder();
         mSaveImageDialog.setCancelable(true);

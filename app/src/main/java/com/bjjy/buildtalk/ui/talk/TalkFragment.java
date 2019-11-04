@@ -64,7 +64,6 @@ public class TalkFragment extends BaseFragment<TalkPresnter> implements TalkCont
     TextView mTvReload;
     @BindView(R.id.noNetView)
     RelativeLayout mNoNetView;
-    Unbinder unbinder;
 
     private List<TalkEntity> mTalkEntityList = new ArrayList<>();
     private TalkAdapter mTalkAdapter;
@@ -183,12 +182,6 @@ public class TalkFragment extends BaseFragment<TalkPresnter> implements TalkCont
             mList.get(i).setIs_attention(0);
         }
         mTalkAdapter.setFocus(i);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 
     @Override
