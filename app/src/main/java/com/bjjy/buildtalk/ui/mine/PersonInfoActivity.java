@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -30,8 +31,8 @@ public class PersonInfoActivity extends BaseActivity<PersonInfoPresenter> implem
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    @BindView(R.id.toolbar_left_back)
+    ImageView mToolbarBack;
     @BindView(R.id.face_iv)
     CircleImageView mFaceIv;
     @BindView(R.id.person_page)
@@ -68,8 +69,7 @@ public class PersonInfoActivity extends BaseActivity<PersonInfoPresenter> implem
 
     @Override
     protected void initView() {
-        mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
-        mToolbar.setNavigationOnClickListener(v -> finish());
+        mToolbarBack.setOnClickListener(v -> finish());
         mToolbarTitle.setText(R.string.person_info);
         EventBus.getDefault().register(this);
     }

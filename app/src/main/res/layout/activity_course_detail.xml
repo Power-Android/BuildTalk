@@ -83,14 +83,14 @@
                         android:layout_gravity="center_vertical"
                         android:text="更新至0讲/ 全0讲"
                         android:textSize="@dimen/sp_10"
-                        android:textColor="@color/text_light"
+                        android:textColor="@color/blue_mid"
                         android:layout_marginRight="@dimen/dp_4"/>
                     <ImageView
                         android:id="@+id/gx_expand_iv"
                         android:layout_width="@dimen/dp_9"
                         android:layout_height="@dimen/dp_9"
                         android:layout_gravity="center_vertical"
-                        android:src="@drawable/sanjiao_icon"
+                        android:src="@drawable/dao_sanjiao_blue"
                         android:layout_marginRight="@dimen/dp_5"/>
                 </LinearLayout>
                 <LinearLayout
@@ -250,11 +250,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/dp_44"
                 android:text="收起"
-                android:textColor="@color/text_mid"
+                android:textColor="@color/blue_mid"
                 android:textSize="@dimen/sp_10"
                 android:gravity="center"
                 android:layout_centerInParent="true"
-                android:drawableRight="@drawable/sanjiao_top_icon"
+                android:drawableRight="@drawable/sanjiao_blue"
                 android:drawablePadding="@dimen/dp_5"/>
         </RelativeLayout>
 

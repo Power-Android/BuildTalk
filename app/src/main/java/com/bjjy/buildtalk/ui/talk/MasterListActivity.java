@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,8 +29,8 @@ public class MasterListActivity extends BaseActivity<MasterListPresenter> implem
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    @BindView(R.id.toolbar_left_back)
+    ImageView mToolbarBack;
     @BindView(R.id.include_toolbar)
     RelativeLayout mIncludeToolbar;
     @BindView(R.id.recycler_view)
@@ -49,8 +50,7 @@ public class MasterListActivity extends BaseActivity<MasterListPresenter> implem
 
     @Override
     protected void initView() {
-        mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
-        mToolbar.setNavigationOnClickListener(v -> finish());
+        mToolbarBack.setOnClickListener(v -> finish());
         mToolbarTitle.setText(R.string.industry_higher_ups);
 
         mRefreshLayout.setOnRefreshLoadMoreListener(this);

@@ -61,6 +61,15 @@ public class CircleListEntity implements Serializable {
         private String headImage;
         private int countAttention;
         private int is_attention;
+        private int countThemeNum;
+
+        public int getCountThemeNum() {
+            return countThemeNum;
+        }
+
+        public void setCountThemeNum(int countThemeNum) {
+            this.countThemeNum = countThemeNum;
+        }
 
         public int getUser_id() {
             return user_id;

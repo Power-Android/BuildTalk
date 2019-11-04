@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -33,8 +34,8 @@ public class EditNameActivity extends BaseActivity<EditNamePresenter> implements
     TextView mToolbarLeftTitle;
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    @BindView(R.id.toolbar_left_back)
+    ImageView mToolbarBack;
     @BindView(R.id.name_et)
     ClearEditText mNameEt;
     @BindView(R.id.toolbar_right_title)
@@ -67,11 +68,13 @@ public class EditNameActivity extends BaseActivity<EditNamePresenter> implements
             mToolbarTitle.setText("个人介绍");
         }
         String name = getIntent().getStringExtra("name");
+        mToolbarBack.setVisibility(View.GONE);
         mToolbarLeftTitle.setText("取消");
         mToolbarRightTitle.setText("完成");
         mNameEt.setText(name);
         mNameEt.setOnEditorActionListener(this);
         mToolbarRightTitle.setOnClickListener(this);
+
     }
 
     @Override

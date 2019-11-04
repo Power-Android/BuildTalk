@@ -50,8 +50,8 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
     TextView mToolbarTitle;
     @BindView(R.id.toolbar_right_title)
     TextView mToolbarRightTitle;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    @BindView(R.id.toolbar_left_back)
+    ImageView mToolbarBack;
     @BindView(R.id.include_toolbar)
     RelativeLayout mIncludeToolbar;
     @BindView(R.id.circle_iv)
@@ -83,8 +83,7 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
     protected void initView() {
         mType = getIntent().getStringExtra("type");
         mCircle_id = getIntent().getStringExtra("circle_id");
-        mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
-        mToolbar.setNavigationOnClickListener(v -> finish());
+        mToolbarBack.setOnClickListener(v -> finish());
         if (TextUtils.isEmpty(mType)){
             mToolbarTitle.setText("免费创建圈子");
         }else {

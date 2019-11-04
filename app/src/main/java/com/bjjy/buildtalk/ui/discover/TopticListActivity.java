@@ -32,8 +32,8 @@ public class TopticListActivity extends BaseActivity<TopticListPresenter> implem
     TextView mToolbarTitle;
     @BindView(R.id.toolbar_right_search)
     ImageView mToolbarRightSearch;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    @BindView(R.id.toolbar_left_back)
+    ImageView mToolbarBack;
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
     @BindView(R.id.refresh_Layout)
@@ -51,8 +51,7 @@ public class TopticListActivity extends BaseActivity<TopticListPresenter> implem
 
     @Override
     protected void initView() {
-        mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
-        mToolbar.setNavigationOnClickListener(v -> finish());
+        mToolbarBack.setOnClickListener(v -> finish());
         mToolbarTitle.setText(getString(R.string.top_tic));
         mToolbarRightSearch.setVisibility(View.VISIBLE);
         mToolbarRightSearch.setOnClickListener(v -> startActivity(new Intent(TopticListActivity.this, CircleSearchActivity.class)));

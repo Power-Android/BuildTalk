@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
@@ -29,8 +30,8 @@ public class CircleMemberActivity extends BaseActivity<CircleMemberPresenter> im
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    @BindView(R.id.toolbar_left_back)
+    ImageView mToolbarBack;
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
     @BindView(R.id.refresh_Layout)
@@ -50,8 +51,7 @@ public class CircleMemberActivity extends BaseActivity<CircleMemberPresenter> im
     @Override
     protected void initView() {
         mCircle_id = getIntent().getStringExtra("circle_id");
-        mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
-        mToolbar.setNavigationOnClickListener(v -> finish());
+        mToolbarBack.setOnClickListener(v -> finish());
         mToolbarTitle.setText(R.string.circle_member);
 
         mRefreshLayout.setOnRefreshLoadMoreListener(this);

@@ -91,12 +91,10 @@ public abstract class BaseActivity<T extends IPresenter> extends AbstractActivit
 
         mErrorView.setOnClickListener(v -> recreate());
         View mErrorViewincludeToolbar = mErrorView.findViewById(R.id.include_toolbar);
-        Toolbar mErrorViewtoolbar = mErrorView.findViewById(R.id.toolbar);
         RelativeLayout.LayoutParams lp1 = new RelativeLayout.LayoutParams(mErrorViewincludeToolbar.getLayoutParams());
         lp1.setMargins(0, StatusBarUtils.getStatusBarHeight(), 0, 0);
         mErrorViewincludeToolbar.setLayoutParams(lp1);
-        mErrorViewtoolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
-        mErrorViewtoolbar.setNavigationOnClickListener(v -> finish());
+        mErrorViewincludeToolbar.findViewById(R.id.toolbar_left_back).setOnClickListener(v -> finish());
 
         mNoNetView.findViewById(R.id.tv_reload).setOnClickListener(v -> recreate());
 

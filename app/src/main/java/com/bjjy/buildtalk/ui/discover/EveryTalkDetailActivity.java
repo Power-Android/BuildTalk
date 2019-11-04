@@ -76,8 +76,8 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    @BindView(R.id.toolbar_left_back)
+    ImageView mToolbarBack;
     @BindView(R.id.title_tv)
     TextView mTitleTv;
     @BindView(R.id.face_iv)
@@ -188,8 +188,7 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(mIncludeToolbar.getLayoutParams());
         lp.setMargins(0, StatusBarUtils.getStatusBarHeight(), 0, 0);
         mIncludeToolbar.setLayoutParams(lp);
-        mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
-        mToolbar.setNavigationOnClickListener(v -> finish());
+        mToolbarBack.setOnClickListener(v -> finish());
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mEveryTalkDetailAdapter = new EveryTalkDetailAdapter(R.layout.adapter_every_talk_detail, mList);

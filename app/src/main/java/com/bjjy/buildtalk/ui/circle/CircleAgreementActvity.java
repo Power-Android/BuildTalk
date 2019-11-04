@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,8 +18,8 @@ public class CircleAgreementActvity extends BaseActivity<CircleAgreementPresente
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    @BindView(R.id.toolbar_left_back)
+    ImageView mToolbarBack;
     @BindView(R.id.include_toolbar)
     RelativeLayout mIncludeToolbar;
     @BindView(R.id.webView)
@@ -32,8 +33,7 @@ public class CircleAgreementActvity extends BaseActivity<CircleAgreementPresente
 
     @Override
     protected void initView() {
-        mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
-        mToolbar.setNavigationOnClickListener(v -> finish());
+        mToolbarBack.setOnClickListener(v -> finish());
         String type = getIntent().getStringExtra("type");
         mUrl = getIntent().getStringExtra("url");
         switch (type){

@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,8 +37,8 @@ public class ServiceActivity extends AppCompatActivity {
     TextView mToolbarTitle;
     @BindView(R.id.toolbar_right_title)
     TextView mToolbarRightTitle;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    @BindView(R.id.toolbar_left_back)
+    ImageView mToolbarBack;
     @BindView(R.id.include_toolbar)
     RelativeLayout mIncludeToolbar;
     @BindView(R.id.phone_tv)
@@ -63,8 +64,7 @@ public class ServiceActivity extends AppCompatActivity {
 
     private void initView() {
         mToolbarTitle.setText("在线客服");
-        mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
-        mToolbar.setNavigationOnClickListener(v -> finish());
+        mToolbarBack.setOnClickListener(v -> finish());
     }
 
     @OnClick(R.id.dial_tv)

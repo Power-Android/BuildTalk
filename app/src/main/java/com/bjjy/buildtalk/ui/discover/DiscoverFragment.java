@@ -57,8 +57,8 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    @BindView(R.id.toolbar_left_back)
+    ImageView mToolbarBack;
     @BindView(R.id.discover_recyclerView)
     RecyclerView mDiscoverRecyclerView;
     @BindView(R.id.refresh_Layout)
@@ -85,6 +85,7 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
 
     @Override
     protected void initView() {
+        mToolbarBack.setVisibility(View.GONE);
         mToolbarTitle.setText(R.string.discover);
         mRefreshLayout.setOnRefreshListener(this);
         mDiscoverRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));

@@ -24,9 +24,9 @@
         android:ellipsize="end"
         android:textColor="@color/text_drak"
         android:textStyle="bold"
-        android:textSize="@dimen/sp_12"
+        android:textSize="@dimen/sp_14"
         android:layout_toRightOf="@+id/item_face_iv"
-        android:layout_marginTop="@dimen/dp_5"/>
+        android:layout_marginTop="@dimen/dp_3"/>
     <ImageView
         android:id="@+id/item_tag_iv"
         android:layout_width="@dimen/dp_8"
@@ -41,7 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="粉丝  "
-        android:textSize="@dimen/sp_9"
+        android:textSize="@dimen/sp_11"
         android:layout_marginTop="@dimen/dp_5"
         android:layout_toRightOf="@+id/item_face_iv"
         android:layout_below="@+id/item_name_tv" />
@@ -52,10 +52,39 @@
         android:layout_toRightOf="@+id/view1"
         android:text="200"
         android:textColor="@color/orange"
-        android:textSize="@dimen/sp_9"
+        android:textSize="@dimen/sp_11"
         android:layout_below="@+id/item_name_tv"
         android:layout_marginTop="@dimen/dp_5"/>
-
+    <ImageView
+        android:id="@+id/fenge_iv"
+        android:layout_width="@dimen/dp_1"
+        android:layout_height="@dimen/dp_10"
+        android:src="@drawable/fenge_icon"
+        android:layout_toRightOf="@+id/item_num_tv"
+        android:layout_below="@+id/item_name_tv"
+        android:layout_marginTop="@dimen/dp_7"
+        android:layout_marginLeft="@dimen/dp_7"/>
+    <TextView
+        android:id="@+id/view3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="主题"
+        android:textSize="@dimen/sp_11"
+        android:layout_toRightOf="@+id/fenge_iv"
+        android:layout_below="@+id/item_name_tv"
+        android:layout_marginTop="@dimen/dp_5"
+        android:layout_marginLeft="@dimen/dp_7"/>
+    <TextView
+        android:id="@+id/item_theme_num_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textSize="@dimen/sp_11"
+        android:textColor="@color/text_mid"
+        android:layout_marginLeft="@dimen/dp_5"
+        android:layout_toRightOf="@+id/view3"
+        android:layout_below="@id/item_name_tv"
+        android:layout_marginTop="@dimen/dp_5"/>
     <LinearLayout
         android:id="@+id/item_focus_ll"
         android:layout_width="@dimen/dp_69"

@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
@@ -30,8 +31,8 @@ public class MasterCollectActivity extends BaseActivity<MasterCollectPresenter> 
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    @BindView(R.id.toolbar_left_back)
+    ImageView mToolbarBack;
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
     @BindView(R.id.refresh_Layout)
@@ -52,8 +53,7 @@ public class MasterCollectActivity extends BaseActivity<MasterCollectPresenter> 
     protected void initView() {
         mUser_id = getIntent().getStringExtra("user_id");
         mName = getIntent().getStringExtra("name");
-        mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
-        mToolbar.setNavigationOnClickListener(v -> finish());
+        mToolbarBack.setOnClickListener(v -> finish());
         if (TextUtils.isEmpty(mName)){
             mToolbarTitle.setText("我的收藏");
         }else {

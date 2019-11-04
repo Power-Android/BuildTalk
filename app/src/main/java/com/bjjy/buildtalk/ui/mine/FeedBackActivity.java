@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
@@ -22,8 +23,8 @@ public class FeedBackActivity extends BaseActivity<FeedBackPresenter> implements
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    @BindView(R.id.toolbar_left_back)
+    ImageView mToolbarBack;
     @BindView(R.id.content_et)
     EditText mContentEt;
     @BindView(R.id.edit_num_tv)
@@ -38,8 +39,7 @@ public class FeedBackActivity extends BaseActivity<FeedBackPresenter> implements
 
     @Override
     protected void initView() {
-        mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
-        mToolbar.setNavigationOnClickListener(v -> finish());
+        mToolbarBack.setOnClickListener(v -> finish());
         mToolbarTitle.setText(R.string.problem_feedback);
         mContentEt.addTextChangedListener(new TextWatcher() {
             @Override

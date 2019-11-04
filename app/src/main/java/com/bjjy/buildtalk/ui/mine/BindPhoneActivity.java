@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
@@ -19,8 +20,8 @@ public class BindPhoneActivity extends BaseActivity<BindPhonePresenter> implemen
     TextView mToolbarLeftTitle;
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    @BindView(R.id.toolbar_left_back)
+    ImageView mToolbarBack;
     @BindView(R.id.phone_tv)
     TextView mPhoneTv;
     @BindView(R.id.edit_tv)
@@ -33,6 +34,7 @@ public class BindPhoneActivity extends BaseActivity<BindPhonePresenter> implemen
 
     @Override
     protected void initView() {
+        mToolbarBack.setVisibility(View.GONE);
         mToolbarLeftTitle.setText(R.string.cancle);
         mToolbarTitle.setText("绑定手机号");
         mPhoneTv.setText(mPresenter.mDataManager.getUser().getMobile());

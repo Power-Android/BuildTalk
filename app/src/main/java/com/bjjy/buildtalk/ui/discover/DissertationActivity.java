@@ -33,8 +33,8 @@ public class DissertationActivity extends BaseActivity<DissertationPresenter> im
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    @BindView(R.id.toolbar_left_back)
+    ImageView mToolbarBack;
     @BindView(R.id.pic_iv)
     ImageView mPicIv;
     @BindView(R.id.toolbar_right_share)
@@ -61,8 +61,7 @@ public class DissertationActivity extends BaseActivity<DissertationPresenter> im
     @Override
     protected void initView() {
         mId = getIntent().getStringExtra("id");
-        mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
-        mToolbar.setNavigationOnClickListener(v -> finish());
+        mToolbarBack.setOnClickListener(v -> finish());
 //        mToolbarRightShare.setVisibility(View.VISIBLE);
 //        mToolbarRightShare.setOnClickListener(this);
         mPresenter.tabData();

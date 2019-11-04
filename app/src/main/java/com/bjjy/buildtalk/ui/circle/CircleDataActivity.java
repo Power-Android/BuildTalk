@@ -26,8 +26,8 @@ public class CircleDataActivity extends BaseActivity<CircleDataPresenter> implem
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    @BindView(R.id.toolbar_left_back)
+    ImageView mToolbarBack;
     @BindView(R.id.circle_iv)
     RoundedImageView mCircleIv;
     @BindView(R.id.circle_title_tv)
@@ -50,8 +50,7 @@ public class CircleDataActivity extends BaseActivity<CircleDataPresenter> implem
     @Override
     protected void initView() {
         mCircle_id = getIntent().getStringExtra("circle_id");
-        mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
-        mToolbar.setNavigationOnClickListener(v -> finish());
+        mToolbarBack.setOnClickListener(v -> finish());
         mToolbarTitle.setText("圈子资料");
     }
 

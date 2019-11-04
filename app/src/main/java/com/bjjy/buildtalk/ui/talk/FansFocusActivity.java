@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
@@ -37,8 +38,8 @@ public class FansFocusActivity extends BaseActivity<FansFocusPresenter> implemen
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    @BindView(R.id.toolbar_left_back)
+    ImageView mToolbarBack;
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
     @BindView(R.id.refresh_Layout)
@@ -72,8 +73,7 @@ public class FansFocusActivity extends BaseActivity<FansFocusPresenter> implemen
         mUser_id = getIntent().getStringExtra("user_id");
         mName = getIntent().getStringExtra("name");
         mType = getIntent().getStringExtra("type");
-        mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
-        mToolbar.setNavigationOnClickListener(v -> finish());
+        mToolbarBack.setOnClickListener(v -> finish());
         if ("fans".equals(mType)) {
             mToolbarTitle.setText(mName + "的粉丝");
         } else {

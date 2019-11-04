@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -51,8 +52,8 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    @BindView(R.id.toolbar_left_back)
+    ImageView mToolbarBack;
     @BindView(R.id.circle_recyclerView)
     RecyclerView mCircleRecyclerView;
     @BindView(R.id.refresh_Layout)
@@ -98,6 +99,7 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
     @Override
     protected void initView() {
         EventBus.getDefault().register(this);
+        mToolbarBack.setVisibility(View.GONE);
         mToolbarTitle.setText(R.string.circle);
         mRefreshLayout.setOnRefreshLoadMoreListener(this);
         mCircleRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 2));

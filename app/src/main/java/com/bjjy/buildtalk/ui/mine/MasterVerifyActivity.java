@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -24,8 +25,8 @@ public class MasterVerifyActivity extends BaseActivity<MasterVerifyPresenter> im
     TextView mToolbarTitle;
     @BindView(R.id.toolbar_right_title)
     TextView mToolbarRightTitle;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    @BindView(R.id.toolbar_left_back)
+    ImageView mToolbarBack;
     @BindView(R.id.face_iv)
     CircleImageView mFaceIv;
     @BindView(R.id.face_rl)
@@ -64,8 +65,7 @@ public class MasterVerifyActivity extends BaseActivity<MasterVerifyPresenter> im
 
     @Override
     protected void initView() {
-        mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
-        mToolbar.setNavigationOnClickListener(v -> finish());
+        mToolbarBack.setOnClickListener(v -> finish());
         mToolbarTitle.setText("大咖认证");
         mToolbarRightTitle.setText("完成");
     }

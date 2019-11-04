@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.DataManager;
@@ -37,6 +38,16 @@ public class CircleListAdapter extends BaseQuickAdapter<CircleListEntity.CircleI
                 .addOnClickListener(R.id.item_focus_ll);
         if (mDataManager.getUser() != null && !TextUtils.isEmpty(mDataManager.getUser().getUser_id())){
             helper.setGone(R.id.item_focus_ll, mDataManager.getUser().getUser_id().equals(String.valueOf(item.getUser_id())) ? false : true);
+        }
+        TextView themeCountTv = helper.getView(R.id.item_theme_num_tv);
+        if (item.getCountThemeNum() <= 999){
+            themeCountTv.setText(item.getCountThemeNum()+"");
+        }else {
+            int count = item.getCountThemeNum();
+            double d = count / 1000;
+            java.text.DecimalFormat myformat=new java.text.DecimalFormat("0.0");
+            String str = myformat.format(d);
+            themeCountTv.setText(str + "K+");
         }
         LinearLayout itemFocusLl = helper.getView(R.id.item_focus_ll);
         int is_attention = item.getIs_attention();

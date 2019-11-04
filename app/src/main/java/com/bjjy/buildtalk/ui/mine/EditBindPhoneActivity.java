@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
@@ -38,6 +39,8 @@ public class EditBindPhoneActivity extends BaseActivity<EditBindPhonePresenter> 
     Button mCodeBtn;
     @BindView(R.id.login_btn)
     Button mLoginBtn;
+    @BindView(R.id.toolbar_left_back)
+    ImageView mToolBarBack;
 
     private CountDownTimer mTimer;
     private boolean isPhone;
@@ -56,6 +59,7 @@ public class EditBindPhoneActivity extends BaseActivity<EditBindPhonePresenter> 
     @Override
     protected void initView() {
         mType = getIntent().getStringExtra("type");
+        mToolBarBack.setVisibility(View.GONE);
         if (!TextUtils.isEmpty(mType)){
             mUnionid = getIntent().getStringExtra("unionid");
             mOpenid = getIntent().getStringExtra("openid");

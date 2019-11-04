@@ -24,8 +24,8 @@ public class MyCardActivity extends BaseActivity<MyCardPresenter> implements MyC
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    @BindView(R.id.toolbar_left_back)
+    ImageView mToolbarBack;
     @BindView(R.id.bg_iv)
     ImageView mBgIv;
     @BindView(R.id.face_iv)
@@ -61,8 +61,7 @@ public class MyCardActivity extends BaseActivity<MyCardPresenter> implements MyC
     @Override
     protected void initView() {
         mCircle_id = getIntent().getStringExtra("circle_id");
-        mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
-        mToolbar.setNavigationOnClickListener(v -> finish());
+        mToolbarBack.setOnClickListener(v -> finish());
         mToolbarTitle.setText("我的名片");
     }
 

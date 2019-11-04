@@ -52,8 +52,8 @@ public class SetPictureActivity extends BaseActivity<SetPicturePresenter> implem
     TextView mPhotoTv;
     @BindView(R.id.camera_tv)
     TextView mCameraTv;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    @BindView(R.id.toolbar_left_back)
+    ImageView mToolbarBack;
 
     private MultipartBody.Part mFile;
     private String type;
@@ -68,8 +68,7 @@ public class SetPictureActivity extends BaseActivity<SetPicturePresenter> implem
     protected void initView() {
         mTag = getIntent().getStringExtra(TAG);
         String pic = getIntent().getStringExtra("pic");
-        mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
-        mToolbar.setNavigationOnClickListener(v -> finish());
+        mToolbarBack.setOnClickListener(v -> finish());
         if (TextUtils.equals(mTag, FACE)) {
             mToolbarTitle.setText("设置个人头像");
             type = "2";

@@ -2,8 +2,8 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/item_selector_gray">
+    android:layout_height="@dimen/dp_44"
+    android:background="@color/white">
     <ImageView
         android:id="@+id/view1"
         android:layout_width="@dimen/dp_21"
@@ -36,4 +36,10 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="@dimen/dp_15"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/border2"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/view1"/>
 </RelativeLayout>

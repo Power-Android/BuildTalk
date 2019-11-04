@@ -42,8 +42,8 @@ public class IDCardActivity extends BaseActivity<IDCardPresenter> implements IDC
     TextView mToolbarLeftTitle;
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    @BindView(R.id.toolbar_left_back)
+    ImageView mToolbarBack;
     @BindView(R.id.zhengmian_iv)
     ImageView mZhengmianIv;
     @BindView(R.id.beimian_iv)
@@ -64,6 +64,7 @@ public class IDCardActivity extends BaseActivity<IDCardPresenter> implements IDC
 
     @Override
     protected void initView() {
+        mToolbarBack.setVisibility(View.GONE);
         mToolbarLeftTitle.setText("取消");
         mToolbarTitle.setText("身份证件照");
     }

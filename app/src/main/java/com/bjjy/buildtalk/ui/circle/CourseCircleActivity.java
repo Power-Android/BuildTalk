@@ -1,6 +1,7 @@
 package com.bjjy.buildtalk.ui.circle;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,7 +14,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +25,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -97,12 +102,8 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     TagFlowLayout mFlowLayout;
     @BindView(R.id.pre_top_rl)
     RelativeLayout mPreTopRl;
-    @BindView(R.id.qz_expand_iv)
-    ImageView mQzExpandIv;
     @BindView(R.id.recommend_tv)
     TextView mRecommendTv;
-    @BindView(R.id.ml_expand_iv)
-    ImageView mMlExpandIv;
     @BindView(R.id.pre_mid_rl)
     RelativeLayout mPreMidRl;
     @BindView(R.id.formal_title_tv)
@@ -111,8 +112,6 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     TextView mFormalNameTv;
     @BindView(R.id.formal_date_tv)
     TextView mFormalDateTv;
-    @BindView(R.id.formal_ml_expand_iv)
-    ImageView mFormalMlExpandIv;
     @BindView(R.id.formal_rl)
     RelativeLayout mFormalRl;
     @BindView(R.id.min_rl)
@@ -125,8 +124,6 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     AppBarLayout mAppBarLayout;
     @BindView(R.id.viewpager)
     ViewPager mViewpager;
-    @BindView(R.id.viewpager_rl)
-    RelativeLayout mViewpagerRl;
     @BindView(R.id.back_iv)
     ImageView mBackIv;
     @BindView(R.id.title_tv)
@@ -145,32 +142,18 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     RelativeLayout mPublisRl;
     @BindView(R.id.formal_face_iv)
     CircleImageView mFormalFaceIv;
-    @BindView(R.id.pre_item_name_tv)
-    TextView mPreItemNameTv;
-    @BindView(R.id.ml_rl)
-    RelativeLayout mMlRl;
     @BindView(R.id.coordinator)
     CoordinatorLayout mCoordinator;
     @BindView(R.id.mc_qz_expand_iv)
     ImageView mMcQzExpandIv;
     @BindView(R.id.mc_recommend_tv)
     TextView mMcRecommendTv;
-    @BindView(R.id.mc_ld_rl)
-    TextView mMcLdRl;
     @BindView(R.id.mc_ld_tv)
     TextView mMcLdTv;
-    @BindView(R.id.mc_ff_rl)
-    TextView mMcFfRl;
-    @BindView(R.id.mc_ff_tv)
-    TextView mMcFfTv;
     @BindView(R.id.expand_rl)
     RelativeLayout mExpandRl;
-    @BindView(R.id.mc_jieshao_rl)
-    RelativeLayout mMcJieshaoRl;
     @BindView(R.id.scrollView)
     ScrollView mScrollView;
-    @BindView(R.id.mc_ml_expand_iv)
-    ImageView mMcMlExpandIv;
     @BindView(R.id.mc_ml_num_tv)
     TextView mMcMlNumTv;
     @BindView(R.id.mc_ml_recycler)
@@ -181,10 +164,6 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     RelativeLayout mMcRl;
     @BindView(R.id.ml_num_tv)
     TextView mMlNumTv;
-    @BindView(R.id.formal_item_name_tv)
-    TextView mFormalItemNameTv;
-    @BindView(R.id.formal_ml_rl)
-    RelativeLayout mFormalMlRl;
     @BindView(R.id.mc_formal_title_tv)
     TextView mMcFormalTitleTv;
     @BindView(R.id.mc_formal_name_tv)
@@ -201,24 +180,26 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     ImageView mTagIv;
     @BindView(R.id.formal_ml_num_tv)
     TextView mFormalMlNumTv;
-    @BindView(R.id.pre_item_free_iv)
-    ImageView mPreItemFreeIv;
-    @BindView(R.id.pre_item_sd_iv)
-    ImageView mPreItemSdIv;
-    @BindView(R.id.formal_item_free_iv)
-    ImageView mFormalItemFreeIv;
-    @BindView(R.id.formal_item_sd_iv)
-    ImageView mFormalItemSdIv;
     @BindView(R.id.screen_tv)
     TextView mScreenTv;
     @BindView(R.id.pre_tag_iv)
     ImageView mPreTagIv;
     @BindView(R.id.refresh_Layout)
     SmartRefreshLayout mRefreshLayout;
+    @BindView(R.id.formal_ml_recycler)
+    RecyclerView mFormalMlRecyclerView;
+    @BindView(R.id.pre_ml_recycler)
+    RecyclerView mPreMlRecyclerView;
+    @BindView(R.id.course_collapse_rl)
+    RelativeLayout mCourseCollapseRl;
+    @BindView(R.id.mc_qz_expand_tv)
+    TextView mMcQzExpandTv;
 
     private MyBadgeViewPagerAdapter mPagerAdapter;
     private List<View> mViews = new ArrayList<>();
     private List<CourseListEntity.CourselistBean> mList = new ArrayList<>();
+    private List<CourseListEntity.CourselistBean> mList2 = new ArrayList<>();
+    private List<CourseListEntity.CourselistBean> mList3 = new ArrayList<>();
     private String mCircle_id;
     private int coursePage = 1;
     private CircleInfoEntity mCircleInfoEntity;
@@ -230,6 +211,8 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     private List<ThemeInfoEntity.ThemeInfoBean> mThemeInfoList = new ArrayList<>();
     private List<ThemeInfoEntity.ThemeInfoBean> mEssenceInfoList = new ArrayList<>();
     private DirectoryAdapter mDirectoryAdapter;
+    private DirectoryAdapter mDirectoryAdapter2;
+    private DirectoryAdapter mDirectoryAdapter3;
     private AppBarLayout.LayoutParams mParams;
     private int mCourse_page_count;
     private BaseDialog mPayDialog;
@@ -304,6 +287,74 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
         mCountChoiceness_themeInfo = circleInfoEntity.getCountChoiceness_themeInfo();
         mPresenter.tabData(circleInfoEntity);
         mPresenter.courseList(circleInfoEntity.getCircleInfo().getData_id() + "", coursePage);
+
+        //预览
+        mPreMlRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mDirectoryAdapter2 = new DirectoryAdapter(R.layout.adapter_directory_layout, mList2, mIsJoin);
+        View footView2 = LayoutInflater.from(this).inflate(R.layout.course_circle_list, null);
+        footView2.setOnClickListener(v -> {
+            mParams.setScrollFlags(0);//不能伸缩
+            mMinRl.setLayoutParams(mParams);
+            mMcRl.setVisibility(View.VISIBLE);
+            mMcTableRl.setVisibility(View.VISIBLE);
+            mJoinTv.setVisibility(View.GONE);
+            mCourseCollapseRl.setVisibility(View.VISIBLE);
+            isMlExpand = true;
+        });
+        mDirectoryAdapter2.setFooterView(footView2);
+        mPreMlRecyclerView.setAdapter(mDirectoryAdapter2);
+        mDirectoryAdapter2.setOnItemClickListener((adapter, view, position) -> {
+            List<CourseListEntity.CourselistBean> mList = adapter.getData();
+            if (mList.get(position).getIs_audition() == 0 && "0".equals(mIsJoin)) {
+                ToastUtils.showShort("该课程还未解锁");
+                return;
+            }
+            Intent intent = new Intent(CourseCircleActivity.this, CourseDetailActivity.class);
+            if (mList.size() > 0) {
+                intent.putExtra("video_url", mList.get(position).getVideoInfo().getVideo_url());
+                intent.putExtra("article_title", mList.get(position).getArticle_title());
+                intent.putExtra("content", mList.get(position).getContent());
+                intent.putExtra("position", position);
+                intent.putExtra("article_id", mList.get(position).getArticle_id()+"");
+            }
+            intent.putExtra("circle_id", mCircle_id);
+            startActivity(intent);
+        });
+        //正式
+        mFormalMlRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mDirectoryAdapter3 = new DirectoryAdapter(R.layout.adapter_directory_layout, mList3, mIsJoin);
+        View footView3 = LayoutInflater.from(this).inflate(R.layout.course_circle_list, null);
+        footView3.setOnClickListener(v -> {
+            mParams.setScrollFlags(0);//不能伸缩
+            mMinRl.setLayoutParams(mParams);
+            mScrollView.setVisibility(View.INVISIBLE);
+            mMcFormalTopRl.setVisibility(View.VISIBLE);
+            mMcFormalFaceIv.setVisibility(View.VISIBLE);
+            mMcRl.setVisibility(View.VISIBLE);
+            mMcTableRl.setVisibility(View.VISIBLE);
+            mPublisRl.setVisibility(View.GONE);
+            mCourseCollapseRl.setVisibility(View.VISIBLE);
+        });
+        mDirectoryAdapter3.setFooterView(footView3);
+        mFormalMlRecyclerView.setAdapter(mDirectoryAdapter3);
+        mDirectoryAdapter3.setOnItemClickListener((adapter, view, position) -> {
+            List<CourseListEntity.CourselistBean> mList = adapter.getData();
+            if (mList.get(position).getIs_audition() == 0 && "0".equals(mIsJoin)) {
+                ToastUtils.showShort("该课程还未解锁");
+                return;
+            }
+            Intent intent = new Intent(CourseCircleActivity.this, CourseDetailActivity.class);
+            if (mList.size() > 0) {
+                intent.putExtra("video_url", mList.get(position).getVideoInfo().getVideo_url());
+                intent.putExtra("article_title", mList.get(position).getArticle_title());
+                intent.putExtra("content", mList.get(position).getContent());
+                intent.putExtra("position", position);
+                intent.putExtra("article_id", mList.get(position).getArticle_id()+"");
+            }
+            intent.putExtra("circle_id", mCircle_id);
+            startActivity(intent);
+        });
+        //蒙层
         mMcMlRecycler.setLayoutManager(new LinearLayoutManager(this));
         mDirectoryAdapter = new DirectoryAdapter(R.layout.adapter_directory_layout, mList, mIsJoin);
         mMcMlRecycler.setAdapter(mDirectoryAdapter);
@@ -508,24 +559,26 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
         mCourse_page_count = courseListEntity.getPage_count();
         int countUpdateCourse = courseListEntity.getCountUpdateCourse();
         int countCourse = courseListEntity.getCountCourse();
-        mMlNumTv.setText("更新至" + countUpdateCourse + "讲/全" + countCourse + "讲");
-        mMcMlNumTv.setText("更新至" + countUpdateCourse + "讲/全" + countCourse + "讲");
-        mFormalMlNumTv.setText("更新至" + countUpdateCourse + "讲/全" + countCourse + "讲");
-        mDirectoryAdapter.addData(courseListEntity.getCourselist());
-        mPreItemNameTv.setText(mDirectoryAdapter.getData().get(0).getArticle_title());
-        mFormalItemNameTv.setText(mDirectoryAdapter.getData().get(0).getArticle_title());
-        if (mIsJoin.equals("1")) {
-            mFormalItemFreeIv.setVisibility(View.GONE);
-            mFormalItemSdIv.setVisibility(View.GONE);
-        } else {
-            if (mDirectoryAdapter.getData().get(0).getIs_audition() == 1) {
-                mPreItemFreeIv.setVisibility(View.VISIBLE);
-                mPreItemSdIv.setVisibility(View.GONE);
-            } else {
-                mPreItemFreeIv.setVisibility(View.GONE);
-                mPreItemSdIv.setVisibility(View.VISIBLE);
+        String s = "更新至" + countUpdateCourse + "讲 • 全" + countCourse + "讲";
+        SpannableString spannableString = new SpannableString(s);
+        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#FF32A7FF")),0,4+String.valueOf(countUpdateCourse).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mMlNumTv.setText(spannableString);
+        mMcMlNumTv.setText(spannableString);
+        mFormalMlNumTv.setText(spannableString);
+
+        if (coursePage == 1 && courseListEntity.getCourselist().size() > 0){
+            List<CourseListEntity.CourselistBean> courselist;
+            if (courseListEntity.getCourselist().size() >= 3){
+                courselist = courseListEntity.getCourselist().subList(0,3);
+            }else if (courseListEntity.getCourselist().size() == 2){
+                courselist = courseListEntity.getCourselist().subList(0,2);
+            }else {
+                courselist = courseListEntity.getCourselist().subList(0,1);
             }
+            mDirectoryAdapter2.addData(courselist);
+            mDirectoryAdapter3.addData(courselist);
         }
+        mDirectoryAdapter.addData(courseListEntity.getCourselist());
     }
 
     @Override
@@ -545,40 +598,56 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
         }
     }
 
-    @OnClick({R.id.qz_expand_iv, R.id.ml_expand_iv, R.id.formal_ml_expand_iv, R.id.back_iv,
+    @OnClick({R.id.qz_expand_ll, R.id.back_iv, R.id.course_collapse_rl,
             R.id.pre_share_iv, R.id.share_iv, R.id.more_iv, R.id.join_tv, R.id.publis_rl,
-            R.id.mc_qz_expand_iv, R.id.mc_ml_expand_iv, R.id.screen_rl, R.id.formal_ml_rl,
-            R.id.ml_rl, R.id.formal_face_iv, R.id.mc_formal_face_iv})
+            R.id.mc_qz_expand_ll, R.id.screen_rl, R.id.formal_face_iv, R.id.mc_formal_face_iv})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.qz_expand_iv://预览-----展开圈子介绍
+            case R.id.qz_expand_ll://预览-----展开圈子介绍
                 mMcRl.setVisibility(View.VISIBLE);
-                mMcQzExpandIv.setImageResource(R.drawable.sanjiao_top_icon);
+                mMcQzExpandTv.setText("收起");
+                mMcQzExpandIv.setImageResource(R.drawable.sanjiao_blue);
                 mParams.setScrollFlags(0);//不能伸缩
                 mMinRl.setLayoutParams(mParams);
                 mExpandRl.setVisibility(View.VISIBLE);
                 break;
-            case R.id.ml_expand_iv://预览-----展开目录
-                mParams.setScrollFlags(0);//不能伸缩
+            case R.id.course_collapse_rl://课程-----收起目录
+                mMcQzExpandTv.setText("展开");
+                mMcQzExpandIv.setImageResource(R.drawable.dao_sanjiao_blue);
+                mParams.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED);
                 mMinRl.setLayoutParams(mParams);
-                mMcMlExpandIv.setImageResource(R.drawable.sanjiao_top_icon);
-                mMcRl.setVisibility(View.VISIBLE);
-                mMcTableRl.setVisibility(View.VISIBLE);
-                isMlExpand = true;
+                mMcTableRl.setVisibility(View.GONE);
+                mMcRl.setVisibility(View.GONE);
+                mCourseCollapseRl.setVisibility(View.GONE);
+                if (TextUtils.equals("0", mIsJoin)){
+                    mJoinTv.setVisibility(View.VISIBLE);
+                }else {
+                    mPublisRl.setVisibility(View.VISIBLE);
+                }
+                isMlExpand = false;
                 break;
-            case R.id.formal_ml_expand_iv://加入-----展开目录
-                mParams.setScrollFlags(0);//不能伸缩
-                mMinRl.setLayoutParams(mParams);
-                mMcMlExpandIv.setImageResource(R.drawable.sanjiao_top_icon);
-                mScrollView.setVisibility(View.INVISIBLE);
-                mMcFormalTopRl.setVisibility(View.VISIBLE);
-                mMcFormalFaceIv.setVisibility(View.VISIBLE);
-                mMcRl.setVisibility(View.VISIBLE);
-                mMcTableRl.setVisibility(View.VISIBLE);
-                break;
-            case R.id.mc_qz_expand_iv://蒙层----收起圈子介绍
+//            case R.id.ml_expand_iv://预览-----展开目录
+//                mParams.setScrollFlags(0);//不能伸缩
+//                mMinRl.setLayoutParams(mParams);
+//                mMcMlExpandIv.setImageResource(R.drawable.sanjiao_top_icon);
+//                mMcRl.setVisibility(View.VISIBLE);
+//                mMcTableRl.setVisibility(View.VISIBLE);
+//                isMlExpand = true;
+//                break;
+//            case R.id.formal_ml_expand_iv://加入-----展开目录
+//                mParams.setScrollFlags(0);//不能伸缩
+//                mMinRl.setLayoutParams(mParams);
+//                mMcMlExpandIv.setImageResource(R.drawable.sanjiao_top_icon);
+//                mScrollView.setVisibility(View.INVISIBLE);
+//                mMcFormalTopRl.setVisibility(View.VISIBLE);
+//                mMcFormalFaceIv.setVisibility(View.VISIBLE);
+//                mMcRl.setVisibility(View.VISIBLE);
+//                mMcTableRl.setVisibility(View.VISIBLE);
+//                break;
+            case R.id.mc_qz_expand_ll://蒙层----收起圈子介绍
                 if (!isMlExpand){
-                    mMcQzExpandIv.setImageResource(R.drawable.sanjiao_icon);
+                    mMcQzExpandTv.setText("展开");
+                    mMcQzExpandIv.setImageResource(R.drawable.dao_sanjiao_blue);
                     mParams.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED);
                     mMinRl.setLayoutParams(mParams);
                     mMcTableRl.setVisibility(View.GONE);
@@ -587,34 +656,31 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
                 }else {//如果蒙层的目录展开，点击时应该是展开圈子介绍
                     mMcRl.setVisibility(View.VISIBLE);
                     mMcTableRl.setVisibility(View.GONE);
-                    mMcQzExpandIv.setImageResource(R.drawable.sanjiao_top_icon);
+                    mMcQzExpandTv.setText("收起");
+                    mMcQzExpandIv.setImageResource(R.drawable.sanjiao_blue);
                     mParams.setScrollFlags(0);//不能伸缩
                     mMinRl.setLayoutParams(mParams);
                     mExpandRl.setVisibility(View.VISIBLE);
                     isMlExpand = false;
                 }
                 break;
-            case R.id.mc_ml_expand_iv://蒙层-----收起目录
-                mMcQzExpandIv.setImageResource(R.drawable.sanjiao_icon);
-                mMcMlExpandIv.setImageResource(R.drawable.sanjiao_icon);
-                mParams.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED);
-                mMinRl.setLayoutParams(mParams);
-                mMcTableRl.setVisibility(View.GONE);
-                mMcRl.setVisibility(View.GONE);
-                isMlExpand = false;
-                break;
+//            case R.id.mc_ml_expand_iv://蒙层-----收起目录
+//                mMcQzExpandIv.setImageResource(R.drawable.sanjiao_icon);
+//                mMcMlExpandIv.setImageResource(R.drawable.sanjiao_icon);
+//                mParams.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED);
+//                mMinRl.setLayoutParams(mParams);
+//                mMcTableRl.setVisibility(View.GONE);
+//                mMcRl.setVisibility(View.GONE);
+//                isMlExpand = false;
+//                break;
             case R.id.back_iv:
                 finish();
                 break;
             case R.id.pre_share_iv:
-                circlePath = mPath + "circle_id=" + mCircle_id + "&num=1";
-                DialogUtils.showShareDialog(this, circlePath, mEndUrl, mCircleInfoEntity.getCircleInfo().getCircle_name(),
-                        mCircleInfoEntity.getCircleInfo().getCircle_image().getPic_url(), mCircleInfoEntity.getCircleInfo().getCircle_desc(),true);
-                break;
             case R.id.share_iv:
                 circlePath = mPath + "circle_id=" + mCircle_id + "&num=1";
                 DialogUtils.showShareDialog(this, circlePath, mEndUrl, mCircleInfoEntity.getCircleInfo().getCircle_name(),
-                        mCircleInfoEntity.getCircleInfo().getCircle_image().getPic_url(), mCircleInfoEntity.getCircleInfo().getCircle_desc(), true);
+                        mCircleInfoEntity.getCircleInfo().getCircle_image().getPic_url(), mCircleInfoEntity.getCircleInfo().getCircle_desc(),true);
                 break;
             case R.id.more_iv:
                 mIntent = new Intent(this, CircleInfoActivity.class);
@@ -624,32 +690,20 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
                 mIntent.putExtra("jieshao", mCircleInfoEntity.getCircleInfo().getCircle_desc());
                 startActivity(mIntent);
                 break;
-            case R.id.ml_rl://预览 目录
-                mIntent = new Intent(this, CourseDetailActivity.class);
-                mList = mDirectoryAdapter.getData();
-                if (mList.size() > 0) {
-                    mIntent.putExtra("video_url", mList.get(0).getVideoInfo().getVideo_url());
-                    mIntent.putExtra("article_title", mList.get(0).getArticle_title());
-                    mIntent.putExtra("content", mList.get(0).getContent());
-                    mIntent.putExtra("position", "0");
-                    mIntent.putExtra("article_id", mList.get(0).getArticle_id()+"");
-                }
-                mIntent.putExtra("circle_id", mCircle_id);
-                startActivity(mIntent);
-                break;
-            case R.id.formal_ml_rl://正式 目录
-                mIntent = new Intent(this, CourseDetailActivity.class);
-                mList = mDirectoryAdapter.getData();
-                if (mList.size() > 0) {
-                    mIntent.putExtra("video_url", mList.get(0).getVideoInfo().getVideo_url());
-                    mIntent.putExtra("article_title", mList.get(0).getArticle_title());
-                    mIntent.putExtra("content", mList.get(0).getContent());
-                    mIntent.putExtra("position", "0");
-                    mIntent.putExtra("article_id", mList.get(0).getArticle_id()+"");
-                }
-                mIntent.putExtra("circle_id", mCircle_id);
-                startActivity(mIntent);
-                break;
+//            case R.id.ml_rl://预览 目录
+//            case R.id.formal_ml_rl://正式 目录
+//                mIntent = new Intent(this, CourseDetailActivity.class);
+//                mList = mDirectoryAdapter.getData();
+//                if (mList.size() > 0) {
+//                    mIntent.putExtra("video_url", mList.get(0).getVideoInfo().getVideo_url());
+//                    mIntent.putExtra("article_title", mList.get(0).getArticle_title());
+//                    mIntent.putExtra("content", mList.get(0).getContent());
+//                    mIntent.putExtra("position", "0");
+//                    mIntent.putExtra("article_id", mList.get(0).getArticle_id()+"");
+//                }
+//                mIntent.putExtra("circle_id", mCircle_id);
+//                startActivity(mIntent);
+//                break;
             case R.id.screen_rl:
                 if (mViewpager_position == 0){
                     showThemeTypeDialog();
@@ -666,16 +720,6 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
                 startActivity(mIntent);
                 break;
             case R.id.formal_face_iv:
-                if (mCircleInfoEntity.getCircleInfo().getIs_author() == 1){
-                    mIntent = new Intent(this, MasterDetailActivity.class);
-                    mIntent.putExtra("user_id", mCircleInfoEntity.getCircleInfo().getUser_id()+"");
-                    startActivity(mIntent);
-                }else {
-                    mIntent = new Intent(this, CircleManDetailActivity.class);
-                    mIntent.putExtra("user_id", mCircleInfoEntity.getCircleInfo().getUser_id()+"");
-                    startActivity(mIntent);
-                }
-                break;
             case R.id.mc_formal_face_iv:
                 if (mCircleInfoEntity.getCircleInfo().getIs_author() == 1){
                     mIntent = new Intent(this, MasterDetailActivity.class);

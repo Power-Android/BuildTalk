@@ -40,7 +40,8 @@
 
                 <data android:scheme="jiantanapp" />
             </intent-filter>
-        </activity> <!-- 腾讯bugly -->
+        </activity>
+        <!-- 腾讯bugly -->
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
@@ -54,13 +55,16 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
-        </provider> <!-- 适配华为（huawei）刘海屏 -->
+        </provider>
+        <!-- 适配华为（huawei）刘海屏 -->
         <meta-data
             android:name="android.notch_support"
-            android:value="true" /> <!-- 适配小米（xiaomi）刘海屏 -->
+            android:value="true" />
+        <!-- 适配小米（xiaomi）刘海屏 -->
         <meta-data
             android:name="notch.config"
-            android:value="portrait|landscape" /> <!-- 友盟配置 -->
+            android:value="portrait|landscape" />
+        <!-- 友盟配置 -->
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -86,16 +90,25 @@
         <activity
             android:name="com.tencent.connect.common.AssistActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" /> <!-- Activity配置 -->
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <!-- Activity配置 -->
         <activity
             android:name=".ui.main.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.main.GuideActivity" />
-        <activity android:name=".ui.discover.EveryTalkListActivity" />
-        <activity android:name=".ui.discover.TopticListActivity" />
-        <activity android:name=".ui.discover.CourseListActivity" />
+        <activity
+            android:name=".ui.main.GuideActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.discover.EveryTalkListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.discover.TopticListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.discover.CourseListActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.discover.EveryTalkDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -104,15 +117,33 @@
             android:name=".ui.talk.TalkSearchActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustResize" />
-        <activity android:name=".ui.talk.MasterListActivity" />
-        <activity android:name=".ui.talk.CircleListActivity" />
-        <activity android:name=".ui.talk.MasterDetailActivity" />
-        <activity android:name=".ui.talk.MasterCircleActivity" />
-        <activity android:name=".ui.talk.FansFocusActivity" />
-        <activity android:name=".ui.talk.MasterCollectActivity" />
-        <activity android:name=".ui.circle.CircleSearchActivity" />
-        <activity android:name=".ui.circle.CircleAgreementActvity" />
-        <activity android:name=".ui.circle.CreateCircleActivity" />
+        <activity
+            android:name=".ui.talk.MasterListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.talk.CircleListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.talk.MasterDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.talk.MasterCircleActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.talk.FansFocusActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.talk.MasterCollectActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.circle.CircleSearchActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.circle.CircleAgreementActvity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.circle.CreateCircleActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.circle.TopticCircleActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -124,37 +155,83 @@
         <activity
             android:name=".ui.main.PhoneLoginActivity"
             android:theme="@style/Anim_fade" />
-        <activity android:name=".ui.mine.WalletActivity" />
-        <activity android:name=".ui.mine.SettingActivity" />
-        <activity android:name=".ui.mine.PersonInfoActivity" />
-        <activity android:name=".ui.mine.FeedBackActivity" />
-        <activity android:name=".ui.mine.AboutUsActivity" />
-        <activity android:name=".ui.mine.TransactionActivity" />
-        <activity android:name=".ui.main.ViewPagerActivity" />
-        <activity android:name=".ui.mine.SetPictureActivity" />
-        <activity android:name=".ui.circle.CircleInfoActivity" />
-        <activity android:name=".ui.circle.CircleMemberActivity" />
-        <activity android:name=".ui.circle.MyCardActivity" />
+        <activity
+            android:name=".ui.mine.WalletActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.mine.SettingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.mine.PersonInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.mine.FeedBackActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.mine.AboutUsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.mine.TransactionActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.main.ViewPagerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.mine.SetPictureActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.circle.CircleInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.circle.CircleMemberActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.circle.MyCardActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.circle.PublishActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.circle.CircleDataActivity" />
-        <activity android:name=".ui.circle.TopticDetailActivity" />
-        <activity android:name=".ui.talk.CircleManDetailActivity" />
-        <activity android:name=".ui.mine.EditNameActivity" />
-        <activity android:name=".ui.mine.BindPhoneActivity" />
-        <activity android:name=".ui.mine.EditBindPhoneActivity" />
+        <activity
+            android:name=".ui.circle.CircleDataActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.circle.TopticDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.talk.CircleManDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.mine.EditNameActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.mine.BindPhoneActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.mine.EditBindPhoneActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.circle.CourseDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.mine.ServiceActivity" />
-        <activity android:name=".ui.discover.DissertationActivity" />
-        <activity android:name=".ui.mine.VersionRecordActivity" />
-        <activity android:name=".ui.mine.MasterVerifyActivity" />
-        <activity android:name=".ui.mine.IDCardActivity"/>
-        <activity android:name=".ui.main.ImagePagerActivity" />
+        <activity
+            android:name=".ui.mine.ServiceActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.discover.DissertationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.mine.VersionRecordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.mine.MasterVerifyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.mine.IDCardActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.main.ImagePagerActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

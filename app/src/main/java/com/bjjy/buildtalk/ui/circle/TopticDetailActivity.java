@@ -69,8 +69,8 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    @BindView(R.id.toolbar_left_back)
+    ImageView mToolbarBack;
     @BindView(R.id.item_face_iv)
     CircleImageView mItemFaceIv;
     @BindView(R.id.item_name_tv)
@@ -151,8 +151,7 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
         mTitle = getIntent().getStringExtra("title");
         mTheme_id = getIntent().getStringExtra("theme_id");
         mCircle_id = getIntent().getStringExtra("circle_id");
-        mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
-        mToolbar.setNavigationOnClickListener(v -> finish());
+        mToolbarBack.setOnClickListener(v -> finish());
         mToolbarTitle.setText(mTitle);
         KeyboardUtils.registerSoftInputChangedListener(this, height -> {
             if (height <= 0) {

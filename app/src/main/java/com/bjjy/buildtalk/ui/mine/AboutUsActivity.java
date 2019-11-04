@@ -5,6 +5,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -22,8 +23,8 @@ public class AboutUsActivity extends BaseActivity<AboutUsPresenter> implements A
     TextView mToolbarTitle;
     @BindView(R.id.toolbar_right_title)
     TextView mToolbarRightTitle;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    @BindView(R.id.toolbar_left_back)
+    ImageView mToolbarBack;
     @BindView(R.id.include_toolbar)
     RelativeLayout mIncludeToolbar;
     @BindView(R.id.webview)
@@ -38,8 +39,7 @@ public class AboutUsActivity extends BaseActivity<AboutUsPresenter> implements A
 
     @Override
     protected void initView() {
-        mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
-        mToolbar.setNavigationOnClickListener(v -> finish());
+        mToolbarBack.setOnClickListener(v -> finish());
         mTitle = getIntent().getStringExtra("title");
         mUrl = getIntent().getStringExtra("url");
         if (TextUtils.isEmpty(mTitle)){

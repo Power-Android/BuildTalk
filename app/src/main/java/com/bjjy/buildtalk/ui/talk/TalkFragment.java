@@ -54,8 +54,8 @@ public class TalkFragment extends BaseFragment<TalkPresnter> implements TalkCont
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    @BindView(R.id.toolbar_left_back)
+    ImageView mToolbarBack;
     @BindView(R.id.talk_recyclerView)
     RecyclerView mTalkRecyclerView;
     @BindView(R.id.refresh_Layout)
@@ -89,6 +89,7 @@ public class TalkFragment extends BaseFragment<TalkPresnter> implements TalkCont
     @Override
     protected void initView() {
         EventBus.getDefault().register(this);
+        mToolbarBack.setVisibility(View.GONE);
         mToolbarTitle.setText(R.string.talk);
         mRefreshLayout.setOnRefreshListener(this);
         mTalkRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));

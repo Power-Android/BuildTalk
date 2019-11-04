@@ -50,8 +50,8 @@ public class PublishActivity extends BaseActivity<PublishPresenter> implements P
     TextView mToolbarTitle;
     @BindView(R.id.toolbar_right_title)
     TextView mToolbarRightTitle;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    @BindView(R.id.toolbar_left_back)
+    ImageView mToolbarBack;
     @BindView(R.id.publish_tv)
     EditText mPublishTv;
     @BindView(R.id.grid_view)
@@ -86,8 +86,7 @@ public class PublishActivity extends BaseActivity<PublishPresenter> implements P
                 list = mData.getTheme_image();
             }
         }
-        mToolbar.setNavigationIcon(R.drawable.arrow_left_black_icon);
-        mToolbar.setNavigationOnClickListener(v -> {
+        mToolbarBack.setOnClickListener(v -> {
             KeyboardUtils.hideSoftInput(this);
             finish();
         });
