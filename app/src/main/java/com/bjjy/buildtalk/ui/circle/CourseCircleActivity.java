@@ -194,6 +194,14 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     RelativeLayout mCourseCollapseRl;
     @BindView(R.id.mc_qz_expand_tv)
     TextView mMcQzExpandTv;
+    @BindView(R.id.view3)
+    TextView formalMlTv;
+    @BindView(R.id.formal_border)
+    View mformalBorder;
+    @BindView(R.id.view2)
+    TextView preMlTv;
+    @BindView(R.id.pre_border)
+    View mPreBorder;
 
     private MyBadgeViewPagerAdapter mPagerAdapter;
     private List<View> mViews = new ArrayList<>();
@@ -231,6 +239,8 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     private int mCountChoiceness_themeInfo;
     private RecyclerView mJhRecyclerView;
     private NestedScrollView mJhEmptyView;
+    private View mFootView2;
+    private View mFootView3;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void event(PayEvent eventBean) {
@@ -291,8 +301,8 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
         //预览
         mPreMlRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mDirectoryAdapter2 = new DirectoryAdapter(R.layout.adapter_directory_layout, mList2, mIsJoin);
-        View footView2 = LayoutInflater.from(this).inflate(R.layout.course_circle_list, null);
-        footView2.setOnClickListener(v -> {
+        mFootView2 = LayoutInflater.from(this).inflate(R.layout.course_circle_list, null);
+        mFootView2.setOnClickListener(v -> {
             mParams.setScrollFlags(0);//不能伸缩
             mMinRl.setLayoutParams(mParams);
             mMcRl.setVisibility(View.VISIBLE);
@@ -301,7 +311,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
             mCourseCollapseRl.setVisibility(View.VISIBLE);
             isMlExpand = true;
         });
-        mDirectoryAdapter2.setFooterView(footView2);
+        mDirectoryAdapter2.setFooterView(mFootView2);
         mPreMlRecyclerView.setAdapter(mDirectoryAdapter2);
         mDirectoryAdapter2.setOnItemClickListener((adapter, view, position) -> {
             List<CourseListEntity.CourselistBean> mList = adapter.getData();
@@ -323,8 +333,8 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
         //正式
         mFormalMlRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mDirectoryAdapter3 = new DirectoryAdapter(R.layout.adapter_directory_layout, mList3, mIsJoin);
-        View footView3 = LayoutInflater.from(this).inflate(R.layout.course_circle_list, null);
-        footView3.setOnClickListener(v -> {
+        mFootView3 = LayoutInflater.from(this).inflate(R.layout.course_circle_list, null);
+        mFootView3.setOnClickListener(v -> {
             mParams.setScrollFlags(0);//不能伸缩
             mMinRl.setLayoutParams(mParams);
             mScrollView.setVisibility(View.INVISIBLE);
@@ -335,7 +345,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
             mPublisRl.setVisibility(View.GONE);
             mCourseCollapseRl.setVisibility(View.VISIBLE);
         });
-        mDirectoryAdapter3.setFooterView(footView3);
+        mDirectoryAdapter3.setFooterView(mFootView3);
         mFormalMlRecyclerView.setAdapter(mDirectoryAdapter3);
         mDirectoryAdapter3.setOnItemClickListener((adapter, view, position) -> {
             List<CourseListEntity.CourselistBean> mList = adapter.getData();
@@ -556,29 +566,51 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
 
     @Override
     public void handlerCourseList(CourseListEntity courseListEntity) {
-        mCourse_page_count = courseListEntity.getPage_count();
-        int countUpdateCourse = courseListEntity.getCountUpdateCourse();
-        int countCourse = courseListEntity.getCountCourse();
-        String s = "更新至" + countUpdateCourse + "讲 • 全" + countCourse + "讲";
-        SpannableString spannableString = new SpannableString(s);
-        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#FF32A7FF")),0,4+String.valueOf(countUpdateCourse).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mMlNumTv.setText(spannableString);
-        mMcMlNumTv.setText(spannableString);
-        mFormalMlNumTv.setText(spannableString);
-
-        if (coursePage == 1 && courseListEntity.getCourselist().size() > 0){
-            List<CourseListEntity.CourselistBean> courselist;
-            if (courseListEntity.getCourselist().size() >= 3){
-                courselist = courseListEntity.getCourselist().subList(0,3);
-            }else if (courseListEntity.getCourselist().size() == 2){
-                courselist = courseListEntity.getCourselist().subList(0,2);
+        if (courseListEntity.getCourselist().size() > 0 ){
+            if (TextUtils.equals("1", mIsJoin)){
+                formalMlTv.setVisibility(View.VISIBLE);
+                mFormalMlNumTv.setVisibility(View.VISIBLE);
+                mformalBorder.setVisibility(View.VISIBLE);
+                mFormalMlRecyclerView.setVisibility(View.VISIBLE);
             }else {
-                courselist = courseListEntity.getCourselist().subList(0,1);
+                preMlTv.setVisibility(View.VISIBLE);
+                mMlNumTv.setVisibility(View.VISIBLE);
+                mPreBorder.setVisibility(View.VISIBLE);
+                mPreMlRecyclerView.setVisibility(View.VISIBLE);
             }
-            mDirectoryAdapter2.addData(courselist);
-            mDirectoryAdapter3.addData(courselist);
+            mCourse_page_count = courseListEntity.getPage_count();
+            int countUpdateCourse = courseListEntity.getCountUpdateCourse();
+            int countCourse = courseListEntity.getCountCourse();
+            String s = "更新至" + countUpdateCourse + "讲 • 全" + countCourse + "讲";
+            SpannableString spannableString = new SpannableString(s);
+            spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#FF32A7FF")),0,4+String.valueOf(countUpdateCourse).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            mMlNumTv.setText(spannableString);
+            mMcMlNumTv.setText(spannableString);
+            mFormalMlNumTv.setText(spannableString);
+
+            if (coursePage == 1 && courseListEntity.getCourselist().size() > 0){
+                List<CourseListEntity.CourselistBean> courselist;
+                if (courseListEntity.getCourselist().size() >= 3){
+                    courselist = courseListEntity.getCourselist().subList(0,3);
+                }else if (courseListEntity.getCourselist().size() == 2){
+                    courselist = courseListEntity.getCourselist().subList(0,2);
+                }else {
+                    courselist = courseListEntity.getCourselist().subList(0,1);
+                }
+                mDirectoryAdapter2.addData(courselist);
+                mDirectoryAdapter3.addData(courselist);
+            }
+            mDirectoryAdapter.addData(courseListEntity.getCourselist());
+        }else {
+            formalMlTv.setVisibility(View.GONE);
+            mFormalMlNumTv.setVisibility(View.GONE);
+            mformalBorder.setVisibility(View.GONE);
+            mFormalMlRecyclerView.setVisibility(View.GONE);
+            preMlTv.setVisibility(View.GONE);
+            mMlNumTv.setVisibility(View.GONE);
+            mPreBorder.setVisibility(View.GONE);
+            mPreMlRecyclerView.setVisibility(View.GONE);
         }
-        mDirectoryAdapter.addData(courseListEntity.getCourselist());
     }
 
     @Override

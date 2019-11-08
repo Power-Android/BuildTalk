@@ -44,8 +44,8 @@
             android:layout_marginTop="@dimen/dp_10"/>
         <ImageView
             android:id="@+id/pre_tag_iv"
-            android:layout_width="@dimen/dp_9"
-            android:layout_height="@dimen/dp_9"
+            android:layout_width="@dimen/dp_11"
+            android:layout_height="@dimen/dp_11"
             android:visibility="invisible"
             android:src="@drawable/tag_icon"
             android:layout_marginTop="@dimen/dp_13"
@@ -130,6 +130,7 @@
             android:id="@+id/view2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:text="目录"
             android:layout_below="@+id/recommend_tv"
             android:textColor="@color/text_drak"
@@ -141,6 +142,7 @@
             android:id="@+id/ml_num_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:textSize="@dimen/sp_10"
             android:textColor="@color/text_light"
             android:layout_alignTop="@+id/view2"
@@ -150,6 +152,7 @@
             android:id="@+id/pre_border"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_1"
+            android:visibility="gone"
             android:background="@color/border2"
             android:layout_below="@+id/view2"
             android:layout_marginTop="@dimen/dp_10"/>
@@ -157,6 +160,7 @@
             android:id="@+id/pre_ml_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:overScrollMode="never"
             android:layout_below="@+id/pre_border" />
     </RelativeLayout>
@@ -193,8 +197,8 @@
                 android:layout_marginTop="@dimen/dp_5"/>
             <ImageView
                 android:id="@+id/tag_iv"
-                android:layout_width="@dimen/dp_9"
-                android:layout_height="@dimen/dp_9"
+                android:layout_width="@dimen/dp_11"
+                android:layout_height="@dimen/dp_11"
                 android:src="@drawable/tag_icon"
                 android:layout_toRightOf="@+id/formal_name_tv"
                 android:layout_below="@id/formal_title_tv"
@@ -214,6 +218,7 @@
                 android:id="@+id/view3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:text="目录"
                 android:layout_below="@+id/formal_name_tv"
                 android:textColor="@color/text_drak"
@@ -226,6 +231,7 @@
                 android:id="@+id/formal_ml_num_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:text="更新至0讲/ 全0讲"
                 android:textSize="@dimen/sp_10"
                 android:textColor="@color/text_light"
@@ -236,6 +242,7 @@
                 android:id="@+id/formal_border"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_1"
+                android:visibility="gone"
                 android:background="@color/border2"
                 android:layout_below="@+id/view3"
                 android:layout_marginTop="@dimen/dp_10"/>
@@ -243,6 +250,7 @@
                 android:id="@+id/formal_ml_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:overScrollMode="never"
                 android:layout_below="@+id/formal_border" />
         </RelativeLayout>

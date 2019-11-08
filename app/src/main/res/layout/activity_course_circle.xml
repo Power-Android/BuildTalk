@@ -323,8 +323,8 @@
                 android:layout_marginTop="@dimen/dp_5"/>
             <ImageView
                 android:id="@+id/mc_tag_iv"
-                android:layout_width="@dimen/dp_9"
-                android:layout_height="@dimen/dp_9"
+                android:layout_width="@dimen/dp_11"
+                android:layout_height="@dimen/dp_11"
                 android:src="@drawable/tag_icon"
                 android:layout_toRightOf="@+id/mc_formal_name_tv"
                 android:layout_below="@id/mc_formal_title_tv"

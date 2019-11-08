@@ -177,9 +177,7 @@ public class CourseCirclePresenter extends BasePresenter<CourseCircleContract.Vi
                 .subscribeWith(new BaseObserver<CourseListEntity>(mView, false) {
                     @Override
                     public void onSuccess(CourseListEntity courseListEntity) {
-                        if (courseListEntity.getCourselist().size() > 0) {
                             mView.handlerCourseList(courseListEntity);
-                        }
                     }
                 }));
     }
