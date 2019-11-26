@@ -1,23 +1,15 @@
 package com.bjjy.buildtalk.adapter;
 
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
-import com.bjjy.buildtalk.entity.MasterListEntity;
 import com.bjjy.buildtalk.entity.SearchResultEntity;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.zhy.view.flowlayout.FlowLayout;
-import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

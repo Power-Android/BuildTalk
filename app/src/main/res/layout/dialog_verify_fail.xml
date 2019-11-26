@@ -35,12 +35,13 @@
             android:layout_below="@+id/view1"
             android:layout_centerHorizontal="true"/>
         <TextView
-            android:id="@+id/view3"
+            android:id="@+id/content_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="很抱歉，您提交的证件照片信息未通过您提交的证件照片信息未通过"
-            android:layout_marginLeft="@dimen/dp_20"
-            android:layout_marginRight="@dimen/dp_20"
+            android:text="很抱歉，您的证件照片信息未通过 （今日还剩2次认证机会）"
+            android:lineSpacingExtra="@dimen/dp_5"
+            android:layout_marginLeft="@dimen/dp_44"
+            android:layout_marginRight="@dimen/dp_44"
             android:gravity="center"
             android:textColor="@color/text_mid"
             android:layout_centerHorizontal="true"

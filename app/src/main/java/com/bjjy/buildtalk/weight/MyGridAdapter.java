@@ -6,16 +6,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.App;
 import com.bjjy.buildtalk.entity.ThemeImageBean;
-import com.bjjy.buildtalk.entity.ThemeInfoEntity;
-import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.SizeUtils;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 

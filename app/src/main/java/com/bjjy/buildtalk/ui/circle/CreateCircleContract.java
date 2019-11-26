@@ -3,7 +3,6 @@ package com.bjjy.buildtalk.ui.circle;
 import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.base.view.IView;
 import com.bjjy.buildtalk.entity.CircleTagEntity;
-import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.SearchCircleInfoEntity;
 
 import java.util.List;

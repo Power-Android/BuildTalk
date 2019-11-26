@@ -3,11 +3,10 @@ package com.bjjy.buildtalk.ui.mine;
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.App;
 import com.bjjy.buildtalk.app.Constants;
+import com.bjjy.buildtalk.app.User;
 import com.bjjy.buildtalk.base.presenter.BasePresenter;
 import com.bjjy.buildtalk.core.rx.BaseObserver;
 import com.bjjy.buildtalk.core.rx.RxUtils;
-import com.bjjy.buildtalk.entity.CircleListEntity;
-import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.utils.HeaderUtils;
 import com.bjjy.buildtalk.utils.TimeUtils;
 
@@ -42,10 +41,9 @@ public class MinePresenter extends BasePresenter<MineContract.View> implements M
         addSubscribe(mDataManager.userInfo(headers,paramas)
                 .compose(RxUtils.SchedulerTransformer())
                 .filter(response -> mView != null)
-                .subscribeWith(new BaseObserver<IEntity>(mView,false){
+                .subscribeWith(new BaseObserver<User>(mView,false){
                     @Override
-                    public void onSuccess(IEntity iEntity) {
-
+                    public void onSuccess(User user) {
                     }
                 }));
     }

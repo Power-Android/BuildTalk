@@ -5,7 +5,6 @@ import com.bjjy.buildtalk.core.rx.BaseObserver;
 import com.bjjy.buildtalk.core.rx.RxUtils;
 import com.bjjy.buildtalk.entity.VersionRecordEntity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;

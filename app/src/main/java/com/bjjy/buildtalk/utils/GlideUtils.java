@@ -3,22 +3,14 @@ package com.bjjy.buildtalk.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
-import android.os.Handler;
-import android.os.Message;
-import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
 import com.bjjy.buildtalk.R;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.request.RequestOptions;
 import com.youth.banner.loader.ImageLoader;
 
-import java.security.MessageDigest;
 import java.util.HashMap;
-
-import static com.bumptech.glide.load.resource.bitmap.VideoDecoder.FRAME_OPTION;
 
 /**
  * @author power

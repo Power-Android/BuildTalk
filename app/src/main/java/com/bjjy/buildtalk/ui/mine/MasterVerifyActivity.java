@@ -1,21 +1,23 @@
 package com.bjjy.buildtalk.ui.mine;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
+import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
+import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
-import com.bjjy.buildtalk.weight.BaseDialog;
+import com.bjjy.buildtalk.core.event.RefreshEvent;
+import com.bjjy.buildtalk.entity.CardInfoEntity;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -23,8 +25,6 @@ public class MasterVerifyActivity extends BaseActivity<MasterVerifyPresenter> im
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
-    @BindView(R.id.toolbar_right_title)
-    TextView mToolbarRightTitle;
     @BindView(R.id.toolbar_left_back)
     ImageView mToolbarBack;
     @BindView(R.id.face_iv)
@@ -55,8 +55,15 @@ public class MasterVerifyActivity extends BaseActivity<MasterVerifyPresenter> im
     TextView mJieshaoTv;
     @BindView(R.id.jieshao_rl)
     RelativeLayout mJieshaoRl;
+
     private Intent mIntent;
-    private BaseDialog mVerifyDialog;
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void event(RefreshEvent eventBean) {
+        if (TextUtils.equals(eventBean.getMsg(), Constants.INFO_REFRESH)) {
+            initEventAndData();
+        }
+    }
 
     @Override
     protected int getLayoutId() {
@@ -67,43 +74,37 @@ public class MasterVerifyActivity extends BaseActivity<MasterVerifyPresenter> im
     protected void initView() {
         mToolbarBack.setOnClickListener(v -> finish());
         mToolbarTitle.setText("大咖认证");
-        mToolbarRightTitle.setText("完成");
+        EventBus.getDefault().register(this);
     }
 
     @Override
     protected void initEventAndData() {
-        showVerifyDialog();
+        mPresenter.cardInfo();
     }
 
-    private void showVerifyDialog() {
-        mVerifyDialog = new BaseDialog.Builder(this)
-                .setViewId(R.layout.dialog_verify_fail)
-                .setGravity(Gravity.CENTER)
-                .setAnimation(R.style.nomal_aniamtion)
-                .setWidthHeightpx((int)getResources().getDimension(R.dimen.dp_300), (int)getResources().getDimension(R.dimen.dp_345))
-                .isOnTouchCanceled(true)
-                .addViewOnClickListener(R.id.close_iv, v -> mVerifyDialog.dismiss())
-                .builder();
-        mVerifyDialog.show();
+    @Override
+    public void handlerCardInfo(CardInfoEntity cardInfoEntity) {
+        mNameTv.setText(cardInfoEntity.getAuthor_name());
+        mCardTv.setText(cardInfoEntity.getCardNumber());
+        mDateTv.setText(cardInfoEntity.getCardValidDate());
+        if (!TextUtils.isEmpty(cardInfoEntity.getAuthor_desc())){
+            mZhichengTv.setTextColor(getResources().getColor(R.color.text_mid));
+            mZhichengTv.setText(cardInfoEntity.getAuthor_desc());
+        }
+        if (!TextUtils.isEmpty(cardInfoEntity.getAuthor_intro())){
+            mJieshaoTv.setTextColor(getResources().getColor(R.color.text_mid));
+            mJieshaoTv.setText(cardInfoEntity.getAuthor_intro());
+        }
     }
 
     @OnClick({R.id.toolbar_right_title, R.id.face_rl, R.id.card_pic_rl, R.id.name_rl, R.id.card_num_rl, R.id.card_date_rl, R.id.zhicheng_rl, R.id.jieshao_rl})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.toolbar_right_title:
-                finish();
-                break;
             case R.id.face_rl:
-                startActivity(new Intent(this, SetPictureActivity.class));
+//                startActivity(new Intent(this, SetPictureActivity.class));
                 break;
             case R.id.card_pic_rl:
-                startActivity(new Intent(this, IDCardActivity.class));
-                break;
-            case R.id.name_rl:
-                break;
-            case R.id.card_num_rl:
-                break;
-            case R.id.card_date_rl:
+//                startActivity(new Intent(this, IDCardActivity.class));
                 break;
             case R.id.zhicheng_rl:
                 mIntent = new Intent(this, EditNameActivity.class);
@@ -116,5 +117,11 @@ public class MasterVerifyActivity extends BaseActivity<MasterVerifyPresenter> im
                 startActivity(mIntent);
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

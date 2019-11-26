@@ -1,7 +1,5 @@
 package com.bjjy.buildtalk.ui.discover;
 
-import com.bjjy.buildtalk.R;
-import com.bjjy.buildtalk.app.App;
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.presenter.BasePresenter;
 import com.bjjy.buildtalk.core.rx.BaseObserver;

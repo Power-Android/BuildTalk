@@ -29,6 +29,17 @@
             android:textColor="@color/text_drak"
             android:textSize="@dimen/sp_17"
             android:textStyle="bold" />
+        <TextView
+            android:id="@+id/project_all_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/icon1"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/common_margin"
+            android:includeFontPadding="false"
+            android:text="@string/look_at_all"
+            android:textColor="@color/text_mid"
+            android:textSize="@dimen/sp_11" />
 
     </RelativeLayout>
 

@@ -46,6 +46,7 @@ ext {
             "loadingView"                           : "com.wang.avi:library:2.1.3",
             "subsampling-scale-image-view"          : "com.davemorrissey.labs:subsampling-scale-image-view:3.10.0",
             "gesture-views"                         : "com.alexvasilkov:gesture-views:2.5.2",
+            "PDF-viewer"                            : "com.github.barteksc:android-pdf-viewer:3.0.0-beta.5",
 
             //net
             "gson"                                  : "com.google.code.gson:gson:2.8.2",

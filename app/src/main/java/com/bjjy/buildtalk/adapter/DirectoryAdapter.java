@@ -1,6 +1,5 @@
 package com.bjjy.buildtalk.adapter;
 
-import android.graphics.Typeface;
 import android.support.annotation.Nullable;
 import android.widget.TextView;
 

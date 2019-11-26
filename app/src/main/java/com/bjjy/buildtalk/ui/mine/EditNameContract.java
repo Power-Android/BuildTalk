@@ -13,7 +13,7 @@ public class EditNameContract {
 
     interface View extends IView{
 
-        void handlerUpData(String nickName);
+        void handlerUpData();
     }
 
     interface Presenter extends IPresenter<View>{

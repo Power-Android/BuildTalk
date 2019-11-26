@@ -1,13 +1,10 @@
 package com.bjjy.buildtalk.ui.discover;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class DissertationActivity extends BaseActivity<DissertationPresenter> implements DissertationContract.View, BaseQuickAdapter.OnItemClickListener, View.OnClickListener {
 

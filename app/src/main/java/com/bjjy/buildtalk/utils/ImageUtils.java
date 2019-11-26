@@ -48,7 +48,6 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.App;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.gif.GifDrawable;

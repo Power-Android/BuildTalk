@@ -1,56 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/dp_300"
-    android:layout_height="@dimen/dp_345">
+    android:layout_height="@dimen/dp_472">
+
     <ImageView
         android:id="@+id/close_iv"
         android:layout_width="@dimen/dp_20"
         android:layout_height="@dimen/dp_20"
-        android:src="@drawable/close_blue1_icon"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true"
+        android:src="@drawable/close_blue1_icon" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/close_iv"
-        android:layout_marginRight="@dimen/dp_10"
-        android:layout_marginTop="@dimen/dp_10">
-        <RelativeLayout
-            android:id="@+id/view1"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_144"
-            android:background="@drawable/shape_blue_top_20radius">
-            <ImageView
-                android:layout_width="@dimen/dp_103"
-                android:layout_height="@dimen/dp_106"
-                android:src="@drawable/verify_diss_icon"
-                android:layout_centerInParent="true"/>
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/view1"
-            android:background="@drawable/shape_white_bottom_20radius">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:text="您上传的身份证件不再有限期范围内，请重新认证。"
-                android:textColor="@color/text_drak"
-                android:textSize="@dimen/sp_14"
-                android:layout_margin="@dimen/dp_24"/>
-            <TextView
-                android:id="@+id/angin_tv"
-                android:layout_width="@dimen/dp_250"
-                android:layout_height="@dimen/dp_44"
-                android:text="重新认证"
-                android:textColor="@color/oranger2"
-                android:textStyle="bold"
-                android:textSize="@dimen/sp_16"
-                android:gravity="center"
-                android:background="@drawable/shape_orange_22radius"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="@dimen/dp_25"/>
-        </RelativeLayout>
+        android:background="@drawable/shape_white_25radius"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_10">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="大咖用户协议"
+            android:textSize="@dimen/sp_18"
+            android:textColor="@color/text_drak"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/common_margin"/>
+        <TextView
+            android:id="@+id/angin_tv"
+            android:layout_width="@dimen/dp_250"
+            android:layout_height="@dimen/dp_44"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/dp_25"
+            android:background="@drawable/shape_blue_25button"
+            android:gravity="center"
+            android:text="同意并继续"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16" />
     </RelativeLayout>
 </RelativeLayout>

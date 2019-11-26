@@ -1,7 +1,5 @@
 package com.bjjy.buildtalk.di.module.activity;
 
-import javax.inject.Inject;
-
 import dagger.Module;
 
 /**

@@ -57,8 +57,56 @@ public class EditNamePresenter extends BasePresenter<EditNameContract.View> {
                             User user = mDataManager.getUser();
                             user.setNickName(nickName);
                             mDataManager.addUser(user);
-                            mView.handlerUpData(nickName);
+                            mView.handlerUpData();
                         }
+                    }
+                }));
+    }
+
+    public void editZhicheng(String trim) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put("type", "2");
+        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        paramas.put("author_desc", trim);
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.updateCardInfo(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(stringBaseResponse -> mView != null)
+                .subscribeWith(new BaseObserver<IEntity>(mView, false) {
+                    @Override
+                    public void onSuccess(IEntity iEntity) {
+                        mView.handlerUpData();
+                    }
+                }));
+    }
+
+    public void editJieshao(String trim) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put("type", "3");
+        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        paramas.put("author_intro", trim);
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.updateCardInfo(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(stringBaseResponse -> mView != null)
+                .subscribeWith(new BaseObserver<IEntity>(mView, false) {
+                    @Override
+                    public void onSuccess(IEntity iEntity) {
+                        mView.handlerUpData();
                     }
                 }));
     }

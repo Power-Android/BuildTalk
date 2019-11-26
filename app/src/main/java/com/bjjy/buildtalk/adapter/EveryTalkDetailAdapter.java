@@ -4,7 +4,6 @@ import android.support.annotation.Nullable;
 import android.widget.ImageView;
 
 import com.bjjy.buildtalk.R;
-import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.GuestBookEntity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;

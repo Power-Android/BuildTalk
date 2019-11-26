@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ui.circle.ComplaintReasonActivity">
+    <include
+        android:id="@+id/include_toolbar"
+        layout="@layout/toolbar_layout"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/include_toolbar"
+        android:padding="@dimen/dp_7_5"/>
+    <EditText
+        android:id="@+id/content_et"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_150"
+        android:layout_below="@+id/recycler_view"
+        android:background="@drawable/shape_reason_def"
+        android:hint="不超过100字"
+        android:textColorHint="@color/text_light"
+        android:textSize="@dimen/sp_14"
+        android:maxLength="100"
+        android:gravity="start"
+        android:padding="@dimen/common_margin"
+        android:layout_marginLeft="@dimen/common_margin"
+        android:layout_marginRight="@dimen/common_margin"
+        android:layout_marginTop="@dimen/dp_7_5"/>
+</RelativeLayout>

@@ -1,38 +1,22 @@
 package com.bjjy.buildtalk.base.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import com.bjjy.buildtalk.R;
-import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.base.view.IView;
-import com.bjjy.buildtalk.core.event.RefreshEvent;
-import com.bjjy.buildtalk.utils.AnimatorUtils;
-import com.bjjy.buildtalk.utils.LogUtils;
-import com.bjjy.buildtalk.utils.StatusBarUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bjjy.buildtalk.weight.BaseDialog;
-
-import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
-
-import static com.bjjy.buildtalk.app.Constants.EMPTY_STATE;
-import static com.bjjy.buildtalk.app.Constants.ERROR_STATE;
-import static com.bjjy.buildtalk.app.Constants.LOADING_STATE;
-import static com.bjjy.buildtalk.app.Constants.NONET_STATE;
-import static com.bjjy.buildtalk.app.Constants.NORMAL_STATE;
 
 /**
  * @author power

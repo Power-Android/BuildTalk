@@ -4,8 +4,6 @@ import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.base.view.IView;
 import com.bjjy.buildtalk.entity.CircleEntity;
 
-import java.util.List;
-
 /**
  * @author power
  * @date 2019/4/26 4:57 PM

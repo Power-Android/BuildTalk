@@ -1,10 +1,9 @@
 package com.bjjy.buildtalk.ui.main;
 
+import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
@@ -13,7 +12,6 @@ import com.bjjy.buildtalk.adapter.ImagePagerAdapter;
 import com.bjjy.buildtalk.utils.AllUtils;
 import com.bjjy.buildtalk.weight.PictureSpinView;
 import com.bumptech.glide.Glide;
-import com.gyf.immersionbar.ImmersionBar;
 
 import java.util.ArrayList;
 

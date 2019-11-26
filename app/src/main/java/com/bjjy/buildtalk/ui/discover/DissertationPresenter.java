@@ -9,8 +9,6 @@ import com.bjjy.buildtalk.base.presenter.BasePresenter;
 import com.bjjy.buildtalk.core.rx.BaseObserver;
 import com.bjjy.buildtalk.core.rx.RxUtils;
 import com.bjjy.buildtalk.entity.DissertationDetailEntity;
-import com.bjjy.buildtalk.entity.EveryTalkEntity;
-import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.utils.HeaderUtils;
 import com.bjjy.buildtalk.utils.TimeUtils;
 

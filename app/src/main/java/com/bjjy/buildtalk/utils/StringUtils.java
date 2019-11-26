@@ -2,9 +2,8 @@ package com.bjjy.buildtalk.utils;
 
 import com.bjjy.buildtalk.entity.CircleTagEntity;
 import com.bjjy.buildtalk.entity.PariseNickNameBean;
+import com.bjjy.buildtalk.entity.PdfInfoEntity;
 import com.bjjy.buildtalk.entity.ThemeImageBean;
-import com.bjjy.buildtalk.entity.ThemeInfoEntity;
-import com.bjjy.buildtalk.entity.VersionRecordEntity;
 
 import java.util.List;
 
@@ -15,6 +14,14 @@ import java.util.List;
  * @description:
  */
 public class StringUtils {
+
+    public static String listToString(List<String> list) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < list.size(); i++) {
+            sb.append(list.get(i)).append(",");
+        }
+        return list.isEmpty() ? "" : sb.toString().substring(0, sb.toString().length() - 1);
+    }
 
     public static String listToString(List<CircleTagEntity> list, char separator) {
         StringBuilder sb = new StringBuilder();
@@ -44,6 +51,14 @@ public class StringUtils {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < list.size(); i++) {
             sb.append(list.get(i)).append("\n");
+        }
+        return list.isEmpty() ? "" : sb.toString().substring(0, sb.toString().length() - 1);
+    }
+
+    public static String listToString4(List<PdfInfoEntity> list, char separator) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < list.size(); i++) {
+            sb.append(list.get(i).getUrl()).append(separator);
         }
         return list.isEmpty() ? "" : sb.toString().substring(0, sb.toString().length() - 1);
     }

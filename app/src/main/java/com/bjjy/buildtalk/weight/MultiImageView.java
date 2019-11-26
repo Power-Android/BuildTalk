@@ -1,9 +1,6 @@
 package com.bjjy.buildtalk.weight;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -13,12 +10,8 @@ import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 
 import com.bjjy.buildtalk.R;
-import com.bjjy.buildtalk.utils.AllUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
-import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,5 @@
 package com.bjjy.buildtalk.ui.talk;
 
-import android.view.View;
-
 import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.base.view.IView;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;

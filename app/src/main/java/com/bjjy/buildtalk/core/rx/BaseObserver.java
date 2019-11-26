@@ -10,13 +10,9 @@ import com.bjjy.buildtalk.base.view.IView;
 import com.bjjy.buildtalk.core.http.exception.ServerException;
 import com.bjjy.buildtalk.core.http.interceptor.ACache;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
-import com.bjjy.buildtalk.utils.EncryptUtils;
 import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.NetworkUtils;
 import com.google.gson.Gson;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import io.reactivex.observers.ResourceObserver;
 import retrofit2.HttpException;

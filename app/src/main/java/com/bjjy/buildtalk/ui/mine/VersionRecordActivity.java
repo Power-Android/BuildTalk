@@ -1,9 +1,7 @@
 package com.bjjy.buildtalk.ui.mine;
 
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class VersionRecordActivity extends BaseActivity<VersionRecordPresenter> implements VersionRecordContarct.View {
 

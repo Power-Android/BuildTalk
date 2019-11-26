@@ -89,6 +89,7 @@ public class ThemeInfoEntity implements Serializable {
         private int is_choiceness;
         private String is_author;
         private List<ThemeImageBean> theme_image;
+        private List<ThemePdfBean> theme_pdf;
         private List<CommentContentBean> comment_content;
         private List<PariseNickNameBean> parise_nickName;
         private int page;
@@ -263,6 +264,14 @@ public class ThemeInfoEntity implements Serializable {
 
         public void setTheme_image(List<ThemeImageBean> theme_image) {
             this.theme_image = theme_image;
+        }
+
+        public List<ThemePdfBean> getTheme_pdf() {
+            return theme_pdf;
+        }
+
+        public void setTheme_pdf(List<ThemePdfBean> theme_pdf) {
+            this.theme_pdf = theme_pdf;
         }
 
         public List<CommentContentBean> getComment_content() {

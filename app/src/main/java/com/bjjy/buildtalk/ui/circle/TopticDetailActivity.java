@@ -2,14 +2,12 @@ package com.bjjy.buildtalk.ui.circle;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -23,17 +21,18 @@ import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.CommentAdapter;
+import com.bjjy.buildtalk.adapter.PdfVewAdapter;
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.core.event.RefreshEvent;
 import com.bjjy.buildtalk.entity.CommentContentBean;
 import com.bjjy.buildtalk.entity.IEntity;
-import com.bjjy.buildtalk.entity.ImgOptionEntity;
 import com.bjjy.buildtalk.entity.PariseNickNameBean;
+import com.bjjy.buildtalk.entity.PdfInfoEntity;
 import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.ThemeImageBean;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
-import com.bjjy.buildtalk.ui.main.ViewPagerActivity;
+import com.bjjy.buildtalk.entity.ThemePdfBean;
 import com.bjjy.buildtalk.utils.AllUtils;
 import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
@@ -43,8 +42,6 @@ import com.bjjy.buildtalk.utils.StringUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bjjy.buildtalk.weight.BaseDialog;
 import com.bjjy.buildtalk.weight.MultiImageView;
-import com.bjjy.buildtalk.weight.MyGridAdapter;
-import com.bjjy.buildtalk.weight.NoScrollGridView;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -54,14 +51,12 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.io.Serializable;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -87,6 +82,8 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
     ImageView mItemImgIv;
     @BindView(R.id.item_grid_view)
     MultiImageView mItemGridView;
+    @BindView(R.id.pdf_recyclerView)
+    RecyclerView mPdfRecyclerView;
     @BindView(R.id.praise_str_tv)
     TextView mPraiseStrTv;
     @BindView(R.id.praise_rl)
@@ -197,6 +194,12 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
         }
         mItemTimeTv.setText(themeInfoEntity.getPublish_time());
         mItemContentTv.setText(themeInfoEntity.getTheme_content());
+
+        if (themeInfoEntity.getTheme_pdf().size() > 0){
+            mItemGridView.setVisibility(View.GONE);
+            mPdfRecyclerView.setVisibility(View.VISIBLE);
+        }
+
         List<ThemeImageBean> themeImageBeanList = themeInfoEntity.getTheme_image();
         List<String> list = new ArrayList<>();
         for (int i = 0; i < themeImageBeanList.size(); i++) {
@@ -204,6 +207,23 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
         }
         mItemGridView.setList(list);
         mItemGridView.setOnItemClickListener((view, position, imageViews) -> AllUtils.startImagePage(this, list, Arrays.asList(imageViews), position));
+
+        List<ThemePdfBean> theme_pdf = themeInfoEntity.getTheme_pdf();
+        List<PdfInfoEntity> list1 = new ArrayList<>();
+        for (int i = 0; i < theme_pdf.size(); i++) {
+            list1.add(new PdfInfoEntity(theme_pdf.get(i).getPdf_name(),theme_pdf.get(i).getPdf_url()));
+        }
+        mPdfRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        PdfVewAdapter pdfVewAdapter = new PdfVewAdapter(R.layout.adapter_pdf_view, list1);
+        mPdfRecyclerView.setAdapter(pdfVewAdapter);
+        pdfVewAdapter.setOnItemClickListener((adapter, view, position) -> {
+            List<PdfInfoEntity> data =  adapter.getData();
+            Intent intent = new Intent(TopticDetailActivity.this, PDFViewerActivity.class);
+            intent.putExtra("data", data.get(position));
+            intent.putExtra("theme_id", themeInfoEntity.getTheme_id()+"");
+            intent.putExtra("isCollect", 0 == themeInfoEntity.getIs_collect());
+            startActivity(intent);
+        });
 
         List<PariseNickNameBean> praiseList = themeInfoEntity.getParise_nickName();
         if (praiseList.size() > 0) {

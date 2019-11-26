@@ -9,6 +9,7 @@ import com.bjjy.buildtalk.core.preference.PreferenceHelper;
 import com.bjjy.buildtalk.entity.ActivityEntity;
 import com.bjjy.buildtalk.entity.AleadyBuyEntity;
 import com.bjjy.buildtalk.entity.BannerEntity;
+import com.bjjy.buildtalk.entity.CardInfoEntity;
 import com.bjjy.buildtalk.entity.CircleEntity;
 import com.bjjy.buildtalk.entity.CircleInfoEntity;
 import com.bjjy.buildtalk.entity.CircleListEntity;
@@ -21,11 +22,13 @@ import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.CourseListEntity;
 import com.bjjy.buildtalk.entity.DissertationDetailEntity;
 import com.bjjy.buildtalk.entity.DissertationEntity;
+import com.bjjy.buildtalk.entity.DissertationListEntity;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
 import com.bjjy.buildtalk.entity.EveryTalkListEntity;
 import com.bjjy.buildtalk.entity.FansFocusEntity;
 import com.bjjy.buildtalk.entity.GuestBookEntity;
+import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.IndustryMasterEntity;
 import com.bjjy.buildtalk.entity.MasterDetailEntity;
 import com.bjjy.buildtalk.entity.MasterListEntity;
@@ -34,12 +37,12 @@ import com.bjjy.buildtalk.entity.MyCardEntity;
 import com.bjjy.buildtalk.entity.PayOrderEntity;
 import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.SaveRecordEntity;
-import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.SearchCircleInfoEntity;
 import com.bjjy.buildtalk.entity.SearchResultEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.entity.VersionRecordEntity;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -101,6 +104,26 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     @Override
     public void loginOut() {
         mDbHelper.loginOut();
+    }
+
+    @Override
+    public void setVerifyRecordCount(int count) {
+        mDbHelper.setVerifyRecordCount(count);
+    }
+
+    @Override
+    public int getVerifyRecordCount() {
+        return mDbHelper.getVerifyRecordCount();
+    }
+
+    @Override
+    public void setUserType(String user_type) {
+        mDbHelper.setUserType(user_type);
+    }
+
+    @Override
+    public String getUserType() {
+        return mDbHelper.getUserType();
     }
 
     @Override
@@ -377,7 +400,7 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     }
 
     @Override
-    public Observable<BaseResponse<IEntity>> userInfo(Map<String, String> headers, Map<String, String> params) {
+    public Observable<BaseResponse<User>> userInfo(Map<String, String> headers, Map<String, String> params) {
         return mHttpHelper.userInfo(headers, params);
     }
 
@@ -459,5 +482,45 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     @Override
     public Observable<BaseResponse<DissertationDetailEntity>> searchDissertationDetail(Map<String, String> headers, Map<String, String> params) {
         return mHttpHelper.searchDissertationDetail(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> idCardUploadHandle(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.idCardUploadHandle(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<CardInfoEntity>> checkCardInfo(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.checkCardInfo(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<CardInfoEntity>> searchUserAttestationInfo(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.searchUserAttestationInfo(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> updateCardInfo(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.updateCardInfo(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<DissertationListEntity>> searchDissertation1(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.searchDissertation1(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> complain(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.complain(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<String>> pdfUploadHandle(List<MultipartBody.Part> files) {
+        return mHttpHelper.pdfUploadHandle(files);
+    }
+
+    @Override
+    public Observable<BaseResponse<File>> downloadFile(String url) {
+        return mHttpHelper.downloadFile(url);
     }
 }

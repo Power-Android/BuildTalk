@@ -1,8 +1,6 @@
 package com.bjjy.buildtalk.ui.mine;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -11,7 +9,6 @@ import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class BindPhoneActivity extends BaseActivity<BindPhonePresenter> implements BindPhoneContract.View {

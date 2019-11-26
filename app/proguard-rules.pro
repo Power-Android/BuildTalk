@@ -493,3 +493,6 @@
       public static **[] values();
       public static ** valueOf(java.lang.String);
   }
+
+  #PDFViewer
+  -keep class com.shockwave.**

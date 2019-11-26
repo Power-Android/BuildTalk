@@ -13,7 +13,6 @@ import com.bjjy.buildtalk.core.greendao.HistoryData;
 import com.bjjy.buildtalk.core.greendao.HistoryDataDao;
 import com.bjjy.buildtalk.core.greendao.UserDao;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -93,6 +92,26 @@ public class DbHelperImpl implements DbHelper {
     @Override
     public void loginOut() {
         getUserDao().deleteAll();
+    }
+
+    @Override
+    public void setVerifyRecordCount(int count) {
+        getUser().setCountCheckRecord(count);
+    }
+
+    @Override
+    public int getVerifyRecordCount() {
+        return getUser().getCountCheckRecord();
+    }
+
+    @Override
+    public void setUserType(String user_type) {
+
+    }
+
+    @Override
+    public String getUserType() {
+        return null;
     }
 
     @Override

@@ -1,19 +1,15 @@
 package com.bjjy.buildtalk.ui.talk;
 
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import com.bjjy.buildtalk.R;
-import com.bjjy.buildtalk.adapter.MasterArticleAdapter;
 import com.bjjy.buildtalk.app.App;
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.presenter.BasePresenter;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.core.rx.BaseObserver;
 import com.bjjy.buildtalk.core.rx.RxUtils;
-import com.bjjy.buildtalk.entity.CircleMasterEntity;
 import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.MasterDetailEntity;
 import com.bjjy.buildtalk.utils.HeaderUtils;

@@ -3,11 +3,9 @@ package com.bjjy.buildtalk.weight;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.bjjy.buildtalk.R;
-import com.bjjy.buildtalk.utils.SizeUtils;
 
 import java.util.ArrayList;
 import java.util.List;

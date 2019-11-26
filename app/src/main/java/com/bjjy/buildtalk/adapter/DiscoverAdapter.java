@@ -17,7 +17,6 @@ import com.bjjy.buildtalk.ui.discover.DissertationActivity;
 import com.bjjy.buildtalk.ui.discover.EveryTalkDetailActivity;
 import com.bjjy.buildtalk.ui.talk.MasterDetailActivity;
 import com.bjjy.buildtalk.utils.GlideUtils;
-import com.bjjy.buildtalk.utils.ToastUtils;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.youth.banner.Banner;
@@ -152,6 +151,7 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
                     intent.putExtra("id", data.get(position).getDissertation_id()+"");
                     mContext.startActivity(intent);
                 });
+                helper.addOnClickListener(R.id.project_all_tv);
                 break;
         }
     }

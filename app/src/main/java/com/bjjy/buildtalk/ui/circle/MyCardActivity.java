@@ -1,7 +1,5 @@
 package com.bjjy.buildtalk.ui.circle;
 
-import android.content.Intent;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,9 +9,7 @@ import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.entity.MyCardEntity;
 import com.bjjy.buildtalk.utils.DialogUtils;
-import com.bjjy.buildtalk.utils.LogUtils;
 import com.bumptech.glide.Glide;
-import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import butterknife.BindView;

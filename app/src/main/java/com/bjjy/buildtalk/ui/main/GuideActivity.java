@@ -17,7 +17,15 @@ import com.bjjy.buildtalk.utils.StatusBarUtils;
 import com.bjjy.buildtalk.weight.ViewPagerIndicator;
 import com.bumptech.glide.Glide;
 
+import butterknife.BindView;
+
 public class GuideActivity extends BaseActivity<GuidePresenter> implements GuideContract.View {
+
+    @BindView(R.id.view_pager)
+    ViewPager viewPager;
+    @BindView(R.id.liner)
+    LinearLayout linear;
+    private int[] images = {R.drawable.guide01, R.drawable.guide02, R.drawable.guide03};
 
     @Override
     protected int getLayoutId() {
@@ -27,9 +35,6 @@ public class GuideActivity extends BaseActivity<GuidePresenter> implements Guide
     @Override
     protected void initView() {
         StatusBarUtils.changeStatusBar(this, true, true);
-        int[] images = {R.drawable.guide01, R.drawable.guide02, R.drawable.guide03};
-        ViewPager viewPager = findViewById(R.id.view_pager);
-        LinearLayout linear = findViewById(R.id.liner);
         viewPager.setOnPageChangeListener(new ViewPagerIndicator(this, viewPager, linear, images.length));
         viewPager.setAdapter(new PagerAdapter() {
             @Override
@@ -49,22 +54,25 @@ public class GuideActivity extends BaseActivity<GuidePresenter> implements Guide
                 ImageView guideIv = view.findViewById(R.id.guide_iv);
                 RelativeLayout guideInto = view.findViewById(R.id.guide_into);
                 if (position == images.length - 1) {
-                    guideInto.setVisibility(View.VISIBLE);
+                    if (guideInto != null)
+                        guideInto.setVisibility(View.VISIBLE);
                 } else {
-                    guideInto.setVisibility(View.INVISIBLE);
+                    if (guideInto != null)
+                        guideInto.setVisibility(View.INVISIBLE);
                 }
                 Glide.with(App.getContext()).load(images[position]).into(guideIv);
                 container.addView(view);
+                assert guideInto != null;
                 guideInto.setOnClickListener(v -> {
                     mPresenter.mDataManager.setIsGuide(true);
-                    startActivity(new Intent(GuideActivity.this,MainActivity.class));
+                    startActivity(new Intent(GuideActivity.this, MainActivity.class));
                     finish();
                 });
                 return view;
             }
 
             @Override
-            public void destroyItem(ViewGroup container, int position, Object object) {
+            public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
                 container.removeView((View) object);
             }
         });

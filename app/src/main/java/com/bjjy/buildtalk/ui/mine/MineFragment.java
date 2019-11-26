@@ -14,11 +14,9 @@ import com.bjjy.buildtalk.base.fragment.BaseFragment;
 import com.bjjy.buildtalk.core.event.RefreshEvent;
 import com.bjjy.buildtalk.ui.main.LoginActivity;
 import com.bjjy.buildtalk.ui.talk.CircleManDetailActivity;
-import com.bjjy.buildtalk.ui.talk.FansFocusActivity;
 import com.bjjy.buildtalk.ui.talk.MasterDetailActivity;
 import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
-import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -28,7 +26,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -110,7 +107,7 @@ public class MineFragment extends BaseFragment<MinePresenter> implements MineCon
 //        mPresenter.userInfo(user.getUser_id());
     }
 
-    @OnClick({R.id.info_iv, R.id.wallet_rl, R.id.set_rl, R.id.help_rl, R.id.service_rl, R.id.name_tv, R.id.face_iv})
+    @OnClick({R.id.info_iv, R.id.wallet_rl ,R.id.buy_rl, R.id.set_rl, R.id.help_rl, R.id.service_rl, R.id.name_tv, R.id.face_iv})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.info_iv:
@@ -118,6 +115,13 @@ public class MineFragment extends BaseFragment<MinePresenter> implements MineCon
                 break;
             case R.id.wallet_rl:
                 LoginHelper.login(mContext, mPresenter.mDataManager, () -> startActivity(new Intent(mContext, WalletActivity.class)));
+                break;
+            case R.id.buy_rl:
+                LoginHelper.login(mContext, mPresenter.mDataManager, () -> {
+                    Intent intent = new Intent(mContext, TransactionActivity.class);
+                    intent.putExtra("title", "已购");
+                    startActivity(intent);
+                });
                 break;
             case R.id.set_rl:
                 LoginHelper.login(mContext, mPresenter.mDataManager, () -> startActivity(new Intent(mContext, SettingActivity.class)));

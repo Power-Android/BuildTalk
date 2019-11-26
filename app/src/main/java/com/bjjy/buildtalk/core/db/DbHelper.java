@@ -24,6 +24,14 @@ public interface DbHelper {
 
     void loginOut();
 
+    void setVerifyRecordCount(int count);
+
+    int getVerifyRecordCount();
+
+    void setUserType(String user_type);
+
+    String getUserType();
+
     /**
      * Add search history data
      *

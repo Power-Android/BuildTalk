@@ -1,10 +1,7 @@
 package com.bjjy.buildtalk.core.http.interceptor;
 
-import com.bjjy.buildtalk.utils.NetworkUtils;
-
 import java.io.IOException;
 
-import okhttp3.CacheControl;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;

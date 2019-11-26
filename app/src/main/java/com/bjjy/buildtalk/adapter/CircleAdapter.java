@@ -4,7 +4,6 @@ import android.widget.ImageView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.entity.CircleEntity;
-import com.bjjy.buildtalk.utils.LogUtils;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;

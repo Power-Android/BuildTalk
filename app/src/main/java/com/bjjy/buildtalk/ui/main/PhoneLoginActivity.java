@@ -1,6 +1,5 @@
 package com.bjjy.buildtalk.ui.main;
 
-import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -17,12 +16,10 @@ import com.bjjy.buildtalk.core.event.RefreshEvent;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
-import com.bjjy.buildtalk.utils.ToastUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class PhoneLoginActivity extends BaseActivity<PhoneLoginPresenter> implements PhoneLoginContract.View {

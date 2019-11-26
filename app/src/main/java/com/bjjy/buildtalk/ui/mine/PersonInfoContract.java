@@ -1,5 +1,6 @@
 package com.bjjy.buildtalk.ui.mine;
 
+import com.bjjy.buildtalk.app.User;
 import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.base.view.IView;
 
@@ -13,6 +14,7 @@ public class PersonInfoContract {
 
     interface View extends IView{
 
+        void handlerUser(User user);
     }
 
     interface Presenter extends IPresenter<View>{

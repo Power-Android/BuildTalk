@@ -27,14 +27,15 @@ public class User {
     private String bindStatus;
     private String bg_pic;
     private boolean loginStatus;
+    private int countCheckRecord;
 
     public User() {
     }
 
-    @Generated(hash = 1863838147)
+    @Generated(hash = 782017750)
     public User(Long id, String user_id, String headImage, String nickName,
             String mobile, String user_type, String updateStatus, String bindStatus,
-            String bg_pic, boolean loginStatus) {
+            String bg_pic, boolean loginStatus, int countCheckRecord) {
         this.id = id;
         this.user_id = user_id;
         this.headImage = headImage;
@@ -45,6 +46,7 @@ public class User {
         this.bindStatus = bindStatus;
         this.bg_pic = bg_pic;
         this.loginStatus = loginStatus;
+        this.countCheckRecord = countCheckRecord;
     }
 
     public Long getId() {
@@ -129,6 +131,14 @@ public class User {
 
     public boolean getLoginStatus() {
         return this.loginStatus;
+    }
+
+    public int getCountCheckRecord() {
+        return countCheckRecord;
+    }
+
+    public void setCountCheckRecord(int countCheckRecord) {
+        this.countCheckRecord = countCheckRecord;
     }
 
     @Override

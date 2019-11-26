@@ -1,6 +1,5 @@
 package com.bjjy.buildtalk.ui.mine;
 
-import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -22,7 +21,6 @@ import com.bjjy.buildtalk.utils.ToastUtils;
 import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class EditBindPhoneActivity extends BaseActivity<EditBindPhonePresenter> implements EditBindPhoneContract.View {

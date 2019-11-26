@@ -1,14 +1,11 @@
 package com.bjjy.buildtalk.adapter;
 
-import android.support.annotation.Nullable;
 import android.widget.ImageView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.entity.CollectEntity;
-import com.bjjy.buildtalk.entity.TalkEntity;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
 import java.util.List;
@@ -34,7 +31,12 @@ public class MaseterCollectAdapter extends BaseMultiItemQuickAdapter<CollectEnti
     protected void convert(BaseViewHolder helper, CollectEntity.MyCollectInfoBean item) {
         switch (item.getItemType()) {
             case BODY_IMAGE:
-                Glide.with(mContext).load(item.getTheme_image().get(0).getPic_url()).into((ImageView) helper.getView(R.id.item_img_iv));
+                if (item.getTheme_pdf().size() > 0){
+                    Glide.with(mContext).load(R.drawable.pdf_file_icon).into((ImageView) helper.getView(R.id.item_img_iv));
+                    helper.setGone(R.id.item_num_tv, true);
+                }else {
+                    Glide.with(mContext).load(item.getTheme_image().get(0).getPic_url()).into((ImageView) helper.getView(R.id.item_img_iv));
+                }
                 helper.setText(R.id.item_content_tv, item.getTheme_content())
                         .setText(R.id.item_num_tv, "共" + item.getTheme_image().size() + "张")
                         .setText(R.id.item_name_tv, item.getName())

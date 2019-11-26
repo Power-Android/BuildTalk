@@ -5,6 +5,7 @@ import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.entity.ActivityEntity;
 import com.bjjy.buildtalk.entity.AleadyBuyEntity;
 import com.bjjy.buildtalk.entity.BannerEntity;
+import com.bjjy.buildtalk.entity.CardInfoEntity;
 import com.bjjy.buildtalk.entity.CircleEntity;
 import com.bjjy.buildtalk.entity.CircleInfoEntity;
 import com.bjjy.buildtalk.entity.CircleListEntity;
@@ -17,11 +18,13 @@ import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.CourseListEntity;
 import com.bjjy.buildtalk.entity.DissertationDetailEntity;
 import com.bjjy.buildtalk.entity.DissertationEntity;
+import com.bjjy.buildtalk.entity.DissertationListEntity;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
 import com.bjjy.buildtalk.entity.EveryTalkListEntity;
 import com.bjjy.buildtalk.entity.FansFocusEntity;
 import com.bjjy.buildtalk.entity.GuestBookEntity;
+import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.IndustryMasterEntity;
 import com.bjjy.buildtalk.entity.MasterDetailEntity;
 import com.bjjy.buildtalk.entity.MasterListEntity;
@@ -30,12 +33,12 @@ import com.bjjy.buildtalk.entity.MyCardEntity;
 import com.bjjy.buildtalk.entity.PayOrderEntity;
 import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.SaveRecordEntity;
-import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.SearchCircleInfoEntity;
 import com.bjjy.buildtalk.entity.SearchResultEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.entity.VersionRecordEntity;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +46,7 @@ import io.reactivex.Observable;
 import okhttp3.MultipartBody;
 import retrofit2.http.FieldMap;
 import retrofit2.http.HeaderMap;
+import retrofit2.http.Url;
 
 
 /**
@@ -80,6 +84,8 @@ public interface HttpHelper {
     Observable<BaseResponse<CircleEntity>> myCircle(Map<String, String> headers, Map<String, String> params);
 
     Observable<BaseResponse<String>> uploadFiles(MultipartBody.Part file);
+
+    Observable<BaseResponse<String>> pdfUploadHandle(List<MultipartBody.Part> files);
 
     Observable<BaseResponse<List<CircleTagEntity>>> searchCircleTags(Map<String, String> headers, Map<String, String> params);
 
@@ -145,7 +151,7 @@ public interface HttpHelper {
 
     Observable<BaseResponse<IEntity>> attention(Map<String, String> headers, Map<String, String> params);
 
-    Observable<BaseResponse<IEntity>> userInfo(Map<String, String> headers, Map<String, String> params);
+    Observable<BaseResponse<User>> userInfo(Map<String, String> headers, Map<String, String> params);
 
     Observable<BaseResponse<IEntity>> updateUserInfo(Map<String, String> headers, Map<String, String> params);
 
@@ -178,5 +184,19 @@ public interface HttpHelper {
     Observable<BaseResponse<List<DissertationEntity>>> searchDissertation();
 
     Observable<BaseResponse<DissertationDetailEntity>> searchDissertationDetail(Map<String, String> headers, Map<String, String> params);
+
+    Observable<BaseResponse<IEntity>> idCardUploadHandle(Map<String, String> headers, Map<String, String> params);
+
+    Observable<BaseResponse<CardInfoEntity>> checkCardInfo(Map<String, String> headers, Map<String, String> params);
+
+    Observable<BaseResponse<CardInfoEntity>> searchUserAttestationInfo(Map<String, String> headers, Map<String, String> params);
+
+    Observable<BaseResponse<IEntity>> updateCardInfo(Map<String, String> headers, Map<String, String> params);
+
+    Observable<BaseResponse<DissertationListEntity>> searchDissertation1(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    Observable<BaseResponse<IEntity>> complain(Map<String, String> headers, Map<String, String> params);
+
+    Observable<BaseResponse<File>> downloadFile(@Url String url);
 
 }

@@ -7,6 +7,7 @@ import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.entity.ActivityEntity;
 import com.bjjy.buildtalk.entity.AleadyBuyEntity;
 import com.bjjy.buildtalk.entity.BannerEntity;
+import com.bjjy.buildtalk.entity.CardInfoEntity;
 import com.bjjy.buildtalk.entity.CircleEntity;
 import com.bjjy.buildtalk.entity.CircleInfoEntity;
 import com.bjjy.buildtalk.entity.CircleListEntity;
@@ -19,11 +20,13 @@ import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.CourseListEntity;
 import com.bjjy.buildtalk.entity.DissertationDetailEntity;
 import com.bjjy.buildtalk.entity.DissertationEntity;
+import com.bjjy.buildtalk.entity.DissertationListEntity;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
 import com.bjjy.buildtalk.entity.EveryTalkListEntity;
 import com.bjjy.buildtalk.entity.FansFocusEntity;
 import com.bjjy.buildtalk.entity.GuestBookEntity;
+import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.IndustryMasterEntity;
 import com.bjjy.buildtalk.entity.MasterDetailEntity;
 import com.bjjy.buildtalk.entity.MasterListEntity;
@@ -32,12 +35,12 @@ import com.bjjy.buildtalk.entity.MyCardEntity;
 import com.bjjy.buildtalk.entity.PayOrderEntity;
 import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.SaveRecordEntity;
-import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.SearchCircleInfoEntity;
 import com.bjjy.buildtalk.entity.SearchResultEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.entity.VersionRecordEntity;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -51,7 +54,8 @@ import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
-import retrofit2.http.QueryMap;
+import retrofit2.http.Streaming;
+import retrofit2.http.Url;
 
 public interface ApiService {
 
@@ -171,6 +175,24 @@ public interface ApiService {
     @Multipart
     @POST("manyPicUploadHandle")
     Observable<BaseResponse<String>> uploadFiles(@Part List<MultipartBody.Part> files);
+
+    /**
+     * 使用@Multipart注解方法，并用@Part注解方法参数，类型是List<okhttp3.MultipartBody.Part>
+     * @return 上传PDF文件
+     */
+    @Multipart
+    @POST("pdfUploadHandle")
+    Observable<BaseResponse<String>> pdfUploadHandle(@Part List<MultipartBody.Part> files);
+
+    /**
+     * 下载文件
+     * @param url
+     * @return
+     * 10以上用@streaming。不会造成oom，反正你用就是了
+     */
+    @GET
+    @Streaming
+    Observable<BaseResponse<File>> downloadFile(@Url String url);
 
     /**
      * @return 获取可用标签
@@ -435,7 +457,7 @@ public interface ApiService {
     @Headers(Constants.HEADER_PASSID)
     @POST("searchUserInfoByUser_id")
     @FormUrlEncoded
-    Observable<BaseResponse<IEntity>> userInfo(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+    Observable<BaseResponse<User>> userInfo(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
     /**
      * @return 更改名字、头像、背景
@@ -551,18 +573,53 @@ public interface ApiService {
     @FormUrlEncoded
     Observable<BaseResponse<DissertationDetailEntity>> searchDissertationDetail(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
+    /**
+     * @return 获取身份证信息
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("idCardUploadHandle")
+    @FormUrlEncoded
+    Observable<BaseResponse<IEntity>> idCardUploadHandle(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
+    /**
+     * @return 验证身份信息
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("checkCardInfo")
+    @FormUrlEncoded
+    Observable<BaseResponse<CardInfoEntity>> checkCardInfo(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
+    /**
+     * @return 查询用户认证信息(未认证、已认证)
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("searchUserAttestationInfo")
+    @FormUrlEncoded
+    Observable<BaseResponse<CardInfoEntity>> searchUserAttestationInfo(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
+    /**
+     * @return 修改大咖资料
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("updateCardInfo")
+    @FormUrlEncoded
+    Observable<BaseResponse<IEntity>> updateCardInfo(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
+    /**
+     * @return 获取所有专题
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("searchIndexDissertation")
+    @FormUrlEncoded
+    Observable<BaseResponse<DissertationListEntity>> searchDissertation1(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
-
-
-
-
-
-
-
+    /**
+     * @return 投诉理由
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("complain")
+    @FormUrlEncoded
+    Observable<BaseResponse<IEntity>> complain(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
 
 

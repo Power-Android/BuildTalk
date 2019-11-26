@@ -12,11 +12,13 @@ import com.bjjy.buildtalk.di.module.activity.CircleListActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CircleManDetailActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CircleMemberActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CircleSearchActivityModule;
+import com.bjjy.buildtalk.di.module.activity.ComplaintReasonActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CourseCircleActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CourseDetailActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CourseListActivityModule;
 import com.bjjy.buildtalk.di.module.activity.CreateCircleActivityModule;
 import com.bjjy.buildtalk.di.module.activity.DissertationActivityModule;
+import com.bjjy.buildtalk.di.module.activity.DissertationListActivityModule;
 import com.bjjy.buildtalk.di.module.activity.EditBindPhoneActivityModule;
 import com.bjjy.buildtalk.di.module.activity.EditNameActivityModule;
 import com.bjjy.buildtalk.di.module.activity.EverTalkListActivityModule;
@@ -33,6 +35,7 @@ import com.bjjy.buildtalk.di.module.activity.MasterDetailActivityModule;
 import com.bjjy.buildtalk.di.module.activity.MasterListActivityModule;
 import com.bjjy.buildtalk.di.module.activity.MasterVerifyActivityModule;
 import com.bjjy.buildtalk.di.module.activity.MyCardActivityModule;
+import com.bjjy.buildtalk.di.module.activity.PDFViewerActivityModule;
 import com.bjjy.buildtalk.di.module.activity.PersonInfoActivityModule;
 import com.bjjy.buildtalk.di.module.activity.PhoneLoginActivityModule;
 import com.bjjy.buildtalk.di.module.activity.PublishActivityModule;
@@ -53,15 +56,18 @@ import com.bjjy.buildtalk.ui.circle.CircleDataActivity;
 import com.bjjy.buildtalk.ui.circle.CircleInfoActivity;
 import com.bjjy.buildtalk.ui.circle.CircleMemberActivity;
 import com.bjjy.buildtalk.ui.circle.CircleSearchActivity;
+import com.bjjy.buildtalk.ui.circle.ComplaintReasonActivity;
 import com.bjjy.buildtalk.ui.circle.CourseCircleActivity;
 import com.bjjy.buildtalk.ui.circle.CourseDetailActivity;
 import com.bjjy.buildtalk.ui.circle.CreateCircleActivity;
 import com.bjjy.buildtalk.ui.circle.MyCardActivity;
+import com.bjjy.buildtalk.ui.circle.PDFViewerActivity;
 import com.bjjy.buildtalk.ui.circle.PublishActivity;
 import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
 import com.bjjy.buildtalk.ui.circle.TopticDetailActivity;
 import com.bjjy.buildtalk.ui.discover.CourseListActivity;
 import com.bjjy.buildtalk.ui.discover.DissertationActivity;
+import com.bjjy.buildtalk.ui.discover.DissertationListActivity;
 import com.bjjy.buildtalk.ui.discover.EveryTalkDetailActivity;
 import com.bjjy.buildtalk.ui.discover.EveryTalkListActivity;
 import com.bjjy.buildtalk.ui.discover.TopticListActivity;
@@ -234,4 +240,13 @@ public abstract class AbstractAllActivityModule {
 
     @ContributesAndroidInjector(modules = IDCardActivityModule.class)
     abstract IDCardActivity mIDCardActivity();
+
+    @ContributesAndroidInjector(modules = DissertationListActivityModule.class)
+    abstract DissertationListActivity mDissertationListActivity();
+
+    @ContributesAndroidInjector(modules = ComplaintReasonActivityModule.class)
+    abstract ComplaintReasonActivity mComplaintReasonActivity();
+
+    @ContributesAndroidInjector(modules = PDFViewerActivityModule.class)
+    abstract PDFViewerActivity mPDFViewerActivity();
 }

@@ -1,7 +1,6 @@
 package com.bjjy.buildtalk.ui.talk;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,7 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class TalkSearchActivity extends BaseActivity<TalkSearchPresenter> implements TalkSearchContract.View, TextView.OnEditorActionListener, OnRefreshLoadMoreListener, BaseQuickAdapter.OnItemClickListener, View.OnFocusChangeListener {

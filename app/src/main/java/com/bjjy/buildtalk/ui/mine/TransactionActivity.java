@@ -1,9 +1,8 @@
 package com.bjjy.buildtalk.ui.mine;
 
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -22,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class TransactionActivity extends BaseActivity<TransactionPresenter> implements TransactionContract.View, BaseQuickAdapter.OnItemClickListener {
 
@@ -46,6 +44,7 @@ public class TransactionActivity extends BaseActivity<TransactionPresenter> impl
     private TransactionAdapter mTransactionAdapter;
 
     private String type = "0";
+    private String mTitle;
 
     @Override
     protected int getLayoutId() {
@@ -55,7 +54,12 @@ public class TransactionActivity extends BaseActivity<TransactionPresenter> impl
     @Override
     protected void initView() {
         mToolbarBack.setOnClickListener(v -> finish());
-        mToolbarTitle.setText(R.string.transaction_list);
+        mTitle = getIntent().getStringExtra("title");
+        if (TextUtils.isEmpty(mTitle)){
+            mToolbarTitle.setText(R.string.transaction_list);
+        }else {
+            mToolbarTitle.setText(mTitle);
+        }
 
         mTabRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mTabAdapter = new TransactionTabAdapter(R.layout.adapter_transaction_tab, mTabList);
@@ -70,7 +74,7 @@ public class TransactionActivity extends BaseActivity<TransactionPresenter> impl
     @Override
     protected void initEventAndData() {
         mPresenter.setTab();
-        mPresenter.setRecord(type);
+        mPresenter.setRecord(type,mTitle);
     }
 
     @Override
@@ -84,13 +88,13 @@ public class TransactionActivity extends BaseActivity<TransactionPresenter> impl
             mTabAdapter.notifyDataSetChanged();
             switch (position) {
                 case 0:
-                    mPresenter.setRecord("0");
+                    mPresenter.setRecord("0", mTitle);
                     break;
                 case 1:
-                    mPresenter.setRecord("2");
+                    mPresenter.setRecord("2", mTitle);
                     break;
                 case 2:
-                    mPresenter.setRecord("1");
+                    mPresenter.setRecord("1", mTitle);
                     break;
             }
         });

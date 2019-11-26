@@ -8,6 +8,7 @@ import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.entity.ActivityEntity;
 import com.bjjy.buildtalk.entity.AleadyBuyEntity;
 import com.bjjy.buildtalk.entity.BannerEntity;
+import com.bjjy.buildtalk.entity.CardInfoEntity;
 import com.bjjy.buildtalk.entity.CircleEntity;
 import com.bjjy.buildtalk.entity.CircleInfoEntity;
 import com.bjjy.buildtalk.entity.CircleListEntity;
@@ -20,11 +21,13 @@ import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.CourseListEntity;
 import com.bjjy.buildtalk.entity.DissertationDetailEntity;
 import com.bjjy.buildtalk.entity.DissertationEntity;
+import com.bjjy.buildtalk.entity.DissertationListEntity;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
 import com.bjjy.buildtalk.entity.EveryTalkListEntity;
 import com.bjjy.buildtalk.entity.FansFocusEntity;
 import com.bjjy.buildtalk.entity.GuestBookEntity;
+import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.IndustryMasterEntity;
 import com.bjjy.buildtalk.entity.MasterDetailEntity;
 import com.bjjy.buildtalk.entity.MasterListEntity;
@@ -33,12 +36,12 @@ import com.bjjy.buildtalk.entity.MyCardEntity;
 import com.bjjy.buildtalk.entity.PayOrderEntity;
 import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.SaveRecordEntity;
-import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.SearchCircleInfoEntity;
 import com.bjjy.buildtalk.entity.SearchResultEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.entity.VersionRecordEntity;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -293,7 +296,7 @@ public class HttpHelperImpl implements HttpHelper {
     }
 
     @Override
-    public Observable<BaseResponse<IEntity>> userInfo(Map<String, String> headers, Map<String, String> params) {
+    public Observable<BaseResponse<User>> userInfo(Map<String, String> headers, Map<String, String> params) {
         return mApiService.userInfo(headers, params);
     }
 
@@ -375,5 +378,45 @@ public class HttpHelperImpl implements HttpHelper {
     @Override
     public Observable<BaseResponse<DissertationDetailEntity>> searchDissertationDetail(Map<String, String> headers, Map<String, String> params) {
         return mApiService.searchDissertationDetail(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> idCardUploadHandle(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.idCardUploadHandle(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<CardInfoEntity>> checkCardInfo(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.checkCardInfo(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<CardInfoEntity>> searchUserAttestationInfo(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.searchUserAttestationInfo(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> updateCardInfo(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.updateCardInfo(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<DissertationListEntity>> searchDissertation1(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.searchDissertation1(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> complain(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.complain(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<String>> pdfUploadHandle(List<MultipartBody.Part> files) {
+        return mApiService.pdfUploadHandle(files);
+    }
+
+    @Override
+    public Observable<BaseResponse<File>> downloadFile(String url) {
+        return mApiService.downloadFile(url);
     }
 }

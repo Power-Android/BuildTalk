@@ -12,32 +12,25 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
-import com.bjjy.buildtalk.app.App;
 import com.bjjy.buildtalk.entity.CommentContentBean;
-import com.bjjy.buildtalk.entity.ImgOptionEntity;
 import com.bjjy.buildtalk.entity.PariseNickNameBean;
+import com.bjjy.buildtalk.entity.PdfInfoEntity;
 import com.bjjy.buildtalk.entity.ThemeImageBean;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
-import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
-import com.bjjy.buildtalk.ui.main.ViewPagerActivity;
+import com.bjjy.buildtalk.entity.ThemePdfBean;
+import com.bjjy.buildtalk.ui.circle.PDFViewerActivity;
 import com.bjjy.buildtalk.utils.AllUtils;
-import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.StringUtils;
 import com.bjjy.buildtalk.weight.MultiImageView;
-import com.bjjy.buildtalk.weight.MyGridAdapter;
-import com.bjjy.buildtalk.weight.NoScrollGridView;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -69,6 +62,9 @@ public class CircleTopticAdapter extends BaseQuickAdapter<ThemeInfoEntity.ThemeI
                 .setGone(R.id.praise_rl, "1".equals(isJoin) ? true : false)
                 .setGone(R.id.comment_rl, "1".equals(isJoin) ? true : false)
                 .setGone(R.id.item_top_tv, 1 == item.getIs_top() ? true : false)
+                .setGone(R.id.item_grid_view, item.getTheme_image().size() > 0 ? true : false)
+                .setGone(R.id.pdf_rl, item.getTheme_pdf().size() > 0 ? true : false)
+                .setVisible(R.id.item_share_iv, item.getTheme_pdf().size() > 0 ? false : true)
                 .setText(R.id.item_time_tv, item.getPublish_time())
                 .setText(R.id.item_content_tv, item.getTheme_content())
                 .addOnClickListener(R.id.item_face_iv)
@@ -103,6 +99,23 @@ public class CircleTopticAdapter extends BaseQuickAdapter<ThemeInfoEntity.ThemeI
         multiImageView.setList(list);
         multiImageView.setOnItemClickListener((view, position, imageViews) -> AllUtils.startImagePage(mActivity, list, Arrays.asList(imageViews), position));
 
+        List<ThemePdfBean> theme_pdf = item.getTheme_pdf();
+        List<PdfInfoEntity> list1 = new ArrayList<>();
+        for (int i = 0; i < theme_pdf.size(); i++) {
+            list1.add(new PdfInfoEntity(theme_pdf.get(i).getPdf_name(),theme_pdf.get(i).getPdf_url()));
+        }
+        RecyclerView pdf_recyclerView = helper.getView(R.id.pdf_recyclerView);
+        pdf_recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        PdfVewAdapter pdfVewAdapter = new PdfVewAdapter(R.layout.adapter_pdf_view, list1);
+        pdf_recyclerView.setAdapter(pdfVewAdapter);
+        pdfVewAdapter.setOnItemClickListener((adapter, view, position) -> {
+            List<PdfInfoEntity> data =  adapter.getData();
+            Intent intent = new Intent(mContext, PDFViewerActivity.class);
+            intent.putExtra("data", data.get(position));
+            intent.putExtra("theme_id", item.getTheme_id()+"");
+            intent.putExtra("isCollect", 0 == item.getIs_collect());
+            mContext.startActivity(intent);
+        });
         if (1 == item.getIs_parise()) {
             helper.setImageResource(R.id.item_praise_iv, R.drawable.praise_sel);
         } else {

@@ -1,7 +1,6 @@
 package com.bjjy.buildtalk.ui.mine;
 
 import com.bjjy.buildtalk.app.Constants;
-import com.bjjy.buildtalk.app.User;
 import com.bjjy.buildtalk.base.presenter.BasePresenter;
 import com.bjjy.buildtalk.core.rx.BaseObserver;
 import com.bjjy.buildtalk.core.rx.RxUtils;

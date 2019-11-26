@@ -11,26 +11,20 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
-import com.bjjy.buildtalk.adapter.ThemeTypeAdapter;
-import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.entity.ActivityEntity;
 import com.bjjy.buildtalk.entity.CircleInfoEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
-import com.bjjy.buildtalk.entity.ThemeTypeEntity;
+import com.bjjy.buildtalk.ui.circle.ComplaintReasonActivity;
 import com.bjjy.buildtalk.ui.circle.CourseCircleActivity;
 import com.bjjy.buildtalk.ui.circle.CourseCirclePresenter;
 import com.bjjy.buildtalk.ui.circle.PublishActivity;
@@ -38,7 +32,6 @@ import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
 import com.bjjy.buildtalk.ui.circle.TopticCirclePresenter;
 import com.bjjy.buildtalk.ui.discover.DissertationActivity;
 import com.bjjy.buildtalk.ui.discover.EveryTalkDetailActivity;
-import com.bjjy.buildtalk.ui.main.ViewPagerActivity;
 import com.bjjy.buildtalk.ui.mine.AboutUsActivity;
 import com.bjjy.buildtalk.ui.talk.MasterDetailActivity;
 import com.bjjy.buildtalk.weight.BaseDialog;
@@ -60,7 +53,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.security.MessageDigest;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -409,7 +401,9 @@ public class DialogUtils {
             mEditDailog.dismiss();
         });
         tousu_tv.setOnClickListener(v -> {
-            ToastUtils.showShort("已投诉！");
+            Intent intent = new Intent(activity, ComplaintReasonActivity.class);
+            intent.putExtra("data_id", data.getTheme_id()+"");
+            activity.startActivity(intent);
             mEditDailog.dismiss();
         });
         dislike_tv.setOnClickListener(v -> {
@@ -553,6 +547,19 @@ public class DialogUtils {
         shareAction.share();
     }
 
+    public static void shareWebUrl1(String url, String title, Bitmap imgUrl, String des,
+                                   Activity context, SHARE_MEDIA pingtai) {
+        UMWeb web = new UMWeb(url);
+        web.setTitle(title);//标题
+        UMImage thumb = new UMImage(context, imgUrl);
+        web.setThumb(thumb);  //缩略图
+        web.setDescription(des);//描述
+        //注意在新浪平台，缩略图属于必传参数，否则会报错
+        ShareAction shareAction = new ShareAction(context).withMedia(web);
+        shareAction.setPlatform(pingtai);//传入平台
+        shareAction.setCallback(umShareListener);
+        shareAction.share();
+    }
     public static void shareSmallProgram(String path, String imgUrl, String title, String des, Activity context, SHARE_MEDIA pingtai){
         //兼容低版本的网页链接
         UMMin umMin = new UMMin(path);

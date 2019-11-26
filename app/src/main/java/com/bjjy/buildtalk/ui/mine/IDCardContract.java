@@ -2,6 +2,8 @@ package com.bjjy.buildtalk.ui.mine;
 
 import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.base.view.IView;
+import com.bjjy.buildtalk.entity.CardInfoEntity;
+import com.bjjy.buildtalk.entity.IEntity;
 
 /**
  * @author power
@@ -12,6 +14,14 @@ import com.bjjy.buildtalk.base.view.IView;
 public class IDCardContract {
 
     interface View extends IView{
+
+        void updateUserInfo(String picUrl);
+
+        void handlerQuery(IEntity iEntity, String picUrl);
+
+        void handlerCommit(CardInfoEntity cardInfoEntity);
+
+        void handlerCommitFailuer(String message);
 
     }
 

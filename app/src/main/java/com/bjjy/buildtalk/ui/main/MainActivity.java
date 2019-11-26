@@ -10,7 +10,6 @@ import android.text.TextUtils;
 import android.widget.FrameLayout;
 
 import com.bjjy.buildtalk.R;
-import com.bjjy.buildtalk.app.App;
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.ui.circle.CircleFragment;
@@ -25,11 +24,6 @@ import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
 
 import butterknife.BindView;
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 
 public class MainActivity extends BaseActivity<MainPresenter> implements MainContract.View {
 
@@ -96,6 +90,15 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
             }
             return true;
         });
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        int index = getIntent().getIntExtra("mCurrentFgIndex", -2);
+        if (index == 0)
+            mBottomNavigationView.setSelectedItemId(R.id.tab_discover);
     }
 
     private void showFragment(int index) {

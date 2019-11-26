@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout 
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.mine.IDCardActivity">
     <include
         android:id="@+id/include_toolbar"
@@ -14,28 +13,57 @@
         android:layout_height="match_parent"
         android:background="#F8F8F8"
         android:layout_below="@+id/include_toolbar">
-        <ImageView
+        <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/zhengmian_iv"
             android:layout_width="@dimen/dp_322"
             android:layout_height="@dimen/dp_172"
             android:scaleType="fitXY"
+            app:riv_border_color="@color/white"
+            app:riv_border_width="@dimen/dp_1"
+            app:riv_corner_radius="@dimen/dp_10"
             android:src="@drawable/card_zhengmian"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/dp_40"/>
-        <ImageView
+        <TextView
+            android:id="@+id/zhengmian_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:text="信息读取失败，点击重新上传身份证人像面"
+            android:textSize="@dimen/sp_13"
+            android:textColor="@color/red"
+            android:layout_below="@+id/zhengmian_iv"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dp_5"/>
+        <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/beimian_iv"
             android:layout_width="@dimen/dp_322"
             android:layout_height="@dimen/dp_172"
+            app:riv_border_color="@color/white"
+            app:riv_border_width="@dimen/dp_1"
+            app:riv_corner_radius="@dimen/dp_10"
             android:scaleType="fitXY"
             android:src="@drawable/card_beimian"
             android:layout_below="@+id/zhengmian_iv"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/dp_30"/>
         <TextView
+            android:id="@+id/beimian_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:text="信息读取失败，点击重新上传身份证国徽面"
+            android:textSize="@dimen/sp_13"
+            android:textColor="@color/red"
+            android:layout_below="@+id/beimian_iv"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dp_5"/>
+        <TextView
             android:id="@+id/upload_tv"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_44"
-            android:text="开始上传"
+            android:visibility="gone"
+            android:text="提交认证"
             android:textSize="@dimen/sp_15"
             android:textColor="@color/white"
             android:gravity="center"
@@ -43,8 +71,7 @@
             android:layout_marginRight="@dimen/dp_25"
             android:background="@drawable/shape_blue_25button"
             android:layout_below="@+id/beimian_iv"
-            android:layout_marginTop="@dimen/dp_40"
-            android:alpha="0.5"/>
+            android:layout_marginTop="@dimen/dp_40" />
     </RelativeLayout>
     <TextView
         android:layout_width="match_parent"

@@ -1,12 +1,10 @@
 package com.bjjy.buildtalk.ui.talk;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,7 +13,6 @@ import android.widget.TextView;
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.CircleSearchResultAdapter;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
-import com.bjjy.buildtalk.entity.CircleInfoEntity;
 import com.bjjy.buildtalk.entity.SearchResultEntity;
 import com.bjjy.buildtalk.ui.circle.CourseCircleActivity;
 import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
@@ -30,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class MasterCircleActivity extends BaseActivity<MasterCirclePresenter> implements MasterCircleContract.View, OnRefreshLoadMoreListener, ViewPager.OnPageChangeListener, BaseQuickAdapter.OnItemClickListener {
 

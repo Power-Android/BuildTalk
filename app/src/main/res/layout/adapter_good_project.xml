@@ -13,7 +13,8 @@
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/project_iv"
         android:layout_width="@dimen/dp_165"
-        android:layout_height="@dimen/dp_64"
+        android:layout_height="@dimen/dp_98"
+        android:scaleType="centerCrop"
         android:src="@drawable/zhuanti_icon"
         app:riv_corner_radius="@dimen/dp_5" />
     <TextView

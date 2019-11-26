@@ -72,6 +72,7 @@ public class CollectEntity implements Serializable {
         private String circle_name;
         private int theme_status;
         private List<ThemeImageBean> theme_image;
+        private List<ThemePdfBean> theme_pdf;
 
         private int itemType;
 
@@ -166,6 +167,14 @@ public class CollectEntity implements Serializable {
 
         public void setTheme_image(List<ThemeImageBean> theme_image) {
             this.theme_image = theme_image;
+        }
+
+        public List<ThemePdfBean> getTheme_pdf() {
+            return theme_pdf;
+        }
+
+        public void setTheme_pdf(List<ThemePdfBean> theme_pdf) {
+            this.theme_pdf = theme_pdf;
         }
 
         public static class ThemeImageBean {

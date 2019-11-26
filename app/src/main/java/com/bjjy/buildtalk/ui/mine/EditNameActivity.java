@@ -1,13 +1,9 @@
 package com.bjjy.buildtalk.ui.mine;
 
-import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -18,17 +14,15 @@ import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.core.event.RefreshEvent;
-import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bjjy.buildtalk.weight.ClearEditText;
 
 import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class EditNameActivity extends BaseActivity<EditNamePresenter> implements EditNameContract.View, TextView.OnEditorActionListener, View.OnClickListener {
+public class EditNameActivity extends BaseActivity<EditNamePresenter> implements EditNameContract.View, View.OnClickListener {
 
     @BindView(R.id.toolbar_left_title)
     TextView mToolbarLeftTitle;
@@ -72,7 +66,7 @@ public class EditNameActivity extends BaseActivity<EditNamePresenter> implements
         mToolbarLeftTitle.setText("取消");
         mToolbarRightTitle.setText("完成");
         mNameEt.setText(name);
-        mNameEt.setOnEditorActionListener(this);
+//        mNameEt.setOnEditorActionListener(this);
         mToolbarRightTitle.setOnClickListener(this);
 
     }
@@ -106,31 +100,27 @@ public class EditNameActivity extends BaseActivity<EditNamePresenter> implements
         finish();
     }
 
-    @Override
-    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if (actionId == EditorInfo.IME_ACTION_DONE) {
-            if (TextUtils.isEmpty(mNameEt.getText().toString().trim())) {
-                if (TextUtils.equals("name", mType)) {
-                    ToastUtils.showShort("请输入昵称");
-                } else if (TextUtils.equals("zhicheng", mType)) {
-                    ToastUtils.showShort("请输入职称");
-                }else {
-                    ToastUtils.showShort("请输入个人介绍");
-                }
-                return true;
-            }
-            if (TextUtils.equals("name", mType)) {
-                mPresenter.editName(mNameEt.getText().toString().trim());
-            } else if (TextUtils.equals("zhicheng", mType)) {
-
-            }
-            KeyboardUtils.hideSoftInput(this);
-        }
-        return false;
-    }
+//    @Override
+//    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//        if (actionId == EditorInfo.IME_ACTION_DONE) {
+//            if (TextUtils.isEmpty(mNameEt.getText().toString().trim())) {
+//                if (TextUtils.equals("name", mType)) {
+//                    ToastUtils.showShort("请输入昵称");
+//                } else if (TextUtils.equals("zhicheng", mType)) {
+//                    ToastUtils.showShort("请输入职称");
+//                }else {
+//                    ToastUtils.showShort("请输入个人介绍");
+//                }
+//                return true;
+//            }
+//
+//            KeyboardUtils.hideSoftInput(this);
+//        }
+//        return false;
+//    }
 
     @Override
-    public void handlerUpData(String nickName) {
+    public void handlerUpData() {
         EventBus.getDefault().post(new RefreshEvent(Constants.INFO_REFRESH));
         finish();
     }
@@ -151,11 +141,17 @@ public class EditNameActivity extends BaseActivity<EditNamePresenter> implements
             }
         }
         if (TextUtils.equals("jieshao", mType)) {
-            if (TextUtils.isEmpty(mNameEt.getText().toString().trim())){
+            if (TextUtils.isEmpty(mContentEt.getText().toString().trim())){
                 ToastUtils.showShort("请输入个人介绍");
                 return;
             }
         }
-        finish();
+        if (TextUtils.equals("name", mType)) {
+            mPresenter.editName(mNameEt.getText().toString().trim());
+        } else if (TextUtils.equals("zhicheng", mType)) {
+            mPresenter.editZhicheng(mNameEt.getText().toString().trim());
+        }else {
+            mPresenter.editJieshao(mContentEt.getText().toString().trim());
+        }
     }
 }

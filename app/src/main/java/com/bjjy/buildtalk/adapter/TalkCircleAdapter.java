@@ -1,31 +1,16 @@
 package com.bjjy.buildtalk.adapter;
 
 import android.support.annotation.Nullable;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
-import com.bjjy.buildtalk.app.App;
-import com.bjjy.buildtalk.app.Constants;
-import com.bjjy.buildtalk.core.http.response.BaseResponse;
-import com.bjjy.buildtalk.core.rx.BaseObserver;
-import com.bjjy.buildtalk.core.rx.RxUtils;
 import com.bjjy.buildtalk.entity.CircleMasterEntity;
-import com.bjjy.buildtalk.entity.FansFocusEntity;
-import com.bjjy.buildtalk.entity.IEntity;
-import com.bjjy.buildtalk.utils.HeaderUtils;
-import com.bjjy.buildtalk.utils.TimeUtils;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * @author power

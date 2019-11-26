@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.MaseterCollectAdapter;
-import com.bjjy.buildtalk.adapter.MasterListAdapter;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.entity.CollectEntity;
 import com.bjjy.buildtalk.ui.circle.TopticDetailActivity;
@@ -77,7 +75,7 @@ public class MasterCollectActivity extends BaseActivity<MasterCollectPresenter> 
         mPage_count = collectEntity.getPage_count();
         mList = collectEntity.getMyCollectInfo();
         for (int i = 0; i < mList.size(); i++) {
-            if (mList.get(i).getTheme_image().size() > 0){
+            if (mList.get(i).getTheme_image().size() > 0 || mList.get(i).getTheme_pdf().size() > 0){
                 mList.get(i).setItemType(MaseterCollectAdapter.BODY_IMAGE);
             }else {
                 mList.get(i).setItemType(MaseterCollectAdapter.BODY_TEXT);

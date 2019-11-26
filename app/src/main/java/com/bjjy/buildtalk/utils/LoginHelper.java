@@ -8,7 +8,6 @@ import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.app.DataManager;
 import com.bjjy.buildtalk.core.event.RefreshEvent;
 import com.bjjy.buildtalk.ui.main.LoginActivity;
-import com.bjjy.buildtalk.ui.mine.SettingActivity;
 
 import org.greenrobot.eventbus.EventBus;
 

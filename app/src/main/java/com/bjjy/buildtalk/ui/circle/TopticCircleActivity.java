@@ -197,12 +197,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
             entity.setIs_show(1);
             entity.setPic_url(eventBean.getUrl());
             entity.setType_name("发表");
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    DialogUtils.showActivityDialog(TopticCircleActivity.this, entity);
-                }
-            }, 1500);
+            new Handler().postDelayed(() -> DialogUtils.showActivityDialog(TopticCircleActivity.this, entity), 1500);
         }
     }
 
@@ -619,6 +614,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
 
                 break;
             case R.id.more_tv://查看更多
+            case R.id.content_more_tv:
                 if ("1".equals(mIsJoin)){
                     Intent intent = new Intent(this, TopticDetailActivity.class);
                     intent.putExtra("title", mCircleInfoEntity.getCircleInfo().getCircle_name());
@@ -629,17 +625,6 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
                     ToastUtils.showShort("加入圈子，方可查看~");
                 }
 
-                break;
-            case R.id.content_more_tv:
-                if ("1".equals(mIsJoin)){
-                    Intent intent1 = new Intent(this, TopticDetailActivity.class);
-                    intent1.putExtra("title", mCircleInfoEntity.getCircleInfo().getCircle_name());
-                    intent1.putExtra("theme_id", data.get(i).getTheme_id() + "");
-                    intent1.putExtra("circle_id", mCircle_id);
-                    startActivity(intent1);
-                }else {
-                    ToastUtils.showShort("加入圈子，方可查看~");
-                }
                 break;
             case R.id.item_face_iv:
 

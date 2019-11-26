@@ -1,7 +1,6 @@
 package com.bjjy.buildtalk.adapter;
 
 import android.support.annotation.Nullable;
-import android.widget.ImageView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.entity.DissertationEntity;

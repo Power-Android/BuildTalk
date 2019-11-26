@@ -18,6 +18,33 @@ public class IEntity implements Serializable{
     private String author_name;
 
     private String pic_url;
+    private String name;
+    private String id;
+    private String valid_date;
+
+    public String getValid_date() {
+        return valid_date;
+    }
+
+    public void setValid_date(String valid_date) {
+        this.valid_date = valid_date;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getAuthor_name() {
         return author_name;

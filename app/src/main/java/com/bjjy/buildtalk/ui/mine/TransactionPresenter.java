@@ -1,11 +1,12 @@
 package com.bjjy.buildtalk.ui.mine;
 
+import android.text.TextUtils;
+
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.presenter.BasePresenter;
 import com.bjjy.buildtalk.core.rx.BaseObserver;
 import com.bjjy.buildtalk.core.rx.RxUtils;
 import com.bjjy.buildtalk.entity.AleadyBuyEntity;
-import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.TransactionTabEntity;
 import com.bjjy.buildtalk.utils.HeaderUtils;
 import com.bjjy.buildtalk.utils.TimeUtils;
@@ -39,11 +40,16 @@ public class TransactionPresenter extends BasePresenter<TransactionContract.View
         mView.handlerTab(list);
     }
 
-    public void setRecord(String type) {
+    public void setRecord(String type, String title) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
         paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
         paramas.put("type",type);
+        if (TextUtils.isEmpty(title)){
+            paramas.put("search_type", "1");
+        }else {
+            paramas.put("search_type", "2");
+        }
         paramas.put(Constants.SOURCE, Constants.ANDROID);
         paramas.put(Constants.TIMESTAMP, timestamp);
         String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));

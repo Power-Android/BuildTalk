@@ -2,9 +2,8 @@ package com.bjjy.buildtalk.ui.mine;
 
 import android.Manifest;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -15,6 +14,10 @@ import android.widget.Toast;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
+import com.bjjy.buildtalk.entity.CardInfoEntity;
+import com.bjjy.buildtalk.entity.IEntity;
+import com.bjjy.buildtalk.ui.main.MainActivity;
+import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bjjy.buildtalk.weight.BaseDialog;
 import com.bumptech.glide.Glide;
 import com.luck.picture.lib.PictureSelector;
@@ -23,12 +26,13 @@ import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.permissions.RxPermissions;
 import com.luck.picture.lib.tools.PictureFileUtils;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
@@ -45,17 +49,26 @@ public class IDCardActivity extends BaseActivity<IDCardPresenter> implements IDC
     @BindView(R.id.toolbar_left_back)
     ImageView mToolbarBack;
     @BindView(R.id.zhengmian_iv)
-    ImageView mZhengmianIv;
+    RoundedImageView mZhengmianIv;
     @BindView(R.id.beimian_iv)
-    ImageView mBeimianIv;
+    RoundedImageView mBeimianIv;
     @BindView(R.id.upload_tv)
     TextView mUploadTv;
+    @BindView(R.id.zhengmian_tv)
+    TextView mZhengmianTv;
+    @BindView(R.id.beimian_tv)
+    TextView mBeimianTv;
     private BaseDialog mDialog;
 
     private MultipartBody.Part mFile;
-    private String type;
-    private String mTag;
     private int card_tag = 0;
+    private List<String> zmList = new ArrayList<>();
+    private List<String> fmList = new ArrayList<>();
+    private List<String> newList = new ArrayList<>();
+    private String mId;
+    private String mName;
+    private String mValid_data;
+    private BaseDialog mVerifyDialog;
 
     @Override
     protected int getLayoutId() {
@@ -89,6 +102,14 @@ public class IDCardActivity extends BaseActivity<IDCardPresenter> implements IDC
                 showCardDialog("身份证国徽面拍照图例", R.drawable.dialog_card_fm_icon);
                 break;
             case R.id.upload_tv:
+                newList.clear();
+                if (!TextUtils.isEmpty(mId) && !TextUtils.isEmpty(mName) && !TextUtils.isEmpty(mValid_data)) {
+                    newList.addAll(zmList);
+                    newList.addAll(fmList);
+                    mPresenter.commiit(newList, mId, mName, mValid_data);
+                } else {
+                    ToastUtils.showShort("请上传有效身份证件~");
+                }
                 break;
         }
     }
@@ -164,7 +185,7 @@ public class IDCardActivity extends BaseActivity<IDCardPresenter> implements IDC
                 .showCropFrame(true)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false   true or false
                 .showCropGrid(true)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false    true or false
                 .openClickSound(false)// 是否开启点击声音 true or false
-                .withAspectRatio(3,2)
+                .withAspectRatio(3, 2)
                 .previewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中) true or false
                 .minimumCompressSize(100)// 小于100kb的图片不压缩
                 .synOrAsy(true)//同步true或异步false 压缩 默认同步
@@ -178,19 +199,106 @@ public class IDCardActivity extends BaseActivity<IDCardPresenter> implements IDC
             if (requestCode == PictureConfig.CHOOSE_REQUEST) {
                 List<LocalMedia> localMedia = PictureSelector.obtainMultipleResult(data);
                 String image = "";
-                if (localMedia.get(0).isCompressed()){
+                if (localMedia.get(0).isCompressed()) {
                     image = localMedia.get(0).getCompressPath();
-                }else {
+                } else {
                     image = localMedia.get(0).getPath();
                 }
-                Glide.with(this).load(image).into(card_tag == 0 ? mZhengmianIv : mBeimianIv);
                 if (!TextUtils.isEmpty(image)) {
                     File file = new File(image);
                     RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
                     mFile = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
-//                    mPresenter.upload(mFile, type);
+                    mPresenter.upload(mFile);
                 }
             }
         }
+    }
+
+    @Override
+    public void updateUserInfo(String picUrl) {
+        mPresenter.queryCard(picUrl);
+    }
+
+    @Override
+    public void handlerQuery(IEntity iEntity, String picUrl) {
+        Glide.with(this).load(picUrl).into(card_tag == 0 ? mZhengmianIv : mBeimianIv);
+        if (card_tag == 0) {
+            zmList.clear();
+            zmList.add(picUrl);
+            if (TextUtils.isEmpty(iEntity.getName()) && TextUtils.isEmpty(iEntity.getId())) {
+                mZhengmianIv.setBorderColor(getResources().getColor(R.color.red));
+                mZhengmianTv.setVisibility(View.VISIBLE);
+                return;
+            }else {
+                mZhengmianIv.setBorderColor(getResources().getColor(R.color.white));
+                mZhengmianTv.setVisibility(View.INVISIBLE);
+            }
+            mId = iEntity.getId();
+            mName = iEntity.getName();
+        } else {
+            fmList.clear();
+            fmList.add(picUrl);
+            if (TextUtils.isEmpty(iEntity.getValid_date())) {
+                mBeimianIv.setBorderColor(getResources().getColor(R.color.red));
+                mBeimianTv.setVisibility(View.VISIBLE);
+                return;
+            }else {
+                mBeimianIv.setBorderColor(getResources().getColor(R.color.white));
+                mBeimianTv.setVisibility(View.INVISIBLE);
+            }
+            mValid_data = iEntity.getValid_date();
+        }
+        if (zmList.size() > 0 && fmList.size() > 0) {
+            mUploadTv.setVisibility(View.VISIBLE);
+        } else {
+            mUploadTv.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void handlerCommit(CardInfoEntity cardInfoEntity) {
+        Intent intent = new Intent(this, MasterVerifyActivity.class);
+//        intent.putExtra("cardInfo", cardInfoEntity);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void handlerCommitFailuer(String message) {
+        showVerifyDialog(message);
+    }
+
+    private void showVerifyDialog(String message) {
+        int count = Integer.parseInt(message);
+        mVerifyDialog = new BaseDialog.Builder(this)
+                .setViewId(R.layout.dialog_verify_fail)
+                .setGravity(Gravity.CENTER)
+                .setAnimation(R.style.nomal_aniamtion)
+                .setWidthHeightpx((int) getResources().getDimension(R.dimen.dp_300), (int) getResources().getDimension(R.dimen.dp_345))
+                .isOnTouchCanceled(true)
+                .addViewOnClickListener(R.id.close_iv, v -> mVerifyDialog.dismiss())
+                .addViewOnClickListener(R.id.angin_tv, v -> {
+                    if (count > 0) {
+                        mVerifyDialog.dismiss();
+                    } else {
+                        mVerifyDialog.dismiss();
+                        Intent intent = new Intent(this, MainActivity.class);
+                        intent.putExtra("mCurrentFgIndex", 0);
+                        startActivity(intent);
+                        finish();
+                    }
+                })
+                .builder();
+        TextView contentTv = mVerifyDialog.getView(R.id.content_tv);
+        TextView anginTv = mVerifyDialog.getView(R.id.angin_tv);
+        if (count > 0) {
+            String content = "很抱歉，您的证件照片信息未通过 （今日还剩" + "<font color='#FF6920'>" + count + "</font>" + "次认证机会）";
+            contentTv.setText(Html.fromHtml(content));
+            anginTv.setText("重新上传证件");
+        } else {
+            contentTv.setText("很抱歉，今日认证次数已上限    休息一下吧！");
+            anginTv.setText("随便逛逛吧");
+        }
+        mVerifyDialog.show();
     }
 }

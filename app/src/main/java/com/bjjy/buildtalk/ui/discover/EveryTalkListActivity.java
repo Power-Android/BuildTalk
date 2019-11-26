@@ -1,7 +1,6 @@
 package com.bjjy.buildtalk.ui.discover;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class EveryTalkListActivity extends BaseActivity<EveryTalkListPresenter> implements EveryTalkContract.View, OnRefreshLoadMoreListener, BaseQuickAdapter.OnItemClickListener {

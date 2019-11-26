@@ -9,8 +9,6 @@ import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.core.rx.BaseObserver;
 import com.bjjy.buildtalk.core.rx.RxUtils;
 import com.bjjy.buildtalk.entity.CircleMasterEntity;
-import com.bjjy.buildtalk.entity.CourseEntity;
-import com.bjjy.buildtalk.entity.FansFocusEntity;
 import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.IndustryMasterEntity;
 import com.bjjy.buildtalk.entity.TalkEntity;
@@ -22,8 +20,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-
-import static com.bjjy.buildtalk.ui.discover.DiscoverFragment.HOT_TOPTIC_PAGE;
 
 /**
  * @author power

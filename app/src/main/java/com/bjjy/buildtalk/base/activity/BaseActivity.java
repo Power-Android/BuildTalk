@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,6 +70,8 @@ public abstract class BaseActivity<T extends IPresenter> extends AbstractActivit
             mPresenter.attachView(this);
         }
 
+        initLoadingDialog();
+
         mNormalView = findViewById(R.id.normalView);
         if (mNormalView == null){
             isLoading = !isLoading;
@@ -86,8 +87,6 @@ public abstract class BaseActivity<T extends IPresenter> extends AbstractActivit
         mEmptyView = findViewById(R.id.emptyView);
         mErrorView = parent.findViewById(R.id.errorView);
         mNoNetView = parent.findViewById(R.id.noNetView);
-
-        initLoadingDialog();
 
         mErrorView.setOnClickListener(v -> recreate());
         View mErrorViewincludeToolbar = mErrorView.findViewById(R.id.include_toolbar);
