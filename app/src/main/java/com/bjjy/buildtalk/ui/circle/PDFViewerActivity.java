@@ -32,7 +32,8 @@ import java.io.File;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class PDFViewerActivity extends BaseActivity<PDFViewerPresenter> implements PDFViewerContract.View, OnPageChangeListener, OnLoadCompleteListener, OnPageErrorListener {
+public class PDFViewerActivity extends BaseActivity<PDFViewerPresenter> implements PDFViewerContract.View,
+        OnPageChangeListener, OnLoadCompleteListener, OnPageErrorListener {
 
     @BindView(R.id.toolbar_left_back)
     ImageView mToolbarLeftBack;

@@ -106,7 +106,7 @@ public class DbHelperImpl implements DbHelper {
 
     @Override
     public void setUserType(String user_type) {
-
+        getUser().setUser_type(user_type);
     }
 
     @Override

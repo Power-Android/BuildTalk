@@ -5,6 +5,8 @@ import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -123,6 +125,15 @@ public class PersonInfoActivity extends BaseActivity<PersonInfoPresenter> implem
                     mVerifyDialog.dismiss();
                 })
                 .builder();
+        WebView webView = mVerifyDialog.getView(R.id.webView);
+        WebSettings settings = webView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setDomStorageEnabled(true);
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
+        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        String url = "https://www.51jiantan.com/dkagreement";
+        webView.loadUrl(url);
         mVerifyDialog.show();
     }
 
@@ -145,7 +156,6 @@ public class PersonInfoActivity extends BaseActivity<PersonInfoPresenter> implem
                 }else {
                     startActivity(new Intent(this, MasterVerifyActivity.class));
                 }
-
                 break;
             case R.id.bg_rl:
                 mIntent = new Intent(this, SetPictureActivity.class);
