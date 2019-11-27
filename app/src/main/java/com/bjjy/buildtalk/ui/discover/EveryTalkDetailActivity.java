@@ -51,6 +51,10 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.audio.AudioAttributes;
+import com.google.android.exoplayer2.audio.AudioListener;
+import com.google.android.exoplayer2.metadata.Metadata;
+import com.google.android.exoplayer2.metadata.MetadataOutput;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
@@ -157,7 +161,7 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            if (!isDestroyed()){
+            if (!isDestroyed()) {
                 Glide.with(EveryTalkDetailActivity.this).load(mBitmap).into(mVideoplayer.thumbImageView);
             }
             return true;
@@ -192,10 +196,10 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mEveryTalkDetailAdapter = new EveryTalkDetailAdapter(R.layout.adapter_every_talk_detail, mList);
         mRecyclerView.setAdapter(mEveryTalkDetailAdapter);
-        ((SimpleItemAnimator)mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+        ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         mEveryTalkDetailAdapter.setOnItemChildClickListener(this);
         KeyboardUtils.registerSoftInputChangedListener(this, height -> {
-            if (height <= 0){
+            if (height <= 0) {
                 mRecordLl.setVisibility(View.VISIBLE);
                 isGone = false;
             }
@@ -212,9 +216,9 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     @Override
     public void handlerTalkDetail(EveryTalkDetailEntity everyTalkDetailEntity) {
         mMNewsInfo = everyTalkDetailEntity.getNewsInfo();
-        if (TextUtils.isEmpty(mType)){
+        if (TextUtils.isEmpty(mType)) {
             mToolbarTitle.setText("每日一谈");
-        }else {
+        } else {
             mToolbarTitle.setText(mMNewsInfo.getArticle_title());
         }
         mTitleTv.setText(mMNewsInfo.getArticle_title());
@@ -224,19 +228,7 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
         mMediaNameTv.setText(mMNewsInfo.getArticle_title());
         if (!TextUtils.isEmpty(mMNewsInfo.getAudio_url())) {
             mMediaRl.setVisibility(View.VISIBLE);
-            if (!TextUtils.isEmpty(mMNewsInfo.getAudio_duration())){
-                mSize = Float.parseFloat(mMNewsInfo.getAudio_duration());
-                float parseLong = Float.parseFloat(mMNewsInfo.getAudio_duration());
-                mAllTime = parseLong * 1000;
-
-                mMediaTimeTv.setText(TimeUtils.getMinuteBySecond((int) mSize));
-
-                mMediaSizeTv.setText(mMNewsInfo.getAudio_size() + "M");
-                mPlayContentLl.setVisibility(View.VISIBLE);
-            }else {
-                mPlayContentLl.setVisibility(View.INVISIBLE);
-            }
-
+            mMediaSizeTv.setText(String.format("%sM", mMNewsInfo.getAudio_size()));
             Glide.with(this).load(R.drawable.playing).into(mPlayingIv);
             simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(this);
             DefaultDataSourceFactory defaultDataSourceFactory =
@@ -251,49 +243,49 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
             mFlVideoPlayer.setVisibility(View.VISIBLE);
             new Thread(() -> {
                 mBitmap = GlideUtils.loadVideoScreenshot(mMNewsInfo.getVideo_url());
-                if (mBitmap != null){
+                if (mBitmap != null) {
                     handler.sendEmptyMessage(1);
                 }
             }).start();
             mVideoplayer.setUp(new JZDataSource(mMNewsInfo.getVideo_url()), Jzvd.SCREEN_WINDOW_NORMAL);
-            if (!mPresenter.mDataManager.getLoginStatus() || mMNewsInfo.getIs_buy() == 0){
+            if (!mPresenter.mDataManager.getLoginStatus() || mMNewsInfo.getIs_buy() == 0) {
                 misPlay.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 misPlay.setVisibility(View.GONE);
             }
             misPlay.setOnClickListener(v -> {
-                if (!mPresenter.mDataManager.getLoginStatus()){
+                if (!mPresenter.mDataManager.getLoginStatus()) {
                     startActivity(new Intent(EveryTalkDetailActivity.this, LoginActivity.class));
-                }else if (mMNewsInfo.getIs_buy() == 0){
+                } else if (mMNewsInfo.getIs_buy() == 0) {
                     showBuyDialog();
                 }
             });
         }
 
-        if (!TextUtils.isEmpty(mMNewsInfo.getContent())){
+        if (!TextUtils.isEmpty(mMNewsInfo.getContent())) {
             WebSettings settings = mWebView.getSettings();
             settings.setJavaScriptEnabled(true);
             settings.setDomStorageEnabled(true);
             settings.setUseWideViewPort(true);
             settings.setLoadWithOverviewMode(true);
             settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-            mWebView.loadData(getHtmlData(mMNewsInfo.getContent()), "text/html;charset=utf-8","utf-8");
+            mWebView.loadData(getHtmlData(mMNewsInfo.getContent()), "text/html;charset=utf-8", "utf-8");
         }
 
-        if ("0".equals(String.valueOf(mMNewsInfo.getIsCollect()))){
+        if ("0".equals(String.valueOf(mMNewsInfo.getIsCollect()))) {
             mPraiseIv.setImageResource(R.drawable.praise_def);
-        }else {
+        } else {
             mPraiseIv.setImageResource(R.drawable.praise_sel);
         }
         mCountCollect = mMNewsInfo.getCountCollect();
-        mPraiseTv.setText( mCountCollect + "赞");
+        mPraiseTv.setText(String.format("%d赞", mCountCollect));
         mRecordEt.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_SEND){
-                if (TextUtils.isEmpty(mRecordEt.getText().toString().trim())){
+            if (actionId == EditorInfo.IME_ACTION_SEND) {
+                if (TextUtils.isEmpty(mRecordEt.getText().toString().trim())) {
                     ToastUtils.showShort("请输入评论内容");
                     return false;
                 }
-                mPresenter.saveRecord(mMNewsInfo.getArticle_id(),mRecordEt.getText().toString().trim(), mType_zhuanti);
+                mPresenter.saveRecord(mMNewsInfo.getArticle_id(), mRecordEt.getText().toString().trim(), mType_zhuanti);
                 mRecordEt.clearFocus();
                 mRecordEt.getText().clear();
                 mRecordLl.setVisibility(View.VISIBLE);
@@ -315,7 +307,7 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
                 float second = curTime / 1000;
                 mMediaTimeTv.setText(TimeUtils.getMinuteBySecond((int) (millisUntilFinished / 1000)));
                 // 进度条实现更新操作
-                second = (mAllTime/1000 - second) / (mAllTime/1000) * 100;
+                second = (mAllTime / 1000 - second) / (mAllTime / 1000) * 100;
                 mProgressBar.setCurrent((int) second);
             }
 
@@ -327,7 +319,6 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
             }
         };
     }
-
 
     private void showBuyDialog() {
         mBuyDialog = new BaseDialog.Builder(this)
@@ -367,12 +358,12 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
                 "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\"> " +
                 "<style>html{padding:15px;} body{word-wrap:break-word;font-size:15px;padding:0px;margin:0px;line-height:2.0;} p{padding:0px;margin:0px;font-size:15px;color:FF656565;line-height:2.0;} img{padding:0px,margin:0px;max-width:100%; width:100%; height:auto;}</style>" +
                 "</head>";
-        return "<html>" + head + "<body>" + ""+ bodyHTML + "</body></html>";
+        return "<html>" + head + "<body>" + "" + bodyHTML + "</body></html>";
     }
 
     @Override
     public void handlerGuestBookList(GuestBookEntity guestBookEntity, boolean isRefresh) {
-        if (guestBookEntity.getGuestbookInfo().size() > 0){
+        if (guestBookEntity.getGuestbookInfo().size() > 0) {
             mPage_count = guestBookEntity.getPage_count();
             if (isRefresh) {
                 mEveryTalkDetailAdapter.setNewData(guestBookEntity.getGuestbookInfo());
@@ -384,7 +375,7 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
             mEmptyView.setVisibility(View.GONE);
             mLoadMoreLayout.setEnableLoadMore(true);
             mRecyclerView.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             mRecyclerView.setVisibility(View.GONE);
             mLoadMoreLayout.setEnableLoadMore(false);
             mEmptyView.setVisibility(View.VISIBLE);
@@ -400,7 +391,7 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     @Override
     public void onPause() {
         super.onPause();
-        if (mCountDownTimer != null){
+        if (mCountDownTimer != null) {
             mCountDownTimer.cancel();
         }
         Jzvd.releaseAllVideos();
@@ -420,8 +411,8 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
         if (playWhenReady) {
             LogUtils.e(playbackState);
-            if (curTime == 0 && playbackState == PlaybackState.STATE_PLAYING){
-                initCountDownTimer((long)mAllTime);
+            if (curTime == 0 && playbackState == PlaybackState.STATE_PLAYING) {
+                initCountDownTimer((long) mAllTime);
                 mCountDownTimer.start();
             }
             if (curTime != 0 && isPause) {
@@ -437,12 +428,15 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
             }
             isPause = false;
         } else {
-            if (!b && mCountDownTimer != null && playbackState == PlaybackState.STATE_PLAYING){
+            long duration = simpleExoPlayer.getDuration();
+            mAllTime = duration;
+            if (!b && mCountDownTimer != null && playbackState == PlaybackState.STATE_PLAYING) {
                 mCountDownTimer.cancel();
             }
             mPlayIv.setImageResource(R.drawable.media_play_icon);
             mPlayingIv.setVisibility(View.INVISIBLE);
-            if (b){
+            if (b) {
+                mMediaTimeTv.setText(TimeUtils.stringForTime((int) duration));
                 b = false;
                 return;
             }
@@ -455,7 +449,7 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
         switch (view.getId()) {
             case R.id.play_iv:
                 LoginHelper.login(this, mPresenter.mDataManager, () -> {
-                    if (mMNewsInfo.getIs_buy() == 0 && !TextUtils.isEmpty(mType)){
+                    if (mMNewsInfo.getIs_buy() == 0 && !TextUtils.isEmpty(mType)) {
                         showBuyDialog();
                         return;
                     }
@@ -467,23 +461,23 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
             case R.id.praise_ll:
                 LoginHelper.login(this, mPresenter.mDataManager, () -> {
                     boolean isCollect = "1".equals(String.valueOf(mMNewsInfo.getIsCollect()));
-                    mPresenter.collectArticle(mArticle_id,isCollect,mType_zhuanti);
+                    mPresenter.collectArticle(mArticle_id, isCollect, mType_zhuanti);
                 });
                 break;
             case R.id.share_iv:
-                if (TextUtils.isEmpty(mType)){
-                    mUrl = Constants.BASE_URL + "jtfwhgetopenid" + "?user_id=" + mPresenter.mDataManager.getUser().getUser_id() + "&news_id=" + mArticle_id;
+                if (TextUtils.isEmpty(mType)) {
+                    mUrl = String.format("%sjtfwhgetopenid?user_id=%s&news_id=%s", Constants.BASE_URL, mPresenter.mDataManager.getUser().getUser_id(), mArticle_id);
                     mEndUrl = Constants.END_URL + "&redirect_uri=" + URLEncoder.encode(mUrl) + "&response_type=code&scope=snsapi_userinfo&state=news#wechat_redirect";
                     DialogUtils.showShareDialog(this, mEndUrl, mEndUrl, mMNewsInfo.getArticle_title(), mMNewsInfo.getAuthor_pic(), "每日一谈", false);
-                }else {
-                    mUrl = Constants.BASE_URL + "jtfwhgetopenid" + "?user_id=" + mPresenter.mDataManager.getUser().getUser_id() + "&article_id=" + mArticle_id;
-                    mEndUrl = Constants.END_URL + "&redirect_uri=" + URLEncoder.encode(mUrl) + "&response_type=code&scope=snsapi_userinfo&state=articlePay#wechat_redirect";
-                    DialogUtils.showShareDialog(this, mEndUrl, mEndUrl, mMNewsInfo.getArticle_title(), mMNewsInfo.getAuthor_pic(), mMNewsInfo.getArticle_title(),false);
+                } else {
+                    mUrl = String.format("%sjtfwhgetopenid?user_id=%s&article_id=%s", Constants.BASE_URL, mPresenter.mDataManager.getUser().getUser_id(), mArticle_id);
+                    mEndUrl = String.format("%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=articlePay#wechat_redirect", Constants.END_URL, URLEncoder.encode(mUrl));
+                    DialogUtils.showShareDialog(this, mEndUrl, mEndUrl, mMNewsInfo.getArticle_title(), mMNewsInfo.getAuthor_pic(), mMNewsInfo.getArticle_title(), false);
                 }
                 break;
             case R.id.record_ll:
                 LoginHelper.login(this, mPresenter.mDataManager, () -> {
-                    if (!isGone){
+                    if (!isGone) {
                         mRecordLl.setVisibility(View.GONE);
                         mRecordEt.setFocusable(true);
                         mRecordEt.setFocusableInTouchMode(true);
@@ -498,15 +492,15 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
 
     @Override
     public void collectSuccess(boolean isSuccess, boolean isCollect) {
-        if (isCollect){
-            if (mCountCollect >= 1){
+        if (isCollect) {
+            if (mCountCollect >= 1) {
                 mPraiseTv.setText(String.valueOf(--mCountCollect + "赞"));
-            }else {
-                mPraiseTv.setText(String.valueOf( 0 + "赞"));
+            } else {
+                mPraiseTv.setText(String.valueOf(0 + "赞"));
             }
             mPraiseIv.setImageResource(R.drawable.praise_def);
             mMNewsInfo.setIsCollect(0);
-        }else {
+        } else {
             mPraiseTv.setText(String.valueOf(++mCountCollect + "赞"));
             mPraiseIv.setImageResource(R.drawable.praise_sel);
             mMNewsInfo.setIsCollect(1);
@@ -519,8 +513,8 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
         switch (view.getId()) {
             case R.id.item_praise_ll:
                 LoginHelper.login(this, mPresenter.mDataManager, () -> {
-                    boolean isPraise = "1".equals(mEveryTalkDetailAdapter.getData().get(position).getIsPraise()+"");
-                    mPresenter.praiseRecord(mType_zhuanti, data.get(position).getGuestbook_id(),position,isPraise);
+                    boolean isPraise = "1".equals(mEveryTalkDetailAdapter.getData().get(position).getIsPraise() + "");
+                    mPresenter.praiseRecord(mType_zhuanti, data.get(position).getGuestbook_id(), position, isPraise);
                 });
                 break;
             case R.id.item_delete_iv:
@@ -563,26 +557,26 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     public void praiseSuccess(boolean isSuccess, int position, boolean isPraise) {
         List<GuestBookEntity.GuestbookInfoBean> data = mEveryTalkDetailAdapter.getData();
         int countpraise = data.get(position).getCountpraise();
-        if (isPraise){
+        if (isPraise) {
             mEveryTalkDetailAdapter.getData().get(position).setIsPraise(0);
-            if (countpraise > 0){
+            if (countpraise > 0) {
                 data.get(position).setCountpraise(--countpraise);
             }
-            mEveryTalkDetailAdapter.setData(position,mEveryTalkDetailAdapter.getData().get(position));
-        }else {
+            mEveryTalkDetailAdapter.setData(position, mEveryTalkDetailAdapter.getData().get(position));
+        } else {
             mEveryTalkDetailAdapter.getData().get(position).setIsPraise(1);
             data.get(position).setCountpraise(++countpraise);
-            mEveryTalkDetailAdapter.setData(position,mEveryTalkDetailAdapter.getData().get(position));
+            mEveryTalkDetailAdapter.setData(position, mEveryTalkDetailAdapter.getData().get(position));
         }
     }
 
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-        if (page < mPage_count){
+        if (page < mPage_count) {
             page++;
             mPresenter.guestbook(mArticle_id, page, false);
             refreshLayout.finishLoadMore();
-        }else {
+        } else {
             refreshLayout.finishLoadMoreWithNoMoreData();
         }
     }
