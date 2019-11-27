@@ -13,7 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bjjy.buildtalk.R;
+import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
+import com.bjjy.buildtalk.core.event.RefreshEvent;
 import com.bjjy.buildtalk.entity.CardInfoEntity;
 import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.ui.main.MainActivity;
@@ -27,6 +29,8 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.permissions.RxPermissions;
 import com.luck.picture.lib.tools.PictureFileUtils;
 import com.makeramen.roundedimageview.RoundedImageView;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -260,6 +264,7 @@ public class IDCardActivity extends BaseActivity<IDCardPresenter> implements IDC
         Intent intent = new Intent(this, MasterVerifyActivity.class);
 //        intent.putExtra("cardInfo", cardInfoEntity);
         startActivity(intent);
+        EventBus.getDefault().post(new RefreshEvent(Constants.INFO_REFRESH));
         finish();
     }
 

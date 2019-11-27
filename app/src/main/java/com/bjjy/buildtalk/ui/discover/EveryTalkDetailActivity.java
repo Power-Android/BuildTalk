@@ -494,14 +494,14 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     public void collectSuccess(boolean isSuccess, boolean isCollect) {
         if (isCollect) {
             if (mCountCollect >= 1) {
-                mPraiseTv.setText(String.valueOf(--mCountCollect + "赞"));
+                mPraiseTv.setText(--mCountCollect + "赞");
             } else {
-                mPraiseTv.setText(String.valueOf(0 + "赞"));
+                mPraiseTv.setText(0 + "赞");
             }
             mPraiseIv.setImageResource(R.drawable.praise_def);
             mMNewsInfo.setIsCollect(0);
         } else {
-            mPraiseTv.setText(String.valueOf(++mCountCollect + "赞"));
+            mPraiseTv.setText(++mCountCollect + "赞");
             mPraiseIv.setImageResource(R.drawable.praise_sel);
             mMNewsInfo.setIsCollect(1);
         }

@@ -79,7 +79,7 @@ public class IDCardPresenter extends BasePresenter<IDCardContract.View> {
     }
 
     public void commiit(List<String> cardUrlList, String id, String name, String valid_data) {
-        String pic_url = StringUtils.listToString3(cardUrlList);
+        String pic_url = StringUtils.listToString(cardUrlList);
 
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();

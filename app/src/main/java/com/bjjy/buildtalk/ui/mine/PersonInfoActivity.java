@@ -86,11 +86,10 @@ public class PersonInfoActivity extends BaseActivity<PersonInfoPresenter> implem
     @Override
     public void handlerUser(User user) {
         mUser = mPresenter.mDataManager.getUser();
-        mPresenter.mDataManager.addUser(mUser);
-        Glide.with(this).load(mUser.getHeadImage()).into(mFaceIv);
-        mNameTv.setText(mUser.getNickName());
-        mPhoneTv.setText(mUser.getMobile());
-        if (TextUtils.equals("1", mUser.getUser_type())){
+        Glide.with(this).load(user.getHeadImage()).into(mFaceIv);
+        mNameTv.setText(user.getNickName());
+        mPhoneTv.setText(user.getMobile());
+        if (TextUtils.equals("1", user.getUser_type())){
             mVerifyTv.setText("未认证");
             mVerifyTv.setBackground(getResources().getDrawable(R.drawable.shape_wrz_2radius));
             Drawable drawable = getResources().getDrawable(R.drawable.def_verify);

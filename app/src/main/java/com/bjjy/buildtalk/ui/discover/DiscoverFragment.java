@@ -168,7 +168,7 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
                     HOT_TOPTIC_PAGE++;
                     mPresenter.discoverToptic();
                     view.setClickable(true);
-                }, 2000);
+                }, 1000);
                 break;
             case R.id.course_all_tv://精品课程----查看全部
                 startActivity(new Intent(mContext, CourseListActivity.class));

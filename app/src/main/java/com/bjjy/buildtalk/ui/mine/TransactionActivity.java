@@ -1,5 +1,6 @@
 package com.bjjy.buildtalk.ui.mine;
 
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -14,6 +15,9 @@ import com.bjjy.buildtalk.adapter.TransactionTabAdapter;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.entity.AleadyBuyEntity;
 import com.bjjy.buildtalk.entity.TransactionTabEntity;
+import com.bjjy.buildtalk.ui.circle.CourseCircleActivity;
+import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
+import com.bjjy.buildtalk.ui.discover.EveryTalkDetailActivity;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
@@ -45,6 +49,7 @@ public class TransactionActivity extends BaseActivity<TransactionPresenter> impl
 
     private String type = "0";
     private String mTitle;
+    private Intent mIntent;
 
     @Override
     protected int getLayoutId() {
@@ -114,6 +119,19 @@ public class TransactionActivity extends BaseActivity<TransactionPresenter> impl
 
     @Override
     public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int position) {
-
+        AleadyBuyEntity data = (AleadyBuyEntity) baseQuickAdapter.getData().get(position);
+        switch (data.getType()){
+            case 1:
+                mIntent = new Intent(this, EveryTalkDetailActivity.class);
+                mIntent.putExtra("article_id", data.getData_id()+"");
+                mIntent.putExtra("type","article");
+                startActivity(mIntent);
+                break;
+            case 2:
+                mIntent = new Intent(this, CourseCircleActivity.class);
+                mIntent.putExtra("circle_id", data.getCircle_id());
+                startActivity(mIntent);
+                break;
+        }
     }
 }

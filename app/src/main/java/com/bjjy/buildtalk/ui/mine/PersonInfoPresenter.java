@@ -45,8 +45,8 @@ public class PersonInfoPresenter extends BasePresenter<PersonInfoContract.View> 
                 .subscribeWith(new BaseObserver<User>(mView,false){
                     @Override
                     public void onSuccess(User user) {
-                        mDataManager.setUserType(user.getUser_type());
-                        mDataManager.setVerifyRecordCount(user.getCountCheckRecord());
+                        user.setLoginStatus(true);
+                        mDataManager.addUser(user);
                         mView.handlerUser(user);
                     }
                 }));
