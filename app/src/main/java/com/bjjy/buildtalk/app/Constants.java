@@ -72,6 +72,7 @@ public class Constants {
     public static final String TOPTIC_REFRESH = "toptic_refresh";
     public static final String TOPTIC_REFRESH_ALL = "toptic_refresh_all";
     public static final String INFO_REFRESH = "info_refresh";
+    public static final String CARD_REFRESH = "card_refresh";
     public static final String PAY_SUCCESS = "pay_success";
     public static final String QUIT_CIRCLE = "quit_circle";
     public static final String FANS_REFRESH = "fans_refresh";

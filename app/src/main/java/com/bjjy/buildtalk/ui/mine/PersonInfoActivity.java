@@ -16,6 +16,7 @@ import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.app.User;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.core.event.RefreshEvent;
+import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bjjy.buildtalk.weight.BaseDialog;
 import com.bumptech.glide.Glide;
@@ -23,6 +24,9 @@ import com.bumptech.glide.Glide;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -79,8 +83,9 @@ public class PersonInfoActivity extends BaseActivity<PersonInfoPresenter> implem
 
     @Override
     protected void initEventAndData() {
-        mPresenter.userInfo();
-
+        if (mPresenter != null) {
+            mPresenter.userInfo();
+        }
     }
 
     @Override
@@ -178,6 +183,7 @@ public class PersonInfoActivity extends BaseActivity<PersonInfoPresenter> implem
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().post(new RefreshEvent(Constants.INFO_REFRESH));
         EventBus.getDefault().unregister(this);
     }
 }

@@ -300,6 +300,11 @@ public class IDCardActivity extends BaseActivity<IDCardPresenter> implements IDC
             String content = "很抱歉，您的证件照片信息未通过 （今日还剩" + "<font color='#FF6920'>" + count + "</font>" + "次认证机会）";
             contentTv.setText(Html.fromHtml(content));
             anginTv.setText("重新上传证件");
+            Glide.with(this).load(R.drawable.card_zhengmian).into(mZhengmianIv);
+            Glide.with(this).load(R.drawable.card_beimian).into(mBeimianIv);
+            zmList.clear();
+            fmList.clear();
+            mUploadTv.setVisibility(View.GONE);
         } else {
             contentTv.setText("很抱歉，今日认证次数已上限    休息一下吧！");
             anginTv.setText("随便逛逛吧");
