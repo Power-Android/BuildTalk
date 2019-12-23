@@ -17,6 +17,15 @@ public class EveryTalkEntity implements Serializable {
 
     private int article_id;
     private String article_title;
+    private boolean isChecked;
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
 
     public int getArticle_id() {
         return article_id;

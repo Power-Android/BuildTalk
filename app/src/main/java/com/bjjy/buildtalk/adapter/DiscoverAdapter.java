@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.bjjy.buildtalk.R;
+import com.bjjy.buildtalk.core.event.PlayerEvent;
 import com.bjjy.buildtalk.entity.BannerEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.DiscoverEntity;
@@ -13,13 +15,17 @@ import com.bjjy.buildtalk.entity.DissertationEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
 import com.bjjy.buildtalk.ui.circle.CourseCircleActivity;
 import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
+import com.bjjy.buildtalk.ui.discover.DiscoverFragment;
 import com.bjjy.buildtalk.ui.discover.DissertationActivity;
 import com.bjjy.buildtalk.ui.discover.EveryTalkDetailActivity;
 import com.bjjy.buildtalk.ui.talk.MasterDetailActivity;
 import com.bjjy.buildtalk.utils.GlideUtils;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.youth.banner.Banner;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +52,7 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
     private List<CourseEntity.CircleInfoBean> mCourseEntities = new ArrayList<>();
     private List<DissertationEntity> dissertationEntities = new ArrayList<>();
     private Intent mIntent;
+    private OnChildRecyclerItemClickListener mOnChildRecyclerItemClickListener;
 
     /**
      * Same as QuickAdapter#QuickAdapter(Context,int) but with
@@ -60,6 +67,14 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
         addItemType(BODY_HOT_TOPTIC, R.layout.discover_body_toptic_layout);
         addItemType(BODY_COURSE, R.layout.discover_body_course_layout);
         addItemType(BODY_PROJECT, R.layout.discover_body_project_layout);
+    }
+
+    public interface OnChildRecyclerItemClickListener{
+        void onEveryTalkItemClick(BaseQuickAdapter adapter, View view, int position);
+    }
+
+    public void setOnChildRecyclerItemClickListener(OnChildRecyclerItemClickListener onChildRecyclerItemClickListener){
+        this.mOnChildRecyclerItemClickListener = onChildRecyclerItemClickListener;
     }
 
     @Override
@@ -111,6 +126,8 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
                     intent.putExtra("article_id",mEveryTalkEntities.get(position).getArticle_id()+"");
                     mContext.startActivity(intent);
                 });
+                everyTalkAdapter.setOnItemChildClickListener((adapter, view, position) ->
+                        mOnChildRecyclerItemClickListener.onEveryTalkItemClick(adapter, view, position));
                 break;
             case BODY_HOT_TOPTIC:
                 RecyclerView toptic_RecyclerView = helper.getView(R.id.toptic_recyclerView);

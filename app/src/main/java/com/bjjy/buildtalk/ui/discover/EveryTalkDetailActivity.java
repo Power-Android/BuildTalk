@@ -2,9 +2,7 @@ package com.bjjy.buildtalk.ui.discover;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.session.PlaybackState;
-import android.net.Uri;
-import android.os.CountDownTimer;
+import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -13,7 +11,6 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -31,33 +28,28 @@ import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.EveryTalkDetailAdapter;
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
+import com.bjjy.buildtalk.core.event.PayEvent;
+import com.bjjy.buildtalk.core.event.PlayerEvent;
 import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.GuestBookEntity;
 import com.bjjy.buildtalk.entity.PayOrderEntity;
+import com.bjjy.buildtalk.entity.SongsEntity;
 import com.bjjy.buildtalk.ui.main.LoginActivity;
 import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.GlideUtils;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.LoginHelper;
+import com.bjjy.buildtalk.utils.PlayerHelper;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
 import com.bjjy.buildtalk.utils.TimeUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bjjy.buildtalk.weight.BaseDialog;
 import com.bjjy.buildtalk.weight.CircleProgressView;
+import com.bjjy.buildtalk.weight.player.PlayerWindowManager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.audio.AudioAttributes;
-import com.google.android.exoplayer2.audio.AudioListener;
-import com.google.android.exoplayer2.metadata.Metadata;
-import com.google.android.exoplayer2.metadata.MetadataOutput;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -65,6 +57,11 @@ import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +72,8 @@ import cn.jzvd.JZDataSource;
 import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
 
-public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresenter> implements EveryTalkDetailContract.View, BaseQuickAdapter.OnItemChildClickListener, OnLoadMoreListener, Player.EventListener {
+public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresenter> implements
+        EveryTalkDetailContract.View, BaseQuickAdapter.OnItemChildClickListener, OnLoadMoreListener {
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
@@ -138,14 +136,12 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     @BindView(R.id.play_content_ll)
     LinearLayout mPlayContentLl;
 
-    private SimpleExoPlayer simpleExoPlayer;
     private EveryTalkDetailAdapter mEveryTalkDetailAdapter;
     private List<GuestBookEntity.GuestbookInfoBean> mList = new ArrayList<>();
     private String mArticle_id;
-    private EveryTalkDetailEntity.NewsInfoBean mMNewsInfo;
+    private EveryTalkDetailEntity.NewsInfoBean mNewsInfo;
     private int mCountCollect = 0;
     private int page = 1;
-    private Spanned mText;
     private boolean isGone = false;
     private int mPage_count = 1;
     private String mType;
@@ -153,9 +149,6 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     private String mEndUrl;
     private BaseDialog mBuyDialog;
     private IWXAPI wxapi;
-    private long curTime = 0;
-    private boolean isPause = false;
-    private boolean isEnd = false;
     private BaseDialog mDeleteDialog;
 
     Handler handler = new Handler(new Handler.Callback() {
@@ -168,14 +161,24 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
         }
     });
     private Bitmap mBitmap;
-    private float mAllTime;
-    private float mSize;
-    private CountDownTimer mCountDownTimer;
-    private boolean b = true;
-    private ExtractorMediaSource.Factory mFactory;
-    private Uri mUri;
     private String mType_zhuanti;
     private String mCountGuestbookNum;
+    private MediaPlayer mediaPlayer = new MediaPlayer();
+    private boolean isPlaying;
+    private int mSort;
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void event(PlayerEvent eventBean) {
+        updatePlayStatus();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void event(PayEvent eventBean) {
+        if (TextUtils.equals(eventBean.getMsg(), Constants.PAY_SUCCESS)) {
+            initEventAndData();
+        }
+    }
 
     @Override
     protected int getLayoutId() {
@@ -183,10 +186,18 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     }
 
     @Override
+    protected void onResume() {
+        setIsMargin(true);
+        super.onResume();
+    }
+
+    @Override
     protected void initView() {
+        EventBus.getDefault().register(this);
         mArticle_id = getIntent().getStringExtra("article_id");
         mType = getIntent().getStringExtra("type");
         mType_zhuanti = getIntent().getStringExtra("type_zhuanti");
+        mSort = getIntent().getIntExtra("sort", 1);
         StatusBarUtils.changeStatusBar(this, true, true);
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(mIncludeToolbar.getLayoutParams());
         lp.setMargins(0, StatusBarUtils.getStatusBarHeight(), 0, 0);
@@ -215,40 +226,39 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
 
     @Override
     public void handlerTalkDetail(EveryTalkDetailEntity everyTalkDetailEntity) {
-        mMNewsInfo = everyTalkDetailEntity.getNewsInfo();
+        mNewsInfo = everyTalkDetailEntity.getNewsInfo();
         if (TextUtils.isEmpty(mType)) {
             mToolbarTitle.setText("每日一谈");
         } else {
-            mToolbarTitle.setText(mMNewsInfo.getArticle_title());
+            mToolbarTitle.setText(mNewsInfo.getArticle_title());
         }
-        mTitleTv.setText(mMNewsInfo.getArticle_title());
-        Glide.with(this).load(mMNewsInfo.getAuthor_pic()).apply(new RequestOptions().error(R.drawable.moren_face)).into(mFaceIv);
-        mNameTv.setText(mMNewsInfo.getAuthor_name());
-        mTimeTv.setText(mMNewsInfo.getPublish_time());
-        mMediaNameTv.setText(mMNewsInfo.getArticle_title());
-        if (!TextUtils.isEmpty(mMNewsInfo.getAudio_url())) {
+        mTitleTv.setText(mNewsInfo.getArticle_title());
+        Glide.with(this).load(mNewsInfo.getAuthor_pic()).apply(new RequestOptions().error(R.drawable.moren_face)).into(mFaceIv);
+        mNameTv.setText(mNewsInfo.getAuthor_name());
+        mTimeTv.setText(TimeUtils.getFriendlyTimeSpanByNow(mNewsInfo.getPublish_time()));
+        mMediaNameTv.setText(mNewsInfo.getArticle_title());
+        if (!TextUtils.isEmpty(mNewsInfo.getAudio_url())) {
             mMediaRl.setVisibility(View.VISIBLE);
-            mMediaSizeTv.setText(String.format("%sM", mMNewsInfo.getAudio_size()));
+            mMediaSizeTv.setText(String.format("%sM", mNewsInfo.getAudio_size()));
             Glide.with(this).load(R.drawable.playing).into(mPlayingIv);
-            simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(this);
-            DefaultDataSourceFactory defaultDataSourceFactory =
-                    new DefaultDataSourceFactory(this, Util.getUserAgent(this, getString(R.string.app_name)));
-            mFactory = new ExtractorMediaSource.Factory(defaultDataSourceFactory);
-            mUri = Uri.parse(mMNewsInfo.getAudio_url());
-            simpleExoPlayer.prepare(mFactory.createMediaSource(mUri));
-            simpleExoPlayer.setPlayWhenReady(false);
-            simpleExoPlayer.addListener(this);
+            try {
+                mediaPlayer.setDataSource(mNewsInfo.getAudio_url());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            mediaPlayer.setOnPreparedListener(mp -> mMediaTimeTv.setText(TimeUtils.stringForTime(mp.getDuration())));
+            mediaPlayer.prepareAsync();
         }
-        if (!TextUtils.isEmpty(mMNewsInfo.getVideo_url())) {
+        if (!TextUtils.isEmpty(mNewsInfo.getVideo_url())) {
             mFlVideoPlayer.setVisibility(View.VISIBLE);
             new Thread(() -> {
-                mBitmap = GlideUtils.loadVideoScreenshot(mMNewsInfo.getVideo_url());
+                mBitmap = GlideUtils.loadVideoScreenshot(mNewsInfo.getVideo_url());
                 if (mBitmap != null) {
                     handler.sendEmptyMessage(1);
                 }
             }).start();
-            mVideoplayer.setUp(new JZDataSource(mMNewsInfo.getVideo_url()), Jzvd.SCREEN_WINDOW_NORMAL);
-            if (!mPresenter.mDataManager.getLoginStatus() || mMNewsInfo.getIs_buy() == 0) {
+            mVideoplayer.setUp(new JZDataSource(mNewsInfo.getVideo_url()), Jzvd.SCREEN_WINDOW_NORMAL);
+            if (!mPresenter.mDataManager.getLoginStatus() || mNewsInfo.getIs_buy() == 0) {
                 misPlay.setVisibility(View.VISIBLE);
             } else {
                 misPlay.setVisibility(View.GONE);
@@ -256,28 +266,28 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
             misPlay.setOnClickListener(v -> {
                 if (!mPresenter.mDataManager.getLoginStatus()) {
                     startActivity(new Intent(EveryTalkDetailActivity.this, LoginActivity.class));
-                } else if (mMNewsInfo.getIs_buy() == 0) {
+                } else if (mNewsInfo.getIs_buy() == 0) {
                     showBuyDialog();
                 }
             });
         }
 
-        if (!TextUtils.isEmpty(mMNewsInfo.getContent())) {
+        if (!TextUtils.isEmpty(mNewsInfo.getContent())) {
             WebSettings settings = mWebView.getSettings();
             settings.setJavaScriptEnabled(true);
             settings.setDomStorageEnabled(true);
             settings.setUseWideViewPort(true);
             settings.setLoadWithOverviewMode(true);
             settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-            mWebView.loadData(getHtmlData(mMNewsInfo.getContent()), "text/html;charset=utf-8", "utf-8");
+            mWebView.loadData(getHtmlData(mNewsInfo.getContent()), "text/html;charset=utf-8", "utf-8");
         }
 
-        if ("0".equals(String.valueOf(mMNewsInfo.getIsCollect()))) {
+        if ("0".equals(String.valueOf(mNewsInfo.getIsCollect()))) {
             mPraiseIv.setImageResource(R.drawable.praise_def);
         } else {
             mPraiseIv.setImageResource(R.drawable.praise_sel);
         }
-        mCountCollect = mMNewsInfo.getCountCollect();
+        mCountCollect = mNewsInfo.getCountCollect();
         mPraiseTv.setText(String.format("%d赞", mCountCollect));
         mRecordEt.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEND) {
@@ -285,7 +295,7 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
                     ToastUtils.showShort("请输入评论内容");
                     return false;
                 }
-                mPresenter.saveRecord(mMNewsInfo.getArticle_id(), mRecordEt.getText().toString().trim(), mType_zhuanti);
+                mPresenter.saveRecord(mNewsInfo.getArticle_id(), mRecordEt.getText().toString().trim(), mType_zhuanti);
                 mRecordEt.clearFocus();
                 mRecordEt.getText().clear();
                 mRecordLl.setVisibility(View.VISIBLE);
@@ -296,28 +306,14 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
         });
     }
 
-    private void initCountDownTimer(long millisInFuture) {
-        //倒计时显示操作
-        // 进度条实现更新操作
-        mCountDownTimer = new CountDownTimer(millisInFuture, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                curTime = millisUntilFinished;
-                //倒计时显示操作
-                float second = curTime / 1000;
-                mMediaTimeTv.setText(TimeUtils.getMinuteBySecond((int) (millisUntilFinished / 1000)));
-                // 进度条实现更新操作
-                second = (mAllTime / 1000 - second) / (mAllTime / 1000) * 100;
-                mProgressBar.setCurrent((int) second);
-            }
-
-            @Override
-            public void onFinish() {
-                mProgressBar.setCurrent(0);
-                curTime = 0;
-                mMediaTimeTv.setText(TimeUtils.getMinuteBySecond((int) mSize));
-            }
-        };
+    private void updatePlayStatus() {
+        if (getPlayerWindowManager().getBinder().isPlaying() && getPlayerWindowManager().getSongId().equals(mArticle_id)){
+            mPlayingIv.setVisibility(View.VISIBLE);
+            Glide.with(this).load(R.drawable.media_stop_icon).into(mPlayIv);
+        }else {
+            mPlayingIv.setVisibility(View.GONE);
+            Glide.with(this).load(R.drawable.media_play_icon).into(mPlayIv);
+        }
     }
 
     private void showBuyDialog() {
@@ -329,8 +325,8 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
                 .isOnTouchCanceled(true)
                 .addViewOnClickListener(R.id.cancle_tv, v -> mBuyDialog.dismiss())
                 .addViewOnClickListener(R.id.query_tv, v -> {
-                    mPresenter.payOrder("1", mMNewsInfo.getArticle_id(), mMNewsInfo.getArticle_title(),
-                            mMNewsInfo.getArticle_price());
+                    mPresenter.payOrder("1", mNewsInfo.getArticle_id(), mNewsInfo.getArticle_title(),
+                            mNewsInfo.getArticle_price());
                     mBuyDialog.dismiss();
                 })
                 .builder();
@@ -391,9 +387,6 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     @Override
     public void onPause() {
         super.onPause();
-        if (mCountDownTimer != null) {
-            mCountDownTimer.cancel();
-        }
         Jzvd.releaseAllVideos();
     }
 
@@ -402,77 +395,52 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
         super.onDestroy();
         KeyboardUtils.unregisterSoftInputChangedListener(this);
         KeyboardUtils.hideSoftInput(this);
-        if (simpleExoPlayer != null) {
-            simpleExoPlayer.release();
-        }
+        EventBus.getDefault().unregister(this);
     }
 
-    @Override
-    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-        if (playWhenReady) {
-            LogUtils.e(playbackState);
-            if (curTime == 0 && playbackState == PlaybackState.STATE_PLAYING) {
-                initCountDownTimer((long) mAllTime);
-                mCountDownTimer.start();
-            }
-            if (curTime != 0 && isPause) {
-                //将上次当前剩余时间作为新的时长
-                initCountDownTimer(curTime);
-                mCountDownTimer.start();
-            }
-            mPlayIv.setImageResource(R.drawable.media_stop_icon);
-            mPlayingIv.setVisibility(View.VISIBLE);
-            if (playbackState == Player.STATE_ENDED) {
-                simpleExoPlayer.prepare(mFactory.createMediaSource(mUri));
-                simpleExoPlayer.setPlayWhenReady(!playWhenReady);
-            }
-            isPause = false;
-        } else {
-            long duration = simpleExoPlayer.getDuration();
-            mAllTime = duration;
-            if (!b && mCountDownTimer != null && playbackState == PlaybackState.STATE_PLAYING) {
-                mCountDownTimer.cancel();
-            }
-            mPlayIv.setImageResource(R.drawable.media_play_icon);
-            mPlayingIv.setVisibility(View.INVISIBLE);
-            if (b) {
-                mMediaTimeTv.setText(TimeUtils.stringForTime((int) duration));
-                b = false;
-                return;
-            }
-            isPause = true;
-        }
-    }
-
-    @OnClick({R.id.play_iv, R.id.praise_ll, R.id.share_iv, R.id.record_ll})
+    @OnClick({R.id.play_rl, R.id.praise_ll, R.id.share_iv, R.id.record_ll})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.play_iv:
+            case R.id.play_rl:
                 LoginHelper.login(this, mPresenter.mDataManager, () -> {
-                    if (mMNewsInfo.getIs_buy() == 0 && !TextUtils.isEmpty(mType)) {
+                    if (mNewsInfo.getIs_buy() == 0 && !TextUtils.isEmpty(mType)) {
                         showBuyDialog();
                         return;
                     }
-                    if (simpleExoPlayer != null) {
-                        simpleExoPlayer.setPlayWhenReady(!simpleExoPlayer.getPlayWhenReady());
+                    if (mSort == 1){
+                        if (!mPresenter.mDataManager.getIsShowPlayer() | PlayerHelper.querySongs(mArticle_id, mPresenter.mDataManager) == null){
+                            showPlayer(mArticle_id);
+                        }else {
+                            if (TextUtils.equals(mArticle_id, getPlayerWindowManager().getSongId())){
+                                if (getPlayerWindowManager().getBinder().isPlaying()){
+                                    getPlayerWindowManager().getBinder().pause();
+                                }else {
+                                    getPlayerWindowManager().getBinder().resume();
+                                }
+                            }else {
+                                showPlayer(mArticle_id);
+                            }
+                        }
+                    }else {
+                        mPresenter.requestSongs(mArticle_id);
                     }
                 });
                 break;
             case R.id.praise_ll:
                 LoginHelper.login(this, mPresenter.mDataManager, () -> {
-                    boolean isCollect = "1".equals(String.valueOf(mMNewsInfo.getIsCollect()));
+                    boolean isCollect = "1".equals(String.valueOf(mNewsInfo.getIsCollect()));
                     mPresenter.collectArticle(mArticle_id, isCollect, mType_zhuanti);
                 });
                 break;
             case R.id.share_iv:
                 if (TextUtils.isEmpty(mType)) {
-                    mUrl = String.format("%sjtfwhgetopenid?user_id=%s&news_id=%s", Constants.BASE_URL, mPresenter.mDataManager.getUser().getUser_id(), mArticle_id);
-                    mEndUrl = Constants.END_URL + "&redirect_uri=" + URLEncoder.encode(mUrl) + "&response_type=code&scope=snsapi_userinfo&state=news#wechat_redirect";
-                    DialogUtils.showShareDialog(this, mEndUrl, mEndUrl, mMNewsInfo.getArticle_title(), mMNewsInfo.getAuthor_pic(), "每日一谈", false);
+                    mUrl = Constants.BASE_URL + "jtfwhgetopenid" + "?user_id=" + mPresenter.mDataManager.getUser().getUser_id() + "&news_id=" + mArticle_id;
+                    mEndUrl = Constants.END_URL + "&redirect_uri=" + mUrl + "&response_type=code&scope=snsapi_userinfo&state=news#wechat_redirect";
+                    DialogUtils.showShareDialog(this, mEndUrl, mEndUrl, mNewsInfo.getArticle_title(), mNewsInfo.getAuthor_pic(), "每日一谈", false);
                 } else {
-                    mUrl = String.format("%sjtfwhgetopenid?user_id=%s&article_id=%s", Constants.BASE_URL, mPresenter.mDataManager.getUser().getUser_id(), mArticle_id);
-                    mEndUrl = String.format("%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=articlePay#wechat_redirect", Constants.END_URL, URLEncoder.encode(mUrl));
-                    DialogUtils.showShareDialog(this, mEndUrl, mEndUrl, mMNewsInfo.getArticle_title(), mMNewsInfo.getAuthor_pic(), mMNewsInfo.getArticle_title(), false);
+                    mUrl = Constants.BASE_URL + "jtfwhgetopenid" + "?user_id=" + mPresenter.mDataManager.getUser().getUser_id() + "&article_id=" + mArticle_id;
+                    mEndUrl = Constants.END_URL + "&redirect_uri=" + URLEncoder.encode(mUrl) + "&response_type=code&scope=snsapi_userinfo&state=articlePay#wechat_redirect";
+                    DialogUtils.showShareDialog(this, mEndUrl, mEndUrl, mNewsInfo.getArticle_title(), mNewsInfo.getAuthor_pic(), mNewsInfo.getArticle_title(), false);
                 }
                 break;
             case R.id.record_ll:
@@ -491,6 +459,23 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     }
 
     @Override
+    public void handlerSongs() {
+        if (!mPresenter.mDataManager.getIsShowPlayer() | PlayerHelper.querySongs(mArticle_id, mPresenter.mDataManager) == null){
+            showPlayer(mArticle_id);
+        }else {
+            if (TextUtils.equals(mArticle_id, getPlayerWindowManager().getSongId())){
+                if (getPlayerWindowManager().getBinder().isPlaying()){
+                    getPlayerWindowManager().getBinder().pause();
+                }else {
+                    getPlayerWindowManager().getBinder().resume();
+                }
+            }else {
+                showPlayer(mArticle_id);
+            }
+        }
+    }
+
+    @Override
     public void collectSuccess(boolean isSuccess, boolean isCollect) {
         if (isCollect) {
             if (mCountCollect >= 1) {
@@ -499,11 +484,11 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
                 mPraiseTv.setText(0 + "赞");
             }
             mPraiseIv.setImageResource(R.drawable.praise_def);
-            mMNewsInfo.setIsCollect(0);
+            mNewsInfo.setIsCollect(0);
         } else {
             mPraiseTv.setText(++mCountCollect + "赞");
             mPraiseIv.setImageResource(R.drawable.praise_sel);
-            mMNewsInfo.setIsCollect(1);
+            mNewsInfo.setIsCollect(1);
         }
     }
 

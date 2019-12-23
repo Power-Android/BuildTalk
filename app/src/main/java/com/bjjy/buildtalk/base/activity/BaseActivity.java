@@ -1,5 +1,6 @@
 package com.bjjy.buildtalk.base.activity;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -7,19 +8,26 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.bjjy.buildtalk.R;
+import com.bjjy.buildtalk.app.DataManager;
 import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.base.view.IView;
+import com.bjjy.buildtalk.ui.main.MainActivity;
 import com.bjjy.buildtalk.utils.AnimatorUtils;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
+import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bjjy.buildtalk.weight.BaseDialog;
+import com.bjjy.buildtalk.weight.player.PlayerWindowManager;
 
 import java.util.List;
 
@@ -43,11 +51,13 @@ import static com.bjjy.buildtalk.app.Constants.NORMAL_STATE;
  * @description: BaseActivity 使用状态布局，根布局的id必须为normalView，且必须是Viewgroup
  */
 public abstract class BaseActivity<T extends IPresenter> extends AbstractActivity
-        implements IView, HasSupportFragmentInjector {
+        implements IView, HasSupportFragmentInjector, View.OnTouchListener {
     @Inject
     DispatchingAndroidInjector<Fragment> mFragmentDispatchingAndroidInjector;
     @Inject
     protected T mPresenter;
+    @Inject
+    DataManager mDataManager;
     private ViewGroup mNormalView;
     private View mErrorView;
     private View mLoadingView;
@@ -57,6 +67,9 @@ public abstract class BaseActivity<T extends IPresenter> extends AbstractActivit
     private boolean isLoading = true;//是否使用状态布局
     private BaseDialog mLoadingDialog;
     private Uri data;
+    private PlayerWindowManager mPlayerWindowManager;
+    private boolean isMargin;
+    private GestureDetector mGestureDetector;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,9 +84,35 @@ public abstract class BaseActivity<T extends IPresenter> extends AbstractActivit
         }
 
         initLoadingDialog();
+        mPlayerWindowManager = PlayerWindowManager.getInstance();
+        mGestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener(){
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                if (mPlayerWindowManager.getBinder().isPlaying() && mPlayerWindowManager.getPlayerView() != null){
+                    if (velocityY >= 0) {
+//                    TranslateAnimation mHiddenAction = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+//                            Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+//                            0.0f, Animation.RELATIVE_TO_SELF, 1.0f);
+                        mPlayerWindowManager.getPlayerView().setVisibility(View.VISIBLE);
+//                    mHiddenAction.setDuration(1000);
+//                    PlayerWindowManager.getInstance().getPlayerView().startAnimation(mHiddenAction);
 
+                    } else {
+//                    TranslateAnimation mHiddenAction = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+//                            Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+//                            1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+                        mPlayerWindowManager.getPlayerView().setVisibility(View.GONE);
+//                    mHiddenAction.setDuration(1000);
+//                    PlayerWindowManager.getInstance().getPlayerView().startAnimation(mHiddenAction);
+
+                    }
+                }
+
+                return false;
+            }
+        });
         mNormalView = findViewById(R.id.normalView);
-        if (mNormalView == null){
+        if (mNormalView == null) {
             isLoading = !isLoading;
             return;
         }
@@ -104,6 +143,51 @@ public abstract class BaseActivity<T extends IPresenter> extends AbstractActivit
     }
 
     @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        return mGestureDetector.onTouchEvent(event);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        mGestureDetector.onTouchEvent(ev);
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mDataManager.getIsShowPlayer()){
+            showPlayer(mPlayerWindowManager.getSongId());
+        }
+    }
+
+    public PlayerWindowManager getPlayerWindowManager(){
+        return mPlayerWindowManager;
+    }
+
+    @Override
+    public void showPlayer(String songId) {
+        mDataManager.setIsSHowPlayer(true);
+        if (!TextUtils.isEmpty(songId)) {
+            LogUtils.e(isMargin);
+            mPlayerWindowManager.showFloatPlayer(this, mDataManager, songId, isMargin);
+        }
+    }
+
+    /**
+     * 改变播放器高度
+     */
+    public void setIsMargin(boolean isMargin){
+        this.isMargin = isMargin;
+    }
+
+    @Override
+    public void hidePlayer() {
+        //TODO 停止播放，调用stop方法
+        mDataManager.setIsSHowPlayer(false);
+    }
+
+    @Override
     public void showErrorMsg(String errorMsg) {
         ToastUtils.showShort(errorMsg);
     }
@@ -111,7 +195,7 @@ public abstract class BaseActivity<T extends IPresenter> extends AbstractActivit
     @Override
     public void showLoading() {
         if (!isLoading) return;
-        if (mLoadingDialog != null){
+        if (mLoadingDialog != null) {
             mLoadingDialog.show();
         }
     }
@@ -119,7 +203,7 @@ public abstract class BaseActivity<T extends IPresenter> extends AbstractActivit
     @Override
     public void hideLoading() {
         if (!isLoading) return;
-        if (mLoadingDialog != null){
+        if (mLoadingDialog != null) {
             mLoadingDialog.dismiss();
         }
     }
@@ -127,7 +211,7 @@ public abstract class BaseActivity<T extends IPresenter> extends AbstractActivit
     @Override
     public void showError() {
         if (!isLoading) return;
-        if(mCurrentState == ERROR_STATE) return;
+        if (mCurrentState == ERROR_STATE) return;
         hideCurrentViewByState();
         mCurrentState = ERROR_STATE;
         showCurrentViewByState();
@@ -136,7 +220,7 @@ public abstract class BaseActivity<T extends IPresenter> extends AbstractActivit
     @Override
     public void showNoNetwork() {
         if (!isLoading) return;
-        if(mCurrentState == NONET_STATE) return;
+        if (mCurrentState == NONET_STATE) return;
         hideCurrentViewByState();
         mCurrentState = NONET_STATE;
         showCurrentViewByState();
@@ -145,7 +229,7 @@ public abstract class BaseActivity<T extends IPresenter> extends AbstractActivit
     @Override
     public void showEmpty() {
         if (!isLoading) return;
-        if(mCurrentState == EMPTY_STATE) return;
+        if (mCurrentState == EMPTY_STATE) return;
         mCurrentState = EMPTY_STATE;
         showCurrentViewByState();
     }
@@ -153,14 +237,14 @@ public abstract class BaseActivity<T extends IPresenter> extends AbstractActivit
     @Override
     public void showNormal() {
         if (!isLoading) return;
-        if(mCurrentState == NORMAL_STATE) return;
+        if (mCurrentState == NORMAL_STATE) return;
         hideCurrentViewByState();
         mCurrentState = NORMAL_STATE;
         showCurrentViewByState();
     }
 
     private void initLoadingDialog() {
-        if (mLoadingDialog == null){
+        if (mLoadingDialog == null) {
             mLoadingDialog = new BaseDialog.Builder(this)
                     .setViewId(R.layout.loading_view)
                     .setGravity(Gravity.CENTER)
@@ -217,7 +301,7 @@ public abstract class BaseActivity<T extends IPresenter> extends AbstractActivit
             default:
                 break;
         }
-        if(showView == null) return;
+        if (showView == null) return;
         AnimatorUtils.showByAlpha(showView);
     }
 
@@ -246,7 +330,7 @@ public abstract class BaseActivity<T extends IPresenter> extends AbstractActivit
             default:
                 break;
         }
-        if(hideView == null) return;
+        if (hideView == null) return;
         AnimatorUtils.hideByAlpha(hideView);
     }
 
@@ -256,7 +340,7 @@ public abstract class BaseActivity<T extends IPresenter> extends AbstractActivit
         boolean flag = false;
         if (cmpName != null) { // 说明系统中存在这个activity    
             ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-            List<ActivityManager.RunningTaskInfo> taskInfoList =am.getRunningTasks(10);
+            List<ActivityManager.RunningTaskInfo> taskInfoList = am.getRunningTasks(10);
             for (ActivityManager.RunningTaskInfo taskInfo : taskInfoList) {
                 if (taskInfo.baseActivity.equals(cmpName)) {// 说明它已经启动了
                     flag = true;

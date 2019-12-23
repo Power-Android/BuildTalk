@@ -63,8 +63,7 @@ public class Constants {
     public static final String PASSWORD = "password";
     public static final String LOGIN_STATUS = "login_status";
     public static final String ISGUIDE = "isGuide";
-
-
+    public static final String IS_SHOW_PLAYER = "isShowPlayer";
 
     /**
      * EventBus Tag
@@ -84,7 +83,6 @@ public class Constants {
     public static final String WX_PAGER = "wx_pager";
     public static final String TAG_DEFAULT = "tag_default";
 
-
     /**
      * constants
      */
@@ -96,5 +94,19 @@ public class Constants {
     public static final String PAGE = "page";
     public static final String PAGE_SIZE = "page_size";
     public static final String MOBILE = "mobile";
+
+    /**
+     * player
+     */
+    public static final String EXTRA_NOTIFICATION = "com.bjjy.buildtalk.notification";
+    public static final int SONG_PLAY = 0;//正在播放
+    public static final int SONG_PAUSE = 1;//暂停
+    public static final int SONG_RESUME = 2;//继续播放
+    public static final int SONG_CHANGE = 3;//歌曲改变（上一首，下一首）
+    public static final int SONG_CLOSE = 4;//播放器关闭
+    public static final int SONG_PROGRESS = 5;//播放进度
+    public static final int SONG_COMPLETION = 6;//播放完成
+    public static final int SONG_ISTALK = 7;//判断是否是首页每日一谈的音频,用来改变图标
+
 
 }

@@ -3,6 +3,7 @@ package com.bjjy.buildtalk.core.db;
 import com.bjjy.buildtalk.app.User;
 import com.bjjy.buildtalk.core.greendao.CircleHistoryData;
 import com.bjjy.buildtalk.core.greendao.HistoryData;
+import com.bjjy.buildtalk.entity.SongsEntity;
 
 import java.util.List;
 
@@ -81,4 +82,13 @@ public interface DbHelper {
      * @return List<CircleHistoryData>
      */
     List<CircleHistoryData> loadAllCircleHistoryData();
+
+    void addSongsData(List<SongsEntity> songs);
+
+    void clearAllSongsData();
+
+    List<SongsEntity> getSongsData();
+
+    SongsEntity querySongsDataById(String songId);
+
 }

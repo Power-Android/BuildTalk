@@ -22,6 +22,7 @@ public class SplashActivity extends BaseActivity<SplashPresenter> implements Spl
 
     @Override
     protected int getLayoutId() {
+        mPresenter.mDataManager.setIsSHowPlayer(false);//隐藏音乐播放器
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         return R.layout.activity_splash;
     }
@@ -29,7 +30,6 @@ public class SplashActivity extends BaseActivity<SplashPresenter> implements Spl
     @Override
     protected void initView() {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏
-
 //        String action = getIntent().getAction();
         String scheme = getIntent().getScheme();
         if (isExistMainActivity(MainActivity.class)) {

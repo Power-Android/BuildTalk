@@ -44,6 +44,7 @@ public class TopticCircleContract {
 
         void handleruserShieldRecordSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list);
 
+        void handlerTopOperateSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i);
     }
 
     interface Presenter extends IPresenter<View>{

@@ -4,15 +4,18 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bjjy.buildtalk.R;
+import com.bjjy.buildtalk.app.DataManager;
 import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.base.view.IView;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bjjy.buildtalk.weight.BaseDialog;
+import com.bjjy.buildtalk.weight.player.PlayerWindowManager;
 
 import javax.inject.Inject;
 
@@ -28,27 +31,28 @@ public abstract class BaseFragment<T extends IPresenter> extends AbstractFragmen
 
     @Inject
     protected T mPresenter;
-
+    @Inject
+    DataManager mDataManager;
     protected Context mContext;
     private BaseDialog mLoadingDialog;
+    private PlayerWindowManager mPlayerWindowManager;
 
     @Override
     public void onAttach(Context context) {
         AndroidSupportInjection.inject(this);
         super.onAttach(context);
         this.mContext = context;
+        mPlayerWindowManager = PlayerWindowManager.getInstance();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         if (mPresenter != null) {
             mPresenter.attachView(this);
         }
         initLoadingDialog();
     }
-
 
     @Override
     public void onDestroyView() {
@@ -74,20 +78,20 @@ public abstract class BaseFragment<T extends IPresenter> extends AbstractFragmen
 
     @Override
     public void showLoading() {
-        if (mLoadingDialog != null){
+        if (mLoadingDialog != null) {
             mLoadingDialog.show();
         }
     }
 
     @Override
     public void hideLoading() {
-        if (mLoadingDialog != null){
+        if (mLoadingDialog != null) {
             mLoadingDialog.dismiss();
         }
     }
 
     private void initLoadingDialog() {
-        if (mLoadingDialog == null){
+        if (mLoadingDialog == null) {
             mLoadingDialog = new BaseDialog.Builder(mContext)
                     .setViewId(R.layout.loading_view)
                     .setGravity(Gravity.CENTER)
@@ -128,4 +132,18 @@ public abstract class BaseFragment<T extends IPresenter> extends AbstractFragmen
     public void showNormal() {
 
     }
+
+    @Override
+    public void showPlayer(String songId) {
+        mDataManager.setIsSHowPlayer(true);
+        if (!TextUtils.isEmpty(songId)) {
+            mPlayerWindowManager.showFloatPlayer(getActivity(), mDataManager, songId, true);
+        }
+    }
+
+    @Override
+    public void hidePlayer() {
+
+    }
+
 }

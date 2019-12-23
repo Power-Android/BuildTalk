@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import com.bjjy.buildtalk.app.App;
 import com.bjjy.buildtalk.app.Constants;
+import com.bjjy.buildtalk.entity.SongsEntity;
 
 import javax.inject.Inject;
 
@@ -31,4 +32,13 @@ public class PreferenceHelperImpl implements PreferenceHelper {
         return mPreferences.getBoolean(Constants.ISGUIDE,false);
     }
 
+    @Override
+    public void setIsSHowPlayer(boolean isShow) {
+        mPreferences.edit().putBoolean(Constants.IS_SHOW_PLAYER, isShow).apply();
+    }
+
+    @Override
+    public boolean getIsShowPlayer() {
+        return mPreferences.getBoolean(Constants.IS_SHOW_PLAYER, false);
+    }
 }

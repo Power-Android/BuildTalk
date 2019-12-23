@@ -1,8 +1,11 @@
 package com.bjjy.buildtalk.ui.circle;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewPager;
@@ -18,6 +21,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -41,11 +46,13 @@ import com.bjjy.buildtalk.ui.talk.CircleManDetailActivity;
 import com.bjjy.buildtalk.ui.talk.MasterDetailActivity;
 import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
+import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bjjy.buildtalk.weight.BaseDialog;
 import com.bjjy.buildtalk.weight.MyBadgeViewPagerAdapter;
+import com.bjjy.buildtalk.weight.player.PlayerWindowManager;
 import com.bjjy.buildtalk.weight.tablayout.TabLayout;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -204,6 +211,12 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
     @Override
     protected int getLayoutId() {
         return R.layout.activity_toptic_circle;
+    }
+
+    @Override
+    protected void onResume() {
+        setIsMargin(true);
+        super.onResume();
     }
 
     @Override
@@ -785,6 +798,16 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
             }
         }
         setUpTabBadge();
+    }
+
+    @Override
+    public void handlerTopOperateSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i) {
+        if (0 == data.getIs_top()){
+            ToastUtils.showShort("主题置顶成功");
+        }else {
+            ToastUtils.showShort("取消置顶成功");
+        }
+        onRefresh(mRefreshLayout);
     }
 
     @Override

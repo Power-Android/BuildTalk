@@ -207,6 +207,7 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
 
     @Override
     protected void onResume() {
+        setIsMargin(true);
         super.onResume();
         new Thread(() -> {
             mBitmap = GlideUtils.loadVideoScreenshot(mVideo_url);
@@ -493,7 +494,7 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
     private void showEditDialog(ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list) {
         mEditDailog = new BaseDialog.Builder(this)
                 .setGravity(Gravity.BOTTOM)
-                .setViewId(R.layout.dialog_theme_edit)
+                .setViewId(R.layout.dialog_theme_edit1)
                 .setWidthHeightpx(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 .setAnimation(R.style.bottom_aniamtion)
                 .isOnTouchCanceled(true)

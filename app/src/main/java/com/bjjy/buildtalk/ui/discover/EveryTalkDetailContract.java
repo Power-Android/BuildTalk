@@ -31,6 +31,9 @@ public class EveryTalkDetailContract {
         void handlerWxOrder(PayOrderEntity payOrderEntity);
 
         void handlerDeleteComment(List<GuestBookEntity.GuestbookInfoBean> mComment_content, int i);
+
+        void handlerSongs();
+
     }
 
     interface Presenter extends IPresenter<View>{

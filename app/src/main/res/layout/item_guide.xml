@@ -9,8 +9,7 @@
         android:id="@+id/guide_iv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        tools:ignore="ContentDescription" />
+        android:scaleType="fitXY" />
 
     <RelativeLayout
         android:id="@+id/guide_into"

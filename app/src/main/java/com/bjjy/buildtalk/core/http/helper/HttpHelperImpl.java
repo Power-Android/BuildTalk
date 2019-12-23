@@ -38,6 +38,7 @@ import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.SaveRecordEntity;
 import com.bjjy.buildtalk.entity.SearchCircleInfoEntity;
 import com.bjjy.buildtalk.entity.SearchResultEntity;
+import com.bjjy.buildtalk.entity.SongsEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.entity.VersionRecordEntity;
 
@@ -346,8 +347,8 @@ public class HttpHelperImpl implements HttpHelper {
     }
 
     @Override
-    public Observable<BaseResponse<List<VersionRecordEntity>>> versionRecord() {
-        return mApiService.versionRecord();
+    public Observable<BaseResponse<List<VersionRecordEntity>>> versionRecord(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.versionRecord(headers, params);
     }
 
     @Override
@@ -418,5 +419,15 @@ public class HttpHelperImpl implements HttpHelper {
     @Override
     public Observable<BaseResponse<File>> downloadFile(String url) {
         return mApiService.downloadFile(url);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> themeTopOperate(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.themeTopOperate(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<List<SongsEntity>>> searchAudioList(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.searchAudioList(headers, params);
     }
 }

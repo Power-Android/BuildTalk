@@ -3,6 +3,7 @@ package com.bjjy.buildtalk.ui.main;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -12,6 +13,9 @@ import android.widget.FrameLayout;
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
+import com.bjjy.buildtalk.core.event.PlayerEvent;
+import com.bjjy.buildtalk.core.receiver.Notifier;
+import com.bjjy.buildtalk.entity.ActivityEntity;
 import com.bjjy.buildtalk.ui.circle.CircleFragment;
 import com.bjjy.buildtalk.ui.circle.CourseCircleActivity;
 import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
@@ -20,8 +24,13 @@ import com.bjjy.buildtalk.ui.discover.DiscoverFragment;
 import com.bjjy.buildtalk.ui.discover.EveryTalkDetailActivity;
 import com.bjjy.buildtalk.ui.mine.MineFragment;
 import com.bjjy.buildtalk.ui.talk.TalkFragment;
+import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 
@@ -69,6 +78,12 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
             data = Uri.parse(s);
             scheme();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        setIsMargin(true);
+        super.onResume();
     }
 
     private void initNavigationView() {
@@ -184,8 +199,15 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
             ToastUtils.showShort(getString(R.string.double_click_exit_toast));
             clickTime = System.currentTimeMillis();
         } else {
+            getPlayerWindowManager().getBinder().stop();
             finish();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        getPlayerWindowManager().getBinder().stop();
     }
 
     private void scheme() {

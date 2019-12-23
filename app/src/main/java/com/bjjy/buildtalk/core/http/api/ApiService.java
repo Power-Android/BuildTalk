@@ -37,6 +37,7 @@ import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.SaveRecordEntity;
 import com.bjjy.buildtalk.entity.SearchCircleInfoEntity;
 import com.bjjy.buildtalk.entity.SearchResultEntity;
+import com.bjjy.buildtalk.entity.SongsEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.entity.VersionRecordEntity;
 
@@ -526,8 +527,10 @@ public interface ApiService {
     /**
      * @return 版本记录
      */
-    @GET("searchUpdateRecord")
-    Observable<BaseResponse<List<VersionRecordEntity>>> versionRecord();
+    @Headers(Constants.HEADER_PASSID)
+    @POST("searchUpdateRecord")
+    @FormUrlEncoded
+    Observable<BaseResponse<List<VersionRecordEntity>>> versionRecord(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
     /**
      * @return 首页活动弹框
@@ -542,6 +545,14 @@ public interface ApiService {
     @POST("themeChoicenessOperate")
     @FormUrlEncoded
     Observable<BaseResponse<IEntity>> addChoiceness(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 主题置顶
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("themeTopOperate")
+    @FormUrlEncoded
+    Observable<BaseResponse<IEntity>> themeTopOperate(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
     /**
      * @return 主题不喜欢
@@ -621,7 +632,13 @@ public interface ApiService {
     @FormUrlEncoded
     Observable<BaseResponse<IEntity>> complain(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
-
+    /**
+     * @return 音频列表
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("searchAudioList")
+    @FormUrlEncoded
+    Observable<BaseResponse<List<SongsEntity>>> searchAudioList(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
 
 

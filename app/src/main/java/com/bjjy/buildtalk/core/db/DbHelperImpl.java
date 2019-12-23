@@ -1,5 +1,6 @@
 package com.bjjy.buildtalk.core.db;
 
+import android.annotation.SuppressLint;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.bjjy.buildtalk.app.App;
@@ -11,12 +12,26 @@ import com.bjjy.buildtalk.core.greendao.DaoMaster;
 import com.bjjy.buildtalk.core.greendao.DaoSession;
 import com.bjjy.buildtalk.core.greendao.HistoryData;
 import com.bjjy.buildtalk.core.greendao.HistoryDataDao;
+import com.bjjy.buildtalk.core.greendao.SongsEntityDao;
 import com.bjjy.buildtalk.core.greendao.UserDao;
+import com.bjjy.buildtalk.entity.SongsEntity;
+import com.bjjy.buildtalk.utils.LogUtils;
+
+import org.greenrobot.greendao.query.Query;
+import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author power
@@ -39,6 +54,7 @@ public class DbHelperImpl implements DbHelper {
     private CircleHistoryData circleHistoryData;
 
     private List<User> mUserList;
+    private List<SongsEntity> mSongsList;
 
     @Inject
     DbHelperImpl() {
@@ -53,13 +69,53 @@ public class DbHelperImpl implements DbHelper {
         daoSession = daoMaster.newSession();
     }
 
-    private UserDao getUserDao(){
+    public DaoSession getGreenDao() {
+        if (daoSession != null)
+            return daoSession;
+        return null;
+    }
+
+    private UserDao getUserDao() {
         return daoSession.getUserDao();
+    }
+
+    private SongsEntityDao getSongsDao() {
+        return daoSession.getSongsEntityDao();
+    }
+
+
+    @Override
+    public void addSongsData(List<SongsEntity> songs) {
+        if (getSongsDao() != null) {
+            getSongsDao().deleteAll();
+        }
+        getSongsDao().insertInTx(songs);
+    }
+
+    @Override
+    public void clearAllSongsData() {
+        getSongsDao().deleteAll();
+    }
+
+    @Override
+    public List<SongsEntity> getSongsData() {
+        return getSongsDao().loadAll();
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public SongsEntity querySongsDataById(String songId) {
+//        List<SongsEntity> list = daoSession.queryRaw(SongsEntity.class, "where article_id = ?", songId);
+        mSongsList = getSongsDao().queryBuilder().where(SongsEntityDao.Properties.Article_id.eq(songId)).list();
+        if (mSongsList.size() > 0) {
+            return mSongsList.get(0);
+        }
+        return null;
     }
 
     @Override
     public void addUser(User user) {
-        if (getUserDao() != null){
+        if (getUserDao() != null) {
             getUserDao().deleteAll();
         }
         getUserDao().insert(user);
@@ -68,7 +124,7 @@ public class DbHelperImpl implements DbHelper {
     @Override
     public User getUser() {
         mUserList = getUserDao().loadAll();
-        if (mUserList.size() == 0){
+        if (mUserList.size() == 0) {
             return new User();
         }
         return mUserList.get(0);
@@ -76,10 +132,10 @@ public class DbHelperImpl implements DbHelper {
 
     @Override
     public void setLoginStatus(boolean isLogin) {
-        if (isLogin){
+        if (isLogin) {
             getUser().setLoginStatus(isLogin);
             getUserDao().update(getUser());
-        }else {
+        } else {
             getUserDao().deleteAll();
         }
     }

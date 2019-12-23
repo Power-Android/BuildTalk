@@ -3,6 +3,7 @@ package com.bjjy.buildtalk.ui.discover;
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.DiscoverAdapter;
 import com.bjjy.buildtalk.app.App;
+import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.presenter.BasePresenter;
 import com.bjjy.buildtalk.core.rx.BaseObserver;
 import com.bjjy.buildtalk.core.rx.RxUtils;
@@ -12,6 +13,7 @@ import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.DiscoverEntity;
 import com.bjjy.buildtalk.entity.DissertationEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
+import com.bjjy.buildtalk.entity.SongsEntity;
 import com.bjjy.buildtalk.utils.HeaderUtils;
 import com.bjjy.buildtalk.utils.TimeUtils;
 import com.google.gson.Gson;
@@ -211,6 +213,28 @@ public class DiscoverPresenter extends BasePresenter<DiscoverContract.View> impl
                     @Override
                     public void onSuccess(List<DissertationEntity> dissertationEntities) {
                         mView.handlerDissertation(dissertationEntities);
+                    }
+                }));
+    }
+
+    public void getSongs(int article_id, int position) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put("article_id", String.valueOf(article_id));
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(App.getContext().getString(R.string.TIMESTAMP), timestamp);
+        headers.put(App.getContext().getString(R.string.SIGN), sign);
+
+        addSubscribe(mDataManager.searchAudioList(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(songsEntityBaseResponse -> mView != null)
+                .subscribeWith(new BaseObserver<List<SongsEntity>>(mView){
+                    @Override
+                    public void onSuccess(List<SongsEntity> songsEntities) {
+                        mView.handlerSongs(songsEntities, position);
                     }
                 }));
     }

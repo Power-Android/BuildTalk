@@ -1,31 +1,54 @@
 package com.bjjy.buildtalk.ui.discover;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.DiscoverAdapter;
+import com.bjjy.buildtalk.adapter.EveryTalkAdapter;
+import com.bjjy.buildtalk.app.Constants;
+import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.base.fragment.BaseFragment;
+import com.bjjy.buildtalk.core.event.PlayerEvent;
+import com.bjjy.buildtalk.core.service.PlayerService;
 import com.bjjy.buildtalk.entity.ActivityEntity;
 import com.bjjy.buildtalk.entity.BannerEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.DiscoverEntity;
 import com.bjjy.buildtalk.entity.DissertationEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
+import com.bjjy.buildtalk.entity.SongsEntity;
+import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
 import com.bjjy.buildtalk.utils.AnimatorUtils;
 import com.bjjy.buildtalk.utils.DialogUtils;
+import com.bjjy.buildtalk.utils.LogUtils;
+import com.bjjy.buildtalk.utils.PlayerHelper;
 import com.bjjy.buildtalk.weight.BaseDialog;
+import com.bjjy.buildtalk.weight.player.PlayerWindowManager;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +61,8 @@ import butterknife.BindView;
  * @project BuildTalk
  * @description: 发现 模块
  */
-public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements DiscoverContract.View, OnRefreshListener, BaseQuickAdapter.OnItemChildClickListener {
+public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements DiscoverContract.View,
+        OnRefreshListener, BaseQuickAdapter.OnItemChildClickListener, DiscoverAdapter.OnChildRecyclerItemClickListener {
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
@@ -57,7 +81,28 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
     private DiscoverAdapter mDiscoverAdapter;
     public static int HOT_TOPTIC_PAGE = 1;
     public static int COURSE_PAGE = 1;
-    private BaseDialog mDialog;
+    private List<EveryTalkEntity> mData;
+    private EveryTalkAdapter everyTalkAdapter;
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void event(PlayerEvent eventBean) {
+        if (mData != null && mData.size() > 0) {
+            for (int i = 0; i < mData.size(); i++) {
+                if (PlayerWindowManager.getInstance().getBinder().isPlaying()) {//先判断是不是正在播放
+                    //如果id相同设置true
+                    if (TextUtils.equals(PlayerWindowManager.getInstance().getSongId(), String.valueOf(mData.get(i).getArticle_id()))) {
+                        mData.get(i).setChecked(true);
+                    } else {
+                        mData.get(i).setChecked(false);
+                    }
+                } else {//暂停状态都设置成false
+                    mData.get(i).setChecked(false);
+                }
+            }
+            everyTalkAdapter.notifyDataSetChanged();
+        }
+    }
 
     public static DiscoverFragment newInstance() {
         return new DiscoverFragment();
@@ -70,6 +115,7 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
 
     @Override
     protected void initView() {
+        EventBus.getDefault().register(this);
         mToolbarBack.setVisibility(View.GONE);
         mToolbarTitle.setText(R.string.discover);
         mRefreshLayout.setOnRefreshListener(this);
@@ -78,6 +124,7 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
         mDiscoverRecyclerView.setAdapter(mDiscoverAdapter);
         mDiscoverAdapter.setOnItemChildClickListener(this);
         mTvReload.setOnClickListener(v -> onRefresh(mRefreshLayout));
+        mDiscoverAdapter.setOnChildRecyclerItemClickListener(this);
     }
 
     @Override
@@ -119,6 +166,7 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
     @Override
     public void handlerEveryTalk(List<EveryTalkEntity> everyTalkEntities) {
         mDiscoverAdapter.setEveryTalkEntities(everyTalkEntities);
+        mPresenter.getSongs(everyTalkEntities.get(0).getArticle_id(), 0);
     }
 
     @Override
@@ -138,7 +186,7 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
 
     @Override
     public void handlerActivitySuccess(ActivityEntity activityEntity) {
-        if (1 == activityEntity.getIs_show()){
+        if (1 == activityEntity.getIs_show()) {
             DialogUtils.showActivityDialog(mContext, activityEntity);
         }
     }
@@ -187,5 +235,38 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
                 startActivity(new Intent(mContext, DissertationListActivity.class));
                 break;
         }
+    }
+
+    @Override
+    public void onEveryTalkItemClick(BaseQuickAdapter adapter, View view, int position) {
+        everyTalkAdapter = (EveryTalkAdapter) adapter;
+        mData = adapter.getData();
+        //先查询数据是否为null，如果null-->先请求数据，后播放，如果不为null-->播放
+        SongsEntity songsEntity = PlayerHelper.querySongs(String.valueOf(mData.get(position).getArticle_id()), mPresenter.mDataManager);
+        if (songsEntity != null) {
+            //如果点击的是相同的音频
+            if (String.valueOf(mData.get(position).getArticle_id()).equals(PlayerWindowManager.getInstance().getSongId())) {
+                if (PlayerWindowManager.getInstance().getBinder().isPlaying()) {
+                    PlayerWindowManager.getInstance().getBinder().pause();
+                } else {
+                    PlayerWindowManager.getInstance().getBinder().resume();
+                }
+            } else {//如果是不相同的音频
+                showPlayer(String.valueOf(mData.get(position).getArticle_id()));
+            }
+        } else {
+            PlayerWindowManager.getInstance().requestSongs(mData.get(position).getArticle_id() + "", "1");
+        }
+    }
+
+    @Override
+    public void handlerSongs(List<SongsEntity> songsEntities, int position) {
+        mPresenter.mDataManager.addSongsData(songsEntities);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

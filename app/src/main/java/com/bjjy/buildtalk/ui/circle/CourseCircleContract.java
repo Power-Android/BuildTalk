@@ -47,6 +47,8 @@ public class CourseCircleContract {
         void handlerThumbSuccess(String thumb_url, List<ThemeInfoEntity.ThemeInfoBean> data, int i);
 
         void handleruserShieldRecordSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list);
+
+        void handlerTopOperateSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i);
     }
 
     interface Presenyer extends IPresenter<View>{

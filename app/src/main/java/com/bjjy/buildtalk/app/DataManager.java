@@ -39,6 +39,7 @@ import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.SaveRecordEntity;
 import com.bjjy.buildtalk.entity.SearchCircleInfoEntity;
 import com.bjjy.buildtalk.entity.SearchResultEntity;
+import com.bjjy.buildtalk.entity.SongsEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.entity.VersionRecordEntity;
 
@@ -61,6 +62,9 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     private DbHelper mDbHelper;
     private PreferenceHelper mPreferenceHelper;
 
+    public DataManager() {
+    }
+
     public DataManager(HttpHelper httpHelper, DbHelper dbHelper, PreferenceHelper preferenceHelper) {
         mHttpHelper = httpHelper;
         mDbHelper = dbHelper;
@@ -76,6 +80,16 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     @Override
     public boolean getIsGuide() {
         return mPreferenceHelper.getIsGuide();
+    }
+
+    @Override
+    public void setIsSHowPlayer(boolean isShow) {
+        mPreferenceHelper.setIsSHowPlayer(isShow);
+    }
+
+    @Override
+    public boolean getIsShowPlayer() {
+        return mPreferenceHelper.getIsShowPlayer();
     }
 
     //==========================================>DbHelper<==================================================================
@@ -164,6 +178,26 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     @Override
     public List<CircleHistoryData> loadAllCircleHistoryData() {
         return mDbHelper.loadAllCircleHistoryData();
+    }
+
+    @Override
+    public void addSongsData(List<SongsEntity> songs) {
+        mDbHelper.addSongsData(songs);
+    }
+
+    @Override
+    public void clearAllSongsData() {
+        mDbHelper.clearAllSongsData();
+    }
+
+    @Override
+    public List<SongsEntity> getSongsData() {
+        return mDbHelper.getSongsData();
+    }
+
+    @Override
+    public SongsEntity querySongsDataById(String songId) {
+        return mDbHelper.querySongsDataById(songId);
     }
 
     //==========================================>HttpHelper<==================================================================
@@ -450,8 +484,8 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     }
 
     @Override
-    public Observable<BaseResponse<List<VersionRecordEntity>>> versionRecord() {
-        return mHttpHelper.versionRecord();
+    public Observable<BaseResponse<List<VersionRecordEntity>>> versionRecord(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.versionRecord(headers, params);
     }
 
     @Override
@@ -522,5 +556,15 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     @Override
     public Observable<BaseResponse<File>> downloadFile(String url) {
         return mHttpHelper.downloadFile(url);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> themeTopOperate(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.themeTopOperate(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<List<SongsEntity>>> searchAudioList(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.searchAudioList(headers, params);
     }
 }

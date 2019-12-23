@@ -3,17 +3,24 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/item_selector"
-    android:paddingBottom="@dimen/dp_6"
-    android:paddingLeft="@dimen/common_margin"
-    android:paddingRight="@dimen/common_margin"
-    android:paddingTop="@dimen/dp_6">
+    android:paddingRight="@dimen/common_margin">
+
+    <ImageView
+        android:id="@+id/item_img_iv"
+        android:layout_width="@dimen/dp_37"
+        android:layout_height="@dimen/dp_29"
+        android:paddingLeft="@dimen/common_margin"
+        android:paddingTop="@dimen/dp_6"
+        android:paddingBottom="@dimen/dp_6"
+        android:paddingRight="@dimen/dp_5"
+        android:src="@drawable/play_gray_icon"/>
 
     <TextView
         android:id="@+id/period_tv"
+        android:layout_toEndOf="@+id/item_img_iv"
+        android:layout_centerVertical="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/play_gray_icon"
-        android:drawablePadding="@dimen/dp_6"
         android:textColor="@color/text_drak"
         android:textSize="@dimen/sp_14"
         android:ellipsize="end"

@@ -34,6 +34,10 @@ public abstract class BaseObserver<T> extends ResourceObserver<BaseResponse<T>> 
     private String cacheKey;
     private Gson gson = new Gson();
 
+    protected BaseObserver() {
+
+    }
+
     protected BaseObserver(IView view) {
         this.mView = view;
     }
@@ -71,7 +75,8 @@ public abstract class BaseObserver<T> extends ResourceObserver<BaseResponse<T>> 
 
     @CallSuper
     public void onFailure(int code, String message) {
-        mView.showErrorMsg(message);
+        if (mView != null)
+            mView.showErrorMsg(message);
     }
 
     @CallSuper
@@ -82,7 +87,7 @@ public abstract class BaseObserver<T> extends ResourceObserver<BaseResponse<T>> 
     @Override
     protected void onStart() {
         Log.d(TAG, "onStart");
-        if (isShowStatusView && isShowLoading) {
+        if (isShowStatusView && isShowLoading && mView != null) {
             mView.showLoading();
         }
     }
@@ -91,17 +96,17 @@ public abstract class BaseObserver<T> extends ResourceObserver<BaseResponse<T>> 
     public void onNext(BaseResponse<T> baseResponse) {
         if (baseResponse.getErrorCode() == BaseResponse.SUCCESS) {
             Log.d(TAG, "onSuccess");
-            if (isShowStatusView) {
+            if (isShowStatusView && mView != null) {
                 mView.hideLoading();
                 mView.showNormal();
             }
-            if (isCache){
+            if (isCache) {
                 ACache.get(App.getContext()).put(cacheKey, gson.toJson(baseResponse.getData()), 2 * ACache.TIME_DAY);
             }
             onSuccess(baseResponse.getData());
         } else {
             Log.d(TAG, "onFailure");
-            if (isShowStatusView) {
+            if (isShowStatusView && mView != null) {
                 mView.hideLoading();
                 mView.showNormal();
             }
@@ -132,7 +137,7 @@ public abstract class BaseObserver<T> extends ResourceObserver<BaseResponse<T>> 
         }
         if (e instanceof HttpException) {
             LogUtils.e(((HttpException) e).message() + ((HttpException) e).response().toString());
-            if (!NetworkUtils.isConnected() && isCache){
+            if (!NetworkUtils.isConnected() && isCache) {
                 String s = ACache.get(App.getContext()).getAsString(cacheKey);
                 Log.d(TAG, "onCache");
                 onCache(s);
@@ -140,7 +145,7 @@ public abstract class BaseObserver<T> extends ResourceObserver<BaseResponse<T>> 
             }
             if (isShowStatusView) {
                 mView.showNoNetwork();
-            }else {
+            } else {
                 mView.showErrorMsg(App.getContext().getString(R.string.http_error));
             }
         } else if (e instanceof ServerException) {

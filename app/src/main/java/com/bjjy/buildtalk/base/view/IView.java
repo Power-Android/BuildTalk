@@ -23,4 +23,8 @@ public interface IView {
     void showEmpty();
 
     void showNormal();
+
+    void showPlayer(String songId);
+
+    void hidePlayer();
 }

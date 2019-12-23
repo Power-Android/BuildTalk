@@ -6,6 +6,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.EveryTalkListAdapter;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
+import com.bjjy.buildtalk.core.event.PlayerEvent;
 import com.bjjy.buildtalk.entity.EveryTalkListEntity;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -25,13 +27,18 @@ import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class EveryTalkListActivity extends BaseActivity<EveryTalkListPresenter> implements EveryTalkContract.View, OnRefreshLoadMoreListener, BaseQuickAdapter.OnItemClickListener {
+public class EveryTalkListActivity extends BaseActivity<EveryTalkListPresenter> implements
+        EveryTalkContract.View, OnRefreshLoadMoreListener, BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemChildClickListener {
 
     @BindView(R.id.back_iv)
     ImageView mBackIv;
@@ -72,6 +79,11 @@ public class EveryTalkListActivity extends BaseActivity<EveryTalkListPresenter> 
     private int type = 1;//1是倒叙，2是正序
     private List<EveryTalkListEntity.NewsInfoBean> mNewsInfoBeanList = new ArrayList<>();
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void event(PlayerEvent eventBean) {
+        updatePlayStatus();
+    }
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_every_talk_list;
@@ -79,6 +91,7 @@ public class EveryTalkListActivity extends BaseActivity<EveryTalkListPresenter> 
 
     @Override
     protected void initView() {
+        EventBus.getDefault().register(this);
         StatusBarUtils.changeStatusBar(this, true, true);
         mRefreshLayout.setOnRefreshLoadMoreListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -86,6 +99,7 @@ public class EveryTalkListActivity extends BaseActivity<EveryTalkListPresenter> 
         mTalkListAdapter = new EveryTalkListAdapter(R.layout.adapter_every_talk_list, mNewsInfoBeanList);
         mRecyclerView.setAdapter(mTalkListAdapter);
         mTalkListAdapter.setOnItemClickListener(this);
+        mTalkListAdapter.setOnItemChildClickListener(this);
     }
 
     @Override
@@ -106,6 +120,24 @@ public class EveryTalkListActivity extends BaseActivity<EveryTalkListPresenter> 
         } else {
             mTalkListAdapter.addData(mNewsInfoBeanList);
         }
+        updatePlayStatus();//每次更新播放小图标
+    }
+
+    private void updatePlayStatus() {
+        List<EveryTalkListEntity.NewsInfoBean> data = mTalkListAdapter.getData();
+        for (int i = 0; i < data.size(); i++) {
+            if (getPlayerWindowManager().getBinder().isPlaying()) {//先判断是不是正在播放
+                //如果id相同设置true
+                if (TextUtils.equals(getPlayerWindowManager().getSongId(), String.valueOf(data.get(i).getArticle_id()))) {
+                    data.get(i).setChecked(true);
+                } else {
+                    data.get(i).setChecked(false);
+                }
+            } else {//暂停状态都设置成false
+                data.get(i).setChecked(false);
+            }
+        }
+        mTalkListAdapter.notifyDataSetChanged();
     }
 
     private void introduce(EveryTalkListEntity.AuthorInfoBean authorInfo) {
@@ -153,10 +185,10 @@ public class EveryTalkListActivity extends BaseActivity<EveryTalkListPresenter> 
                 break;
             case R.id.paixu_tv:
                 page = 1;
-                if (type == 1){
+                if (type == 1) {
                     type = 2;
                     mPaiXuTv.setText("倒序");
-                }else {
+                } else {
                     type = 1;
                     mPaiXuTv.setText("正序");
                 }
@@ -191,6 +223,38 @@ public class EveryTalkListActivity extends BaseActivity<EveryTalkListPresenter> 
         List<EveryTalkListEntity.NewsInfoBean> data = adapter.getData();
         Intent intent = new Intent(EveryTalkListActivity.this, EveryTalkDetailActivity.class);
         intent.putExtra("article_id", data.get(position).getArticle_id() + "");
+        intent.putExtra("sort",type);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+        List<EveryTalkListEntity.NewsInfoBean> data = adapter.getData();
+        if (view.getId() == R.id.icon1) {
+            if (type == 1){
+                if (String.valueOf(data.get(position).getArticle_id()).equals(getPlayerWindowManager().getSongId())) {
+                    if (getPlayerWindowManager().getBinder().isPlaying()) {
+                        getPlayerWindowManager().getBinder().pause();
+                    } else {
+                        getPlayerWindowManager().getBinder().resume();
+                    }
+                } else {
+                    showPlayer(String.valueOf(data.get(position).getArticle_id()));
+                }
+            }else {
+                mPresenter.requestSongs(String.valueOf(data.get(position).getArticle_id()));
+            }
+        }
+    }
+
+    @Override
+    public void handlerSongs(String article_id) {
+        showPlayer(article_id);
     }
 }

@@ -14,6 +14,9 @@ public class EveryTalkContract {
     interface View extends IView{
 
         void handlerTalkList(EveryTalkListEntity everyTalkListEntity, boolean isRefresh);
+
+        void handlerSongs(String article_id);
+
     }
 
     interface Presenter extends IPresenter<View>{

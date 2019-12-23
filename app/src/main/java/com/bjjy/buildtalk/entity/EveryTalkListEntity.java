@@ -167,6 +167,15 @@ public class EveryTalkListEntity implements Serializable {
         private String publish_time;
         private int browsecount;
         private int media_type;
+        private boolean isChecked;
+
+        public boolean isChecked() {
+            return isChecked;
+        }
+
+        public void setChecked(boolean checked) {
+            isChecked = checked;
+        }
 
         public int getArticle_id() {
             return article_id;

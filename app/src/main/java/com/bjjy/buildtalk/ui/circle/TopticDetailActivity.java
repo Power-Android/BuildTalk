@@ -39,6 +39,7 @@ import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
 import com.bjjy.buildtalk.utils.StringUtils;
+import com.bjjy.buildtalk.utils.TimeUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bjjy.buildtalk.weight.BaseDialog;
 import com.bjjy.buildtalk.weight.MultiImageView;
@@ -140,6 +141,12 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
     }
 
     @Override
+    protected void onResume() {
+        setIsMargin(true);
+        super.onResume();
+    }
+
+    @Override
     protected void initView() {
         StatusBarUtils.changeStatusBar(this, true, true);
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(mIncludeToolbar.getLayoutParams());
@@ -192,7 +199,7 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
         }else{
             mItemJobTv.setVisibility(View.GONE);
         }
-        mItemTimeTv.setText(themeInfoEntity.getPublish_time());
+        mItemTimeTv.setText(TimeUtils.getFriendlyTimeSpanByNow(themeInfoEntity.getPublish_time()));
         mItemContentTv.setText(themeInfoEntity.getTheme_content());
 
         if (themeInfoEntity.getTheme_pdf().size() > 0){
@@ -325,7 +332,7 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
     private void showEditDialog(ThemeInfoEntity.ThemeInfoBean data) {
         mEditDailog = new BaseDialog.Builder(this)
                 .setGravity(Gravity.BOTTOM)
-                .setViewId(R.layout.dialog_theme_edit)
+                .setViewId(R.layout.dialog_theme_edit1)
                 .setWidthHeightpx(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 .setAnimation(R.style.bottom_aniamtion)
                 .isOnTouchCanceled(true)

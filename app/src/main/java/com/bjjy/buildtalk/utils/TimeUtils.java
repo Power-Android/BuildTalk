@@ -678,18 +678,23 @@ public class TimeUtils {
         if (span < 0)
             // U can read http://www.apihome.cn/api/java/Formatter.html to understand it.
             return String.format("%tc", millis);
-        if (span < 1000) {
+//        if (span < 1000) {
+//            return "刚刚";
+//        } else
+        if (span < Constants.MIN) {
+//            return String.format(Locale.getDefault(), "%d秒前", span / Constants.SEC);
             return "刚刚";
-        } else if (span < Constants.MIN) {
-            return String.format(Locale.getDefault(), "%d秒前", span / Constants.SEC);
         } else if (span < Constants.HOUR) {
             return String.format(Locale.getDefault(), "%d分钟前", span / Constants.MIN);
+        }else if (span < Constants.DAY){
+            return String.format(Locale.getDefault(), "%d小时前", span / Constants.HOUR);
         }
         // 获取当天 00:00
         long wee = getWeeOfToday();
-        if (millis >= wee) {
-            return String.format("今天%tR", millis);
-        } else if (millis >= wee - Constants.DAY) {
+//        if (millis >= wee) {
+//            return String.format("今天%tR", millis);
+//        } else
+        if (millis >= wee - Constants.DAY) {
             return String.format("昨天%tR", millis);
         } else {
             return String.format("%tF", millis);
@@ -1551,29 +1556,6 @@ public class TimeUtils {
         return sb.toString();
     }
 
-    /**
-     * @param seconds
-     * @return 秒转分
-     */
-    public static String getMinuteBySecond(int seconds) {
-
-        StringBuffer buffer = new StringBuffer();
-        int second = seconds % 60;
-        int minute = seconds / 60;
-
-        if (minute <= 9) {
-            buffer.append("0" + minute + "分");
-        } else {
-            buffer.append(minute + "分");
-        }
-        if (second <= 9) {
-            buffer.append("0" + second + "秒");
-        } else {
-            buffer.append(second + "秒");
-        }
-        return buffer.toString();
-    }
-
     public static String stringForTime(int timeMs) {
         StringBuilder mFormatBuilder;
         Formatter mFormatter;
@@ -1587,9 +1569,9 @@ public class TimeUtils {
 
         mFormatBuilder.setLength(0);
         if (hours > 0) {
-            return mFormatter.format("%d时%02d分%02d秒", hours, minutes, seconds).toString();
+            return mFormatter.format("%d:%02d:%02d", hours, minutes, seconds).toString();
         } else {
-            return mFormatter.format("%02d分%02d秒", minutes, seconds).toString();
+            return mFormatter.format("%02d:%02d", minutes, seconds).toString();
         }
     }
 

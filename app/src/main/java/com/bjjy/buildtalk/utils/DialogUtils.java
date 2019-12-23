@@ -11,6 +11,8 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -21,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
+import com.bjjy.buildtalk.adapter.EditDialogAdapter;
 import com.bjjy.buildtalk.entity.ActivityEntity;
 import com.bjjy.buildtalk.entity.CircleInfoEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
@@ -41,6 +44,7 @@ import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
@@ -53,6 +57,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.security.MessageDigest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -70,7 +75,7 @@ public class DialogUtils {
     private static BaseDialog mActivityDialog;
     private static BaseDialog mSaveImageDialog;
 
-    public static void showSaveImageDialog(Context context, String imgUrl){
+    public static void showSaveImageDialog(Context context, String imgUrl) {
         mSaveImageDialog = new BaseDialog.Builder(context)
                 .setViewId(R.layout.dialog_select_layout)
                 .setGravity(Gravity.BOTTOM)
@@ -108,7 +113,7 @@ public class DialogUtils {
         mSaveImageDialog.show();
     }
 
-    public static void showActivityDialog(Context context, ActivityEntity activityEntity){
+    public static void showActivityDialog(Context context, ActivityEntity activityEntity) {
         mActivityDialog = new BaseDialog.Builder(context)
                 .setViewId(R.layout.dialog_activity_layout)
                 //设置显示位置
@@ -120,31 +125,31 @@ public class DialogUtils {
                 //设置触摸dialog外围是否关闭
                 .isOnTouchCanceled(false)
                 .addViewOnClickListener(R.id.iv, v -> {
-                    if (TextUtils.equals("发表", activityEntity.getType_name())){
+                    if (TextUtils.equals("发表", activityEntity.getType_name())) {
                         return;
                     }
-                    if (!TextUtils.isEmpty(activityEntity.getActivity_url())){
+                    if (!TextUtils.isEmpty(activityEntity.getActivity_url())) {
                         Intent intent = new Intent(context, AboutUsActivity.class);
                         intent.putExtra("url", activityEntity.getActivity_url());
                         intent.putExtra("title", activityEntity.getActivity_title());
                         context.startActivity(intent);
-                    }else {
-                        switch (activityEntity.getType_id()){
+                    } else {
+                        switch (activityEntity.getType_id()) {
                             case "1":
-                                if ("1".equals(activityEntity.getCircle_type())){
+                                if ("1".equals(activityEntity.getCircle_type())) {
                                     Intent intent = new Intent(context, TopticCircleActivity.class);
-                                    intent.putExtra("circle_id", activityEntity.getData_id()+"");
+                                    intent.putExtra("circle_id", activityEntity.getData_id() + "");
                                     context.startActivity(intent);
-                                }else {
+                                } else {
                                     Intent intent = new Intent(context, CourseCircleActivity.class);
-                                    intent.putExtra("circle_id", activityEntity.getData_id()+"");
+                                    intent.putExtra("circle_id", activityEntity.getData_id() + "");
                                     context.startActivity(intent);
                                 }
                                 break;
                             case "2":
                                 Intent intent1 = new Intent(context, EveryTalkDetailActivity.class);
-                                intent1.putExtra("article_id",activityEntity.getData_id()+"");
-                                intent1.putExtra("type","article");
+                                intent1.putExtra("article_id", activityEntity.getData_id() + "");
+                                intent1.putExtra("type", "article");
                                 context.startActivity(intent1);
                                 break;
                             case "3":
@@ -154,7 +159,7 @@ public class DialogUtils {
                                 break;
                             case "4":
                                 Intent intent3 = new Intent(context, DissertationActivity.class);
-                                intent3.putExtra("id",activityEntity.getData_id()+"");
+                                intent3.putExtra("id", activityEntity.getData_id() + "");
                                 context.startActivity(intent3);
                                 break;
                         }
@@ -168,19 +173,19 @@ public class DialogUtils {
 
         final Bitmap[] mBitmap = new Bitmap[1];
         Glide.with(context).load(activityEntity.getPic_url()).apply(new RequestOptions()
-                        .transform(new Transformation<Bitmap>() {
-            @NonNull
-            @Override
-            public Resource<Bitmap> transform(@NonNull Context context, @NonNull Resource<Bitmap> resource, int outWidth, int outHeight) {
-                mBitmap[0] = resource.get();
-                return resource;
-            }
+                .transform(new Transformation<Bitmap>() {
+                    @NonNull
+                    @Override
+                    public Resource<Bitmap> transform(@NonNull Context context, @NonNull Resource<Bitmap> resource, int outWidth, int outHeight) {
+                        mBitmap[0] = resource.get();
+                        return resource;
+                    }
 
-            @Override
-            public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+                    @Override
+                    public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
 
-            }
-        })).into((RoundedImageView) mActivityDialog.getView(R.id.iv));
+                    }
+                })).into((RoundedImageView) mActivityDialog.getView(R.id.iv));
         if (TextUtils.equals("发表", activityEntity.getType_name())) {
             ToastUtils.showShort("长按可保存图片~");
             mActivityDialog.getView(R.id.iv).setOnLongClickListener(v1 -> {
@@ -198,7 +203,7 @@ public class DialogUtils {
             appDir.mkdir();
         }
         //图片文件名称
-        String fileName = "jt_"+System.currentTimeMillis() + ".jpg";
+        String fileName = "jt_" + System.currentTimeMillis() + ".jpg";
         File file = new File(appDir, fileName);
         try {
             FileOutputStream fos = new FileOutputStream(file);
@@ -206,7 +211,7 @@ public class DialogUtils {
             fos.flush();
             fos.close();
         } catch (Exception e) {
-            Log.e("111",e.getMessage());
+            Log.e("111", e.getMessage());
             e.printStackTrace();
         }
 
@@ -215,7 +220,7 @@ public class DialogUtils {
         try {
             MediaStore.Images.Media.insertImage(context.getContentResolver(), path, fileName, null);
         } catch (FileNotFoundException e) {
-            Log.e("333",e.getMessage());
+            Log.e("333", e.getMessage());
             e.printStackTrace();
         }
         // 最后通知图库更新
@@ -233,13 +238,11 @@ public class DialogUtils {
      * @param list
      * @param topticPresenter
      * @param coursePresenter
-     * @param circleInfoEntity
-     *
-     * 圈子主题/精华的编辑按钮弹出框
+     * @param circleInfoEntity 圈子主题/精华的编辑按钮弹出框
      */
     public static void showEditDialog(final Activity activity, ThemeInfoEntity.ThemeInfoBean data, int i,
                                       List<ThemeInfoEntity.ThemeInfoBean> list, TopticCirclePresenter topticPresenter,
-                                      CourseCirclePresenter coursePresenter, CircleInfoEntity circleInfoEntity){
+                                      CourseCirclePresenter coursePresenter, CircleInfoEntity circleInfoEntity) {
         mEditDailog = new BaseDialog.Builder(activity)
                 .setGravity(Gravity.BOTTOM)
                 .setViewId(R.layout.dialog_theme_edit)
@@ -247,172 +250,163 @@ public class DialogUtils {
                 .setAnimation(R.style.bottom_aniamtion)
                 .isOnTouchCanceled(true)
                 .builder();
-        TextView collect_tv = mEditDailog.getView(R.id.collect_tv);
-        TextView edit_tv = mEditDailog.getView(R.id.edit_tv);
-        TextView delete_tv = mEditDailog.getView(R.id.delete_tv);
-        TextView jinghua_tv = mEditDailog.getView(R.id.jinghua_tv);
-        TextView dislike_tv = mEditDailog.getView(R.id.dislike_tv);
-        TextView tousu_tv = mEditDailog.getView(R.id.tousu_tv);
+        RecyclerView recyclerView = mEditDailog.getView(R.id.recycler_view);
+        recyclerView.setLayoutManager(new GridLayoutManager(activity, 4));
+        List<String> itemList = new ArrayList<>();
+        EditDialogAdapter adapter = new EditDialogAdapter(R.layout.adapter_edit_dialog, itemList, data);
+        recyclerView.setAdapter(adapter);
 
-        if (coursePresenter == null){
-            if (topticPresenter.mDataManager.getUser().getUser_id().equals(circleInfoEntity.getCircleInfo().getUser_id() + "")){//如果是圈主
-                if (topticPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())){
-                    //如果是自己的主题----收藏、修改、加精、删除
-                    collect_tv.setVisibility(View.VISIBLE);
-                    edit_tv.setVisibility(View.VISIBLE);
-                    jinghua_tv.setVisibility(View.VISIBLE);
-                    delete_tv.setVisibility(View.VISIBLE);
-                    dislike_tv.setVisibility(View.GONE);
-                    tousu_tv.setVisibility(View.GONE);
-                }else {
-                    //不是自己的主题----收藏、加精、不喜欢、投诉
-                    collect_tv.setVisibility(View.VISIBLE);
-                    jinghua_tv.setVisibility(View.VISIBLE);
-                    dislike_tv.setVisibility(View.VISIBLE);
-                    tousu_tv.setVisibility(View.VISIBLE);
-                    delete_tv.setVisibility(View.GONE);
-                    edit_tv.setVisibility(View.GONE);
-                }
-            }else {//如果是成员
-                if (topticPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())){
-                    //如果是自己的主题----收藏、修改、删除
-                    collect_tv.setVisibility(View.VISIBLE);
-                    edit_tv.setVisibility(View.VISIBLE);
-                    delete_tv.setVisibility(View.VISIBLE);
-                    jinghua_tv.setVisibility(View.GONE);
-                    dislike_tv.setVisibility(View.GONE);
-                    tousu_tv.setVisibility(View.GONE);
-                }else {
-                    //不是自己的主题----收藏、不喜欢、投诉
-                    collect_tv.setVisibility(View.VISIBLE);
-                    dislike_tv.setVisibility(View.VISIBLE);
-                    tousu_tv.setVisibility(View.VISIBLE);
-                    edit_tv.setVisibility(View.GONE);
-                    delete_tv.setVisibility(View.GONE);
-                    jinghua_tv.setVisibility(View.GONE);
-                }
-            }
-        }else {
-            if (coursePresenter.mDataManager.getUser().getUser_id().equals(circleInfoEntity.getCircleInfo().getUser_id() + "")){//如果是圈主
-                if (coursePresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())){
-                    //如果是自己的主题----收藏、修改、加精、删除
-                    collect_tv.setVisibility(View.VISIBLE);
-                    edit_tv.setVisibility(View.VISIBLE);
-                    jinghua_tv.setVisibility(View.VISIBLE);
-                    delete_tv.setVisibility(View.VISIBLE);
-                    dislike_tv.setVisibility(View.GONE);
-                    tousu_tv.setVisibility(View.GONE);
-                }else {
-                    //不是自己的主题----收藏、加精、不喜欢、投诉
-                    collect_tv.setVisibility(View.VISIBLE);
-                    jinghua_tv.setVisibility(View.VISIBLE);
-                    dislike_tv.setVisibility(View.VISIBLE);
-                    tousu_tv.setVisibility(View.VISIBLE);
-                    delete_tv.setVisibility(View.GONE);
-                    edit_tv.setVisibility(View.GONE);
-                }
-            }else {//如果是成员
-                if (coursePresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())){
-                    //如果是自己的主题----收藏、修改、删除
-                    collect_tv.setVisibility(View.VISIBLE);
-                    edit_tv.setVisibility(View.VISIBLE);
-                    delete_tv.setVisibility(View.VISIBLE);
-                    jinghua_tv.setVisibility(View.GONE);
-                    dislike_tv.setVisibility(View.GONE);
-                    tousu_tv.setVisibility(View.GONE);
-                }else {
-                    //不是自己的主题----收藏、不喜欢、投诉
-                    collect_tv.setVisibility(View.VISIBLE);
-                    dislike_tv.setVisibility(View.VISIBLE);
-                    tousu_tv.setVisibility(View.VISIBLE);
-                    edit_tv.setVisibility(View.GONE);
-                    delete_tv.setVisibility(View.GONE);
-                    jinghua_tv.setVisibility(View.GONE);
-                }
-            }
-        }
-
-        if (1 == data.getIs_collect()) {
-            Drawable drawable = activity.getResources().getDrawable(R.drawable.collect_sel_icon);
-            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-            collect_tv.setCompoundDrawables(null, drawable, null, null);
-        } else {
-            Drawable drawable = activity.getResources().getDrawable(R.drawable.collect_def_icon);
-            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-            collect_tv.setCompoundDrawables(null, drawable, null, null);
-        }
-        if (1 == data.getIs_choiceness()) {
-            Drawable drawable = activity.getResources().getDrawable(R.drawable.qxjiajing_icon);
-            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-            jinghua_tv.setCompoundDrawables(null, drawable, null, null);
-            jinghua_tv.setText("取消精华");
-        } else {
-            Drawable drawable = activity.getResources().getDrawable(R.drawable.jiajing_icon);
-            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-            jinghua_tv.setCompoundDrawables(null, drawable, null, null);
-            jinghua_tv.setText("加精");
-        }
-        collect_tv.setOnClickListener(v -> {
-            if (coursePresenter == null){
-                topticPresenter.collectTheme(data, i);
-            }else {
-                coursePresenter.collectTheme(data, i);
-            }
-            mEditDailog.dismiss();
-        });
-
-        jinghua_tv.setOnClickListener(v -> {
-            if (coursePresenter == null){
-                topticPresenter.addChoiceness(data, i);
-            }else {
-                coursePresenter.addChoiceness(data, i);
-            }
-            mEditDailog.dismiss();
-        });
-        edit_tv.setOnClickListener(v -> {
-            if (coursePresenter == null){
+        if (coursePresenter == null) {
+            if (topticPresenter.mDataManager.getUser().getUser_id().equals(circleInfoEntity.getCircleInfo().getUser_id() + "")) {//如果是圈主
                 if (topticPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
-                    Intent intent = new Intent(activity, PublishActivity.class);
-                    intent.putExtra("themeInfo", data);
-                    intent.putExtra("circle_name", circleInfoEntity.getCircleInfo().getCircle_name());
-                    activity.startActivity(intent);
+                    //如果是自己的主题----收藏、修改、置顶、加精、删除
+                    itemList.clear();
+                    itemList.add("收藏");
+                    itemList.add("修改");
+                    itemList.add("置顶");
+                    itemList.add("加精");
+                    itemList.add("删除");
+                    adapter.setNewData(itemList);
+                } else {
+                    //不是自己的主题----收藏、置顶、加精、不喜欢、投诉
+                    itemList.clear();
+                    itemList.add("收藏");
+                    itemList.add("置顶");
+                    itemList.add("加精");
+                    itemList.add("不喜欢");
+                    itemList.add("投诉");
+                    adapter.setNewData(itemList);
                 }
-            }else {
-                if (coursePresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
-                    Intent intent = new Intent(activity, PublishActivity.class);
-                    intent.putExtra("themeInfo", data);
-                    intent.putExtra("circle_name", circleInfoEntity.getCircleInfo().getCircle_name());
-                    activity.startActivity(intent);
-                }
-            }
-
-            mEditDailog.dismiss();
-        });
-        delete_tv.setOnClickListener(v -> {
-            if (coursePresenter == null){
+            } else {//如果是成员
                 if (topticPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
-                    showDeleteDialog(data, i, list,activity,topticPresenter, null);
+                    //如果是自己的主题----收藏、修改、删除
+                    itemList.clear();
+                    itemList.add("收藏");
+                    itemList.add("删除");
+                    itemList.add("修改");
+                    adapter.setNewData(itemList);
+                } else {
+                    //不是自己的主题----收藏、不喜欢、投诉
+                    itemList.clear();
+                    itemList.add("收藏");
+                    itemList.add("不喜欢");
+                    itemList.add("投诉");
+                    adapter.setNewData(itemList);
                 }
-            }else {
+            }
+        } else {
+            if (coursePresenter.mDataManager.getUser().getUser_id().equals(circleInfoEntity.getCircleInfo().getUser_id() + "")) {//如果是圈主
                 if (coursePresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
-                    showDeleteDialog(data, i, list,activity,null, coursePresenter);
+                    //如果是自己的主题----收藏、修改、置顶、加精、删除
+                    itemList.clear();
+                    itemList.add("收藏");
+                    itemList.add("修改");
+                    itemList.add("置顶");
+                    itemList.add("加精");
+                    itemList.add("删除");
+                    adapter.setNewData(itemList);
+                } else {
+                    //不是自己的主题----收藏、置顶、加精、不喜欢、投诉
+                    itemList.clear();
+                    itemList.add("收藏");
+                    itemList.add("置顶");
+                    itemList.add("加精");
+                    itemList.add("不喜欢");
+                    itemList.add("投诉");
+                    adapter.setNewData(itemList);
+                }
+            } else {//如果是成员
+                if (coursePresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
+                    //如果是自己的主题----收藏、修改、删除
+                    //如果是自己的主题----收藏、修改、删除
+                    itemList.clear();
+                    itemList.add("收藏");
+                    itemList.add("删除");
+                    itemList.add("修改");
+                    adapter.setNewData(itemList);
+                } else {
+                    //不是自己的主题----收藏、不喜欢、投诉
+                    itemList.clear();
+                    itemList.add("收藏");
+                    itemList.add("不喜欢");
+                    itemList.add("投诉");
+                    adapter.setNewData(itemList);
                 }
             }
-            mEditDailog.dismiss();
-        });
-        tousu_tv.setOnClickListener(v -> {
-            Intent intent = new Intent(activity, ComplaintReasonActivity.class);
-            intent.putExtra("data_id", data.getTheme_id()+"");
-            activity.startActivity(intent);
-            mEditDailog.dismiss();
-        });
-        dislike_tv.setOnClickListener(v -> {
-            if (coursePresenter == null){
-                topticPresenter.userShieldRecord(data, i, list);
-            }else {
-                coursePresenter.userShieldRecord(data, i, list);
+        }
+
+        adapter.setOnItemClickListener((adapter1, view, position) -> {
+            List<String> item = adapter1.getData();
+            switch (item.get(position)) {
+                case "收藏":
+                    if (coursePresenter == null) {
+                        topticPresenter.collectTheme(data, i);
+                    } else {
+                        coursePresenter.collectTheme(data, i);
+                    }
+                    mEditDailog.dismiss();
+                    break;
+                case "修改":
+                    if (coursePresenter == null) {
+                        if (topticPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
+                            Intent intent = new Intent(activity, PublishActivity.class);
+                            intent.putExtra("themeInfo", data);
+                            intent.putExtra("circle_name", circleInfoEntity.getCircleInfo().getCircle_name());
+                            activity.startActivity(intent);
+                        }
+                    } else {
+                        if (coursePresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
+                            Intent intent = new Intent(activity, PublishActivity.class);
+                            intent.putExtra("themeInfo", data);
+                            intent.putExtra("circle_name", circleInfoEntity.getCircleInfo().getCircle_name());
+                            activity.startActivity(intent);
+                        }
+                    }
+                    mEditDailog.dismiss();
+                    break;
+                case "置顶":
+                    if (coursePresenter == null){
+                        topticPresenter.themeTopOperate(data, i);
+                    }else {
+                        coursePresenter.themeTopOperate(data, i);
+                    }
+                    mEditDailog.dismiss();
+                    break;
+                case "加精":
+                    if (coursePresenter == null) {
+                        topticPresenter.addChoiceness(data, i);
+                    } else {
+                        coursePresenter.addChoiceness(data, i);
+                    }
+                    mEditDailog.dismiss();
+                    break;
+                case "删除":
+                    if (coursePresenter == null) {
+                        if (topticPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
+                            showDeleteDialog(data, i, list, activity, topticPresenter, null);
+                        }
+                    } else {
+                        if (coursePresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
+                            showDeleteDialog(data, i, list, activity, null, coursePresenter);
+                        }
+                    }
+                    mEditDailog.dismiss();
+                    break;
+                case "不喜欢":
+                    if (coursePresenter == null) {
+                        topticPresenter.userShieldRecord(data, i, list);
+                    } else {
+                        coursePresenter.userShieldRecord(data, i, list);
+                    }
+                    mEditDailog.dismiss();
+                    break;
+                case "投诉":
+                    Intent intent = new Intent(activity, ComplaintReasonActivity.class);
+                    intent.putExtra("data_id", data.getTheme_id() + "");
+                    activity.startActivity(intent);
+                    mEditDailog.dismiss();
+                    break;
             }
-            mEditDailog.dismiss();
         });
         TextView cancle_tv = mEditDailog.getView(R.id.cancle_tv);
         cancle_tv.setOnClickListener(v -> mEditDailog.dismiss());
@@ -425,9 +419,7 @@ public class DialogUtils {
      * @param list
      * @param activity
      * @param topticPresenter
-     * @param coursePresenter
-     *
-     * 评论弹出框
+     * @param coursePresenter 评论弹出框
      */
     public static void showDeleteDialog(ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list,
                                         Activity activity, TopticCirclePresenter topticPresenter, CourseCirclePresenter coursePresenter) {
@@ -439,9 +431,9 @@ public class DialogUtils {
                 .isOnTouchCanceled(true)
                 .addViewOnClickListener(R.id.cancle_tv, v -> mDeleteDialog.dismiss())
                 .addViewOnClickListener(R.id.query_tv, v -> {
-                    if (coursePresenter == null){
+                    if (coursePresenter == null) {
                         topticPresenter.deleteTheme(data, i, list);
-                    }else {
+                    } else {
                         coursePresenter.deleteTheme(data, i, list);
                     }
                     mDeleteDialog.dismiss();
@@ -482,9 +474,9 @@ public class DialogUtils {
                 ToastUtils.showShort("请输入评论内容");
                 return;
             }
-            if (coursePresenter == null){
+            if (coursePresenter == null) {
                 topticPresenter.publishComment(mInputEt.getText().toString().trim(), String.valueOf(theme_id), i, data);
-            }else {
+            } else {
                 coursePresenter.publishComment(mInputEt.getText().toString().trim(), String.valueOf(theme_id), i, data);
             }
             if (mMInputDialog != null) {
@@ -506,9 +498,9 @@ public class DialogUtils {
                 //设置触摸dialog外围是否关闭
                 .isOnTouchCanceled(true)
                 .addViewOnClickListener(R.id.wechat_tv, v -> {
-                    if (isSmall){
+                    if (isSmall) {
                         shareSmallProgram(url, imgUrl, title, desc, activity, SHARE_MEDIA.WEIXIN);
-                    }else {
+                    } else {
                         shareWebUrl(weburl, title, imgUrl, desc, activity, SHARE_MEDIA.WEIXIN);
                     }
                     shareDialog.dismiss();
@@ -548,7 +540,7 @@ public class DialogUtils {
     }
 
     public static void shareWebUrl1(String url, String title, Bitmap imgUrl, String des,
-                                   Activity context, SHARE_MEDIA pingtai) {
+                                    Activity context, SHARE_MEDIA pingtai) {
         UMWeb web = new UMWeb(url);
         web.setTitle(title);//标题
         UMImage thumb = new UMImage(context, imgUrl);
@@ -560,7 +552,8 @@ public class DialogUtils {
         shareAction.setCallback(umShareListener);
         shareAction.share();
     }
-    public static void shareSmallProgram(String path, String imgUrl, String title, String des, Activity context, SHARE_MEDIA pingtai){
+
+    public static void shareSmallProgram(String path, String imgUrl, String title, String des, Activity context, SHARE_MEDIA pingtai) {
         //兼容低版本的网页链接
         UMMin umMin = new UMMin(path);
         // 小程序消息封面图片

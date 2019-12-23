@@ -35,6 +35,7 @@ import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.SaveRecordEntity;
 import com.bjjy.buildtalk.entity.SearchCircleInfoEntity;
 import com.bjjy.buildtalk.entity.SearchResultEntity;
+import com.bjjy.buildtalk.entity.SongsEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.entity.VersionRecordEntity;
 
@@ -171,7 +172,7 @@ public interface HttpHelper {
 
     Observable<BaseResponse<String>> updateCircleInfo(Map<String, String> headers, Map<String, String> params);
 
-    Observable<BaseResponse<List<VersionRecordEntity>>> versionRecord();
+    Observable<BaseResponse<List<VersionRecordEntity>>> versionRecord(Map<String, String> headers, Map<String, String> params);
 
     Observable<BaseResponse<ActivityEntity>> getActivity();
 
@@ -198,5 +199,9 @@ public interface HttpHelper {
     Observable<BaseResponse<IEntity>> complain(Map<String, String> headers, Map<String, String> params);
 
     Observable<BaseResponse<File>> downloadFile(@Url String url);
+
+    Observable<BaseResponse<IEntity>> themeTopOperate(Map<String, String> headers, Map<String, String> params);
+
+    Observable<BaseResponse<List<SongsEntity>>> searchAudioList(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
 }

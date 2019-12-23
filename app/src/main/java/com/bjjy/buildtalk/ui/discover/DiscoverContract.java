@@ -8,6 +8,7 @@ import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.DiscoverEntity;
 import com.bjjy.buildtalk.entity.DissertationEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
+import com.bjjy.buildtalk.entity.SongsEntity;
 
 import java.util.List;
 
@@ -32,6 +33,8 @@ public class DiscoverContract {
         void handlerActivitySuccess(ActivityEntity activityEntity);
 
         void handlerDissertation(List<DissertationEntity> dissertationEntities);
+
+        void handlerSongs(List<SongsEntity> songsEntities, int position);
     }
 
     interface Presenter extends IPresenter<View>{

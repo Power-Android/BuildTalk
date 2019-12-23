@@ -5,6 +5,7 @@ import android.widget.ImageView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.entity.GuestBookEntity;
+import com.bjjy.buildtalk.utils.TimeUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -30,10 +31,10 @@ public class EveryTalkDetailAdapter extends BaseQuickAdapter<GuestBookEntity.Gue
                 .apply(new RequestOptions().error(R.drawable.moren_face))
                 .into((ImageView) helper.getView(R.id.item_face_iv));
         helper.setText(R.id.item_name_tv, item.getNickname())
-                .setText(R.id.item_time_tv, item.getGuestbook_time())
+                .setText(R.id.item_time_tv, TimeUtils.getFriendlyTimeSpanByNow(item.getGuestbook_time()))
                 .setText(R.id.item_content_tv, item.getContent())
                 .setText(R.id.item_praise_tv, String.valueOf(item.getCountpraise()))
-                .setGone(R.id.item_delete_iv, 1 == item.getIsDelete() ? true : false)
+                .setGone(R.id.item_delete_iv, 1 == item.getIsDelete())
                 .addOnClickListener(R.id.item_praise_ll)
                 .addOnClickListener(R.id.item_delete_iv);
         if ("1".equals(String.valueOf(item.getIsPraise()))){

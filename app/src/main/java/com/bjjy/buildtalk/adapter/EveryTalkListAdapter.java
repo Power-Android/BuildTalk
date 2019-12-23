@@ -5,9 +5,11 @@ import android.support.annotation.Nullable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.widget.ImageView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.entity.EveryTalkListEntity;
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -30,9 +32,15 @@ public class EveryTalkListAdapter extends BaseQuickAdapter<EveryTalkListEntity.N
         String article_title = item.getArticle_title();
         SpannableString spannableString = new SpannableString(article_title);
         ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#FF8F8F8F"));
-        spannableString.setSpan(colorSpan,0,article_title.indexOf("期")+1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-        helper.setText(R.id.item_period_tv,spannableString)
-            .setText(R.id.item_time_tv, item.getPublish_time())
-            .setText(R.id.item_num_tv, item.getBrowsecount()+"阅读");
+        spannableString.setSpan(colorSpan, 0, article_title.indexOf("期") + 1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        helper.setText(R.id.item_period_tv, spannableString)
+                .setText(R.id.item_time_tv, item.getPublish_time())
+                .addOnClickListener(R.id.icon1)
+                .setText(R.id.item_num_tv, item.getBrowsecount() + "阅读");
+        if (item.isChecked()) {
+            Glide.with(mContext).load(R.drawable.play_gif_icon).into((ImageView) helper.getView(R.id.icon1));
+        } else {
+            Glide.with(mContext).load(R.drawable.play_gray_icon).into((ImageView) helper.getView(R.id.icon1));
+        }
     }
 }

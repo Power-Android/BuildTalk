@@ -262,6 +262,12 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     }
 
     @Override
+    protected void onResume() {
+        setIsMargin(true);
+        super.onResume();
+    }
+
+    @Override
     protected void initView() {
         mCircle_id = getIntent().getStringExtra("circle_id");
         StatusBarUtils.changeStatusBar(this, true, false);
@@ -1084,6 +1090,16 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
                 }
             }
         }
+    }
+
+    @Override
+    public void handlerTopOperateSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i) {
+        if (0 == data.getIs_top()){
+            ToastUtils.showShort("主题置顶成功");
+        }else {
+            ToastUtils.showShort("取消置顶成功");
+        }
+        onRefresh(mRefreshLayout);
     }
 
     @Override

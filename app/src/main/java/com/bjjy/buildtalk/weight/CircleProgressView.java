@@ -129,16 +129,13 @@ public class CircleProgressView extends View {
         mAnimator = ValueAnimator.ofInt(0, current);
         mAnimator.setDuration(duration);
         mAnimator.setInterpolator(new LinearInterpolator());
-        mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int current = (int) animation.getAnimatedValue();
-                if (tCurrent != current) {
-                    tCurrent = current;
-                    setCurrent(current);
-                    if (mOnAnimProgressListener != null)
-                        mOnAnimProgressListener.valueUpdate(current);
-                }
+        mAnimator.addUpdateListener(animation -> {
+            int current1 = (int) animation.getAnimatedValue();
+            if (tCurrent != current1) {
+                tCurrent = current1;
+                setCurrent(current1);
+                if (mOnAnimProgressListener != null)
+                    mOnAnimProgressListener.valueUpdate(current1);
             }
         });
         mAnimator.start();
@@ -161,7 +158,20 @@ public class CircleProgressView extends View {
 
     public void destroy() {
         if (mAnimator != null) {
+            setCurrent(0);
             mAnimator.cancel();
+        }
+    }
+
+    public void pause(){
+        if (mAnimator != null){
+            mAnimator.pause();
+        }
+    }
+
+    public void resume() {
+        if (mAnimator != null){
+            mAnimator.resume();
         }
     }
 

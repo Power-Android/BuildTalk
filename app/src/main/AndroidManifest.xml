@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
 
     <application
         android:name=".app.App"
@@ -22,6 +23,15 @@
         android:roundIcon="@mipmap/app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service android:name=".core.service.PlayerService"/>
+        <receiver android:name=".core.receiver.StatusBarReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.bjjy.buildtalk.STATUS_BAR_ACTIONS"/>
+            </intent-filter>
+        </receiver>
+
         <activity android:name=".ui.circle.PDFViewerActivity"/>
         <activity android:name=".ui.circle.ComplaintReasonActivity" />
         <activity android:name=".ui.discover.DissertationListActivity" />

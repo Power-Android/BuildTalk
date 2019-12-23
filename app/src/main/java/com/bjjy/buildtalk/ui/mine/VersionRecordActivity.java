@@ -1,7 +1,11 @@
 package com.bjjy.buildtalk.ui.mine;
 
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -45,7 +49,22 @@ public class VersionRecordActivity extends BaseActivity<VersionRecordPresenter> 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new VersionRecordAdapter(mList);
         mRecyclerView.setAdapter(mAdapter);
-        mPresenter.versionRecord();
+        mPresenter.versionRecord(getAppVersionName(this));
+    }
+
+    /**
+     * 返回当前程序版本名
+     */
+    public static String getAppVersionName(Context context) {
+        String versionName=null;
+        try {
+            PackageManager pm = context.getPackageManager();
+            PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
+            versionName = pi.versionName;
+        } catch (Exception e) {
+            Log.e("VersionInfo", "Exception", e);
+        }
+        return versionName;
     }
 
     @Override

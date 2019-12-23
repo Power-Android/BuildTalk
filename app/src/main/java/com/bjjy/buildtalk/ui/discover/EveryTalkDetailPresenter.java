@@ -13,8 +13,11 @@ import com.bjjy.buildtalk.entity.GuestBookEntity;
 import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.PayOrderEntity;
 import com.bjjy.buildtalk.entity.SaveRecordEntity;
+import com.bjjy.buildtalk.entity.SongsEntity;
 import com.bjjy.buildtalk.utils.HeaderUtils;
+import com.bjjy.buildtalk.utils.PlayerHelper;
 import com.bjjy.buildtalk.utils.TimeUtils;
+import com.bjjy.buildtalk.utils.ToastUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -193,7 +196,7 @@ public class EveryTalkDetailPresenter extends BasePresenter<EveryTalkDetailContr
         Map<String, String> paramas = new HashMap<>();
         paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
         paramas.put("guestbook_id", comment_id);
-        if (TextUtils.isEmpty(type_zhuanti)){
+        if (TextUtils.isEmpty(type_zhuanti)) {
             paramas.put("type", "1");
         } else if (TextUtils.equals("2", type_zhuanti)) {
             paramas.put("type", "3");
@@ -243,4 +246,25 @@ public class EveryTalkDetailPresenter extends BasePresenter<EveryTalkDetailContr
                 }));
     }
 
+    public void requestSongs(String article_id) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put("article_id", article_id);
+        paramas.put("sort", "2");
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(App.getContext().getString(R.string.TIMESTAMP), timestamp);
+        headers.put(App.getContext().getString(R.string.SIGN), sign);
+        addSubscribe(mDataManager.searchAudioList(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .subscribeWith(new BaseObserver<List<SongsEntity>>() {
+                    @Override
+                    public void onSuccess(List<SongsEntity> songsEntities) {
+                            mDataManager.addSongsData(songsEntities);
+                            mView.handlerSongs();
+                    }
+                }));
+    }
 }

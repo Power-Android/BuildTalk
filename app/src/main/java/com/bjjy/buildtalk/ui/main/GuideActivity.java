@@ -25,7 +25,6 @@ public class GuideActivity extends BaseActivity<GuidePresenter> implements Guide
     ViewPager viewPager;
     @BindView(R.id.liner)
     LinearLayout linear;
-    private int[] images = {R.drawable.guide01, R.drawable.guide02, R.drawable.guide03};
 
     @Override
     protected int getLayoutId() {
@@ -35,7 +34,8 @@ public class GuideActivity extends BaseActivity<GuidePresenter> implements Guide
     @Override
     protected void initView() {
         StatusBarUtils.changeStatusBar(this, true, true);
-        viewPager.setOnPageChangeListener(new ViewPagerIndicator(this, viewPager, linear, images.length));
+        final int[] images = new int[]{R.drawable.guide01, R.drawable.guide02, R.drawable.guide03};
+        viewPager.addOnPageChangeListener(new ViewPagerIndicator(this, viewPager, linear, images.length));
         viewPager.setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {
@@ -60,14 +60,13 @@ public class GuideActivity extends BaseActivity<GuidePresenter> implements Guide
                     if (guideInto != null)
                         guideInto.setVisibility(View.INVISIBLE);
                 }
-                Glide.with(App.getContext()).load(images[position]).into(guideIv);
-                container.addView(view);
-                assert guideInto != null;
+                guideIv.setImageDrawable(getResources().getDrawable(images[position]));
                 guideInto.setOnClickListener(v -> {
                     mPresenter.mDataManager.setIsGuide(true);
                     startActivity(new Intent(GuideActivity.this, MainActivity.class));
                     finish();
                 });
+                container.addView(view);
                 return view;
             }
 

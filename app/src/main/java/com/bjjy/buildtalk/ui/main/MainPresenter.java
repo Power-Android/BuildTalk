@@ -1,14 +1,23 @@
 package com.bjjy.buildtalk.ui.main;
 
+import android.text.TextUtils;
+
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.App;
+import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.presenter.BasePresenter;
+import com.bjjy.buildtalk.core.event.PlayerEvent;
 import com.bjjy.buildtalk.core.rx.BaseObserver;
 import com.bjjy.buildtalk.core.rx.RxUtils;
 import com.bjjy.buildtalk.entity.IEntity;
+import com.bjjy.buildtalk.entity.SongsEntity;
 import com.bjjy.buildtalk.utils.HeaderUtils;
 import com.bjjy.buildtalk.utils.LogUtils;
+import com.bjjy.buildtalk.utils.PlayerHelper;
 import com.bjjy.buildtalk.utils.TimeUtils;
+import com.bjjy.buildtalk.utils.ToastUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
 import java.util.List;

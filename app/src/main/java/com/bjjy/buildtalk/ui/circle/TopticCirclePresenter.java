@@ -337,4 +337,27 @@ public class TopticCirclePresenter extends BasePresenter<TopticCircleContract.Vi
                     }
                 }));
     }
+
+    public void themeTopOperate(ThemeInfoEntity.ThemeInfoBean data, int i) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        paramas.put("theme_id", data.getTheme_id()+"");
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.themeTopOperate(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<IEntity>(mView, false) {
+                    @Override
+                    public void onSuccess(IEntity iEntity) {
+                        mView.handlerTopOperateSuccess(iEntity,data, i);
+                    }
+                }));
+    }
 }

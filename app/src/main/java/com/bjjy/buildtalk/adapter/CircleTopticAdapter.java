@@ -26,11 +26,13 @@ import com.bjjy.buildtalk.entity.ThemePdfBean;
 import com.bjjy.buildtalk.ui.circle.PDFViewerActivity;
 import com.bjjy.buildtalk.utils.AllUtils;
 import com.bjjy.buildtalk.utils.StringUtils;
+import com.bjjy.buildtalk.utils.TimeUtils;
 import com.bjjy.buildtalk.weight.MultiImageView;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -55,17 +57,17 @@ public class CircleTopticAdapter extends BaseQuickAdapter<ThemeInfoEntity.ThemeI
     protected void convert(BaseViewHolder helper, ThemeInfoEntity.ThemeInfoBean item) {
         Glide.with(mContext).load(item.getHeadImage()).into((ImageView) helper.getView(R.id.item_face_iv));
         helper.setText(R.id.item_name_tv, item.getName())
-                .setGone(R.id.content_ll, TextUtils.isEmpty(item.getTheme_content()) ? false : true)
-                .setGone(R.id.item_job_tv, "1".equals(item.getIs_circleMaster()) ? true : false)
-                .setGone(R.id.item_more_iv, "1".equals(isJoin) ? true : false)
-                .setGone(R.id.column_rl, "1".equals(isJoin) ? true : false)
-                .setGone(R.id.praise_rl, "1".equals(isJoin) ? true : false)
-                .setGone(R.id.comment_rl, "1".equals(isJoin) ? true : false)
-                .setGone(R.id.item_top_tv, 1 == item.getIs_top() ? true : false)
-                .setGone(R.id.item_grid_view, item.getTheme_image().size() > 0 ? true : false)
-                .setGone(R.id.pdf_rl, item.getTheme_pdf().size() > 0 ? true : false)
-                .setVisible(R.id.item_share_iv, item.getTheme_pdf().size() > 0 ? false : true)
-                .setText(R.id.item_time_tv, item.getPublish_time())
+                .setGone(R.id.content_ll, !TextUtils.isEmpty(item.getTheme_content()))
+                .setGone(R.id.item_job_tv, "1".equals(item.getIs_circleMaster()))
+                .setGone(R.id.item_more_iv, "1".equals(isJoin))
+                .setGone(R.id.column_rl, "1".equals(isJoin))
+                .setGone(R.id.praise_rl, "1".equals(isJoin))
+                .setGone(R.id.comment_rl, "1".equals(isJoin))
+                .setGone(R.id.item_top_tv, 1 == item.getIs_top())
+                .setGone(R.id.item_grid_view, item.getTheme_image().size() > 0)
+                .setGone(R.id.pdf_rl, item.getTheme_pdf().size() > 0)
+                .setVisible(R.id.item_share_iv, item.getTheme_pdf().size() <= 0)
+                .setText(R.id.item_time_tv, TimeUtils.getFriendlyTimeSpanByNow(item.getPublish_time()))
                 .setText(R.id.item_content_tv, item.getTheme_content())
                 .addOnClickListener(R.id.item_face_iv)
                 .addOnClickListener(R.id.item_more_iv)
