@@ -105,7 +105,7 @@ public class CircleListActivity extends BaseActivity<CircleListPresenter> implem
 
     @Override
     public void onItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-        LoginHelper.login(this, mPresenter.mDataManager, () -> {
+        LoginHelper.getInstance().login(this, mPresenter.mDataManager, () -> {
             List<CircleListEntity.CircleInfoBean> mCircleInfo = baseQuickAdapter.getData();
             mPresenter.attention(mCircleInfo.get(i).getUser_id(), mCircleInfo, i);
         });

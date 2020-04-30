@@ -38,7 +38,7 @@ public class CourseCircleContract {
 
         void handlerDeleteSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list);
 
-        void handlerCommentSuccess(int i, List<ThemeInfoEntity.ThemeInfoBean> data, List<CommentContentBean> commentInfo);
+        void handlerCommentSuccess(int adapterPosition, int i, List<ThemeInfoEntity.ThemeInfoBean> data, List<CommentContentBean> commentInfo);
 
         void handlerEssenceInfo(ThemeInfoEntity themeInfoEntity, boolean isRefresh);
 

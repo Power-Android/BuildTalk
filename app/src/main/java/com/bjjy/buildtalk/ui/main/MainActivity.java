@@ -1,5 +1,6 @@
 package com.bjjy.buildtalk.ui.main;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,8 +9,10 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.FrameLayout;
 
+import com.alibaba.fastjson.JSON;
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
@@ -27,6 +30,9 @@ import com.bjjy.buildtalk.ui.talk.TalkFragment;
 import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
+import com.mobile.auth.gatewayauth.PhoneNumberAuthHelper;
+import com.mobile.auth.gatewayauth.TokenResultListener;
+import com.mobile.auth.gatewayauth.model.TokenRet;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -74,7 +80,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         showFragment(mCurrentFgIndex);
         initNavigationView();
         String s = getIntent().getStringExtra("data");
-        if (!TextUtils.isEmpty(s)){
+        if (!TextUtils.isEmpty(s)) {
             data = Uri.parse(s);
             scheme();
         }

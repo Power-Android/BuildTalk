@@ -430,4 +430,19 @@ public class HttpHelperImpl implements HttpHelper {
     public Observable<BaseResponse<List<SongsEntity>>> searchAudioList(Map<String, String> headers, Map<String, String> params) {
         return mApiService.searchAudioList(headers, params);
     }
+
+    @Override
+    public Observable<BaseResponse<User>> getMobile(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.getMobile(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> themeRetract(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.themeRetract(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<String>> myWallet(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.myWallet(headers, params);
+    }
 }

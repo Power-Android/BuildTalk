@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/normalView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/normalView"
     tools:context="com.bjjy.buildtalk.ui.talk.MasterDetailActivity">
 
     <android.support.design.widget.CoordinatorLayout
@@ -69,8 +69,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_centerInParent="true"
-                        android:drawablePadding="@dimen/dp_5"
                         android:drawableRight="@drawable/sanjiao_icon"
+                        android:drawablePadding="@dimen/dp_5"
                         android:gravity="center"
                         android:paddingLeft="@dimen/dp_30"
                         android:paddingRight="@dimen/dp_30"
@@ -87,10 +87,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
             <com.scwang.smartrefresh.layout.SmartRefreshLayout
                 android:id="@+id/refresh_Layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
                 <android.support.v4.view.ViewPager
                     android:id="@+id/viewpager"
                     android:layout_width="match_parent"
@@ -100,7 +102,7 @@
         </RelativeLayout>
 
     </android.support.design.widget.CoordinatorLayout>
-
+    <!--  toolbar  -->
     <RelativeLayout
         android:id="@+id/top_title_rl"
         android:layout_width="match_parent"
@@ -115,10 +117,10 @@
                 android:id="@+id/back_iv"
                 android:layout_width="@dimen/dp_50"
                 android:layout_height="@dimen/dp_44"
-                android:paddingBottom="@dimen/dp_12"
                 android:paddingLeft="@dimen/dp_15"
-                android:paddingRight="@dimen/dp_15"
                 android:paddingTop="@dimen/dp_12"
+                android:paddingRight="@dimen/dp_15"
+                android:paddingBottom="@dimen/dp_12"
                 android:src="@drawable/arrow_left_white_icon" />
 
             <TextView
@@ -165,7 +167,7 @@
         </RelativeLayout>
 
     </RelativeLayout>
-
+    <!--  未加入时的蒙层  -->
     <RelativeLayout
         android:id="@+id/mc_rl"
         android:layout_width="match_parent"
@@ -193,6 +195,7 @@
                     android:textColor="@color/text_drak"
                     android:textSize="@dimen/sp_15"
                     android:textStyle="bold" />
+
                 <LinearLayout
                     android:id="@+id/mc_qz_expand_ll"
                     android:layout_width="wrap_content"
@@ -201,14 +204,15 @@
                     android:layout_marginTop="@dimen/dp_20"
                     android:layout_marginEnd="@dimen/common_margin"
                     android:gravity="center">
+
                     <TextView
                         android:id="@+id/mc_qz_expand_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/dp_5"
                         android:text="展开"
                         android:textColor="@color/blue_mid"
-                        android:textSize="@dimen/sp_12"
-                        android:layout_marginRight="@dimen/dp_5"/>
+                        android:textSize="@dimen/sp_12" />
 
                     <ImageView
                         android:id="@+id/mc_qz_expand_iv"
@@ -216,7 +220,6 @@
                         android:layout_height="@dimen/dp_9"
                         android:src="@drawable/dao_sanjiao_blue" />
                 </LinearLayout>
-
 
                 <RelativeLayout
                     android:id="@+id/mc_jieshao_rl"
@@ -229,8 +232,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/common_margin"
-                        android:layout_marginRight="@dimen/common_margin"
                         android:layout_marginTop="@dimen/dp_10"
+                        android:layout_marginRight="@dimen/common_margin"
                         android:ellipsize="end"
                         android:maxLines="2"
                         android:textColor="@color/text_mid"
@@ -254,14 +257,14 @@
                             android:textSize="@dimen/sp_15"
                             android:textStyle="bold" />
 
-                        <TextView
+                        <WebView
                             android:id="@+id/mc_ld_tv"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/mc_ld_rl"
                             android:layout_marginLeft="@dimen/common_margin"
-                            android:layout_marginRight="@dimen/common_margin"
                             android:layout_marginTop="@dimen/dp_10"
+                            android:layout_marginRight="@dimen/common_margin"
                             android:ellipsize="end"
                             android:textColor="@color/text_mid"
                             android:textSize="12sp" />
@@ -283,10 +286,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/mc_ff_rl"
-                            android:layout_marginBottom="@dimen/dp_60"
                             android:layout_marginLeft="@dimen/common_margin"
-                            android:layout_marginRight="@dimen/common_margin"
                             android:layout_marginTop="@dimen/dp_10"
+                            android:layout_marginRight="@dimen/common_margin"
+                            android:layout_marginBottom="@dimen/dp_60"
                             android:ellipsize="end"
                             android:text="1、本课程为视频课程，预计四月底更新完毕，购买成功后即可通过“建谈”APP端、小程序端永久观看。\n2、由于视频内容为虚拟商品，一经购买，概不退款。\n3、课程学习过程中，如有任何问题，请联系13433280987"
                             android:textColor="@color/text_mid"
@@ -298,57 +301,61 @@
 
         <RelativeLayout
             android:id="@+id/mc_formal_top_rl"
-            android:visibility="invisible"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="invisible">
+
             <TextView
                 android:id="@+id/mc_formal_title_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/common_margin"
+                android:layout_marginTop="@dimen/dp_30"
                 android:text="建筑产业工业互联网"
                 android:textColor="@color/text_drak"
                 android:textSize="@dimen/sp_18"
-                android:textStyle="bold"
-                android:layout_marginLeft="@dimen/common_margin"
-                android:layout_marginTop="@dimen/dp_30"/>
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/mc_formal_name_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="圈主：小地瓜"
-                android:textSize="@dimen/sp_10"
-                android:textColor="@color/text_light"
                 android:layout_below="@+id/mc_formal_title_tv"
                 android:layout_marginLeft="@dimen/dp_15"
-                android:layout_marginTop="@dimen/dp_5"/>
+                android:layout_marginTop="@dimen/dp_5"
+                android:text="圈主：小地瓜"
+                android:textColor="@color/text_light"
+                android:textSize="@dimen/sp_10" />
+
             <ImageView
                 android:id="@+id/mc_tag_iv"
                 android:layout_width="@dimen/dp_11"
                 android:layout_height="@dimen/dp_11"
-                android:src="@drawable/tag_icon"
-                android:layout_toRightOf="@+id/mc_formal_name_tv"
                 android:layout_below="@id/mc_formal_title_tv"
+                android:layout_marginLeft="@dimen/dp_2"
                 android:layout_marginTop="@dimen/dp_7"
-                android:layout_marginLeft="@dimen/dp_2"/>
+                android:layout_toRightOf="@+id/mc_formal_name_tv"
+                android:src="@drawable/tag_icon" />
+
             <TextView
                 android:id="@+id/mc_formal_date_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/mc_formal_title_tv"
+                android:layout_marginLeft="@dimen/dp_25"
+                android:layout_marginTop="@dimen/dp_5"
+                android:layout_toRightOf="@+id/mc_formal_name_tv"
                 android:text="创建 490天"
                 android:textColor="@color/text_light"
-                android:textSize="@dimen/sp_10"
-                android:layout_below="@+id/mc_formal_title_tv"
-                android:layout_toRightOf="@+id/mc_formal_name_tv"
-                android:layout_marginTop="@dimen/dp_5"
-                android:layout_marginLeft="@dimen/dp_25"/>
+                android:textSize="@dimen/sp_10" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/mc_table_rl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_below="@+id/mc_formal_top_rl">
+            android:layout_below="@+id/mc_formal_top_rl"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/mc_view2"
@@ -366,24 +373,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/mc_view2"
-                android:textColor="@color/text_light"
-                android:textSize="@dimen/sp_10"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="@dimen/common_margin"/>
+                android:layout_marginEnd="@dimen/common_margin"
+                android:textColor="@color/text_light"
+                android:textSize="@dimen/sp_10" />
+
             <View
                 android:id="@+id/mc_border"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_1"
-                android:background="@color/border2"
                 android:layout_below="@+id/mc_view2"
-                android:layout_marginTop="@dimen/dp_10"/>
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="@color/border2" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/mc_ml_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:overScrollMode="never"
-                android:layout_below="@+id/mc_border" />
+                android:layout_below="@+id/mc_border"
+                android:overScrollMode="never" />
 
         </RelativeLayout>
 
@@ -391,14 +399,108 @@
             android:id="@+id/mc_formal_face_iv"
             android:layout_width="@dimen/dp_60"
             android:layout_height="@dimen/dp_60"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:layout_marginTop="@dimen/dp_m_30"
+            android:src="@drawable/moren_face"
             android:visibility="gone"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="@dimen/dp_1" />
+    </RelativeLayout>
+    <!--  已加入时简介的蒙层  -->
+    <RelativeLayout
+        android:id="@+id/mc_formal_rl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dp_170"
+        android:visibility="gone">
+        <RelativeLayout
+            android:id="@+id/jianjie_rl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/dp_30"
+            android:background="@drawable/shape_white_top_22raidus"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/formal_title_tv1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/common_margin"
+                android:layout_marginTop="@dimen/dp_30"
+                android:textColor="@color/text_drak"
+                android:textSize="@dimen/sp_18"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/mc_jianjie_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="@dimen/dp_30"
+                android:layout_marginEnd="@dimen/common_margin"
+                android:drawablePadding="@dimen/dp_3"
+                android:drawableRight="@drawable/arrow_down_icon"
+                android:text="简介"
+                android:textColor="@color/text_mid"
+                android:textSize="@dimen/sp_13" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/formal_title_tv1">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/mc_recommend_tv1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/common_margin"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:layout_marginRight="@dimen/common_margin"
+                        android:ellipsize="end"
+                        android:maxLines="6"
+                        android:textColor="@color/text_mid"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/mc_ld1_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/mc_recommend_tv1"
+                        android:layout_marginLeft="@dimen/dp_15"
+                        android:layout_marginTop="@dimen/dp_20"
+                        android:text="课程亮点"
+                        android:textColor="@color/text_drak"
+                        android:textSize="@dimen/sp_15"
+                        android:textStyle="bold" />
+
+                    <WebView
+                        android:id="@+id/mc_ld_tv1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/mc_ld1_tv"
+                        android:layout_marginLeft="@dimen/common_margin"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:layout_marginRight="@dimen/common_margin"
+                        android:ellipsize="end"
+                        android:textColor="@color/text_mid"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+            </ScrollView>
+
+        </RelativeLayout>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/formal_face_iv1"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="@dimen/dp_60"
+            android:layout_marginLeft="@dimen/dp_15"
             android:src="@drawable/moren_face"
             app:civ_border_color="@color/white"
-            app:civ_border_width="@dimen/dp_1"
-            android:layout_marginTop="@dimen/dp_m_30"
-            android:layout_marginLeft="@dimen/dp_15"/>
+            app:civ_border_width="@dimen/dp_1" />
     </RelativeLayout>
-
+    <!--  加入按钮  -->
     <TextView
         android:id="@+id/join_tv"
         android:layout_width="@dimen/dp_245"
@@ -434,29 +536,32 @@
             android:text="发表..."
             android:textColor="@color/blue_mid" />
     </RelativeLayout>
+    <!-- 最下边的收起目录   -->
     <RelativeLayout
         android:id="@+id/course_collapse_rl"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_44"
-        android:visibility="gone"
+        android:layout_alignParentBottom="true"
         android:paddingTop="@dimen/dp_10"
         android:paddingBottom="@dimen/dp_5"
-        android:layout_alignParentBottom="true">
+        android:visibility="gone">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_33"
             android:layout_marginStart="@dimen/common_margin"
             android:layout_marginEnd="@dimen/common_margin"
             android:background="@drawable/shape_blue_storke_17radius">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="收起目录"
                 android:layout_centerInParent="true"
-                android:textSize="@dimen/sp_12"
-                android:textColor="@color/blue_mid"
                 android:drawableRight="@drawable/sanjiao_blue"
-                android:drawablePadding="@dimen/dp_5"/>
+                android:drawablePadding="@dimen/dp_5"
+                android:text="收起目录"
+                android:textColor="@color/blue_mid"
+                android:textSize="@dimen/sp_12" />
         </RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>

@@ -8,6 +8,7 @@ import com.bjjy.buildtalk.entity.CourseListEntity;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -26,7 +27,9 @@ public class DirectoryAdapter extends BaseQuickAdapter<CourseListEntity.Courseli
 
     @Override
     protected void convert(BaseViewHolder helper, CourseListEntity.CourselistBean item) {
-        helper.setText(R.id.item_name_tv, item.getArticle_title());
+        DecimalFormat df = new DecimalFormat("00");
+        String str = df.format(helper.getAdapterPosition()+1);
+        helper.setText(R.id.item_name_tv, str + "讲  "+item.getArticle_title());
         TextView nameTv = helper.getView(R.id.item_name_tv);
         if (item.isSelected()){
 //            nameTv.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));

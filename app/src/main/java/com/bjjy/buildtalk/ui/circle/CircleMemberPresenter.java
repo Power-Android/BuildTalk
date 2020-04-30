@@ -26,12 +26,13 @@ public class CircleMemberPresenter extends BasePresenter<CircleMemberContract.Vi
 
     }
 
-    public void circleUser(String circle_id, int page, boolean isRefresh) {
+    public void circleUser1(String circle_id, int page, int page_Position, boolean isRefresh) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
         paramas.put("circle_id", circle_id);
         paramas.put(Constants.PAGE, page+"");
         paramas.put(Constants.PAGE_SIZE, "10");
+        paramas.put("type", String.valueOf(page_Position));
         paramas.put(Constants.TIMESTAMP, timestamp);
         String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
 
@@ -45,7 +46,57 @@ public class CircleMemberPresenter extends BasePresenter<CircleMemberContract.Vi
                 .subscribeWith(new BaseObserver<MemberEntity>(mView, false) {
                     @Override
                     public void onSuccess(MemberEntity memberEntity) {
-                        mView.handlerCircleUser(memberEntity, isRefresh);
+                        mView.handlerCircleUser1(memberEntity, isRefresh);
+                    }
+                }));
+    }
+
+    public void circleUser2(String circle_id, int page, int page_Position, boolean isRefresh) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put("circle_id", circle_id);
+        paramas.put(Constants.PAGE, page+"");
+        paramas.put(Constants.PAGE_SIZE, "10");
+        paramas.put("type", String.valueOf(page_Position));
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.circleUser(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<MemberEntity>(mView, false) {
+                    @Override
+                    public void onSuccess(MemberEntity memberEntity) {
+                        mView.handlerCircleUser2(memberEntity, isRefresh);
+                    }
+                }));
+    }
+
+    public void circleUser3(String circle_id, int page, int page_Position, boolean isRefresh) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put("circle_id", circle_id);
+        paramas.put(Constants.PAGE, page+"");
+        paramas.put(Constants.PAGE_SIZE, "10");
+        paramas.put("type", String.valueOf(page_Position));
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.circleUser(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<MemberEntity>(mView, false) {
+                    @Override
+                    public void onSuccess(MemberEntity memberEntity) {
+                        mView.handlerCircleUser3(memberEntity, isRefresh);
                     }
                 }));
     }

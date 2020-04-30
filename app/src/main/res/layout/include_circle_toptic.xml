@@ -47,11 +47,13 @@
             android:layout_marginLeft="@dimen/dp_10"/>
         <TextView
             android:id="@+id/praise_tv"
-            android:layout_width="wrap_content"
+            android:includeFontPadding="true"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:text="傲慢偏见，建筑大师的大师，我是你兄弟，辛德瑞拉，心语心愿"
-            android:layout_marginLeft="@dimen/dp_10"
-            android:textSize="@dimen/sp_11"
+            android:textSize="@dimen/sp_13"
             android:textColor="@color/text_light"/>
     </LinearLayout>
     <RelativeLayout

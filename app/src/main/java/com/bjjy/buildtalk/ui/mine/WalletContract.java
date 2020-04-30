@@ -2,6 +2,7 @@ package com.bjjy.buildtalk.ui.mine;
 
 import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.base.view.IView;
+import com.bjjy.buildtalk.entity.IEntity;
 
 /**
  * @author power
@@ -13,6 +14,7 @@ public class WalletContract  {
 
     interface View extends IView{
 
+        void handlerWallet(String s);
     }
 
     interface Presenter extends IPresenter<View>{

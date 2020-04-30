@@ -24,6 +24,15 @@ public class BannerEntity implements Serializable {
     private String pic_url;
     private String type_name;
     private String circle_type;
+    private String url;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
     public int getPic_id() {
         return pic_id;

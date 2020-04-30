@@ -1,5 +1,7 @@
 package com.bjjy.buildtalk.ui.circle;
 
+import android.text.TextUtils;
+
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.presenter.BasePresenter;
 import com.bjjy.buildtalk.core.rx.BaseObserver;
@@ -162,13 +164,17 @@ public class CourseDetailPresenter extends BasePresenter<CourseDetailContarct.Vi
                 }));
     }
 
-    public void publishComment(String content, String theme_id, int i, List<ThemeInfoEntity.ThemeInfoBean> data) {
+    public void publishComment(int adapterPosition, String content, String theme_id, String commentId,
+                               String pareantId, int i, List<ThemeInfoEntity.ThemeInfoBean> data) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
         paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
         paramas.put(Constants.SOURCE, Constants.ANDROID);
         paramas.put("theme_id", theme_id);
         paramas.put("content", content);
+        paramas.put("parentCommentId", TextUtils.equals("0", pareantId) ? commentId : pareantId);
+        paramas.put("reply_commentId", TextUtils.isEmpty(commentId) ? "" : commentId);//如果是回复他人的评论，传他人的评论id,否则传空
+        paramas.put("publish_type", "1");//1 返回主题详情外评论样式 2返回主题详情页评论样式
         paramas.put(Constants.TIMESTAMP, timestamp);
         String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
 

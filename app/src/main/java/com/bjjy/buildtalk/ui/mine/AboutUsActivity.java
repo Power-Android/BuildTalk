@@ -42,7 +42,9 @@ public class AboutUsActivity extends BaseActivity<AboutUsPresenter> implements A
         if (TextUtils.isEmpty(mTitle)){
             mToolbarTitle.setText(R.string.about_us);
         }else {
-            mToolbarTitle.setText(mTitle);
+            if (!TextUtils.equals("web", mTitle)){
+                mToolbarTitle.setText(mTitle);
+            }
         }
     }
 
@@ -55,7 +57,7 @@ public class AboutUsActivity extends BaseActivity<AboutUsPresenter> implements A
         settings.setLoadWithOverviewMode(true);
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         if (TextUtils.isEmpty(mUrl)){
-            mWebview.loadUrl("https://jt.chinabim.com/we");
+            mWebview.loadUrl("https://www.51jiantan.com/we");
         }else {
             mWebview.loadUrl(mUrl);
         }

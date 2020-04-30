@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.CommentAdapter;
+import com.bjjy.buildtalk.adapter.DetailCommentAdapter;
 import com.bjjy.buildtalk.adapter.PdfVewAdapter;
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
@@ -61,7 +62,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> implements TopticDetailContract.View, OnRefreshListener, OnLoadMoreListener, BaseQuickAdapter.OnItemChildClickListener {
+public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> implements TopticDetailContract.View, OnRefreshListener, OnLoadMoreListener, BaseQuickAdapter.OnItemChildClickListener, CommentAdapter.onCommentItemlistener {
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
@@ -134,6 +135,9 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
     private String mPath1;//主题
     private String themePath;//主题拼接完成url
     private String mCircle_id;
+    private int mComment_id;
+    private String mParentCommentId;
+    public static int mFlag = 0;
 
     @Override
     protected int getLayoutId() {
@@ -184,6 +188,7 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
         mRecyclerView.setAdapter(mCommentAdapter);
         ((SimpleItemAnimator)mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         mCommentAdapter.setOnItemChildClickListener(this);
+        mCommentAdapter.setCommentClickListener(this);
     }
 
     @Override
@@ -275,7 +280,7 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
                     ToastUtils.showShort("请输入评论内容");
                     return false;
                 }
-                mPresenter.publishComment(mRecordEt.getText().toString().trim(), themeInfoEntity.getTheme_id());
+                mPresenter.publishComment(mRecordEt.getText().toString().trim(), themeInfoEntity.getTheme_id(), mComment_id == 0 ? "" :mComment_id+"", mParentCommentId);
                 mRecordEt.clearFocus();
                 mRecordEt.getText().clear();
                 mRecordLl.setVisibility(View.VISIBLE);
@@ -291,11 +296,11 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
         switch (view.getId()) {
             case R.id.item_more_iv:
                 if (themeInfoEntity != null)
-                    LoginHelper.login(this, mPresenter.mDataManager, () -> showEditDialog(themeInfoEntity));
+                    LoginHelper.getInstance().login(this, mPresenter.mDataManager, () -> showEditDialog(themeInfoEntity));
                 break;
             case R.id.praise_ll:
                 if (themeInfoEntity != null) {
-                    LoginHelper.login(this, mPresenter.mDataManager, () -> mPresenter.praise(themeInfoEntity.getTheme_id() + "", "1", null));
+                    LoginHelper.getInstance().login(this, mPresenter.mDataManager, () -> mPresenter.praise(themeInfoEntity.getTheme_id() + "", "1", null));
                 }
                 break;
             case R.id.share_iv:
@@ -308,12 +313,14 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
                 }
                 break;
             case R.id.record_ll:
-                LoginHelper.login(this, mPresenter.mDataManager, () -> {
+                LoginHelper.getInstance().login(this, mPresenter.mDataManager, () -> {
                     if (!isGone) {
                         mRecordLl.setVisibility(View.GONE);
                         mRecordEt.setFocusable(true);
                         mRecordEt.setFocusableInTouchMode(true);
                         mRecordEt.requestFocus();
+                        mComment_id = 0;
+                        mParentCommentId = "";
                         KeyboardUtils.showSoftInput(TopticDetailActivity.this);
                         isGone = !isGone;
                     }
@@ -455,6 +462,22 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
             case R.id.item_delete_iv:
                 showDeleteDialog(mComment_content, i);
                 break;
+            case R.id.item_content_tv:
+                if (!String.valueOf(mComment_content.get(i).getUser_id()).equals(mPresenter.mDataManager.getUser().getUser_id())){
+                    if (!isGone) {
+                        mRecordLl.setVisibility(View.GONE);
+                        mRecordEt.setFocusable(true);
+                        mRecordEt.setFocusableInTouchMode(true);
+                        mRecordEt.requestFocus();
+                        mRecordEt.setHint("回复：" + mComment_content.get(i).getName());
+                        mComment_id = mComment_content.get(i).getComment_id();
+                        mParentCommentId = mComment_content.get(i).getParentCommentId();
+                        mFlag = 0;
+                        KeyboardUtils.showSoftInput(TopticDetailActivity.this);
+                        isGone = !isGone;
+                    }
+                }
+                break;
         }
     }
 
@@ -530,5 +553,23 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
     @Override
     public void handlerCommentSuccess(List<CommentContentBean> commentInfo) {
         mPresenter.commentList(mTheme_id, 1, true);
+    }
+
+    @Override
+    public void onCommentClick(int adapterPosition, DetailCommentAdapter adapter, View view, int position) {
+        if (!String.valueOf(adapter.getData().get(position).getUser_id()).equals(mPresenter.mDataManager.getUser().getUser_id())){
+            if (!isGone) {
+                mRecordLl.setVisibility(View.GONE);
+                mRecordEt.setFocusable(true);
+                mRecordEt.setFocusableInTouchMode(true);
+                mRecordEt.requestFocus();
+                mFlag = 0;
+                mRecordEt.setHint("回复：" + adapter.getData().get(position).getName());
+                mComment_id = adapter.getData().get(position).getComment_id();
+                mParentCommentId = adapter.getData().get(position).getParentCommentId();
+                KeyboardUtils.showSoftInput(TopticDetailActivity.this);
+                isGone = !isGone;
+            }
+        }
     }
 }

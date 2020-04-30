@@ -71,6 +71,7 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
     private List<String> mCircle_tags = new ArrayList<>();
     private String mPic_url;
     private boolean isMax = false;
+    private long lastTime = 0;
 
     @Override
     protected int getLayoutId() {
@@ -82,14 +83,19 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
         mType = getIntent().getStringExtra("type");
         mCircle_id = getIntent().getStringExtra("circle_id");
         mToolbarBack.setOnClickListener(v -> finish());
-        if (TextUtils.isEmpty(mType)){
+        if (TextUtils.isEmpty(mType)) {
             mToolbarTitle.setText("免费创建圈子");
-        }else {
+        } else {
             mToolbarTitle.setText("圈子资料");
         }
         mToolbarRightTitle.setText("完成");
         mToolbarRightTitle.setOnClickListener(v -> {
-            createCircle();
+            //常规方式
+            long currTime = System.currentTimeMillis();
+            if (currTime - lastTime > 1000) {
+                createCircle();
+            }
+            lastTime = currTime;
         });
         mCircleIv.setOnClickListener(v -> {
             requestPhoto();
@@ -116,16 +122,16 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
                 TextView tv = view.findViewById(R.id.tag_tv);
                 ImageView delete = view.findViewById(R.id.tag_delete);
                 tv.setText(circleTagEntity.getTag_name());
-                if (circleTagEntity.isSelected()){
+                if (circleTagEntity.isSelected()) {
                     tv.setBackground(getResources().getDrawable(R.drawable.shape_create_circle_sel));
                     tv.setTextColor(getResources().getColor(R.color.white));
-                }else {
+                } else {
                     tv.setBackground(getResources().getDrawable(R.drawable.shape_create_circle_def));
                     tv.setTextColor(getResources().getColor(R.color.text_mid));
                 }
-                if (circleTagEntity.isCustom()){
+                if (circleTagEntity.isCustom()) {
                     delete.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     delete.setVisibility(View.GONE);
                 }
                 delete.setOnClickListener(v -> {
@@ -142,7 +148,7 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
             if (mTagList.get(position).isSelected()) {
                 mTagList.get(position).setSelected(false);
             } else {
-                if (isMax){
+                if (isMax) {
                     ToastUtils.showShort("最多选中5个标签");
                     return true;
                 }
@@ -154,13 +160,13 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
         });
 
         mAddEt.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_DONE){
-                if (TextUtils.isEmpty(v.getText().toString().trim())){
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                if (TextUtils.isEmpty(v.getText().toString().trim())) {
                     ToastUtils.showShort("请输入标签内容");
                     return false;
                 }
                 for (int i = 0; i < mTagList.size(); i++) {
-                    if (TextUtils.equals(v.getText().toString(), mTagList.get(i).getTag_name())){
+                    if (TextUtils.equals(v.getText().toString(), mTagList.get(i).getTag_name())) {
                         ToastUtils.showShort("不能重复添加标签");
                         return true;
                     }
@@ -173,65 +179,65 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
             vervify();
             return true;
         });
-        if (!TextUtils.isEmpty(mType)){
+        if (!TextUtils.isEmpty(mType)) {
             mPresenter.searchCircleInfo(mCircle_id);
-        }else {
+        } else {
             mTagAdapter.notifyDataChanged();
         }
     }
 
-    private void vervify(){
+    private void vervify() {
         mSelList.clear();
         int a = 0;
         for (int i = 0; i < mTagList.size(); i++) {
-            if (mTagList.get(i).isSelected()){
+            if (mTagList.get(i).isSelected()) {
                 mSelList.add(mTagList.get(i));
             }
-            if (mTagList.get(i).isCustom()){
+            if (mTagList.get(i).isCustom()) {
                 a++;
             }
         }
-        if (mSelList.size() >= 5){
+        if (mSelList.size() >= 5) {
             isMax = true;
             mAddEt.setVisibility(View.GONE);
-        }else {
+        } else {
             isMax = false;
             mAddEt.setVisibility(View.VISIBLE);
         }
-        if (a >= 5){
+        if (a >= 5) {
             mAddEt.setVisibility(View.GONE);
         }
     }
 
     private void createCircle() {
 
-        if (TextUtils.isEmpty(mCircleTitleEt.getText().toString())){
+        if (TextUtils.isEmpty(mCircleTitleEt.getText().toString())) {
             ToastUtils.showShort("请填写圈子名称");
             return;
         }
-        if (mSelList.size() == 0 ){
+        if (mSelList.size() == 0) {
             ToastUtils.showShort("请选择行业标签");
             return;
         }
-        if (mFile == null){
-            if (!TextUtils.isEmpty(mPic_url)){
+        if (mFile == null) {
+            if (!TextUtils.isEmpty(mPic_url)) {
                 mPresenter.updateCircleInfo(mCircle_id, mPic_url, mCircleTitleEt.getText().toString(),
-                        StringUtils.listToString(mSelList,','),mEditText.getText().toString().trim());
-            }else {
+                        StringUtils.listToString(mSelList, ','), mEditText.getText().toString().trim());
+            } else {
                 ToastUtils.showShort("请添加圈子封面");
             }
             return;
         }
-        if (TextUtils.isEmpty(mType)){
-            mPresenter.upload(false, mCircle_id, mFile,mCircleTitleEt.getText().toString(),
-                    StringUtils.listToString(mSelList,','),mEditText.getText().toString().trim());
-        }else {
-            if (mFile != null){
-                mPresenter.upload(true, mCircle_id, mFile,mCircleTitleEt.getText().toString(),
-                        StringUtils.listToString(mSelList,','),mEditText.getText().toString().trim());
-            }else {
+        if (TextUtils.isEmpty(mType)) {
+            mPresenter.upload(false, mCircle_id, mFile, mCircleTitleEt.getText().toString(),
+                    StringUtils.listToString(mSelList, ','), mEditText.getText().toString().trim());
+        } else {
+            if (mFile != null) {
+                mPresenter.upload(true, mCircle_id, mFile, mCircleTitleEt.getText().toString(),
+                        StringUtils.listToString(mSelList, ','), mEditText.getText().toString().trim());
+            } else {
                 mPresenter.updateCircleInfo(mCircle_id, mPic_url, mCircleTitleEt.getText().toString(),
-                        StringUtils.listToString(mSelList,','),mEditText.getText().toString().trim());
+                        StringUtils.listToString(mSelList, ','), mEditText.getText().toString().trim());
             }
         }
     }
@@ -273,7 +279,7 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
                 .showCropFrame(true)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false   true or false
                 .showCropGrid(true)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false    true or false
                 .openClickSound(false)// 是否开启点击声音 true or false
-                .withAspectRatio(1,1)
+                .withAspectRatio(1, 1)
                 .previewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中) true or false
                 .minimumCompressSize(100)// 小于100kb的图片不压缩
                 .synOrAsy(true)//同步true或异步false 压缩 默认同步
@@ -287,13 +293,13 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
             if (requestCode == PictureConfig.CHOOSE_REQUEST) {
                 List<LocalMedia> localMedia = PictureSelector.obtainMultipleResult(data);
                 String image = "";
-                if (localMedia.get(0).isCompressed()){
+                if (localMedia.get(0).isCompressed()) {
                     image = localMedia.get(0).getCompressPath();
-                }else {
+                } else {
                     image = localMedia.get(0).getPath();
                 }
                 Glide.with(this).load(image).into(mCircleIv);
-                if (!TextUtils.isEmpty(image)){
+                if (!TextUtils.isEmpty(image)) {
                     File file = new File(image);
                     RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
                     mFile = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
@@ -315,7 +321,7 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
         mCircle_tags = Arrays.asList(circle_tags.split(","));
         for (int i = 0; i < mTagList.size(); i++) {
             for (int j = 0; j < mCircle_tags.size(); j++) {
-                if (mTagList.size() > 0 && mCircle_tags.size() > 0 && mTagList.get(i).getTag_name().equals(mCircle_tags.get(j))){
+                if (mTagList.size() > 0 && mCircle_tags.size() > 0 && mTagList.get(i).getTag_name().equals(mCircle_tags.get(j))) {
                     mTagList.get(i).setSelected(true);
                 }
             }
@@ -328,10 +334,10 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
         mTagAdapter.notifyDataChanged();
     }
 
-    public static List removeDuplicate(List<CircleTagEntity> list){
-        for (int i = 0; i < list.size() - 1; i++ ){
-            for (int j = list.size() - 1; j > i; j-- ){
-                if (list.get(j).getTag_name().equals(list.get(i).getTag_name())){
+    public static List removeDuplicate(List<CircleTagEntity> list) {
+        for (int i = 0; i < list.size() - 1; i++) {
+            for (int j = list.size() - 1; j > i; j--) {
+                if (list.get(j).getTag_name().equals(list.get(i).getTag_name())) {
                     list.remove(j);
                 }
             }

@@ -26,7 +26,7 @@ public class AllUtils {
     //设置是否可以弹窗下载
     private static boolean mCanDown=true;
     //设置最大放大倍数
-    private static float mMaxZoom=6.0f;
+    private static float mMaxZoom=3.0f;
     //设置普通图下是否可以旋转
     private static boolean mRotationEnabled=false;
     //文件保存路径

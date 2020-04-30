@@ -15,12 +15,10 @@
             android:scaleType="centerCrop" />
         <View
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/dp_220"
             android:background="#020203"
             android:alpha="0.2"/>
     </RelativeLayout>
-
-
     <RelativeLayout
         android:id="@+id/pre_top_rl"
         android:layout_width="match_parent"
@@ -196,6 +194,19 @@
                 android:textStyle="bold"
                 android:layout_marginLeft="@dimen/common_margin"
                 android:layout_marginTop="@dimen/dp_30"/>
+            <TextView
+                android:id="@+id/jianjie_expand_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="简介"
+                android:textColor="@color/text_mid"
+                android:textSize="@dimen/sp_13"
+                android:drawablePadding="@dimen/dp_3"
+                android:drawableRight="@drawable/arrow_right_black"
+                android:layout_marginTop="@dimen/dp_30"
+                android:layout_alignParentRight="true"
+                android:layout_marginEnd="@dimen/common_margin"/>
+
             <TextView
                 android:id="@+id/formal_name_tv"
                 android:layout_width="wrap_content"

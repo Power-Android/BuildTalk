@@ -5,8 +5,8 @@ ext {
             buildToolsVersion           : "28.0.0",
             minSdkVersion               : 21,
             targetSdkVersion            : 27,
-            versionCode                 : 20301,
-            versionName                 : "2.3.1",
+            versionCode                 : 20304,
+            versionName                 : "2.3.4",
             renderscriptTargetApi       : 21
     ]
 
@@ -46,6 +46,7 @@ ext {
             "subsampling-scale-image-view"          : "com.davemorrissey.labs:subsampling-scale-image-view:3.10.0",
             "gesture-views"                         : "com.alexvasilkov:gesture-views:2.5.2",
             "PDF-viewer"                            : "com.github.barteksc:android-pdf-viewer:3.0.0-beta.5",
+            "MagicIndicator"                        : "com.github.hackware1993:MagicIndicator:1.5.0",
 
             //net
             "gson"                                  : "com.google.code.gson:gson:2.8.2",

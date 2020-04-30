@@ -36,12 +36,12 @@ public class DissertationPresenter extends BasePresenter<DissertationContract.Vi
     }
 
     public void tabData() {
-        list.add("详情");
         list.add("视频");
+        list.add("详情");
         View detailView = LayoutInflater.from(App.getContext()).inflate(R.layout.dissertation_detail_layout, null, false);
         View videoView = LayoutInflater.from(App.getContext()).inflate(R.layout.dissertation_video_layout, null, false);
-        views.add(detailView);
         views.add(videoView);
+        views.add(detailView);
 
         mView.handlerTabData(list, views);
     }

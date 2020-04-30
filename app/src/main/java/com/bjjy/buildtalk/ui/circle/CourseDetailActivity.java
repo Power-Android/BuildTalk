@@ -1,5 +1,6 @@
 package com.bjjy.buildtalk.ui.circle;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -68,7 +69,7 @@ import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
 
 public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> implements CourseDetailContarct.View, OnRefreshLoadMoreListener,
-        BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.RequestLoadMoreListener {
+        BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.RequestLoadMoreListener, CircleTopticAdapter.onCommentItemlistener {
 
     @BindView(R.id.videoplayer)
     JzvdStd mVideoplayer;
@@ -222,10 +223,12 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
         this.mCircleInfoEntity = circleInfoEntity;
         mIsJoin = circleInfoEntity.getIsJoin();
 
-        mTopticAdapter = new CircleTopticAdapter(R.layout.adapter_article_toptic, mThemeInfoList, mIsJoin, this);
+        mTopticAdapter = new CircleTopticAdapter(mThemeInfoList, mIsJoin, this);
         mRecyclerView.setAdapter(mTopticAdapter);
         mTopticAdapter.setOnItemClickListener(this);
         mTopticAdapter.setOnItemChildClickListener(this);
+        mTopticAdapter.setCommentClickListener(this);
+
         if (TextUtils.equals("0", mIsJoin)) {
             mRefreshLayout.setEnableLoadMore(false);
             View footerView = LayoutInflater.from(App.getContext()).inflate(R.layout.footer_circle_toptic, null, false);
@@ -462,7 +465,7 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
                 mPresenter.praise(data, i);
                 break;
             case R.id.item_comment_iv:
-                showCommentDialog(data.get(i).getTheme_id(), i, data);
+                showCommentDialog(i , data.get(i).getTheme_id(),"", i, data, "", "");
                 break;
             case R.id.item_share_iv:
                 if (data.get(i).getTheme_image().size() > 0){
@@ -563,7 +566,8 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
         mDeleteDialog.show();
     }
 
-    private void showCommentDialog(int theme_id, int i, List<ThemeInfoEntity.ThemeInfoBean> data) {
+    private void showCommentDialog(int adapterPosition, int theme_id, String pareantId, int i, List<ThemeInfoEntity.ThemeInfoBean> data,
+                                   String commentId, String replyName) {
         mMInputDialog = new BaseDialog.Builder(CourseDetailActivity.this)
                 .setGravity(Gravity.BOTTOM)
                 .setViewId(R.layout.dialog_input_layout)
@@ -586,7 +590,8 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
                 ToastUtils.showShort("请输入评论内容");
                 return;
             }
-            mPresenter.publishComment(mInputEt.getText().toString().trim(), String.valueOf(theme_id), i, data);
+            mPresenter.publishComment(adapterPosition,mInputEt.getText().toString().trim(), String.valueOf(theme_id), commentId, pareantId, i, data);
+
             if (mMInputDialog != null) {
                 KeyboardUtils.hideSoftInput(mInputEt);
                 mMInputDialog.dismiss();
@@ -638,6 +643,14 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
             mDirectoryAdapter.loadMoreComplete();
         } else {
             mDirectoryAdapter.loadMoreEnd();
+        }
+    }
+
+    @Override
+    public void onCommentClick(int adapterPosition, CircleTopticAdapter.CommentAdapter adapter, View view, int position, List<ThemeInfoEntity.ThemeInfoBean> data) {
+        if (!String.valueOf(adapter.getData().get(position).getUser_id()).equals(mPresenter.mDataManager.getUser().getUser_id())){
+            showCommentDialog(adapterPosition, adapter.getData().get(position).getTheme_id(), adapter.getData().get(position).getParentCommentId(),
+                    position, data, adapter.getData().get(position).getComment_id()+"", adapter.getData().get(position).getName());
         }
     }
 }

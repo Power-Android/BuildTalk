@@ -18,11 +18,13 @@ import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
 import com.bjjy.buildtalk.ui.discover.DiscoverFragment;
 import com.bjjy.buildtalk.ui.discover.DissertationActivity;
 import com.bjjy.buildtalk.ui.discover.EveryTalkDetailActivity;
+import com.bjjy.buildtalk.ui.mine.AboutUsActivity;
 import com.bjjy.buildtalk.ui.talk.MasterDetailActivity;
 import com.bjjy.buildtalk.utils.GlideUtils;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.mobile.auth.gatewayauth.activity.AuthWebVeiwActivity;
 import com.youth.banner.Banner;
 
 import org.greenrobot.eventbus.EventBus;
@@ -109,6 +111,12 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
                         case 4:
                             mIntent = new Intent(mContext, DissertationActivity.class);
                             mIntent.putExtra("id",mBannerEntities.get(position).getData_id()+"");
+                            mContext.startActivity(mIntent);
+                            break;
+                        case 5:
+                            mIntent = new Intent(mContext, AboutUsActivity.class);
+                            mIntent.putExtra("title", "web");
+                            mIntent.putExtra("url", mBannerEntities.get(position).getUrl());
                             mContext.startActivity(mIntent);
                             break;
                     }

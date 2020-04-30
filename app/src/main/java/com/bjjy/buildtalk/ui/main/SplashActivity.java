@@ -30,7 +30,6 @@ public class SplashActivity extends BaseActivity<SplashPresenter> implements Spl
     @Override
     protected void initView() {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏
-//        String action = getIntent().getAction();
         String scheme = getIntent().getScheme();
         if (isExistMainActivity(MainActivity.class)) {
             isExist = true;

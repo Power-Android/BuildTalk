@@ -1,10 +1,13 @@
 package com.bjjy.buildtalk.ui.main;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.User;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
@@ -14,6 +17,9 @@ import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
+import com.mobile.auth.gatewayauth.PhoneNumberAuthHelper;
+import com.mobile.auth.gatewayauth.TokenResultListener;
+import com.mobile.auth.gatewayauth.model.TokenRet;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -62,13 +68,13 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
             case R.id.yhxy_tv:
                 mIntent = new Intent(this, CircleAgreementActvity.class);
                 mIntent.putExtra("type","yhxy");
-                mIntent.putExtra("url", "https://jt.chinabim.com/yh");
+                mIntent.putExtra("url", "https://www.51jiantan.com/yh");
                 startActivity(mIntent);
                 break;
             case R.id.yszc_tv:
                 mIntent = new Intent(this, CircleAgreementActvity.class);
                 mIntent.putExtra("type","yszc");
-                mIntent.putExtra("url", "https://jt.chinabim.com/ys");
+                mIntent.putExtra("url", "https://www.51jiantan.com/ys");
                 startActivity(mIntent);
                 break;
         }

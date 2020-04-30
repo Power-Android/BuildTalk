@@ -28,7 +28,7 @@ public class TopticCircleContract {
 
         void handlerJoinSuccess(IEntity iEntity);
 
-        void handlerCommentSuccess(int position, List<ThemeInfoEntity.ThemeInfoBean> data, List<CommentContentBean> contentBeanList);
+        void handlerCommentSuccess(int adapterPosition, int position, List<ThemeInfoEntity.ThemeInfoBean> data, List<CommentContentBean> contentBeanList);
 
         void handlerPraiseSuccess(List<ThemeInfoEntity.ThemeInfoBean> data, int i, PraiseEntity praiseEntity);
 
@@ -45,6 +45,8 @@ public class TopticCircleContract {
         void handleruserShieldRecordSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list);
 
         void handlerTopOperateSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i);
+
+        void handlerRetractSuccess(int i);
     }
 
     interface Presenter extends IPresenter<View>{

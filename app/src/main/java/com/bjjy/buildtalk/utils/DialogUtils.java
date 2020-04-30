@@ -16,7 +16,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -44,7 +43,6 @@ import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
@@ -444,8 +442,9 @@ public class DialogUtils {
         mDeleteDialog.show();
     }
 
-    public static void showCommentDialog(int theme_id, int i, List<ThemeInfoEntity.ThemeInfoBean> data, Activity activity,
-                                         TopticCirclePresenter topticPresenter, CourseCirclePresenter coursePresenter) {
+    public static void showCommentDialog(int adapterPosition, int theme_id, String pareantId,  int i, List<ThemeInfoEntity.ThemeInfoBean> data,
+                                         String commentId, String replyName, Activity activity, TopticCirclePresenter topticPresenter,
+                                         CourseCirclePresenter coursePresenter) {
         mMInputDialog = new BaseDialog.Builder(activity)
                 .setGravity(Gravity.BOTTOM)
                 .setViewId(R.layout.dialog_input_layout)
@@ -454,6 +453,9 @@ public class DialogUtils {
                 .builder();
         EditText mInputEt = mMInputDialog.getView(R.id.comment_et);
         TextView publishTv = mMInputDialog.getView(R.id.publish_tv);
+        if (!TextUtils.isEmpty(replyName)){
+            mInputEt.setHint("回复" + replyName + "：");
+        }
         mMInputDialog.setOnShowListener(dialog -> mInputEt.postDelayed(() -> {
             mInputEt.requestFocus();
             KeyboardUtils.showSoftInput(mInputEt);
@@ -475,9 +477,9 @@ public class DialogUtils {
                 return;
             }
             if (coursePresenter == null) {
-                topticPresenter.publishComment(mInputEt.getText().toString().trim(), String.valueOf(theme_id), i, data);
+                topticPresenter.publishComment(adapterPosition,mInputEt.getText().toString().trim(), String.valueOf(theme_id), commentId, pareantId, i, data);
             } else {
-                coursePresenter.publishComment(mInputEt.getText().toString().trim(), String.valueOf(theme_id), i, data);
+                coursePresenter.publishComment(adapterPosition,mInputEt.getText().toString().trim(), String.valueOf(theme_id), commentId, pareantId, i, data);
             }
             if (mMInputDialog != null) {
                 mMInputDialog.dismiss();

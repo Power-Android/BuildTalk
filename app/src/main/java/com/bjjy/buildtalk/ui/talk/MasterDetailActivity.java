@@ -222,7 +222,7 @@ public class MasterDetailActivity extends BaseActivity<MasterDetailPresenter> im
             case R.id.face_iv:
                 break;
             case R.id.focus_ll:
-                LoginHelper.login(this, mPresenter.mDataManager, () -> {
+                LoginHelper.getInstance().login(this, mPresenter.mDataManager, () -> {
                     if (1 == mMasterDetailEntity.getIs_attention()){
                         showDialog();
                     }else {

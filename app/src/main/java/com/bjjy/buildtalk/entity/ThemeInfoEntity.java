@@ -1,5 +1,7 @@
 package com.bjjy.buildtalk.entity;
 
+import com.chad.library.adapter.base.entity.MultiItemEntity;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -54,7 +56,7 @@ public class ThemeInfoEntity implements Serializable {
         this.themeInfo = themeInfo;
     }
 
-    public static class ThemeInfoBean implements Serializable{
+    public static class ThemeInfoBean implements Serializable, MultiItemEntity {
         /**
          * theme_id : 11
          * theme_content : 圈子[我是圈子名称]创建成功
@@ -72,6 +74,7 @@ public class ThemeInfoEntity implements Serializable {
          * is_circleMaster : 1
          * is_parise : 1
          */
+        private int is_retract = 1;
 
         private int theme_id;
         private String theme_content;
@@ -97,6 +100,15 @@ public class ThemeInfoEntity implements Serializable {
         private int countCommentNum;
         private int themeCountParise;
         private int is_top;
+        private int countParise;
+
+        public int getCountParise() {
+            return countParise;
+        }
+
+        public void setCountParise(int countParise) {
+            this.countParise = countParise;
+        }
 
         public int getIs_top() {
             return is_top;
@@ -288,6 +300,19 @@ public class ThemeInfoEntity implements Serializable {
 
         public void setParise_nickName(List<PariseNickNameBean> parise_nickName) {
             this.parise_nickName = parise_nickName;
+        }
+
+        @Override
+        public int getItemType() {
+            return is_retract;
+        }
+
+        public int getIs_retract() {
+            return is_retract;
+        }
+
+        public void setIs_retract(int is_retract) {
+            this.is_retract = is_retract;
         }
     }
 }

@@ -105,7 +105,7 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
         mCircleAdapter.setFooterViewAsFlow(true);
         mFooterView = LayoutInflater.from(mContext).inflate(R.layout.circle_footer_view, null);
         mCircleAdapter.addFooterView(mFooterView);
-        mFooterView.setOnClickListener(v -> LoginHelper.login(mContext, mPresenter.mDataManager, () -> createCircle()));
+        mFooterView.setOnClickListener(v -> LoginHelper.getInstance().login(mContext, mPresenter.mDataManager, () -> createCircle()));
         mCircleAdapter.setOnItemClickListener(this);
         mTvReload.setOnClickListener(v -> onRefresh(mRefreshLayout));
     }
@@ -190,7 +190,7 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
             mBottomSheetDialog.dismiss();
             Intent intent = new Intent(mContext, CircleAgreementActvity.class);
             intent.putExtra("type", "qzgz");
-            intent.putExtra("url", "https://jt.chinabim.com/qz.html");
+            intent.putExtra("url", "https://www.51jiantan.com/qz.html");
             startActivity(intent);
         });
         next.setOnClickListener(v -> {

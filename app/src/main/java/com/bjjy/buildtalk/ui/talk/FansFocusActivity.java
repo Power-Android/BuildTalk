@@ -83,7 +83,7 @@ public class FansFocusActivity extends BaseActivity<FansFocusPresenter> implemen
             mRecyclerView.setAdapter(mFansFocusAdapter);
             mFansFocusAdapter.setOnItemChildClickListener((baseQuickAdapter, view, i) -> {
                 List<FansFocusEntity.MyFansInfoBean> mMyFansInfo = baseQuickAdapter.getData();
-                LoginHelper.login(FansFocusActivity.this, mPresenter.mDataManager, () -> mPresenter.attention(mMyFansInfo.get(i).getUser_id(), mMyFansInfo, i));
+                LoginHelper.getInstance().login(FansFocusActivity.this, mPresenter.mDataManager, () -> mPresenter.attention(mMyFansInfo.get(i).getUser_id(), mMyFansInfo, i));
             });
             mFansFocusAdapter.setOnItemClickListener((baseQuickAdapter, view, i) -> {
                 List<FansFocusEntity.MyFansInfoBean> data = baseQuickAdapter.getData();
@@ -102,7 +102,7 @@ public class FansFocusActivity extends BaseActivity<FansFocusPresenter> implemen
             mRecyclerView.setAdapter(mFocusAdapter);
             mFocusAdapter.setOnItemChildClickListener((baseQuickAdapter, view, i) -> {
                 List<FansFocusEntity.AttentionInfoBean> mAttentionInfoBeans = baseQuickAdapter.getData();
-                LoginHelper.login(FansFocusActivity.this, mPresenter.mDataManager, () -> mPresenter.attention1(mAttentionInfoBeans.get(i).getAttention_user(), mAttentionInfoBeans, i));
+                LoginHelper.getInstance().login(FansFocusActivity.this, mPresenter.mDataManager, () -> mPresenter.attention1(mAttentionInfoBeans.get(i).getAttention_user(), mAttentionInfoBeans, i));
             });
             mFocusAdapter.setOnItemClickListener((baseQuickAdapter, view, i) -> {
                 List<FansFocusEntity.AttentionInfoBean> data = baseQuickAdapter.getData();

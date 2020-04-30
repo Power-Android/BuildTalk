@@ -1,11 +1,8 @@
 package com.bjjy.buildtalk.ui.circle;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewPager;
@@ -21,8 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.ViewTreeObserver;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -46,13 +41,11 @@ import com.bjjy.buildtalk.ui.talk.CircleManDetailActivity;
 import com.bjjy.buildtalk.ui.talk.MasterDetailActivity;
 import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
-import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bjjy.buildtalk.weight.BaseDialog;
 import com.bjjy.buildtalk.weight.MyBadgeViewPagerAdapter;
-import com.bjjy.buildtalk.weight.player.PlayerWindowManager;
 import com.bjjy.buildtalk.weight.tablayout.TabLayout;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -78,7 +71,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> implements
         TopticCircleContract.View, AppBarLayout.OnOffsetChangedListener, OnRefreshLoadMoreListener,
-        BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, ViewPager.OnPageChangeListener {
+        BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, ViewPager.OnPageChangeListener, CircleTopticAdapter.onCommentItemlistener {
 
     @BindView(R.id.toptic_bg)
     ImageView mTopticBg;
@@ -324,20 +317,22 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
         mRefreshLayout.setOnRefreshLoadMoreListener(this);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(App.getContext()));
-        mTopticAdapter = new CircleTopticAdapter(R.layout.adapter_article_toptic, mThemeInfoList, mIsJoin, this);
+        mTopticAdapter = new CircleTopticAdapter(mThemeInfoList, mIsJoin, this);
         mRecyclerView.setAdapter(mTopticAdapter);
         ((SimpleItemAnimator)mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
         mJhRecyclerView.setLayoutManager(new LinearLayoutManager(App.getContext()));
-        mTopticAdapter1 = new CircleTopticAdapter(R.layout.adapter_article_toptic, mEssenceInfoList, mIsJoin, this);
+        mTopticAdapter1 = new CircleTopticAdapter(mEssenceInfoList, mIsJoin, this);
         mJhRecyclerView.setAdapter(mTopticAdapter1);
         ((SimpleItemAnimator)mJhRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
         mTopticAdapter.setOnItemClickListener(this);
         mTopticAdapter.setOnItemChildClickListener(this);
+        mTopticAdapter.setCommentClickListener(this);
 
         mTopticAdapter1.setOnItemClickListener(this);
         mTopticAdapter1.setOnItemChildClickListener(this);
+        mTopticAdapter1.setCommentClickListener(this);
 
         if (TextUtils.equals("0", mIsJoin)) {
             mRefreshLayout.setEnableLoadMore(false);
@@ -480,7 +475,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
                         mCircleInfoEntity.getCircleInfo().getCircle_image().getPic_url(), mCircleInfoEntity.getCircleInfo().getCircle_desc(), true);
                 break;
             case R.id.join_tv:
-                LoginHelper.login(this, mPresenter.mDataManager, () -> mPresenter.joinCircle(mCircle_id));
+                LoginHelper.getInstance().login(this, mPresenter.mDataManager, () -> mPresenter.joinCircle(mCircle_id));
                 break;
             case R.id.more_iv:
                 mIntent = new Intent(this, CircleInfoActivity.class);
@@ -615,8 +610,8 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
             case R.id.item_praise_iv://点赞
                 mPresenter.praise(data, i);
                 break;
-            case R.id.item_comment_iv://评论
-                DialogUtils.showCommentDialog(data.get(i).getTheme_id(), i, data, this, mPresenter, null);
+            case R.id.item_comment_iv://评论 评论主题，commentid传空
+                DialogUtils.showCommentDialog(i ,data.get(i).getTheme_id(), "", i, data, "", "", this, mPresenter, null);
                 break;
             case R.id.item_share_iv://分享
                 if (data.get(i).getTheme_image().size() > 0) {
@@ -637,10 +632,12 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
                 }else {
                     ToastUtils.showShort("加入圈子，方可查看~");
                 }
-
                 break;
             case R.id.item_face_iv:
-
+                break;
+            case R.id.item_shouqi_iv://收起
+            case R.id.item_zhankai_iv://展开
+                mPresenter.themeRetract(data.get(i).getTheme_id(), data.get(i).getIs_retract(), i);
                 break;
         }
     }
@@ -663,18 +660,24 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
         mPresenter.essenceInfo(mCircle_id, jhPage, "1", true);
     }
 
+    /**
+     * @param adapterPosition 列表position
+     * @param position 评论列表position
+     * @param data
+     * @param contentBeanList
+     */
     @Override
-    public void handlerCommentSuccess(int position, List<ThemeInfoEntity.ThemeInfoBean> data, List<CommentContentBean> contentBeanList) {
-        data.get(position).setComment_content(contentBeanList);
+    public void handlerCommentSuccess(int adapterPosition, int position, List<ThemeInfoEntity.ThemeInfoBean> data, List<CommentContentBean> contentBeanList) {
+        data.get(adapterPosition).setComment_content(contentBeanList);
         if (mViewpager_position == 0) {//主题列表
-            mTopticAdapter.notifyItemChanged(position);
+            mTopticAdapter.notifyItemChanged(adapterPosition);
             //如果评论的这条主题是精华，那么刷新精华列表数据
-            if (data.get(position).getIs_choiceness() == 1) {
+            if (data.get(adapterPosition).getIs_choiceness() == 1) {
                 refreshChoiceness();
             }
         } else {//精华列表,局部刷新主题数据
-            mTopticAdapter1.notifyItemChanged(position);
-            int theme_id = data.get(position).getTheme_id();
+            mTopticAdapter1.notifyItemChanged(adapterPosition);
+            int theme_id = data.get(adapterPosition).getTheme_id();
             List<ThemeInfoEntity.ThemeInfoBean> topticAdapterData = mTopticAdapter.getData();
             for (int i = 0; i < topticAdapterData.size(); i++) {
                 if (theme_id == topticAdapterData.get(i).getTheme_id()) {
@@ -693,6 +696,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
             data.get(i).setIs_parise(0);
         }
         data.get(i).setParise_nickName(praiseEntity.getNickName());
+        data.get(i).setCountParise(praiseEntity.getCountpraise());
         if (mViewpager_position == 0) {//主题列表
             mTopticAdapter.notifyItemChanged(i);
             //如果点赞的这条主题是精华，那么刷新精华列表数据
@@ -833,6 +837,11 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
     }
 
     @Override
+    public void handlerRetractSuccess(int i) {
+        onRefresh(mRefreshLayout);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
@@ -862,5 +871,14 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
     @Override
     public void onPageScrollStateChanged(int i) {
 
+    }
+
+    @Override
+    public void onCommentClick(int adapterPosition, CircleTopticAdapter.CommentAdapter adapter, View view, int position, List<ThemeInfoEntity.ThemeInfoBean> data) {
+        if (!String.valueOf(adapter.getData().get(position).getUser_id()).equals(mPresenter.mDataManager.getUser().getUser_id())){
+            DialogUtils.showCommentDialog(adapterPosition, adapter.getData().get(position).getTheme_id(),adapter.getData().get(position).getParentCommentId(),
+                    position, data, adapter.getData().get(position).getComment_id()+"", adapter.getData().get(position).getName(),
+                    this, mPresenter, null);
+        }
     }
 }

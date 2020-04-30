@@ -640,10 +640,29 @@ public interface ApiService {
     @FormUrlEncoded
     Observable<BaseResponse<List<SongsEntity>>> searchAudioList(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
+    /**
+     * @return 获取手机号
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("getMobile")
+    @FormUrlEncoded
+    Observable<BaseResponse<User>> getMobile(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
+    /**
+     * @return 主题收起/展开
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("themeRetract")
+    @FormUrlEncoded
+    Observable<BaseResponse<IEntity>> themeRetract(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
-
-
+    /**
+     * @return 我的钱包
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("myWallet")
+    @FormUrlEncoded
+    Observable<BaseResponse<String>> myWallet(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
 
 

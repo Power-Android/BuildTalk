@@ -15,6 +15,7 @@ import com.bjjy.buildtalk.utils.LogUtils;
 import com.scwang.smartrefresh.header.MaterialHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
+import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.umeng.analytics.MobclickAgent;
@@ -104,13 +105,16 @@ public class App extends Application implements HasActivityInjector {
     private void initRefresh() {
         //设置全局的Header构建器
         SmartRefreshLayout.setDefaultRefreshHeaderCreator((context, layout) -> {
+            ClassicsHeader classicsHeader = new ClassicsHeader(context);
             MaterialHeader materialHeader = new MaterialHeader(context);
             materialHeader.setColorSchemeColors(getResources().getColor(R.color.blue_drak));
-            return materialHeader;
+            return classicsHeader;
         });
         //设置全局的Footer构建器
         SmartRefreshLayout.setDefaultRefreshFooterCreator((context, layout) -> {
             //指定为经典Footer，默认是 BallPulseFooter
+            ClassicsFooter classicsFooter = new ClassicsFooter(context);
+
             return new ClassicsFooter(context).setDrawableSize(20);
         });
     }

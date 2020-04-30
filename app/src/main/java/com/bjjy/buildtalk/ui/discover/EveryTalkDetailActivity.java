@@ -402,7 +402,7 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.play_rl:
-                LoginHelper.login(this, mPresenter.mDataManager, () -> {
+                LoginHelper.getInstance().login(this, mPresenter.mDataManager, () -> {
                     if (mNewsInfo.getIs_buy() == 0 && !TextUtils.isEmpty(mType)) {
                         showBuyDialog();
                         return;
@@ -427,7 +427,7 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
                 });
                 break;
             case R.id.praise_ll:
-                LoginHelper.login(this, mPresenter.mDataManager, () -> {
+                LoginHelper.getInstance().login(this, mPresenter.mDataManager, () -> {
                     boolean isCollect = "1".equals(String.valueOf(mNewsInfo.getIsCollect()));
                     mPresenter.collectArticle(mArticle_id, isCollect, mType_zhuanti);
                 });
@@ -435,7 +435,7 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
             case R.id.share_iv:
                 if (TextUtils.isEmpty(mType)) {
                     mUrl = Constants.BASE_URL + "jtfwhgetopenid" + "?user_id=" + mPresenter.mDataManager.getUser().getUser_id() + "&news_id=" + mArticle_id;
-                    mEndUrl = Constants.END_URL + "&redirect_uri=" + mUrl + "&response_type=code&scope=snsapi_userinfo&state=news#wechat_redirect";
+                    mEndUrl = Constants.END_URL + "&redirect_uri=" + URLEncoder.encode(mUrl) + "&response_type=code&scope=snsapi_userinfo&state=news#wechat_redirect";
                     DialogUtils.showShareDialog(this, mEndUrl, mEndUrl, mNewsInfo.getArticle_title(), mNewsInfo.getAuthor_pic(), "每日一谈", false);
                 } else {
                     mUrl = Constants.BASE_URL + "jtfwhgetopenid" + "?user_id=" + mPresenter.mDataManager.getUser().getUser_id() + "&article_id=" + mArticle_id;
@@ -444,7 +444,7 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
                 }
                 break;
             case R.id.record_ll:
-                LoginHelper.login(this, mPresenter.mDataManager, () -> {
+                LoginHelper.getInstance().login(this, mPresenter.mDataManager, () -> {
                     if (!isGone) {
                         mRecordLl.setVisibility(View.GONE);
                         mRecordEt.setFocusable(true);
@@ -497,7 +497,7 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
         List<GuestBookEntity.GuestbookInfoBean> data = mEveryTalkDetailAdapter.getData();
         switch (view.getId()) {
             case R.id.item_praise_ll:
-                LoginHelper.login(this, mPresenter.mDataManager, () -> {
+                LoginHelper.getInstance().login(this, mPresenter.mDataManager, () -> {
                     boolean isPraise = "1".equals(mEveryTalkDetailAdapter.getData().get(position).getIsPraise() + "");
                     mPresenter.praiseRecord(mType_zhuanti, data.get(position).getGuestbook_id(), position, isPraise);
                 });

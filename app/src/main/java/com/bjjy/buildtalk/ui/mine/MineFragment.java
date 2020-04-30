@@ -2,7 +2,10 @@ package com.bjjy.buildtalk.ui.mine;
 
 import android.content.Intent;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -17,6 +20,8 @@ import com.bjjy.buildtalk.ui.talk.CircleManDetailActivity;
 import com.bjjy.buildtalk.ui.talk.MasterDetailActivity;
 import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
+import com.bjjy.buildtalk.utils.ToastUtils;
+import com.bjjy.buildtalk.weight.BaseDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -58,6 +63,8 @@ public class MineFragment extends BaseFragment<MinePresenter> implements MineCon
     RelativeLayout mHelpRl;
     @BindView(R.id.service_rl)
     RelativeLayout mServiceRl;
+    private BaseDialog mVerifyDialog;
+    private User mUser;
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -99,6 +106,8 @@ public class MineFragment extends BaseFragment<MinePresenter> implements MineCon
             Glide.with(mContext).load(user.getHeadImage()).apply(new RequestOptions().error(R.drawable.moren_face)).into(mFaceIv);
             mNameTv.setText(user.getNickName());
             mPhoneTv.setText(user.getMobile());
+            mPresenter.myWallet();
+            mPresenter.userInfo(user.getUser_id());
         }else {
             Glide.with(mContext).load(R.drawable.moren_face).into(mFaceIv);
             mNameTv.setText(R.string.login);
@@ -107,37 +116,47 @@ public class MineFragment extends BaseFragment<MinePresenter> implements MineCon
 //        mPresenter.userInfo(user.getUser_id());
     }
 
-    @OnClick({R.id.info_iv, R.id.wallet_rl ,R.id.buy_rl, R.id.set_rl, R.id.help_rl, R.id.service_rl, R.id.name_tv, R.id.face_iv})
+    @Override
+    public void handlerWallet(String s) {
+        mWalletTv.setText(String.format("￥%s可提", s));
+    }
+
+    @Override
+    public void handlerUser(User user) {
+        mUser = mPresenter.mDataManager.getUser();
+    }
+
+    @OnClick({R.id.info_iv, R.id.wallet_rl ,R.id.buy_rl, R.id.set_rl, R.id.help_rl, R.id.service_rl,
+            R.id.name_tv, R.id.face_iv, R.id.update_master_tv, R.id.talk_wallet_rl})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.info_iv:
-                LoginHelper.login(mContext, mPresenter.mDataManager, () -> startActivity(new Intent(mContext, PersonInfoActivity.class)));
+                LoginHelper.getInstance().login(mContext, mPresenter.mDataManager, () -> MineFragment.this.startActivity(new Intent(mContext, PersonInfoActivity.class)));
                 break;
             case R.id.wallet_rl:
-                LoginHelper.login(mContext, mPresenter.mDataManager, () -> startActivity(new Intent(mContext, WalletActivity.class)));
+                LoginHelper.getInstance().login(mContext, mPresenter.mDataManager, () -> startActivity(new Intent(mContext, WalletActivity.class)));
                 break;
             case R.id.buy_rl:
-                LoginHelper.login(mContext, mPresenter.mDataManager, () -> {
+                LoginHelper.getInstance().login(mContext, mPresenter.mDataManager, () -> {
                     Intent intent = new Intent(mContext, TransactionActivity.class);
                     intent.putExtra("title", "已购");
                     startActivity(intent);
                 });
                 break;
             case R.id.set_rl:
-                LoginHelper.login(mContext, mPresenter.mDataManager, () -> startActivity(new Intent(mContext, SettingActivity.class)));
+                LoginHelper.getInstance().login(mContext, mPresenter.mDataManager, () -> startActivity(new Intent(mContext, SettingActivity.class)));
                 break;
             case R.id.help_rl:
-                LoginHelper.login(mContext, mPresenter.mDataManager, () -> startActivity(new Intent(mContext, FeedBackActivity.class)));
+                LoginHelper.getInstance().login(mContext, mPresenter.mDataManager, () -> startActivity(new Intent(mContext, FeedBackActivity.class)));
                 break;
             case R.id.service_rl:
                 startActivity(new Intent(mContext, ServiceActivity.class));
                 break;
             case R.id.name_tv:
-                if (!mPresenter.mDataManager.getLoginStatus())
-                    startActivity(new Intent(mContext, LoginActivity.class));
+                LoginHelper.getInstance().login(mContext, mPresenter.mDataManager, () -> startActivity(new Intent(mContext, LoginActivity.class)));
                 break;
             case R.id.face_iv:
-                LoginHelper.login(mContext, mPresenter.mDataManager, () -> {
+                LoginHelper.getInstance().login(mContext, mPresenter.mDataManager, () -> {
                     if (TextUtils.equals("1", mPresenter.mDataManager.getUser().getUser_type())){
                         Intent intent = new Intent(mContext, CircleManDetailActivity.class);
                         intent.putExtra("user_id", mPresenter.mDataManager.getUser().getUser_id());
@@ -148,7 +167,51 @@ public class MineFragment extends BaseFragment<MinePresenter> implements MineCon
                         startActivity(intent);
                     }
                 });
+            case R.id.update_master_tv:
+                mUser = mPresenter.mDataManager.getUser();
+                if (TextUtils.equals("1",mUser.getUser_type())){
+                    if (mPresenter.mDataManager.getVerifyRecordCount() > 0 ){
+                        showVerifyDialog();
+                    }else {
+                        ToastUtils.showCollect("今日认证次数已上限", getResources().getDrawable(R.drawable.collect_cancle_icon));
+                    }
+                }else {
+                    startActivity(new Intent(mContext, MasterVerifyActivity.class));
+                }
+                break;
+            case R.id.talk_wallet_rl:
+                ToastUtils.showCollect("仅支持苹果系统", getResources().getDrawable(R.drawable.collect_cancle_icon));
+                break;
         }
+    }
+
+    private void showVerifyDialog() {
+        mVerifyDialog = new BaseDialog.Builder(mContext)
+                .setViewId(R.layout.dialog_master_verify_layout)
+                //设置显示位置
+                .setGravity(Gravity.CENTER)
+                //设置动画
+                .setAnimation(R.style.nomal_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx((int)getResources().getDimension(R.dimen.dp_300), (int)getResources().getDimension(R.dimen.dp_472))
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                .addViewOnClickListener(R.id.close_iv, v -> mVerifyDialog.dismiss())
+                .addViewOnClickListener(R.id.angin_tv, v -> {
+                    startActivity(new Intent(mContext, IDCardActivity.class));
+                    mVerifyDialog.dismiss();
+                })
+                .builder();
+        WebView webView = mVerifyDialog.getView(R.id.webView);
+        WebSettings settings = webView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setDomStorageEnabled(true);
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
+        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        String url = "https://www.51jiantan.com/dkagreement";
+        webView.loadUrl(url);
+        mVerifyDialog.show();
     }
 
     @Override

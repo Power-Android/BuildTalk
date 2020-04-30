@@ -567,4 +567,19 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     public Observable<BaseResponse<List<SongsEntity>>> searchAudioList(Map<String, String> headers, Map<String, String> params) {
         return mHttpHelper.searchAudioList(headers, params);
     }
+
+    @Override
+    public Observable<BaseResponse<User>> getMobile(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.getMobile(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> themeRetract(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.themeRetract(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<String>> myWallet(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.myWallet(headers, params);
+    }
 }

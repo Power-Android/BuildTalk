@@ -1,9 +1,11 @@
 package com.bjjy.buildtalk.ui.circle;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import com.bjjy.buildtalk.R;
+import com.bjjy.buildtalk.adapter.CircleTopticAdapter;
 import com.bjjy.buildtalk.app.App;
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.presenter.BasePresenter;
@@ -174,13 +176,17 @@ public class TopticCirclePresenter extends BasePresenter<TopticCircleContract.Vi
                 }));
     }
 
-    public void publishComment(String content, String theme_id, int i, List<ThemeInfoEntity.ThemeInfoBean> data) {
+    public void publishComment(int adapterPosition, String content, String theme_id, String commentId,
+                               String pareantId, int i, List<ThemeInfoEntity.ThemeInfoBean> data) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
         paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
         paramas.put(Constants.SOURCE, Constants.ANDROID);
         paramas.put("theme_id", theme_id);
         paramas.put("content", content);
+        paramas.put("parentCommentId", TextUtils.equals("0", pareantId) ? commentId : pareantId);
+        paramas.put("reply_commentId", TextUtils.isEmpty(commentId) ? "" : commentId);//如果是回复他人的评论，传他人的评论id,否则传空
+        paramas.put("publish_type", "1");//1 返回主题详情外评论样式 2返回主题详情页评论样式
         paramas.put(Constants.TIMESTAMP, timestamp);
         String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
 
@@ -194,7 +200,7 @@ public class TopticCirclePresenter extends BasePresenter<TopticCircleContract.Vi
                 .subscribeWith(new BaseObserver<CommentSuccessEntity>(mView, false) {
                     @Override
                     public void onSuccess(CommentSuccessEntity commentSuccessEntity) {
-                        mView.handlerCommentSuccess(i,data, commentSuccessEntity.getCommentInfo());
+                        mView.handlerCommentSuccess(adapterPosition, i, data, commentSuccessEntity.getCommentInfo());
                     }
                 }));
     }
@@ -357,6 +363,30 @@ public class TopticCirclePresenter extends BasePresenter<TopticCircleContract.Vi
                     @Override
                     public void onSuccess(IEntity iEntity) {
                         mView.handlerTopOperateSuccess(iEntity,data, i);
+                    }
+                }));
+    }
+
+    public void themeRetract(int theme_id, int is_retract, int i) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        paramas.put("theme_id", String.valueOf(theme_id));
+        paramas.put("retract_status", String.valueOf(is_retract));
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.themeRetract(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<IEntity>(mView, false) {
+                    @Override
+                    public void onSuccess(IEntity iEntity) {
+                        mView.handlerRetractSuccess(i);
                     }
                 }));
     }

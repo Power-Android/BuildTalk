@@ -70,8 +70,17 @@
             android:layout_marginRight="@dimen/dp_5"
             android:paddingLeft="@dimen/dp_10"
             android:paddingRight="@dimen/dp_10"
-            android:paddingBottom="@dimen/dp_10"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingBottom="@dimen/dp_5"
             android:src="@drawable/item_more_icon" />
+        <ImageView
+            android:id="@+id/item_shouqi_iv"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_20"
+            android:visibility="gone"
+            android:layout_toLeftOf="@+id/item_more_iv"
+            android:layout_alignTop="@id/item_face_iv"
+            android:src="@drawable/theme_shouqi_icon" />
 
         <TextView
             android:id="@+id/item_time_tv"
@@ -84,7 +93,15 @@
             android:text="2019-05-23 15:06:50"
             android:textColor="@color/text_light"
             android:textSize="@dimen/sp_9" />
-
+        <ImageView
+            android:id="@+id/item_top_iv"
+            android:visibility="gone"
+            android:layout_width="@dimen/dp_15"
+            android:layout_height="@dimen/dp_18"
+            android:src="@drawable/theme_zhiding_icon"
+            android:layout_below="@+id/item_face_iv"
+            android:layout_marginTop="@dimen/dp_11"
+            android:layout_alignRight="@+id/item_face_iv"/>
         <LinearLayout
             android:id="@+id/content_ll"
             android:layout_width="match_parent"
@@ -125,8 +142,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/content_ll"
-            android:layout_marginLeft="@dimen/dp_5"
-            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_11"
             android:layout_marginRight="@dimen/dp_15"
             android:layout_marginBottom="@dimen/dp_10"
             android:layout_toRightOf="@+id/item_face_iv" />
@@ -162,4 +179,5 @@
         android:layout_height="@dimen/dp_1"
         android:layout_marginTop="@dimen/dp_10"
         android:background="@color/border3" />
+
 </LinearLayout>

@@ -59,6 +59,42 @@ public class MemberEntity implements Serializable {
         private String name;
         private int updateStauts;
         private int is_author;
+        private String circle_master;
+        private String liveness;
+        private String countThemeParise;
+        private String countThemeCommentNum;
+
+        public String getCircle_master() {
+            return circle_master;
+        }
+
+        public void setCircle_master(String circle_master) {
+            this.circle_master = circle_master;
+        }
+
+        public String getLiveness() {
+            return liveness;
+        }
+
+        public void setLiveness(String liveness) {
+            this.liveness = liveness;
+        }
+
+        public String getCountThemeParise() {
+            return countThemeParise;
+        }
+
+        public void setCountThemeParise(String countThemeParise) {
+            this.countThemeParise = countThemeParise;
+        }
+
+        public String getCountThemeCommentNum() {
+            return countThemeCommentNum;
+        }
+
+        public void setCountThemeCommentNum(String countThemeCommentNum) {
+            this.countThemeCommentNum = countThemeCommentNum;
+        }
 
         public int getUser_id() {
             return user_id;

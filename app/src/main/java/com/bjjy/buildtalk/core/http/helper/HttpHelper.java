@@ -204,4 +204,10 @@ public interface HttpHelper {
 
     Observable<BaseResponse<List<SongsEntity>>> searchAudioList(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
+    Observable<BaseResponse<User>> getMobile(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    Observable<BaseResponse<IEntity>> themeRetract(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    Observable<BaseResponse<String>> myWallet(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
 }

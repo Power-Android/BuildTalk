@@ -13,7 +13,8 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 
     <application
         android:name=".app.App"
@@ -22,17 +23,21 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/app_icon"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <service android:name=".core.service.PlayerService"/>
-        <receiver android:name=".core.receiver.StatusBarReceiver"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+
+        <service android:name=".core.service.PlayerService" />
+
+        <receiver
+            android:name=".core.receiver.StatusBarReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.bjjy.buildtalk.STATUS_BAR_ACTIONS"/>
+                <action android:name="com.bjjy.buildtalk.STATUS_BAR_ACTIONS" />
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.circle.PDFViewerActivity"/>
+        <activity android:name=".ui.circle.PDFViewerActivity" />
         <activity android:name=".ui.circle.ComplaintReasonActivity" />
         <activity android:name=".ui.discover.DissertationListActivity" />
         <activity
@@ -98,7 +103,27 @@
         <activity
             android:name="com.tencent.connect.common.AssistActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" /> <!-- Activity配置 -->
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" /> <!-- 阿里云手机号认证 -->
+        <!-- 联通电信授权⻚ -->
+        <activity
+            android:name="com.mobile.auth.gatewayauth.LoginAuthActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:screenOrientation="behind"
+            android:theme="@style/authsdk_activity_dialog" /> <!-- 协议⻚⾯webview -->
+        <activity
+            android:name="com.mobile.auth.gatewayauth.activity.AuthWebVeiwActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:screenOrientation="behind" /> <!-- 移动授权⻚ -->
+        <activity
+            android:name="com.cmic.sso.sdk.activity.LoginAuthActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTop"
+            android:screenOrientation="behind"
+            android:theme="@style/authsdk_activity_dialog" /> <!-- Activity配置 -->
         <activity
             android:name=".ui.main.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"

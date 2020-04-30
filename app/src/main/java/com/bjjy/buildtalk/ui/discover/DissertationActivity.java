@@ -67,9 +67,9 @@ public class DissertationActivity extends BaseActivity<DissertationPresenter> im
     public void handlerTabData(List<String> list, List<View> views) {
         mViewPager.setAdapter(new MyViewPagerAdapter(list, views));
         mTabLayout.setupWithViewPager(mViewPager);
-        mContentTv = views.get(0).findViewById(R.id.content_tv);
+        mContentTv = views.get(1).findViewById(R.id.content_tv);
 
-        mRecyclerView = views.get(1).findViewById(R.id.recycler_view);
+        mRecyclerView = views.get(0).findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new DissertationAdapter(R.layout.adapter_dissertation_layout, mList);
         mRecyclerView.setAdapter(mAdapter);

@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -78,7 +79,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> implements CourseCircleContract.View, AppBarLayout.OnOffsetChangedListener, OnRefreshLoadMoreListener, BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.RequestLoadMoreListener, ViewPager.OnPageChangeListener {
+public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> implements CourseCircleContract.View, AppBarLayout.OnOffsetChangedListener, OnRefreshLoadMoreListener, BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.RequestLoadMoreListener, ViewPager.OnPageChangeListener, CircleTopticAdapter.onCommentItemlistener {
 
     @BindView(R.id.toptic_bg)
     ImageView mTopticBg;
@@ -134,6 +135,8 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     RelativeLayout mPublisRl;
     @BindView(R.id.formal_face_iv)
     CircleImageView mFormalFaceIv;
+    @BindView(R.id.formal_face_iv1)
+    CircleImageView mFormalFaceIv1;
     @BindView(R.id.coordinator)
     CoordinatorLayout mCoordinator;
     @BindView(R.id.mc_qz_expand_iv)
@@ -141,7 +144,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     @BindView(R.id.mc_recommend_tv)
     TextView mMcRecommendTv;
     @BindView(R.id.mc_ld_tv)
-    TextView mMcLdTv;
+    WebView mMcLdTv;
     @BindView(R.id.expand_rl)
     RelativeLayout mExpandRl;
     @BindView(R.id.scrollView)
@@ -194,6 +197,24 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     TextView preMlTv;
     @BindView(R.id.pre_border)
     View mPreBorder;
+    @BindView(R.id.jianjie_expand_tv)
+    TextView mJianjieExpandTv;
+    @BindView(R.id.mc_ld_rl)
+    TextView mMcLdRl;
+    @BindView(R.id.mc_jieshao_rl)
+    RelativeLayout mMcJieshaoRl;
+    @BindView(R.id.formal_title_tv1)
+    TextView mFormalTitleTv1;
+    @BindView(R.id.mc_recommend_tv1)
+    TextView mMcRecommendTv1;
+    @BindView(R.id.mc_ld1_tv)
+    TextView mMcLd1Tv;
+    @BindView(R.id.mc_ld_tv1)
+    WebView mMcLdTv1;
+    @BindView(R.id.jianjie_rl)
+    RelativeLayout mJianjieRl;
+    @BindView(R.id.mc_formal_rl)
+    RelativeLayout mMcFormalRl;
 
     private MyBadgeViewPagerAdapter mPagerAdapter;
     private List<View> mViews = new ArrayList<>();
@@ -323,7 +344,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
                 intent.putExtra("article_title", mList.get(position).getArticle_title());
                 intent.putExtra("content", mList.get(position).getContent());
                 intent.putExtra("position", position);
-                intent.putExtra("article_id", mList.get(position).getArticle_id()+"");
+                intent.putExtra("article_id", mList.get(position).getArticle_id() + "");
             }
             intent.putExtra("circle_id", mCircle_id);
             startActivity(intent);
@@ -357,7 +378,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
                 intent.putExtra("article_title", mList.get(position).getArticle_title());
                 intent.putExtra("content", mList.get(position).getContent());
                 intent.putExtra("position", position);
-                intent.putExtra("article_id", mList.get(position).getArticle_id()+"");
+                intent.putExtra("article_id", mList.get(position).getArticle_id() + "");
             }
             intent.putExtra("circle_id", mCircle_id);
             startActivity(intent);
@@ -379,11 +400,12 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
                 intent.putExtra("article_title", mList.get(i).getArticle_title());
                 intent.putExtra("content", mList.get(i).getContent());
                 intent.putExtra("position", i);
-                intent.putExtra("article_id", mList.get(i).getArticle_id()+"");
+                intent.putExtra("article_id", mList.get(i).getArticle_id() + "");
             }
             intent.putExtra("circle_id", mCircle_id);
             startActivity(intent);
         });
+
         if (TextUtils.equals("0", mIsJoin)) {//未加入
             mFormalRl.setVisibility(View.GONE);
             mPreTopRl.setVisibility(View.VISIBLE);
@@ -404,7 +426,8 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
             mPreDateTv.setText("创建 " + circleInfoEntity.getCircleInfo().getCreate_day() + "天");
             mJoinTv.setText("加入圈子￥" + circleInfoEntity.getCircleInfo().getCourse_money());
             if (!TextUtils.isEmpty(circleInfoEntity.getCircleInfo().getLightSpot())) {
-                mMcLdTv.setText(Html.fromHtml(circleInfoEntity.getCircleInfo().getLightSpot()));//亮点
+                mMcLdTv.loadData(getHtmlData(circleInfoEntity.getCircleInfo().getLightSpot()),
+                        "text/html;charset=utf-8", "utf-8");//亮点
             }
             List<String> circle_tags = circleInfoEntity.getCircleInfo().getCircle_tags();
             mFlowLayout.setAdapter(new TagAdapter<String>(circle_tags) {
@@ -433,6 +456,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
             mScreenRl.setVisibility(View.VISIBLE);
             Glide.with(this).load(circleInfoEntity.getCircleInfo().getCircle_image().getPic_url()).into(mTopticBg);
             Glide.with(this).load(circleInfoEntity.getCircleInfo().getMaster_pic()).into(mFormalFaceIv);
+            Glide.with(this).load(circleInfoEntity.getCircleInfo().getMaster_pic()).into(mFormalFaceIv1);
             mFormalTitleTv.setText(circleInfoEntity.getCircleInfo().getCircle_name());
             mFormalNameTv.setText("圈主：" + circleInfoEntity.getCircleInfo().getName());
             if (circleInfoEntity.getCircleInfo().getIs_author() == 1) {
@@ -444,7 +468,22 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
             mMcFormalTitleTv.setText(circleInfoEntity.getCircleInfo().getCircle_name());
             mMcFormalNameTv.setText("圈主：" + circleInfoEntity.getCircleInfo().getName());
             mMcFormalDateTv.setText("创建 " + circleInfoEntity.getCircleInfo().getCreate_day() + "天");
+            //简介蒙层
+            mFormalTitleTv1.setText(circleInfoEntity.getCircleInfo().getCircle_name());
+            mMcRecommendTv1.setText(circleInfoEntity.getCircleInfo().getCourse_desc());
+            if (!TextUtils.isEmpty(circleInfoEntity.getCircleInfo().getLightSpot())) {
+                mMcLdTv1.loadData(getHtmlData(circleInfoEntity.getCircleInfo().getLightSpot()),
+                        "text/html;charset=utf-8", "utf-8");//亮点
+            }
         }
+    }
+
+    private String getHtmlData(String bodyHTML) {
+        String head = "<head>" +
+                "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\"> " +
+                "<style>html{padding:15px;} body{word-wrap:break-word;font-size:15px;padding:0px;margin:0px;line-height:2.0;} p{padding:0px;margin:0px;font-size:15px;color:FF656565;line-height:2.0;} img{padding:0px,margin:0px;max-width:100%; width:100%; height:auto;}</style>" +
+                "</head>";
+        return "<html>" + head + "<body>" + "" + bodyHTML + "</body></html>";
     }
 
     @Override
@@ -463,20 +502,22 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
         mRefreshLayout.setOnRefreshLoadMoreListener(this);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(App.getContext()));
-        mTopticAdapter = new CircleTopticAdapter(R.layout.adapter_article_toptic, mThemeInfoList, mIsJoin, this);
+        mTopticAdapter = new CircleTopticAdapter(mThemeInfoList, mIsJoin, this);
         mRecyclerView.setAdapter(mTopticAdapter);
-        ((SimpleItemAnimator)mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+        ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
         mJhRecyclerView.setLayoutManager(new LinearLayoutManager(App.getContext()));
-        mTopticAdapter1 = new CircleTopticAdapter(R.layout.adapter_article_toptic, mEssenceInfoList, mIsJoin, this);
+        mTopticAdapter1 = new CircleTopticAdapter(mEssenceInfoList, mIsJoin, this);
         mJhRecyclerView.setAdapter(mTopticAdapter1);
-        ((SimpleItemAnimator)mJhRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+        ((SimpleItemAnimator) mJhRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
         mTopticAdapter.setOnItemClickListener(this);
         mTopticAdapter.setOnItemChildClickListener(this);
+        mTopticAdapter.setCommentClickListener(this);
 
         mTopticAdapter1.setOnItemClickListener(this);
         mTopticAdapter1.setOnItemChildClickListener(this);
+        mTopticAdapter1.setCommentClickListener(this);
 
         if (TextUtils.equals("0", mIsJoin)) {
             mRefreshLayout.setEnableLoadMore(false);
@@ -499,7 +540,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
         if ("0".equals(mIsJoin) && mThemeInfoList.size() > 5) {
             mThemeInfoList = mThemeInfoList.subList(0, 5);
         }
-        if (mThemeInfoList.size() > 0){
+        if (mThemeInfoList.size() > 0) {
             mEmptyView.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.VISIBLE);
             if (isRefresh) {
@@ -507,7 +548,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
             } else {
                 mTopticAdapter.addData(mThemeInfoList);
             }
-        }else {
+        } else {
             mRecyclerView.setVisibility(View.GONE);
             mEmptyView.setVisibility(View.VISIBLE);
         }
@@ -564,13 +605,13 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
 
     @Override
     public void handlerCourseList(CourseListEntity courseListEntity) {
-        if (courseListEntity.getCourselist().size() > 0 ){
-            if (TextUtils.equals("1", mIsJoin)){
+        if (courseListEntity.getCourselist().size() > 0) {
+            if (TextUtils.equals("1", mIsJoin)) {
                 formalMlTv.setVisibility(View.VISIBLE);
                 mFormalMlNumTv.setVisibility(View.VISIBLE);
                 mformalBorder.setVisibility(View.VISIBLE);
                 mFormalMlRecyclerView.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 preMlTv.setVisibility(View.VISIBLE);
                 mMlNumTv.setVisibility(View.VISIBLE);
                 mPreBorder.setVisibility(View.VISIBLE);
@@ -581,25 +622,25 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
             int countCourse = courseListEntity.getCountCourse();
             String s = "更新至" + countUpdateCourse + "讲 • 全" + countCourse + "讲";
             SpannableString spannableString = new SpannableString(s);
-            spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#FF32A7FF")),0,4+String.valueOf(countUpdateCourse).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#FF32A7FF")), 0, 4 + String.valueOf(countUpdateCourse).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             mMlNumTv.setText(spannableString);
             mMcMlNumTv.setText(spannableString);
             mFormalMlNumTv.setText(spannableString);
 
-            if (coursePage == 1 && courseListEntity.getCourselist().size() > 0){
+            if (coursePage == 1 && courseListEntity.getCourselist().size() > 0) {
                 List<CourseListEntity.CourselistBean> courselist;
-                if (courseListEntity.getCourselist().size() >= 3){
-                    courselist = courseListEntity.getCourselist().subList(0,3);
-                }else if (courseListEntity.getCourselist().size() == 2){
-                    courselist = courseListEntity.getCourselist().subList(0,2);
-                }else {
-                    courselist = courseListEntity.getCourselist().subList(0,1);
+                if (courseListEntity.getCourselist().size() >= 3) {
+                    courselist = courseListEntity.getCourselist().subList(0, 3);
+                } else if (courseListEntity.getCourselist().size() == 2) {
+                    courselist = courseListEntity.getCourselist().subList(0, 2);
+                } else {
+                    courselist = courseListEntity.getCourselist().subList(0, 1);
                 }
                 mDirectoryAdapter2.addData(courselist);
                 mDirectoryAdapter3.addData(courselist);
             }
             mDirectoryAdapter.addData(courseListEntity.getCourselist());
-        }else {
+        } else {
             formalMlTv.setVisibility(View.GONE);
             mFormalMlNumTv.setVisibility(View.GONE);
             mformalBorder.setVisibility(View.GONE);
@@ -630,7 +671,8 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
 
     @OnClick({R.id.qz_expand_ll, R.id.back_iv, R.id.course_collapse_rl,
             R.id.pre_share_iv, R.id.share_iv, R.id.more_iv, R.id.join_tv, R.id.publis_rl,
-            R.id.mc_qz_expand_ll, R.id.screen_rl, R.id.formal_face_iv, R.id.mc_formal_face_iv})
+            R.id.mc_qz_expand_ll, R.id.screen_rl, R.id.formal_face_iv, R.id.mc_formal_face_iv,
+            R.id.jianjie_expand_tv, R.id.mc_jianjie_tv})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.qz_expand_ll://预览-----展开圈子介绍
@@ -649,9 +691,9 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
                 mMcTableRl.setVisibility(View.GONE);
                 mMcRl.setVisibility(View.GONE);
                 mCourseCollapseRl.setVisibility(View.GONE);
-                if (TextUtils.equals("0", mIsJoin)){
+                if (TextUtils.equals("0", mIsJoin)) {
                     mJoinTv.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     mPublisRl.setVisibility(View.VISIBLE);
                 }
                 isMlExpand = false;
@@ -675,7 +717,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
 //                mMcTableRl.setVisibility(View.VISIBLE);
 //                break;
             case R.id.mc_qz_expand_ll://蒙层----收起圈子介绍
-                if (!isMlExpand){
+                if (!isMlExpand) {
                     mMcQzExpandTv.setText("展开");
                     mMcQzExpandIv.setImageResource(R.drawable.dao_sanjiao_blue);
                     mParams.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED);
@@ -683,7 +725,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
                     mMcTableRl.setVisibility(View.GONE);
                     mExpandRl.setVisibility(View.GONE);
                     mMcRl.setVisibility(View.GONE);
-                }else {//如果蒙层的目录展开，点击时应该是展开圈子介绍
+                } else {//如果蒙层的目录展开，点击时应该是展开圈子介绍
                     mMcRl.setVisibility(View.VISIBLE);
                     mMcTableRl.setVisibility(View.GONE);
                     mMcQzExpandTv.setText("收起");
@@ -710,7 +752,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
             case R.id.share_iv:
                 circlePath = mPath + "circle_id=" + mCircle_id + "&num=1";
                 DialogUtils.showShareDialog(this, circlePath, mEndUrl, mCircleInfoEntity.getCircleInfo().getCircle_name(),
-                        mCircleInfoEntity.getCircleInfo().getCircle_image().getPic_url(), mCircleInfoEntity.getCircleInfo().getCircle_desc(),true);
+                        mCircleInfoEntity.getCircleInfo().getCircle_image().getPic_url(), mCircleInfoEntity.getCircleInfo().getCircle_desc(), true);
                 break;
             case R.id.more_iv:
                 mIntent = new Intent(this, CircleInfoActivity.class);
@@ -735,14 +777,14 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
 //                startActivity(mIntent);
 //                break;
             case R.id.screen_rl:
-                if (mViewpager_position == 0){
+                if (mViewpager_position == 0) {
                     showThemeTypeDialog();
-                }else {
+                } else {
                     ToastUtils.showShort("暂未开放");
                 }
                 break;
             case R.id.join_tv:
-                LoginHelper.login(this, mPresenter.mDataManager, () -> showPayDialog());
+                LoginHelper.getInstance().login(this, mPresenter.mDataManager, () -> showPayDialog());
                 break;
             case R.id.publis_rl:
                 mIntent = new Intent(this, PublishActivity.class);
@@ -751,15 +793,21 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
                 break;
             case R.id.formal_face_iv:
             case R.id.mc_formal_face_iv:
-                if (mCircleInfoEntity.getCircleInfo().getIs_author() == 1){
+                if (mCircleInfoEntity.getCircleInfo().getIs_author() == 1) {
                     mIntent = new Intent(this, MasterDetailActivity.class);
-                    mIntent.putExtra("user_id", mCircleInfoEntity.getCircleInfo().getUser_id()+"");
+                    mIntent.putExtra("user_id", mCircleInfoEntity.getCircleInfo().getUser_id() + "");
                     startActivity(mIntent);
-                }else {
+                } else {
                     mIntent = new Intent(this, CircleManDetailActivity.class);
-                    mIntent.putExtra("user_id", mCircleInfoEntity.getCircleInfo().getUser_id()+"");
+                    mIntent.putExtra("user_id", mCircleInfoEntity.getCircleInfo().getUser_id() + "");
                     startActivity(mIntent);
                 }
+                break;
+            case R.id.jianjie_expand_tv://展开简介
+                mMcFormalRl.setVisibility(View.VISIBLE);
+                break;
+            case R.id.mc_jianjie_tv://收起简介
+                mMcFormalRl.setVisibility(View.GONE);
                 break;
         }
     }
@@ -837,7 +885,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
 
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-        if (mViewpager_position == 0){
+        if (mViewpager_position == 0) {
             if (page < pageCount) {
                 page++;
                 mPresenter.themeInfo(mCircle_id, page, type, false);
@@ -845,7 +893,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
             } else {
                 refreshLayout.finishLoadMoreWithNoMoreData();
             }
-        }else {
+        } else {
             if (jhPage < jhPageCount) {
                 jhPage++;
                 mPresenter.essenceInfo(mCircle_id, jhPage, "1", false);
@@ -858,10 +906,10 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        if (mViewpager_position == 0){
+        if (mViewpager_position == 0) {
             page = 1;
             mPresenter.themeInfo(mCircle_id, page, type, true);
-        }else {
+        } else {
             jhPage = 1;
             mPresenter.essenceInfo(mCircle_id, jhPage, "1", true);
         }
@@ -891,18 +939,18 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
         List<ThemeInfoEntity.ThemeInfoBean> data = baseQuickAdapter.getData();
         switch (view.getId()) {
             case R.id.item_more_iv:
-                DialogUtils.showEditDialog(this,data.get(i),i,data,null, mPresenter, mCircleInfoEntity);
+                DialogUtils.showEditDialog(this, data.get(i), i, data, null, mPresenter, mCircleInfoEntity);
                 break;
             case R.id.item_praise_iv:
                 mPresenter.praise(data, i);
                 break;
             case R.id.item_comment_iv:
-                DialogUtils.showCommentDialog(data.get(i).getTheme_id(), i, data, this, null, mPresenter);
+                DialogUtils.showCommentDialog(i , data.get(i).getTheme_id(),"", i, data, "", "", this, null, mPresenter);
                 break;
             case R.id.item_share_iv:
-                if (data.get(i).getTheme_image().size() > 0){
+                if (data.get(i).getTheme_image().size() > 0) {
                     mPresenter.getThumb(data.get(i).getTheme_image().get(0).getPic_url(), data, i);
-                }else {
+                } else {
                     mPresenter.getThumb(data.get(i).getHeadImage(), data, i);
                 }
                 break;
@@ -920,7 +968,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     public void handlerThumbSuccess(String thumb_url, List<ThemeInfoEntity.ThemeInfoBean> data, int i) {
         String mUrl = Constants.BASE_URL + "jtfwhgetopenid" + "?user_id=" + mPresenter.mDataManager.getUser().getUser_id() + "&theme_id=" + data.get(i).getTheme_id();
         String mEndUrl = Constants.END_URL + "&redirect_uri=" + URLEncoder.encode(mUrl) + "&response_type=code&scope=snsapi_userinfo&state=theme#wechat_redirect";
-        themePath = mPath1 + "theme_id=" + data.get(i).getTheme_id() + "&circle_id=" + mCircle_id +"&num=1";
+        themePath = mPath1 + "theme_id=" + data.get(i).getTheme_id() + "&circle_id=" + mCircle_id + "&num=1";
         DialogUtils.showShareDialog(this, themePath, mEndUrl,
                 TextUtils.isEmpty(data.get(i).getTheme_content()) ? mCircleInfoEntity.getCircleInfo().getCircle_name() : data.get(i).getTheme_content(),
                 thumb_url, data.get(i).getTheme_content(), true);
@@ -935,20 +983,20 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     }
 
     @Override
-    public void handlerCommentSuccess(int position, List<ThemeInfoEntity.ThemeInfoBean> data, List<CommentContentBean> contentBeanList) {
-        data.get(position).setComment_content(contentBeanList);
-        if (mViewpager_position == 0){//主题列表
-            mTopticAdapter.notifyItemChanged(position);
+    public void handlerCommentSuccess(int adapterPosition, int position, List<ThemeInfoEntity.ThemeInfoBean> data, List<CommentContentBean> contentBeanList) {
+        data.get(adapterPosition).setComment_content(contentBeanList);
+        if (mViewpager_position == 0) {//主题列表
+            mTopticAdapter.notifyItemChanged(adapterPosition);
             //如果评论的这条主题是精华，那么刷新精华列表数据
-            if (data.get(position).getIs_choiceness() == 1){
+            if (data.get(adapterPosition).getIs_choiceness() == 1) {
                 refreshChoiceness();
             }
-        }else {//精华列表,局部刷新主题数据
-            mTopticAdapter1.notifyItemChanged(position);
-            int theme_id = data.get(position).getTheme_id();
+        } else {//精华列表,局部刷新主题数据
+            mTopticAdapter1.notifyItemChanged(adapterPosition);
+            int theme_id = data.get(adapterPosition).getTheme_id();
             List<ThemeInfoEntity.ThemeInfoBean> topticAdapterData = mTopticAdapter.getData();
             for (int i = 0; i < topticAdapterData.size(); i++) {
-                if (theme_id == topticAdapterData.get(i).getTheme_id()){
+                if (theme_id == topticAdapterData.get(i).getTheme_id()) {
                     topticAdapterData.get(i).setComment_content(contentBeanList);
                     mTopticAdapter.notifyItemChanged(i);
                 }
@@ -964,18 +1012,18 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
             data.get(i).setIs_parise(0);
         }
         data.get(i).setParise_nickName(praiseEntity.getNickName());
-        if (mViewpager_position == 0){//主题列表
+        if (mViewpager_position == 0) {//主题列表
             mTopticAdapter.notifyItemChanged(i);
             //如果点赞的这条主题是精华，那么刷新精华列表数据
-            if (data.get(i).getIs_choiceness() == 1){
+            if (data.get(i).getIs_choiceness() == 1) {
                 refreshChoiceness();
             }
-        }else {//精华列表,局部刷新主题数据
+        } else {//精华列表,局部刷新主题数据
             mTopticAdapter1.notifyItemChanged(i);
             int theme_id = data.get(i).getTheme_id();
             List<ThemeInfoEntity.ThemeInfoBean> topticAdapterData = mTopticAdapter.getData();
             for (int j = 0; j < topticAdapterData.size(); j++) {
-                if (theme_id == topticAdapterData.get(j).getTheme_id()){
+                if (theme_id == topticAdapterData.get(j).getTheme_id()) {
                     if (topticAdapterData.get(j).getIs_parise() == 0) {
                         topticAdapterData.get(j).setIs_parise(1);
                     } else {
@@ -997,18 +1045,18 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
             data.setIs_collect(0);
             ToastUtils.showCollect("取消收藏", getResources().getDrawable(R.drawable.collect_cancle_icon));
         }
-        if (mViewpager_position == 0){//主题列表
+        if (mViewpager_position == 0) {//主题列表
             mTopticAdapter.notifyItemChanged(i);
             //如果点赞的这条主题是精华，那么刷新精华列表数据
-            if (data.getIs_choiceness() == 1){
+            if (data.getIs_choiceness() == 1) {
                 refreshChoiceness();
             }
-        }else {//精华列表,局部刷新主题数据
+        } else {//精华列表,局部刷新主题数据
             mTopticAdapter1.notifyItemChanged(i);
             int theme_id = data.getTheme_id();
             List<ThemeInfoEntity.ThemeInfoBean> topticAdapterData = mTopticAdapter.getData();
             for (int j = 0; j < topticAdapterData.size(); j++) {
-                if (theme_id == topticAdapterData.get(j).getTheme_id()){
+                if (theme_id == topticAdapterData.get(j).getTheme_id()) {
                     if (0 == topticAdapterData.get(j).getIs_collect()) {
                         topticAdapterData.get(j).setIs_collect(1);
                     } else {
@@ -1023,18 +1071,18 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     @Override
     public void handlerDeleteSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list) {
         list.remove(i);
-        if (mViewpager_position == 0){//主题列表
+        if (mViewpager_position == 0) {//主题列表
             mTopticAdapter.notifyItemRemoved(i);
             //如果点赞的这条主题是精华，那么刷新精华列表数据
-            if (data.getIs_choiceness() == 1){
+            if (data.getIs_choiceness() == 1) {
                 refreshChoiceness();
             }
-        }else {//精华列表,局部刷新主题数据
+        } else {//精华列表,局部刷新主题数据
             mTopticAdapter1.notifyItemRemoved(i);
             int theme_id = data.getTheme_id();
             List<ThemeInfoEntity.ThemeInfoBean> topticAdapterData = mTopticAdapter.getData();
             for (int j = 0; j < topticAdapterData.size(); j++) {
-                if (theme_id == topticAdapterData.get(j).getTheme_id()){
+                if (theme_id == topticAdapterData.get(j).getTheme_id()) {
                     topticAdapterData.remove(j);
                     mTopticAdapter.notifyItemRemoved(j);
                 }
@@ -1053,16 +1101,16 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
             mPagerAdapter.setCount(--mCountChoiceness_themeInfo);
             ToastUtils.showShort("取消精华成功");
         }
-        if (mViewpager_position == 0){//主题列表
+        if (mViewpager_position == 0) {//主题列表
             mTopticAdapter.notifyItemChanged(i);
             refreshChoiceness();
-        }else {//精华列表,局部刷新主题数据
+        } else {//精华列表,局部刷新主题数据
             mTopticAdapter1.remove(i);
             mTopticAdapter1.notifyItemChanged(i);
             int theme_id = data.getTheme_id();
             List<ThemeInfoEntity.ThemeInfoBean> topticAdapterData = mTopticAdapter.getData();
             for (int j = 0; j < topticAdapterData.size(); j++) {
-                if (theme_id == topticAdapterData.get(j).getTheme_id()){
+                if (theme_id == topticAdapterData.get(j).getTheme_id()) {
                     topticAdapterData.get(j).setIs_choiceness(0);
                 }
             }
@@ -1094,9 +1142,9 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
 
     @Override
     public void handlerTopOperateSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i) {
-        if (0 == data.getIs_top()){
+        if (0 == data.getIs_top()) {
             ToastUtils.showShort("主题置顶成功");
-        }else {
+        } else {
             ToastUtils.showShort("取消置顶成功");
         }
         onRefresh(mRefreshLayout);
@@ -1106,7 +1154,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     public void onLoadMoreRequested() {
         if (coursePage < mCourse_page_count) {
             coursePage++;
-            mPresenter.courseList(mCircleInfoEntity.getCircleInfo().getData_id()+"", coursePage);
+            mPresenter.courseList(mCircleInfoEntity.getCircleInfo().getData_id() + "", coursePage);
             mDirectoryAdapter.loadMoreComplete();
         } else {
             mDirectoryAdapter.loadMoreEnd();
@@ -1143,5 +1191,14 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
     @Override
     public void onPageScrollStateChanged(int i) {
 
+    }
+
+    @Override
+    public void onCommentClick(int adapterPosition, CircleTopticAdapter.CommentAdapter adapter, View view, int position, List<ThemeInfoEntity.ThemeInfoBean> data) {
+        if (!String.valueOf(adapter.getData().get(position).getUser_id()).equals(mPresenter.mDataManager.getUser().getUser_id())){
+            DialogUtils.showCommentDialog(adapterPosition, adapter.getData().get(position).getTheme_id(), adapter.getData().get(position).getParentCommentId(),
+                    position, data, adapter.getData().get(position).getComment_id()+"", adapter.getData().get(position).getName(),
+                    this, null, mPresenter);
+        }
     }
 }

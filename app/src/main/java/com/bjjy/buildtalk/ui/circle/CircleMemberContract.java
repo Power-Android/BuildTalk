@@ -14,7 +14,9 @@ public class CircleMemberContract {
 
     interface View extends IView{
 
-        void handlerCircleUser(MemberEntity iEntity, boolean isRefresh);
+        void handlerCircleUser1(MemberEntity iEntity, boolean isRefresh);
+        void handlerCircleUser2(MemberEntity iEntity, boolean isRefresh);
+        void handlerCircleUser3(MemberEntity iEntity, boolean isRefresh);
     }
 
     interface Presenter extends IPresenter<View>{

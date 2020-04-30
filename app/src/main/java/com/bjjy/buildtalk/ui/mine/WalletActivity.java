@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
+import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.utils.ToastUtils;
 
 import butterknife.BindView;
@@ -39,7 +40,12 @@ public class WalletActivity extends BaseActivity<WalletPresenter> implements Wal
 
     @Override
     protected void initEventAndData() {
+        mPresenter.myWallet();
+    }
 
+    @Override
+    public void handlerWallet(String s) {
+        mMoneyTv.setText(s);
     }
 
     @OnClick({R.id.with_draw_tv, R.id.wallet_rl})
