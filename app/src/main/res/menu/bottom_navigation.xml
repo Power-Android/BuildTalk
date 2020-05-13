@@ -6,7 +6,7 @@
         android:id="@+id/tab_discover"
         android:enabled="true"
         android:icon="@drawable/selector_discover"
-        android:title="@string/discover"
+        android:title="首页"
         app:showAsAction="ifRoom" />
 
     <item
@@ -20,7 +20,7 @@
         android:id="@+id/tab_talk"
         android:enabled="true"
         android:icon="@drawable/selector_talk"
-        android:title="@string/talk"
+        android:title="@string/discover"
         app:showAsAction="ifRoom" />
 
     <item

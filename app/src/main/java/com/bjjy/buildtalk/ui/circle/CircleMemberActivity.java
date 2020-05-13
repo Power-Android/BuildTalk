@@ -234,30 +234,30 @@ public class CircleMemberActivity extends BaseActivity<CircleMemberPresenter> im
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
         switch (mViewPager.getCurrentItem()){
             case 0:
-                if (page1 < mPage_count) {
+                if (page1 <= mPage_count) {
                     page1++;
                     mPresenter.circleUser1(mCircle_id, page1, mViewPager.getCurrentItem() + 1, false);
                     refreshLayout.finishLoadMore();
-                } else {
-                    refreshLayout.finishLoadMoreWithNoMoreData();
+                }else {
+                    refreshLayout.finishLoadMore();
                 }
                 break;
             case 1:
-                if (page2 < mPage_count) {
+                if (page2 <= mPage_count) {
                     page2++;
-                    mPresenter.circleUser1(mCircle_id, page2, mViewPager.getCurrentItem() + 1, false);
+                    mPresenter.circleUser2(mCircle_id, page2, mViewPager.getCurrentItem() + 1, false);
                     refreshLayout.finishLoadMore();
-                } else {
-                    refreshLayout.finishLoadMoreWithNoMoreData();
+                }else {
+                    refreshLayout.finishLoadMore();
                 }
                 break;
             case 2:
-                if (page3 < mPage_count) {
+                if (page3 <= mPage_count) {
                     page3++;
-                    mPresenter.circleUser1(mCircle_id, page3, mViewPager.getCurrentItem() + 1, false);
+                    mPresenter.circleUser3(mCircle_id, page3, mViewPager.getCurrentItem() + 1, false);
                     refreshLayout.finishLoadMore();
-                } else {
-                    refreshLayout.finishLoadMoreWithNoMoreData();
+                }else {
+                    refreshLayout.finishLoadMore();
                 }
                 break;
         }

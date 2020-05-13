@@ -1,5 +1,6 @@
 package com.bjjy.buildtalk.weight;
 
+import android.support.constraint.ConstraintLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,7 @@ public class MyGridAdapter extends BaseAdapter {
         this.list = imgList;
         this.isDel = isDel;
         if (isDel){
-            imageWidth = (SizeUtils.getScreenWidth() - SizeUtils.dp2px(30)) / 3;
+            imageWidth = (SizeUtils.getScreenWidth() - SizeUtils.dp2px(60)) / 3;
         }else {
             float dimension = App.getContext().getResources().getDimension(R.dimen.dp_50);
             imageWidth = (SizeUtils.getScreenWidth() - (int)dimension) / 3;
@@ -40,17 +41,21 @@ public class MyGridAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return list.size();
+        if (list.size() < 9 && list.size() > 0) {
+            return list.size() + 1;
+        } else {
+            return list.size();
+        }
     }
 
     @Override
     public Object getItem(int position) {
-        return list.get(position);
+        return null;
     }
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return 0;
     }
 
     @Override
@@ -66,7 +71,7 @@ public class MyGridAdapter extends BaseAdapter {
             }else {
                 holder.delete_iv.setVisibility(View.GONE);
             }
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.iv.getLayoutParams();
+            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) holder.iv.getLayoutParams();
             params.width = imageWidth;
             params.height = imageWidth;
             holder.iv.setLayoutParams(params);
@@ -75,8 +80,14 @@ public class MyGridAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
 
         holder.iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        Glide.with(App.getContext()).load(list.get(position).getPic_url()).into(holder.iv);
-        holder.delete_iv.setOnClickListener(v -> mDeleteCallBackListener.deleteCallBack(position));
+        if (list != null && position < list.size()){
+            Glide.with(App.getContext()).load(list.get(position).getPic_url()).into(holder.iv);
+            holder.delete_iv.setVisibility(View.VISIBLE);
+            holder.delete_iv.setOnClickListener(v -> mDeleteCallBackListener.deleteCallBack(position));
+        }else {
+            Glide.with(App.getContext()).load(R.drawable.add_picture_icon).into(holder.iv);
+            holder.delete_iv.setVisibility(View.GONE);
+        }
         return convertView;
     }
 

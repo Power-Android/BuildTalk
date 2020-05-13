@@ -18,6 +18,7 @@ import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
+import com.tencent.ugc.TXUGCBase;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
@@ -47,6 +48,8 @@ public class App extends Application implements HasActivityInjector {
     }
 
     private static Context context;
+    private String ugcLicenceUrl = "http://license.vod2.myqcloud.com/license/v1/16187355249352ba84335c5f98ea4432/TXUgcSDK.licence";
+    private String ugcKey = "67b4af4ac9dc2a70d256e432740cc2fb";
 
     @Inject
     public DataManager mDataManager;
@@ -67,8 +70,15 @@ public class App extends Application implements HasActivityInjector {
 
         initLog();
         initRefresh();
+        initTxVideo();
         initUM();
         initBulgy();
+    }
+
+    private void initTxVideo() {
+
+        // 短视频licence设置
+        TXUGCBase.getInstance().setLicence(this, ugcLicenceUrl, ugcKey);
     }
 
     public void initLog() {

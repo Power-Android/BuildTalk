@@ -63,6 +63,10 @@ public class MineFragment extends BaseFragment<MinePresenter> implements MineCon
     RelativeLayout mHelpRl;
     @BindView(R.id.service_rl)
     RelativeLayout mServiceRl;
+    @BindView(R.id.update_master_tv)
+    RelativeLayout mUpdateMasterTv;
+    @BindView(R.id.tag_iv)
+    ImageView mTagiv;
     private BaseDialog mVerifyDialog;
     private User mUser;
 
@@ -103,6 +107,13 @@ public class MineFragment extends BaseFragment<MinePresenter> implements MineCon
     protected void initEventAndData() {
         if (mPresenter.mDataManager.getLoginStatus()){
             User user = mPresenter.mDataManager.getUser();
+            if (TextUtils.equals("1",user.getUser_type())){
+                mUpdateMasterTv.setVisibility(View.VISIBLE);
+                mTagiv.setVisibility(View.GONE);
+            }else {
+                mUpdateMasterTv.setVisibility(View.GONE);
+                mTagiv.setVisibility(View.VISIBLE);
+            }
             Glide.with(mContext).load(user.getHeadImage()).apply(new RequestOptions().error(R.drawable.moren_face)).into(mFaceIv);
             mNameTv.setText(user.getNickName());
             mPhoneTv.setText(user.getMobile());

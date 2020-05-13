@@ -25,6 +25,7 @@ import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
 import com.bjjy.buildtalk.ui.circle.TopticDetailActivity;
 import com.bjjy.buildtalk.ui.discover.DiscoverFragment;
 import com.bjjy.buildtalk.ui.discover.EveryTalkDetailActivity;
+import com.bjjy.buildtalk.ui.home.HomeFragment;
 import com.bjjy.buildtalk.ui.mine.MineFragment;
 import com.bjjy.buildtalk.ui.talk.TalkFragment;
 import com.bjjy.buildtalk.utils.DialogUtils;
@@ -51,8 +52,9 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     private int mCurrentFgIndex = 0;
     private DiscoverFragment mDiscoverFragment;
     private CircleFragment mCircleFragment;
-    private TalkFragment mTalkFragment;
+//    private TalkFragment mTalkFragment;
     private MineFragment mMineFragment;
+    private HomeFragment mHomeFragment;
     private Uri data;
     private long clickTime;
 
@@ -103,7 +105,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                     showFragment(Constants.TYPE_CIRCLE);
                     break;
                 case R.id.tab_talk:
-                    showFragment(Constants.TYPE_TALK);
+                    showFragment(Constants.TYPE_FIND);
                     break;
                 case R.id.tab_mine:
                     showFragment(Constants.TYPE_MINE);
@@ -142,12 +144,12 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                 }
                 transaction.show(mCircleFragment);
                 break;
-            case Constants.TYPE_TALK:
-                if (mTalkFragment == null) {
-                    mTalkFragment = TalkFragment.newInstance();
-                    transaction.add(R.id.fragment_group, mTalkFragment);
+            case Constants.TYPE_FIND:
+                if (mHomeFragment == null) {
+                    mHomeFragment = HomeFragment.getInstance();
+                    transaction.add(R.id.fragment_group, mHomeFragment);
                 }
-                transaction.show(mTalkFragment);
+                transaction.show(mHomeFragment);
                 break;
             case Constants.TYPE_MINE:
                 if (mMineFragment == null) {
@@ -172,9 +174,9 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                     transaction.hide(mCircleFragment);
                 }
                 break;
-            case Constants.TYPE_TALK:
-                if (mTalkFragment != null) {
-                    transaction.hide(mTalkFragment);
+            case Constants.TYPE_FIND:
+                if (mHomeFragment != null) {
+                    transaction.hide(mHomeFragment);
                 }
                 break;
             case Constants.TYPE_MINE:

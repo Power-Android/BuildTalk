@@ -47,6 +47,8 @@ ext {
             "gesture-views"                         : "com.alexvasilkov:gesture-views:2.5.2",
             "PDF-viewer"                            : "com.github.barteksc:android-pdf-viewer:3.0.0-beta.5",
             "MagicIndicator"                        : "com.github.hackware1993:MagicIndicator:1.5.0",
+            "switch_button"                         : "com.github.zcweng:switch-button:0.0.3@aar",
+            "VerticalViewPager"                     : "com.github.castorflex.verticalviewpager:library:19.0.1",
 
             //net
             "gson"                                  : "com.google.code.gson:gson:2.8.2",

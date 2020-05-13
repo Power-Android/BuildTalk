@@ -39,7 +39,7 @@
                     android:id="@+id/tablayout"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_44"
-                    app:tabBackground="@android:color/transparent"
+                    app:tabBackground="@color/white"
                     app:tabDividerWidthWidthText="true"
                     app:tabGravity="fill"
                     app:tabIndicatorColor="@color/orange"
@@ -52,6 +52,7 @@
                     android:id="@+id/screen_rl"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_30"
+                    android:background="@color/white"
                     android:visibility="gone"
                     android:layout_below="@+id/tablayout">
                     <TextView

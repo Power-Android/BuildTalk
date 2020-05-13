@@ -82,6 +82,8 @@ dependencies {
     implementation rootProject.ext.dependencies["gesture-views"]
     implementation rootProject.ext.dependencies["PDF-viewer"]
     implementation rootProject.ext.dependencies["MagicIndicator"]
+    implementation rootProject.ext.dependencies["switch_button"]
+    implementation rootProject.ext.dependencies["VerticalViewPager"]
 
     //net
     implementation rootProject.ext.dependencies["gson"]
@@ -130,4 +132,5 @@ dependencies {
     implementation files('libs/umeng-shareboard-widget-6.9.4.jar')
     implementation files('libs/umeng-sharetool-6.9.4.jar')
     implementation files('libs/phoneNumber-AuthSDK-2.7.1-20191223.aar')
+    implementation files('libs/LiteAVSDK_UGC.aar')
 }

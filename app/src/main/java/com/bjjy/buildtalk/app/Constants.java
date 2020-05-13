@@ -44,6 +44,7 @@ public class Constants {
     public static final int TYPE_CIRCLE = 1;
     public static final int TYPE_TALK = 2;
     public static final int TYPE_MINE = 3;
+    public static final int TYPE_FIND = 4;
 
     //TimeUtils
     public static final int MSEC = 1;

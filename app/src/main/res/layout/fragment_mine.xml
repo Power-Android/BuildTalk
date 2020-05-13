@@ -36,6 +36,16 @@
                     app:civ_border_color="@color/white"
                     app:civ_border_width="@dimen/dp_2" />
 
+                <ImageView
+                    android:id="@+id/tag_iv"
+                    android:layout_width="@dimen/dp_14"
+                    android:layout_height="@dimen/dp_14"
+                    android:visibility="gone"
+                    android:src="@drawable/tag_icon"
+                    android:layout_marginBottom="@dimen/dp_3"
+                    android:layout_marginLeft="@dimen/dp_60"
+                    android:layout_alignBottom="@+id/face_iv"/>
+
                 <TextView
                     android:id="@+id/name_tv"
                     android:layout_width="wrap_content"
@@ -78,6 +88,7 @@
 
             <RelativeLayout
                 android:id="@+id/update_master_tv"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_64">
                 <ImageView

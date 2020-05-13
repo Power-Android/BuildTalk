@@ -42,6 +42,7 @@ import com.bjjy.buildtalk.di.module.activity.PublishActivityModule;
 import com.bjjy.buildtalk.di.module.activity.ServiceActivityModule;
 import com.bjjy.buildtalk.di.module.activity.SetPictureActivityModule;
 import com.bjjy.buildtalk.di.module.activity.SettingActivityModule;
+import com.bjjy.buildtalk.di.module.activity.ShortVideoActivityModule;
 import com.bjjy.buildtalk.di.module.activity.SplashActivtyModule;
 import com.bjjy.buildtalk.di.module.activity.TalkSearchActivityModule;
 import com.bjjy.buildtalk.di.module.activity.TopticCircleActivityModule;
@@ -99,6 +100,7 @@ import com.bjjy.buildtalk.ui.talk.MasterCollectActivity;
 import com.bjjy.buildtalk.ui.talk.MasterDetailActivity;
 import com.bjjy.buildtalk.ui.talk.MasterListActivity;
 import com.bjjy.buildtalk.ui.talk.TalkSearchActivity;
+import com.bjjy.buildtalk.ui.video.ShortVideoActivity;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
@@ -249,4 +251,7 @@ public abstract class AbstractAllActivityModule {
 
     @ContributesAndroidInjector(modules = PDFViewerActivityModule.class)
     abstract PDFViewerActivity mPDFViewerActivity();
+
+    @ContributesAndroidInjector(modules = ShortVideoActivityModule.class)
+    abstract ShortVideoActivity mShortVideoActivity();
 }

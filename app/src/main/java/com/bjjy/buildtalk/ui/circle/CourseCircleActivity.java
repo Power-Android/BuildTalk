@@ -662,7 +662,7 @@ public class CourseCircleActivity extends BaseActivity<CourseCirclePresenter> im
         if (offset > 0) {
             mTitleTv.setText(mCircleInfoEntity.getCircleInfo().getCircle_name());
             mTitleTv.setVisibility(View.VISIBLE);
-            mTopTitleRl.setBackgroundColor(getResources().getColor(R.color.blue_mid));
+            mTopTitleRl.setBackgroundColor(getResources().getColor(R.color.colorAccent));
         } else {
             mTitleTv.setVisibility(View.GONE);
             mTopTitleRl.setBackgroundColor(getResources().getColor(R.color.transparent));

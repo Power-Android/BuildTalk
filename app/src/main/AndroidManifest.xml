@@ -25,6 +25,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".ui.video.ShortVideoActivity"></activity>
 
         <service android:name=".core.service.PlayerService" />
 
