@@ -62,4 +62,12 @@ public class StringUtils {
         }
         return list.isEmpty() ? "" : sb.toString().substring(0, sb.toString().length() - 1);
     }
+
+    public static String listToString5(List<PdfInfoEntity> list, char separator) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < list.size(); i++) {
+            sb.append(list.get(i).getName()).append(separator);
+        }
+        return list.isEmpty() ? "" : sb.toString().substring(0, sb.toString().length() - 1);
+    }
 }

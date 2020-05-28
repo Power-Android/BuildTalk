@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,6 +52,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -138,6 +141,9 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
     private int mComment_id;
     private String mParentCommentId;
     public static int mFlag = 0;
+    BottomSheetDialog mBottomSheetDialog;
+    BottomSheetBehavior mBehavior;
+    private View mView;
 
     @Override
     protected int getLayoutId() {
@@ -331,9 +337,9 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
     @Override
     public void handlerThumbSuccess(String thumb_url, ThemeInfoEntity.ThemeInfoBean themeInfoEntity) {
         themePath = mPath1 + "theme_id=" + themeInfoEntity.getTheme_id() + "&circle_id=" + mCircle_id + "&num=1";
-        DialogUtils.showShareDialog(this, themePath, mEndUrl,
+        showShareDialog(themePath, mEndUrl,
                 TextUtils.isEmpty(themeInfoEntity.getTheme_content()) ? mTitle : themeInfoEntity.getTheme_content(),
-                thumb_url, themeInfoEntity.getTheme_content(), true);
+                thumb_url, themeInfoEntity.getTheme_content(), true, true);
     }
 
     private void showEditDialog(ThemeInfoEntity.ThemeInfoBean data) {
@@ -571,5 +577,40 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
                 isGone = !isGone;
             }
         }
+    }
+
+    private void showShareDialog(String url, String weburl, String title, String imgUrl, String desc,
+                                 boolean isSmall, boolean isVisible){
+        if (mBottomSheetDialog == null) {
+            mBottomSheetDialog = new BottomSheetDialog(this, R.style.bottom_sheet_dialog);
+            mBottomSheetDialog.getWindow().getAttributes().windowAnimations =
+                    R.style.bottom_sheet_dialog;
+            mBottomSheetDialog.setCancelable(true);
+            mBottomSheetDialog.setCanceledOnTouchOutside(true);
+            mView = getLayoutInflater().inflate(R.layout.dialog_share_layout, null);
+            mBottomSheetDialog.setContentView(mView);
+            mBehavior = BottomSheetBehavior.from((View) mView.getParent());
+            mBehavior.setSkipCollapsed(true);
+//            int peekHeight = getResources().getDisplayMetrics().heightPixels;
+            //设置默认弹出高度为屏幕的0.4倍
+//            mBehavior.setPeekHeight((int)(0.4 * peekHeight));
+        }
+        mView.findViewById(R.id.discover_tv).setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        mBottomSheetDialog.show();
+        mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        mView.findViewById(R.id.wechat_tv).setOnClickListener(v -> {
+            if (isSmall) {
+                DialogUtils.shareSmallProgram(url, imgUrl, title, desc, TopticDetailActivity.this, SHARE_MEDIA.WEIXIN);
+            } else {
+                DialogUtils.shareWebUrl(weburl, title, imgUrl, desc, TopticDetailActivity.this, SHARE_MEDIA.WEIXIN);
+            }
+            mBottomSheetDialog.dismiss();
+        });
+        mView.findViewById(R.id.wechat_circle_tv).setOnClickListener(v -> {
+            DialogUtils.shareWebUrl(weburl, title, imgUrl, desc, TopticDetailActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
+            mBottomSheetDialog.dismiss();
+        });
+        mView.findViewById(R.id.discover_tv).setOnClickListener(v -> mBottomSheetDialog.dismiss());
+        mView.findViewById(R.id.cancle_tv).setOnClickListener(v -> mBottomSheetDialog.dismiss());
     }
 }

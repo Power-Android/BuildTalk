@@ -20,6 +20,15 @@ public class ThemeImageBean implements Serializable {
     private String pic_url;
     private MultipartBody.Part part;
     private int position = -1;
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public int getPosition() {
         return position;
@@ -53,18 +62,9 @@ public class ThemeImageBean implements Serializable {
         this.part = part;
     }
 
-    public ThemeImageBean(String pic_url, MultipartBody.Part part, int position) {
+    public ThemeImageBean(String pic_url, int position, String name) {
         this.pic_url = pic_url;
-        this.part = part;
         this.position = position;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (getPic_id() != null && getPic_url() != null && obj instanceof ThemeImageBean) {
-            ThemeImageBean dcl = (ThemeImageBean) obj;
-            return getPic_id().equals(dcl.getPic_id()) && getPic_url().equals(dcl.getPic_url());
-        }
-        return super.equals(obj);
+        this.name = name;
     }
 }

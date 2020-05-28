@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
+import com.bjjy.buildtalk.core.event.PlayerEvent;
 import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.SizeUtils;
 import com.bjjy.buildtalk.utils.TimeUtils;
@@ -20,6 +21,8 @@ import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bjjy.buildtalk.weight.CircleProgressView;
 import com.bumptech.glide.Glide;
 import com.makeramen.roundedimageview.RoundedImageView;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * @author power
@@ -86,6 +89,7 @@ public class FloatPlayer extends FrameLayout {
     public void setInfo(String coverUrl, String title) {
         Glide.with(mContext).load(coverUrl).into(mCoverIv);
         mTitleTv.setText(title);
+        EventBus.getDefault().postSticky(new PlayerEvent(title));
     }
 
     public void setFloatViewListener(FloatPlayerListener listener) {

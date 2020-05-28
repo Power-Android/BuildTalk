@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
+import com.bjjy.buildtalk.entity.DisrOrAttenEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -21,6 +22,7 @@ import java.util.List;
 public class EditDialogAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
 
     private ThemeInfoEntity.ThemeInfoBean mThemeInfoBean;
+    private DisrOrAttenEntity.ThemeInfoBean.ParentThemeInfoBean mThemeInfoBean1;
     private Drawable mDrawable;
 
     public EditDialogAdapter(int layoutResId, @Nullable List<String> data, ThemeInfoEntity.ThemeInfoBean themeInfoBean) {
@@ -28,12 +30,17 @@ public class EditDialogAdapter extends BaseQuickAdapter<String, BaseViewHolder> 
         mThemeInfoBean = themeInfoBean;
     }
 
+    public EditDialogAdapter(int layoutResId, @Nullable List<String> data, DisrOrAttenEntity.ThemeInfoBean.ParentThemeInfoBean themeInfoBean) {
+        super(layoutResId, data);
+        mThemeInfoBean1 = themeInfoBean;
+    }
+
     @Override
     protected void convert(BaseViewHolder helper, String item) {
         TextView textView = helper.getView(R.id.item_name_tv);
         switch (item){
             case "收藏":
-                if (1 == mThemeInfoBean.getIs_collect()) {
+                if (mThemeInfoBean == null ? 1 == mThemeInfoBean1.getIs_collect() : 1 == mThemeInfoBean.getIs_collect()) {
                     mDrawable = mContext.getResources().getDrawable(R.drawable.collect_sel_icon);
                     mDrawable.setBounds(0, 0, mDrawable.getMinimumWidth(), mDrawable.getMinimumHeight());
                     textView.setCompoundDrawables(null, mDrawable, null, null);
@@ -50,7 +57,7 @@ public class EditDialogAdapter extends BaseQuickAdapter<String, BaseViewHolder> 
                 textView.setText(item);
                 break;
             case "置顶":
-                if (1 == mThemeInfoBean.getIs_top()) {
+                if (mThemeInfoBean == null ? 1 ==mThemeInfoBean1.getIs_top() : 1 == mThemeInfoBean.getIs_top()) {
                     mDrawable = mContext.getResources().getDrawable(R.drawable.qxzhiding_icon);
                     mDrawable.setBounds(0, 0, mDrawable.getMinimumWidth(), mDrawable.getMinimumHeight());
                     textView.setCompoundDrawables(null, mDrawable, null, null);
@@ -63,7 +70,7 @@ public class EditDialogAdapter extends BaseQuickAdapter<String, BaseViewHolder> 
                 }
                 break;
             case "加精":
-                if (1 == mThemeInfoBean.getIs_choiceness()) {
+                if (mThemeInfoBean == null ? 1 == mThemeInfoBean1.getIs_choiceness() : 1 == mThemeInfoBean.getIs_choiceness()) {
                     mDrawable = mContext.getResources().getDrawable(R.drawable.qxjiajing_icon);
                     mDrawable.setBounds(0, 0, mDrawable.getMinimumWidth(), mDrawable.getMinimumHeight());
                     textView.setCompoundDrawables(null, mDrawable, null, null);

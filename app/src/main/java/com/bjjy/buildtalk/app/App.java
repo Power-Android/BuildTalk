@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Environment;
 import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.di.component.DaggerAppComponent;
@@ -18,6 +19,7 @@ import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
+import com.tencent.qcloud.ugckit.UGCKit;
 import com.tencent.ugc.TXUGCBase;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
@@ -38,7 +40,7 @@ import dagger.android.HasActivityInjector;
  * @project BuildTalk
  * @description: application
  */
-public class App extends Application implements HasActivityInjector {
+public class App extends MultiDexApplication implements HasActivityInjector {
     @Inject
     DispatchingAndroidInjector<Activity> mAndroidInjector;
 
@@ -76,9 +78,9 @@ public class App extends Application implements HasActivityInjector {
     }
 
     private void initTxVideo() {
-
         // 短视频licence设置
         TXUGCBase.getInstance().setLicence(this, ugcLicenceUrl, ugcKey);
+        UGCKit.init(this);
     }
 
     public void initLog() {
@@ -194,11 +196,5 @@ public class App extends Application implements HasActivityInjector {
 
         /***** 统一初始化Bugly产品，包含Beta *****/
         Bugly.init(this, "b0499897de", true);
-    }
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        MultiDex.install(this);
     }
 }

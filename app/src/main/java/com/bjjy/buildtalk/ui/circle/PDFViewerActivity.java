@@ -103,7 +103,7 @@ public class PDFViewerActivity extends BaseActivity<PDFViewerPresenter> implemen
                 .onPageChange(this)
                 .enableAnnotationRendering(true)
                 .onLoad(this)
-                .scrollHandle(new DefaultScrollHandle(this))
+//                .scrollHandle(new DefaultScrollHandle(this))
                 .spacing(10) // in dp
                 .onPageError(this)
                 .load();

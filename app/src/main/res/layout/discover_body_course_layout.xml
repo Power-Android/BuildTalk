@@ -33,7 +33,7 @@
             android:id="@+id/course_all_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/icon1"
+            android:layout_alignBottom="@+id/icon1"
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/common_margin"
             android:includeFontPadding="false"

@@ -2,6 +2,8 @@ package com.bjjy.buildtalk.utils;
 
 import android.util.Base64;
 
+import com.alibaba.sdk.android.oss.common.auth.HmacSHA1Signature;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -1229,5 +1231,27 @@ public final class EncryptUtils {
             }
         }
         return true;
+    }
+
+    /**
+     * 根据ak/sk、content生成token
+     *
+     * @param accessKey
+     * @param screctKey
+     * @param content
+     * @return
+     */
+    public static String sign(String accessKey, String screctKey, String content) {
+
+        String signature;
+
+        try {
+            signature = new HmacSHA1Signature().computeSignature(screctKey, content);
+            signature = signature.trim();
+        } catch (Exception e) {
+            throw new IllegalStateException("Compute signature failed!", e);
+        }
+
+        return "OSS " + accessKey + ":" + signature;
     }
 }

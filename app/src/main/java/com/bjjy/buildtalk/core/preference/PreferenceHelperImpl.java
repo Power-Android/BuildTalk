@@ -41,4 +41,14 @@ public class PreferenceHelperImpl implements PreferenceHelper {
     public boolean getIsShowPlayer() {
         return mPreferences.getBoolean(Constants.IS_SHOW_PLAYER, false);
     }
+
+    @Override
+    public void setHistorySongsData(String songsId) {
+        mPreferences.edit().putString(Constants.SONG_ID, songsId).apply();
+    }
+
+    @Override
+    public String getHistorySongsData() {
+        return mPreferences.getString(Constants.SONG_ID, "");
+    }
 }

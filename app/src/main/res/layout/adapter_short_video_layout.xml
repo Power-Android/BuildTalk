@@ -70,8 +70,8 @@
         android:src="@drawable/tag_icon"
         android:layout_marginStart="@dimen/dp_3"
         app:layout_constraintStart_toEndOf="@+id/item_name_tv"
-        app:layout_constraintTop_toTopOf="@id/item_name_tv"
-        app:layout_constraintBottom_toBottomOf="@id/item_name_tv"/>
+        app:layout_constraintTop_toTopOf="@+id/item_name_tv"
+        app:layout_constraintBottom_toBottomOf="@+id/item_name_tv"/>
     <TextView
         android:id="@+id/item_share_tv"
         android:layout_width="@dimen/dp_50"

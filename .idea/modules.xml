@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/BuildTalk.iml" filepath="$PROJECT_DIR$/BuildTalk.iml" group="BuildTalk" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="BuildTalk/app" />
+      <module fileurl="file://$PROJECT_DIR$/beauty/beauty.iml" filepath="$PROJECT_DIR$/beauty/beauty.iml" group="BuildTalk/beauty" />
+      <module fileurl="file://$PROJECT_DIR$/ugckit/ugckit.iml" filepath="$PROJECT_DIR$/ugckit/ugckit.iml" group="BuildTalk/ugckit" />
     </modules>
   </component>
 </project>

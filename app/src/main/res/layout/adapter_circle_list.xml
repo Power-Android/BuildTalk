@@ -83,7 +83,7 @@
         android:textColor="@color/text_mid"
         android:layout_marginLeft="@dimen/dp_5"
         android:layout_toRightOf="@+id/view3"
-        android:layout_below="@id/item_name_tv"
+        android:layout_below="@+id/item_name_tv"
         android:layout_marginTop="@dimen/dp_5"/>
     <LinearLayout
         android:id="@+id/item_focus_ll"

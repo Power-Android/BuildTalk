@@ -511,16 +511,16 @@ public class DialogUtils {
                     shareWebUrl(weburl, title, imgUrl, desc, activity, SHARE_MEDIA.WEIXIN_CIRCLE);
                     shareDialog.dismiss();
                 })
-                .addViewOnClickListener(R.id.qq_tv, v -> {
-                    shareWebUrl(weburl, title, imgUrl, desc, activity, SHARE_MEDIA.QQ);
-                    shareDialog.dismiss();
-                })
-                .addViewOnClickListener(R.id.link_tv, v -> {
-                    ClipboardManager cmb = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
-                    cmb.setText(weburl);
-                    ToastUtils.showShort("已复制到剪切板");
-                    shareDialog.dismiss();
-                })
+//                .addViewOnClickListener(R.id.qq_tv, v -> {
+//                    shareWebUrl(weburl, title, imgUrl, desc, activity, SHARE_MEDIA.QQ);
+//                    shareDialog.dismiss();
+//                })
+//                .addViewOnClickListener(R.id.link_tv, v -> {
+//                    ClipboardManager cmb = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+//                    cmb.setText(weburl);
+//                    ToastUtils.showShort("已复制到剪切板");
+//                    shareDialog.dismiss();
+//                })
                 .addViewOnClickListener(R.id.cancle_tv, v -> shareDialog.dismiss())
                 //设置监听事件
                 .builder();

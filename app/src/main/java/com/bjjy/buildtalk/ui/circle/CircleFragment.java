@@ -1,5 +1,6 @@
 package com.bjjy.buildtalk.ui.circle;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -161,6 +162,8 @@ public class CircleFragment extends BaseFragment<CirclePresenter> implements Cir
     private void createCircle() {
         if (mBottomSheetDialog == null) {
             mBottomSheetDialog = new BottomSheetDialog(mContext, R.style.bottom_sheet_dialog);
+            mBottomSheetDialog.getWindow().getAttributes().windowAnimations =
+                    R.style.bottom_sheet_dialog;
             mBottomSheetDialog.setCancelable(true);
             mBottomSheetDialog.setCanceledOnTouchOutside(true);
             mView = getLayoutInflater().inflate(R.layout.dialog_circle_agreenment, null);

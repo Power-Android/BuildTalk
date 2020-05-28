@@ -1,35 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <View
+        android:id="@+id/bg_iv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_78"
+        android:layout_marginTop="@dimen/dp_12"
+        android:layout_marginStart="@dimen/dp_7"
+        android:layout_marginEnd="@dimen/dp_7"
+        android:background="@drawable/home_every_talk_bg"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+    <com.bjjy.buildtalk.weight.CircleProgressView
+        android:id="@+id/progress_bar"
+        android:layout_width="@dimen/dp_32"
+        android:layout_height="@dimen/dp_32"
+        android:layout_centerInParent="true"
+        app:progress_width="@dimen/dp_2"
+        app:progress_color="@color/oranger3"
+        app:location_start="top"
+        android:layout_marginStart="@dimen/dp_20"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/bg_iv"
+        app:layout_constraintBottom_toBottomOf="@+id/bg_iv"/>
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/rotate_iv"
+        android:layout_width="@dimen/dp_30"
+        android:layout_height="@dimen/dp_30"
+        android:src="@drawable/media_face_icon"
+        app:layout_constraintStart_toStartOf="@+id/progress_bar"
+        app:layout_constraintTop_toTopOf="@+id/progress_bar"
+        app:layout_constraintBottom_toBottomOf="@+id/progress_bar"
+        app:layout_constraintEnd_toEndOf="@+id/progress_bar"/>
     <ImageView
-        android:id="@+id/icon1"
-        android:layout_width="@dimen/dp_68"
-        android:layout_height="@dimen/dp_20"
-        android:layout_marginLeft="@dimen/common_margin"
-        android:layout_marginTop="@dimen/dp_20"
-        android:src="@drawable/every_talk_icon" />
-
+        android:id="@+id/talk_play_iv"
+        android:layout_width="@dimen/dp_30"
+        android:layout_height="@dimen/dp_30"
+        android:src="@drawable/home_talk_play"
+        android:padding="@dimen/dp_10"
+        app:layout_constraintStart_toStartOf="@+id/progress_bar"
+        app:layout_constraintTop_toTopOf="@+id/progress_bar"
+        app:layout_constraintBottom_toBottomOf="@+id/progress_bar"
+        app:layout_constraintEnd_toEndOf="@+id/progress_bar"/>
     <TextView
-        android:id="@+id/et_all_tv"
+        android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:includeFontPadding="false"
-        android:layout_alignBottom="@+id/icon1"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/common_margin"
-        android:text="@string/look_at_all"
-        android:textSize="@dimen/sp_11"
-        android:textColor="@color/text_mid" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/et_recyclerView"
-        android:layout_width="match_parent"
+        android:text="每日一谈"
+        android:textSize="@dimen/sp_16"
+        android:textStyle="bold"
+        android:textColor="@color/text_color7"
+        android:layout_marginStart="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_18"
+        app:layout_constraintTop_toTopOf="@+id/bg_iv"
+        app:layout_constraintStart_toEndOf="@+id/progress_bar"/>
+    <TextView
+        android:id="@+id/content_tv"
+        android:layout_width="@dimen/dp_200"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/icon1"
-        android:layout_marginBottom="@dimen/dp_8"
-        android:layout_marginTop="@dimen/dp_10"
-        android:overScrollMode="never" />
-
-</RelativeLayout>
+        android:textSize="@dimen/sp_11"
+        android:textColor="@color/text_mid"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:inputType="text"
+        android:layout_marginStart="@dimen/dp_10"
+        android:layout_marginBottom="@dimen/dp_18"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/progress_bar"/>
+    <ImageView
+        android:layout_width="@dimen/dp_12"
+        android:layout_height="@dimen/dp_12"
+        android:src="@drawable/arrow_right_media_icon"
+        android:layout_marginEnd="@dimen/dp_20"
+        android:layout_marginTop="@dimen/dp_23"
+        app:layout_constraintTop_toTopOf="@+id/bg_iv"
+        app:layout_constraintEnd_toEndOf="@+id/bg_iv" />
+</android.support.constraint.ConstraintLayout>

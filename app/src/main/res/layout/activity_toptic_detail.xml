@@ -81,7 +81,7 @@
                             android:id="@+id/item_more_iv"
                             android:layout_width="@dimen/dp_30"
                             android:layout_height="@dimen/dp_20"
-                            android:layout_alignTop="@id/item_face_iv"
+                            android:layout_alignTop="@+id/item_face_iv"
                             android:layout_alignParentRight="true"
                             android:layout_marginRight="@dimen/dp_5"
                             android:paddingLeft="@dimen/dp_10"

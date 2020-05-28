@@ -21,6 +21,6 @@
             android:src="@drawable/pic_delete_icon"
             android:visibility="visible"
             app:layout_constraintTop_toTopOf="@+id/image"
-            app:layout_constraintEnd_toEndOf="@id/image"/>
+            app:layout_constraintEnd_toEndOf="@+id/image"/>
 
 </android.support.constraint.ConstraintLayout>

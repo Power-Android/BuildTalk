@@ -44,7 +44,6 @@
             android:layout_height="@dimen/dp_40"
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/common_margin"
-            android:text="已更新至105期"
             android:textColor="@color/text_light"
             android:textSize="@dimen/sp_12" />
 

@@ -25,7 +25,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.video.ShortVideoActivity"></activity>
+        <activity android:name=".ui.video.ShortVideoActivity" />
 
         <service android:name=".core.service.PlayerService" />
 
@@ -265,6 +265,61 @@
         <activity
             android:name=".ui.main.ImagePagerActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".videochoose.TCPicturePickerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/PickerActivityTheme" />
+        <activity
+            android:name=".videochoose.TCTripleRecordVideoPickerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/PickerActivityTheme" />
+        <activity
+            android:name=".videochoose.TCVideoPickerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/PickerActivityTheme" />
+        <activity
+            android:name=".videoeditor.TCVideoCutActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/EditerActivityTheme" />
+        <activity
+            android:name=".videoeditor.TCVideoEditerActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/EditerActivityTheme" />
+        <activity
+            android:name=".videoeditor.TCVideoEffectActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/EditerActivityTheme" />
+        <activity
+            android:name=".videojoiner.TCPictureJoinActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/PictureTransitionActivityStyle" />
+        <activity
+            android:name=".videojoiner.TCVideoJoinerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name=".videopublish.TCVideoPublisherActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name=".videorecord.TCVideoRecordActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/RecordActivityTheme"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name=".videorecord.TCVideoFollowRecordActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/MixRecordActivityTheme"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name=".videorecord.TCVideoTripleScreenActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/MixRecordActivityTheme"
+            android:windowSoftInputMode="adjustNothing" />
     </application>
 
 </manifest>

@@ -188,7 +188,6 @@ public class LoginHelper{
                 .setView(wechatTv)
                 .setRootViewId(AuthRegisterViewConfig.RootViewId.ROOT_VIEW_ID_BODY)
                 .setCustomInterface(context -> {
-                    //TODO 调起三方微信登录
                     UMShareAPI.get(mContext).getPlatformInfo((Activity) mContext, SHARE_MEDIA.WEIXIN, mUMAuthListener);
                     mAlicomAuthHelper.quitLoginPage();
                 }).build());

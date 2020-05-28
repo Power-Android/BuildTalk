@@ -1,6 +1,8 @@
 package com.bjjy.buildtalk.ui.circle;
 
 import android.content.Intent;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -18,6 +20,7 @@ import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
 import com.bjjy.buildtalk.weight.BaseDialog;
 import com.bumptech.glide.Glide;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -77,6 +80,9 @@ public class CircleInfoActivity extends BaseActivity<CircleInfoPresenter> implem
     private String mJieshao;
     private String mEndUrl;
     private String mType;
+    BottomSheetDialog mBottomSheetDialog;
+    BottomSheetBehavior mBehavior;
+    private View mView;
 
     @Override
     protected int getLayoutId() {
@@ -150,8 +156,8 @@ public class CircleInfoActivity extends BaseActivity<CircleInfoPresenter> implem
                 finish();
                 break;
             case R.id.share_iv:
-                DialogUtils.showShareDialog(this, "", mEndUrl, mMasterInfoEntity.getCircle_name(),
-                        mMasterInfoEntity.getCircle_image().getPic_url(), mJieshao, false);
+                showShareDialog("", mEndUrl, mMasterInfoEntity.getCircle_name(),
+                        mMasterInfoEntity.getCircle_image().getPic_url(), mJieshao, false, false);
                 break;
             case R.id.member_rl:
                 mIntent = new Intent(this, CircleMemberActivity.class);
@@ -208,5 +214,39 @@ public class CircleInfoActivity extends BaseActivity<CircleInfoPresenter> implem
     public void handlerQuitCircle(IEntity iEntity) {
         EventBus.getDefault().post(new RefreshEvent(Constants.QUIT_CIRCLE));
         finish();
+    }
+
+    private void showShareDialog(String url, String weburl, String title, String imgUrl, String desc, boolean isSmall, boolean isVisible){
+        if (mBottomSheetDialog == null) {
+            mBottomSheetDialog = new BottomSheetDialog(this, R.style.bottom_sheet_dialog);
+            mBottomSheetDialog.getWindow().getAttributes().windowAnimations =
+                    R.style.bottom_sheet_dialog;
+            mBottomSheetDialog.setCancelable(true);
+            mBottomSheetDialog.setCanceledOnTouchOutside(true);
+            mView = getLayoutInflater().inflate(R.layout.dialog_share_layout, null);
+            mBottomSheetDialog.setContentView(mView);
+            mBehavior = BottomSheetBehavior.from((View) mView.getParent());
+            mBehavior.setSkipCollapsed(true);
+//            int peekHeight = getResources().getDisplayMetrics().heightPixels;
+            //设置默认弹出高度为屏幕的0.4倍
+//            mBehavior.setPeekHeight((int)(0.4 * peekHeight));
+        }
+        mView.findViewById(R.id.discover_tv).setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        mBottomSheetDialog.show();
+        mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        mView.findViewById(R.id.wechat_tv).setOnClickListener(v -> {
+            if (isSmall) {
+                DialogUtils.shareSmallProgram(url, imgUrl, title, desc, CircleInfoActivity.this, SHARE_MEDIA.WEIXIN);
+            } else {
+                DialogUtils.shareWebUrl(weburl, title, imgUrl, desc, CircleInfoActivity.this, SHARE_MEDIA.WEIXIN);
+            }
+            mBottomSheetDialog.dismiss();
+        });
+        mView.findViewById(R.id.wechat_circle_tv).setOnClickListener(v -> {
+            DialogUtils.shareWebUrl(weburl, title, imgUrl, desc, CircleInfoActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
+            mBottomSheetDialog.dismiss();
+        });
+        mView.findViewById(R.id.discover_tv).setOnClickListener(v -> mBottomSheetDialog.dismiss());
+        mView.findViewById(R.id.cancle_tv).setOnClickListener(v -> mBottomSheetDialog.dismiss());
     }
 }

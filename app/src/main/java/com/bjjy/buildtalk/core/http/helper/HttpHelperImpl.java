@@ -19,6 +19,7 @@ import com.bjjy.buildtalk.entity.CollectEntity;
 import com.bjjy.buildtalk.entity.CommentSuccessEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.CourseListEntity;
+import com.bjjy.buildtalk.entity.DisrOrAttenEntity;
 import com.bjjy.buildtalk.entity.DissertationDetailEntity;
 import com.bjjy.buildtalk.entity.DissertationEntity;
 import com.bjjy.buildtalk.entity.DissertationListEntity;
@@ -444,5 +445,10 @@ public class HttpHelperImpl implements HttpHelper {
     @Override
     public Observable<BaseResponse<String>> myWallet(Map<String, String> headers, Map<String, String> params) {
         return mApiService.myWallet(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<DisrOrAttenEntity>> searchFindTheme(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.searchFindTheme(headers, params);
     }
 }

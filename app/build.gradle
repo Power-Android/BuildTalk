@@ -46,6 +46,14 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
     }
 
+    packagingOptions {
+        pickFirst '**/libc++_shared.so'
+        doNotStrip "*/armeabi/libYTCommon.so"
+        doNotStrip "*/armeabi-v7a/libYTCommon.so"
+        doNotStrip "*/x86/libYTCommon.so"
+        doNotStrip "*/arm64-v8a/libYTCommon.so"
+    }
+
 }
 
 greendao {
@@ -57,6 +65,9 @@ greendao {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'src/main/jniLibs')
+    implementation 'com.mcxiaoke.volley:library:1.0.19'
+    implementation 'com.github.ctiao:dfm:0.4.4'
     //base
     implementation rootProject.ext.dependencies["appcompat-v7"]
     implementation rootProject.ext.dependencies["cardview-v7"]
@@ -84,6 +95,7 @@ dependencies {
     implementation rootProject.ext.dependencies["MagicIndicator"]
     implementation rootProject.ext.dependencies["switch_button"]
     implementation rootProject.ext.dependencies["VerticalViewPager"]
+    implementation 'com.github.MZCretin:ExpandableTextView:v1.6.1'
 
     //net
     implementation rootProject.ext.dependencies["gson"]
@@ -93,8 +105,6 @@ dependencies {
     implementation rootProject.ext.dependencies["converter-gson"]
     implementation rootProject.ext.dependencies["adapter-rxjava2"]
     implementation rootProject.ext.dependencies["glide"]
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation 'com.android.support:appcompat-v7:28.0.0'
     annotationProcessor rootProject.ext.dependencies["glide_compiler"]
     implementation rootProject.ext.dependencies["transformations"]
     //dao
@@ -123,6 +133,7 @@ dependencies {
     implementation rootProject.ext.dependencies["bugly-upgrade"]
     implementation rootProject.ext.dependencies["buhly-crashreport"]
     implementation 'com.alibaba:fastjson:1.2.61'
+    implementation rootProject.ext.dependencies["ali_oss"]
 
     implementation files('libs/umeng-analytics-8.0.2.jar')
     implementation files('libs/umeng-common-2.0.2.jar')
@@ -131,6 +142,7 @@ dependencies {
     implementation files('libs/umeng-share-wechat-simplify-6.9.4.jar')
     implementation files('libs/umeng-shareboard-widget-6.9.4.jar')
     implementation files('libs/umeng-sharetool-6.9.4.jar')
+    compile(name: 'LiteAVSDK_Professional', ext: 'aar')
+    implementation project(':ugckit')
     implementation files('libs/phoneNumber-AuthSDK-2.7.1-20191223.aar')
-    implementation files('libs/LiteAVSDK_UGC.aar')
 }

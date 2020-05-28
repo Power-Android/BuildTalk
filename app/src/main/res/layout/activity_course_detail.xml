@@ -124,7 +124,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_below="@id/view1">
+                        android:layout_below="@+id/view1">
 
                         <ImageView
                             android:id="@+id/empty_img"

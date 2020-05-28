@@ -1,12 +1,17 @@
 package com.bjjy.buildtalk.ui.home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +21,25 @@ import android.view.animation.DecelerateInterpolator;
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.AttentionHAdapter;
 import com.bjjy.buildtalk.adapter.DiscoverHAdapter;
+import com.bjjy.buildtalk.adapter.EditDialogAdapter;
+import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.fragment.BaseFragment;
+import com.bjjy.buildtalk.entity.CircleInfoEntity;
+import com.bjjy.buildtalk.entity.DisrOrAttenEntity;
 import com.bjjy.buildtalk.entity.IEntity;
+import com.bjjy.buildtalk.entity.ThemeInfoEntity;
+import com.bjjy.buildtalk.ui.circle.ComplaintReasonActivity;
+import com.bjjy.buildtalk.ui.circle.PublishActivity;
+import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
+import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.SizeUtils;
+import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bjjy.buildtalk.weight.MyViewPagerAdapter;
 import com.bjjy.buildtalk.weight.ScaleTransitionPagerTitleView;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.tencent.qcloud.ugckit.utils.ToastUtil;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -33,6 +51,7 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTit
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.SimplePagerTitleView;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +65,7 @@ import butterknife.Unbinder;
  * @project BuildTalk
  * @description: 发现
  */
-public class HomeFragment extends BaseFragment<HomePresenter> implements HomeContract.View {
+public class HomeFragment extends BaseFragment<HomePresenter> implements HomeContract.View, BaseQuickAdapter.OnItemChildClickListener {
     @BindView(R.id.magic_indicator)
     MagicIndicator mMagicIndicator;
     @BindView(R.id.viewpager)
@@ -58,10 +77,23 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
     View attentionView, discoverView;
     private RecyclerView mAttentionRv;
     private RecyclerView mDiscoverRv;
-    private List<IEntity> mDisList = new ArrayList<>();
-    private List<IEntity> mAtenList = new ArrayList<>();
+    private List<DisrOrAttenEntity.ThemeInfoBean> mDisList = new ArrayList<>();
+    private List<DisrOrAttenEntity.ThemeInfoBean> mAtenList = new ArrayList<>();
     private DiscoverHAdapter mDiscoverHAdapter;
     private AttentionHAdapter mAttentionHAdapter;
+    private int disPage = 1;
+    private int attenPage = 1;
+    private String mPath = "pages/sub_circle/pages/subjectDetails/subjectDetails?";
+    private String themePath;//主题拼接完成url
+    BottomSheetDialog mBottomSheetDialog;
+    BottomSheetBehavior mBehavior;
+    private View mView;
+    BottomSheetDialog mEditDialog;
+    BottomSheetBehavior mEditBehavior;
+    private View mEditView;
+    private List<String> mItemList;
+    private EditDialogAdapter mAdapter;
+
 
     public static HomeFragment getInstance(){
         return new HomeFragment();
@@ -130,20 +162,251 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
         View d_headerView = LayoutInflater.from(mContext).inflate(R.layout.adapter_header_layout, null, false);
         mDiscoverHAdapter.addHeaderView(d_headerView);
         mDiscoverRv.setAdapter(mDiscoverHAdapter);
+        mDiscoverHAdapter.setOnItemChildClickListener(this);
 
         mAttentionRv.setLayoutManager(new LinearLayoutManager(mContext));
         mAttentionHAdapter = new AttentionHAdapter(R.layout.adapter_attention_layout, mAtenList);
         View a_headerView = LayoutInflater.from(mContext).inflate(R.layout.adapter_header_layout, null, false);
         mAttentionHAdapter.addHeaderView(a_headerView);
         mAttentionRv.setAdapter(mAttentionHAdapter);
+        mAttentionHAdapter.setOnItemChildClickListener(this);
+
     }
 
     @Override
     protected void initEventAndData() {
-        for (int i = 0; i < 5; i++) {
-            mDisList.add(new IEntity());
-            mAtenList.add(new IEntity());
+        mPresenter.discover(disPage);
+        mPresenter.attention(attenPage);
+
+    }
+
+    @Override
+    public void handlerDiscover(DisrOrAttenEntity disrOrAttenEntity) {
+        mDisList = disrOrAttenEntity.getThemeInfo();
+        if (disPage == 1){
+            mDiscoverHAdapter.setNewData(mDisList);
+        }else {
+            mDiscoverHAdapter.addData(mDisList);
         }
+    }
+
+    @Override
+    public void handlerAttention(DisrOrAttenEntity disrOrAttenEntity) {
+        mAtenList = disrOrAttenEntity.getThemeInfo();
+        if (attenPage == 1){
+            mAttentionHAdapter.setNewData(mAtenList);
+        }else {
+            mAttentionHAdapter.addData(mAtenList);
+        }
+    }
+
+    @Override
+    public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+        List<DisrOrAttenEntity.ThemeInfoBean> mList = adapter.getData();
+        switch (view.getId()){
+            case R.id.item_face_iv://个人主页
+            case R.id.item_from_tv:
+                break;
+            case R.id.item_atten_cl://关注
+                break;
+            case R.id.item_more_iv://更多操作
+                if (1 == mList.get(position).getParent_isDelete()){
+                    ToastUtils.showShort("原主题已被删除");
+                    return;
+                }
+                if (mList.get(position).getTheme_image().size() > 0) {
+                    mPresenter.getThumb(mList.get(position).getTheme_image().get(0).getPic_url(), mList, position, true);
+                } else {
+                    mPresenter.getThumb(mList.get(position).getHeadImage(), mList, position, true);
+                }
+                break;
+            case R.id.item_praise_ll://点赞
+                break;
+            case R.id.item_record_ll://进入详情
+                break;
+            case R.id.item_share_ll://分享
+                if (1 == mList.get(position).getParent_isDelete()){
+                    ToastUtils.showShort("原主题已被删除");
+                    return;
+                }
+                if (mList.get(position).getTheme_image().size() > 0) {
+                    mPresenter.getThumb(mList.get(position).getTheme_image().get(0).getPic_url(), mList, position, false);
+                } else {
+                    mPresenter.getThumb(mList.get(position).getHeadImage(), mList, position, false);
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void handlerThumbSuccess(String thumb_url, List<DisrOrAttenEntity.ThemeInfoBean> data, int i, boolean isEdit) {
+        String mUrl = Constants.BASE_URL + "jtfwhgetopenid" + "?user_id=" + mPresenter.mDataManager.getUser().getUser_id() + "&theme_id=" + data.get(i).getTheme_id();
+        String mEndUrl = Constants.END_URL + "&redirect_uri=" + URLEncoder.encode(mUrl) + "&response_type=code&scope=snsapi_userinfo&state=theme#wechat_redirect";
+        themePath = mPath + "theme_id=" + data.get(i).getTheme_id() + "&circle_id=" + "这个Path不对呢，记得改" + "&num=1";
+        if (isEdit){
+            showEditDialog(data.get(i), i, data, data.get(i).getParent_themeInfo(),themePath, mEndUrl, TextUtils.isEmpty(data.get(i).getTheme_content()) ? data.get(i).getParent_themeInfo().getTheme_content() : data.get(i).getTheme_content(),
+                    thumb_url, data.get(i).getTheme_content(), true, true);
+        }else {
+            showShareDialog(themePath, mEndUrl,
+                    TextUtils.isEmpty(data.get(i).getTheme_content()) ? data.get(i).getParent_themeInfo().getName() : data.get(i).getTheme_content(),
+                    thumb_url, data.get(i).getTheme_content(), true, true);
+        }
+    }
+
+    private void showShareDialog(String url, String weburl, String title, String imgUrl,
+                                 String desc, boolean isSmall, boolean isVisible) {
+        if (mBottomSheetDialog == null) {
+            mBottomSheetDialog = new BottomSheetDialog(mContext, R.style.bottom_sheet_dialog);
+            mBottomSheetDialog.getWindow().getAttributes().windowAnimations =
+                    R.style.bottom_sheet_dialog;
+            mBottomSheetDialog.setCancelable(true);
+            mBottomSheetDialog.setCanceledOnTouchOutside(true);
+            mView = getLayoutInflater().inflate(R.layout.dialog_share_layout, null);
+            mBottomSheetDialog.setContentView(mView);
+            mBehavior = BottomSheetBehavior.from((View) mView.getParent());
+            mBehavior.setSkipCollapsed(true);
+//            int peekHeight = getResources().getDisplayMetrics().heightPixels;
+            //设置默认弹出高度为屏幕的0.4倍
+//            mBehavior.setPeekHeight((int)(0.4 * peekHeight));
+        }
+        mView.findViewById(R.id.discover_tv).setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        mBottomSheetDialog.show();
+        mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        mView.findViewById(R.id.wechat_tv).setOnClickListener(v -> {
+            if (isSmall) {
+                DialogUtils.shareSmallProgram(url, imgUrl, title, desc, getActivity(), SHARE_MEDIA.WEIXIN);
+            } else {
+                DialogUtils.shareWebUrl(weburl, title, imgUrl, desc, getActivity(), SHARE_MEDIA.WEIXIN);
+            }
+            mBottomSheetDialog.dismiss();
+        });
+        mView.findViewById(R.id.wechat_circle_tv).setOnClickListener(v -> {
+            DialogUtils.shareWebUrl(weburl, title, imgUrl, desc, getActivity(), SHARE_MEDIA.WEIXIN_CIRCLE);
+            mBottomSheetDialog.dismiss();
+        });
+        mView.findViewById(R.id.discover_tv).setOnClickListener(v -> mBottomSheetDialog.dismiss());
+        mView.findViewById(R.id.cancle_tv).setOnClickListener(v -> mBottomSheetDialog.dismiss());
+    }
+
+    public void showEditDialog(DisrOrAttenEntity.ThemeInfoBean data, int i, List<DisrOrAttenEntity.ThemeInfoBean> list,
+                               DisrOrAttenEntity.ThemeInfoBean.ParentThemeInfoBean circleInfoEntity, String url, String weburl, String title, String imgUrl,
+                               String desc, boolean isSmall, boolean isVisible) {
+        if (mEditDialog == null) {
+            mEditDialog = new BottomSheetDialog(mContext, R.style.bottom_sheet_dialog);
+            mEditDialog.getWindow().getAttributes().windowAnimations =
+                    R.style.bottom_sheet_dialog;
+            mEditDialog.setCancelable(true);
+            mEditDialog.setCanceledOnTouchOutside(true);
+            mEditView = getLayoutInflater().inflate(R.layout.dialog_theme_edit, null);
+            mEditDialog.setContentView(mEditView);
+            mEditBehavior = BottomSheetBehavior.from((View) mEditView.getParent());
+            mEditBehavior.setSkipCollapsed(true);
+//            int peekHeight = getResources().getDisplayMetrics().heightPixels;
+            //设置默认弹出高度为屏幕的0.4倍
+//            mBehavior.setPeekHeight((int)(0.4 * peekHeight));
+            mItemList = new ArrayList<>();
+            RecyclerView recyclerView = mEditView.findViewById(R.id.recycler_view);
+            recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+            mAdapter = new EditDialogAdapter(R.layout.adapter_edit_dialog, mItemList, data.getParent_themeInfo());
+            recyclerView.setAdapter(mAdapter);
+        }
+        mEditView.findViewById(R.id.discover_tv).setVisibility(isVisible ? View.VISIBLE : View.GONE);
+
+        if (mPresenter.mDataManager.getUser().getUser_id().equals(circleInfoEntity.getUser_id() + "")) {//如果是圈主
+            if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
+                //如果是自己的主题----收藏、修改、置顶、加精、删除
+                mItemList.clear();
+                mItemList.add("收藏");
+                mItemList.add("修改");
+                mItemList.add("置顶");
+                mItemList.add("加精");
+                mItemList.add("删除");
+                mAdapter.setNewData(mItemList);
+            } else {
+                //不是自己的主题----收藏、置顶、加精、不喜欢、投诉
+                mItemList.clear();
+                mItemList.add("收藏");
+                mItemList.add("置顶");
+                mItemList.add("加精");
+                mItemList.add("不喜欢");
+                mItemList.add("投诉");
+                mAdapter.setNewData(mItemList);
+            }
+        } else {//如果是成员
+            if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
+                //如果是自己的主题----收藏、修改、删除
+                mItemList.clear();
+                mItemList.add("收藏");
+                mItemList.add("删除");
+                mItemList.add("修改");
+                mAdapter.setNewData(mItemList);
+            } else {
+                //不是自己的主题----收藏、不喜欢、投诉
+                mItemList.clear();
+                mItemList.add("收藏");
+                mItemList.add("不喜欢");
+                mItemList.add("投诉");
+                mAdapter.setNewData(mItemList);
+            }
+        }
+        mAdapter.setOnItemClickListener((adapter1, view, position) -> {
+            List<String> item = adapter1.getData();
+            switch (item.get(position)) {
+                case "收藏":
+//                    mPresenter.collectTheme(data, i);
+                    mEditDialog.dismiss();
+                    break;
+                case "修改":
+//                    if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
+//                        Intent intent = new Intent(mContext, PublishActivity.class);
+//                        intent.putExtra("themeInfo", data);
+//                        intent.putExtra("circle_name", circleInfoEntity.get());
+//                        startActivity(intent);
+//                    }
+                    mEditDialog.dismiss();
+                    break;
+                case "置顶":
+//                    mPresenter.themeTopOperate(data, i);
+                    mEditDialog.dismiss();
+                    break;
+                case "加精":
+//                    mPresenter.addChoiceness(data, i);
+                    mEditDialog.dismiss();
+                    break;
+                case "删除":
+//                    if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
+//                        DialogUtils.showDeleteDialog(data, i, list, mContext, mPresenter, null);
+//                    }
+                    mEditDialog.dismiss();
+                    break;
+                case "不喜欢":
+//                    mPresenter.userShieldRecord(data, i, list);
+                    mEditDialog.dismiss();
+                    break;
+                case "投诉":
+                    Intent intent = new Intent(mContext, ComplaintReasonActivity.class);
+                    intent.putExtra("data_id", data.getTheme_id() + "");
+                    startActivity(intent);
+                    mEditDialog.dismiss();
+                    break;
+            }
+        });
+        mEditDialog.show();
+        mEditBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        mEditView.findViewById(R.id.wechat_tv).setOnClickListener(v -> {
+            if (isSmall) {
+                DialogUtils.shareSmallProgram(url, imgUrl, title, desc, getActivity(), SHARE_MEDIA.WEIXIN);
+            } else {
+                DialogUtils.shareWebUrl(weburl, title, imgUrl, desc, getActivity(), SHARE_MEDIA.WEIXIN);
+            }
+            mEditDialog.dismiss();
+        });
+        mEditView.findViewById(R.id.wechat_circle_tv).setOnClickListener(v -> {
+            DialogUtils.shareWebUrl(weburl, title, imgUrl, desc, getActivity(), SHARE_MEDIA.WEIXIN_CIRCLE);
+            mEditDialog.dismiss();
+        });
+        mEditView.findViewById(R.id.discover_tv).setOnClickListener(v -> mEditDialog.dismiss());
+        mEditView.findViewById(R.id.cancle_tv).setOnClickListener(v -> mEditDialog.dismiss());
     }
 
     @Override

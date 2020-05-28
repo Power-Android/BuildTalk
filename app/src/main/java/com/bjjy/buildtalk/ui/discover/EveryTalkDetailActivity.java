@@ -7,6 +7,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,6 +36,7 @@ import com.bjjy.buildtalk.entity.EveryTalkDetailEntity;
 import com.bjjy.buildtalk.entity.GuestBookEntity;
 import com.bjjy.buildtalk.entity.PayOrderEntity;
 import com.bjjy.buildtalk.entity.SongsEntity;
+import com.bjjy.buildtalk.ui.circle.CourseCircleActivity;
 import com.bjjy.buildtalk.ui.main.LoginActivity;
 import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.GlideUtils;
@@ -56,6 +59,7 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -166,6 +170,10 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
     private MediaPlayer mediaPlayer = new MediaPlayer();
     private boolean isPlaying;
     private int mSort;
+
+    BottomSheetDialog mBottomSheetDialog;
+    BottomSheetBehavior mBehavior;
+    private View mView;
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -436,11 +444,11 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
                 if (TextUtils.isEmpty(mType)) {
                     mUrl = Constants.BASE_URL + "jtfwhgetopenid" + "?user_id=" + mPresenter.mDataManager.getUser().getUser_id() + "&news_id=" + mArticle_id;
                     mEndUrl = Constants.END_URL + "&redirect_uri=" + URLEncoder.encode(mUrl) + "&response_type=code&scope=snsapi_userinfo&state=news#wechat_redirect";
-                    DialogUtils.showShareDialog(this, mEndUrl, mEndUrl, mNewsInfo.getArticle_title(), mNewsInfo.getAuthor_pic(), "每日一谈", false);
+                    showShareDialog(mEndUrl, mEndUrl, mNewsInfo.getArticle_title(), mNewsInfo.getAuthor_pic(), "每日一谈", false, false);
                 } else {
                     mUrl = Constants.BASE_URL + "jtfwhgetopenid" + "?user_id=" + mPresenter.mDataManager.getUser().getUser_id() + "&article_id=" + mArticle_id;
                     mEndUrl = Constants.END_URL + "&redirect_uri=" + URLEncoder.encode(mUrl) + "&response_type=code&scope=snsapi_userinfo&state=articlePay#wechat_redirect";
-                    DialogUtils.showShareDialog(this, mEndUrl, mEndUrl, mNewsInfo.getArticle_title(), mNewsInfo.getAuthor_pic(), mNewsInfo.getArticle_title(), false);
+                    showShareDialog(mEndUrl, mEndUrl, mNewsInfo.getArticle_title(), mNewsInfo.getAuthor_pic(), mNewsInfo.getArticle_title(), false, false);
                 }
                 break;
             case R.id.record_ll:
@@ -564,5 +572,40 @@ public class EveryTalkDetailActivity extends BaseActivity<EveryTalkDetailPresent
         } else {
             refreshLayout.finishLoadMoreWithNoMoreData();
         }
+    }
+
+    private void showShareDialog(String url, String weburl, String title, String imgUrl, String desc,
+                                 boolean isSmall, boolean isVisible){
+        if (mBottomSheetDialog == null) {
+            mBottomSheetDialog = new BottomSheetDialog(this, R.style.bottom_sheet_dialog);
+            mBottomSheetDialog.getWindow().getAttributes().windowAnimations =
+                    R.style.bottom_sheet_dialog;
+            mBottomSheetDialog.setCancelable(true);
+            mBottomSheetDialog.setCanceledOnTouchOutside(true);
+            mView = getLayoutInflater().inflate(R.layout.dialog_share_layout, null);
+            mBottomSheetDialog.setContentView(mView);
+            mBehavior = BottomSheetBehavior.from((View) mView.getParent());
+            mBehavior.setSkipCollapsed(true);
+//            int peekHeight = getResources().getDisplayMetrics().heightPixels;
+            //设置默认弹出高度为屏幕的0.4倍
+//            mBehavior.setPeekHeight((int)(0.4 * peekHeight));
+        }
+        mView.findViewById(R.id.discover_tv).setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        mBottomSheetDialog.show();
+        mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        mView.findViewById(R.id.wechat_tv).setOnClickListener(v -> {
+            if (isSmall) {
+                DialogUtils.shareSmallProgram(url, imgUrl, title, desc, EveryTalkDetailActivity.this, SHARE_MEDIA.WEIXIN);
+            } else {
+                DialogUtils.shareWebUrl(weburl, title, imgUrl, desc, EveryTalkDetailActivity.this, SHARE_MEDIA.WEIXIN);
+            }
+            mBottomSheetDialog.dismiss();
+        });
+        mView.findViewById(R.id.wechat_circle_tv).setOnClickListener(v -> {
+            DialogUtils.shareWebUrl(weburl, title, imgUrl, desc, EveryTalkDetailActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
+            mBottomSheetDialog.dismiss();
+        });
+        mView.findViewById(R.id.discover_tv).setOnClickListener(v -> mBottomSheetDialog.dismiss());
+        mView.findViewById(R.id.cancle_tv).setOnClickListener(v -> mBottomSheetDialog.dismiss());
     }
 }

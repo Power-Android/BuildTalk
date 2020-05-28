@@ -14,4 +14,7 @@ public interface PreferenceHelper {
 
     void setIsSHowPlayer(boolean isShow);
     boolean getIsShowPlayer();
+
+    void setHistorySongsData(String  songsId);
+    String getHistorySongsData();
 }

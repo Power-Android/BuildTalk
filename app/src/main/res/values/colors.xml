@@ -34,7 +34,7 @@
 
     <!--The ornament color-->
     <color name="white">#FFFFFF</color>
-    <color name="orange">#FFF5B83A</color>
+    <color name="orange">#FF7643</color>
     <color name="transparent">#00000000</color>
     <color name="black">#000000</color>
     <color name="orange_drak">#4C2705</color>

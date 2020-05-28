@@ -18,6 +18,7 @@ import com.bjjy.buildtalk.entity.CollectEntity;
 import com.bjjy.buildtalk.entity.CommentSuccessEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.CourseListEntity;
+import com.bjjy.buildtalk.entity.DisrOrAttenEntity;
 import com.bjjy.buildtalk.entity.DissertationDetailEntity;
 import com.bjjy.buildtalk.entity.DissertationEntity;
 import com.bjjy.buildtalk.entity.DissertationListEntity;
@@ -663,6 +664,14 @@ public interface ApiService {
     @POST("myWallet")
     @FormUrlEncoded
     Observable<BaseResponse<String>> myWallet(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 发现页/关注页
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("searchFindTheme")
+    @FormUrlEncoded
+    Observable<BaseResponse<DisrOrAttenEntity>> searchFindTheme(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
 
 

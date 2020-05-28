@@ -7,6 +7,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -53,6 +55,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -145,6 +148,9 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
     private String circlePath;//话题圈拼接完成的url
     private String mPath1;//主题
     private String themePath;//主题拼接完成url
+    BottomSheetDialog mBottomSheetDialog;
+    BottomSheetBehavior mBehavior;
+    private View mView;
 
     Handler handler = new Handler(new Handler.Callback() {
         @Override
@@ -363,9 +369,9 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
                 String mEndUrl = Constants.END_URL + "&redirect_uri=" + URLEncoder.encode(mUrl) + "&response_type=code&scope=snsapi_userinfo&state=coursePay#wechat_redirect";
 //                String url = "https://jt.chinabim.com/share/#/course/" + mCircle_id + "?suid=" + mPresenter.mDataManager.getUser().getUser_id();
                 circlePath = mPath + "article_id=" + mArticle_id + "circle_id=" + mCircle_id + "&num=1";
-                DialogUtils.showShareDialog(this, circlePath, mEndUrl, mArticle_title,
+                showShareDialog(circlePath, mEndUrl, mArticle_title,
                         mCircleInfoEntity.getCircleInfo().getCircle_image().getPic_url(),
-                        mCircleInfoEntity.getCircleInfo().getCircle_desc(), true);
+                        mCircleInfoEntity.getCircleInfo().getCircle_desc(), true, false);
                 break;
             case R.id.share_iv:
                 break;
@@ -489,9 +495,9 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
         String mUrl = Constants.BASE_URL + "jtfwhgetopenid" + "?user_id=" + mPresenter.mDataManager.getUser().getUser_id() + "&theme_id=" + data.get(i).getTheme_id();
         String mEndUrl = Constants.END_URL + "&redirect_uri=" + URLEncoder.encode(mUrl) + "&response_type=code&scope=snsapi_userinfo&state=theme#wechat_redirect";
         themePath = mPath1 + "theme_id=" + data.get(i).getTheme_id() + "&circle_id=" + mCircle_id + "&num=1";
-        DialogUtils.showShareDialog(this, themePath, mEndUrl,
+        showShareDialog(themePath, mEndUrl,
                 TextUtils.isEmpty(data.get(i).getTheme_content()) ? mCircleInfoEntity.getCircleInfo().getCircle_name() : data.get(i).getTheme_content(),
-                thumb_url, data.get(i).getTheme_content(), true);
+                thumb_url, data.get(i).getTheme_content(), true, true);
     }
 
     private void showEditDialog(ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list) {
@@ -652,5 +658,39 @@ public class CourseDetailActivity extends BaseActivity<CourseDetailPresenter> im
             showCommentDialog(adapterPosition, adapter.getData().get(position).getTheme_id(), adapter.getData().get(position).getParentCommentId(),
                     position, data, adapter.getData().get(position).getComment_id()+"", adapter.getData().get(position).getName());
         }
+    }
+
+    private void showShareDialog(String url, String weburl, String title, String imgUrl, String desc, boolean isSmall, boolean isVisible){
+        if (mBottomSheetDialog == null) {
+            mBottomSheetDialog = new BottomSheetDialog(this, R.style.bottom_sheet_dialog);
+            mBottomSheetDialog.getWindow().getAttributes().windowAnimations =
+                    R.style.bottom_sheet_dialog;
+            mBottomSheetDialog.setCancelable(true);
+            mBottomSheetDialog.setCanceledOnTouchOutside(true);
+            mView = getLayoutInflater().inflate(R.layout.dialog_share_layout, null);
+            mBottomSheetDialog.setContentView(mView);
+            mBehavior = BottomSheetBehavior.from((View) mView.getParent());
+            mBehavior.setSkipCollapsed(true);
+//            int peekHeight = getResources().getDisplayMetrics().heightPixels;
+            //设置默认弹出高度为屏幕的0.4倍
+//            mBehavior.setPeekHeight((int)(0.4 * peekHeight));
+        }
+        mView.findViewById(R.id.discover_tv).setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        mBottomSheetDialog.show();
+        mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        mView.findViewById(R.id.wechat_tv).setOnClickListener(v -> {
+            if (isSmall) {
+                DialogUtils.shareSmallProgram(url, imgUrl, title, desc, CourseDetailActivity.this, SHARE_MEDIA.WEIXIN);
+            } else {
+                DialogUtils.shareWebUrl(weburl, title, imgUrl, desc, CourseDetailActivity.this, SHARE_MEDIA.WEIXIN);
+            }
+            mBottomSheetDialog.dismiss();
+        });
+        mView.findViewById(R.id.wechat_circle_tv).setOnClickListener(v -> {
+            DialogUtils.shareWebUrl(weburl, title, imgUrl, desc, CourseDetailActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
+            mBottomSheetDialog.dismiss();
+        });
+        mView.findViewById(R.id.discover_tv).setOnClickListener(v -> mBottomSheetDialog.dismiss());
+        mView.findViewById(R.id.cancle_tv).setOnClickListener(v -> mBottomSheetDialog.dismiss());
     }
 }

@@ -22,6 +22,10 @@ buildscript {
 
 allprojects {
     repositories {
+        flatDir {
+            dirs 'src/main/jniLibs'
+            dirs project(':ugckit').file('libs')
+        }
         google()
         jcenter()
         mavenCentral()

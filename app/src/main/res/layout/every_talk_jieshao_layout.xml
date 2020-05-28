@@ -41,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/edu_tv"
-                android:layout_below="@id/name_tv"
+                android:layout_below="@+id/name_tv"
                 android:layout_marginTop="@dimen/dp_15"
                 android:layout_marginLeft="@dimen/dp_10"
                 app:max_select="0"/>
@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="悉尼大学工商管理硕士，美国南加州大学工商管理博士"
-                android:layout_below="@id/edu_tv"
+                android:layout_below="@+id/edu_tv"
                 android:layout_marginTop="@dimen/dp_10"
                 android:textColor="@color/text_mid"/>
             <TextView

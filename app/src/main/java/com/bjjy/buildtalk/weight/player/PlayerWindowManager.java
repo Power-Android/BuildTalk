@@ -101,8 +101,10 @@ public class PlayerWindowManager {
                     startPlay(songId);
                 }else if (TextUtils.equals(status, "2")){
                     mFloatPlayerListener.next();
+                    EventBus.getDefault().post(new PlayerEvent(mSongsData.get(position).getArticle_title()));
                 }else {
                     mFloatPlayerListener.last();
+                    EventBus.getDefault().post(new PlayerEvent(mSongsData.get(position).getArticle_title()));
                 }
                 return;
             }
@@ -236,6 +238,7 @@ public class PlayerWindowManager {
         public void close() {
             mPlayStatusBinder.close();
             mDataManager.setIsSHowPlayer(false);
+            mDataManager.setHistorySongsData(mSongsData.get(position).getArticle_id());
         }
 
         @Override

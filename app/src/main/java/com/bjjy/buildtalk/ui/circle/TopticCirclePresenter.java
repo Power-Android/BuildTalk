@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.bjjy.buildtalk.R;
-import com.bjjy.buildtalk.adapter.CircleTopticAdapter;
 import com.bjjy.buildtalk.app.App;
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.presenter.BasePresenter;
@@ -299,7 +298,7 @@ public class TopticCirclePresenter extends BasePresenter<TopticCircleContract.Vi
                 }));
     }
 
-    public void getThumb(String pic_url, List<ThemeInfoEntity.ThemeInfoBean> data, int i) {
+    public void getThumb(String pic_url, List<ThemeInfoEntity.ThemeInfoBean> data, int i, boolean isEdit) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
         paramas.put("pic_url", pic_url);
@@ -316,7 +315,7 @@ public class TopticCirclePresenter extends BasePresenter<TopticCircleContract.Vi
                 .subscribeWith(new BaseObserver<String>(mView, true, true) {
                     @Override
                     public void onSuccess(String thumb_url) {
-                        mView.handlerThumbSuccess(thumb_url, data, i);
+                        mView.handlerThumbSuccess(thumb_url, data, i, isEdit);
                     }
                 }));
     }

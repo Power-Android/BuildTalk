@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
@@ -24,6 +26,7 @@ import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.CircleTopticAdapter;
+import com.bjjy.buildtalk.adapter.EditDialogAdapter;
 import com.bjjy.buildtalk.adapter.ThemeTypeAdapter;
 import com.bjjy.buildtalk.app.App;
 import com.bjjy.buildtalk.app.Constants;
@@ -53,6 +56,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
@@ -157,7 +161,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
     private String type = "1";
     private CircleTopticAdapter mTopticAdapter;
     private CircleTopticAdapter mTopticAdapter1;
-    private BaseDialog mMInputDialog, mEditDailog;
+    private BaseDialog mMInputDialog;
     private Intent mIntent;
     private BaseDialog mDeleteDialog;
     private int mViewpager_position;
@@ -173,6 +177,14 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
     private RecyclerView mJhRecyclerView;
     private NestedScrollView mJhEmptyView;
     private String thumb_url;
+    BottomSheetDialog mBottomSheetDialog;
+    BottomSheetBehavior mBehavior;
+    private View mView;
+    BottomSheetDialog mEditDialog;
+    BottomSheetBehavior mEditBehavior;
+    private View mEditView;
+    private List<String> mItemList;
+    private EditDialogAdapter mAdapter;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void event(RefreshEvent eventBean) {
@@ -182,7 +194,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
         if (TextUtils.equals(eventBean.getMsg(), Constants.TOPTIC_REFRESH_ALL)) {
             mPresenter.CircleInfo(mCircle_id);
         }
-        if (TextUtils.equals(eventBean.getMsg(), Constants.INFO_REFRESH)){
+        if (TextUtils.equals(eventBean.getMsg(), Constants.INFO_REFRESH)) {
             mPresenter.CircleInfo(mCircle_id);
         }
         if (TextUtils.equals(eventBean.getMsg(), Constants.QUIT_CIRCLE)) {
@@ -319,12 +331,12 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
         mRecyclerView.setLayoutManager(new LinearLayoutManager(App.getContext()));
         mTopticAdapter = new CircleTopticAdapter(mThemeInfoList, mIsJoin, this);
         mRecyclerView.setAdapter(mTopticAdapter);
-        ((SimpleItemAnimator)mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+        ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
         mJhRecyclerView.setLayoutManager(new LinearLayoutManager(App.getContext()));
         mTopticAdapter1 = new CircleTopticAdapter(mEssenceInfoList, mIsJoin, this);
         mJhRecyclerView.setAdapter(mTopticAdapter1);
-        ((SimpleItemAnimator)mJhRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+        ((SimpleItemAnimator) mJhRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
         mTopticAdapter.setOnItemClickListener(this);
         mTopticAdapter.setOnItemChildClickListener(this);
@@ -471,8 +483,9 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
             case R.id.share_iv:
             case R.id.pre_share_iv:
                 circlePath = mPath + "circle_id=" + mCircle_id + "&num=1";
-                DialogUtils.showShareDialog(this, circlePath, mEndUrl, mCircleInfoEntity.getCircleInfo().getCircle_name(),
-                        mCircleInfoEntity.getCircleInfo().getCircle_image().getPic_url(), mCircleInfoEntity.getCircleInfo().getCircle_desc(), true);
+                showShareDialog(circlePath, mEndUrl, mCircleInfoEntity.getCircleInfo().getCircle_name(),
+                        mCircleInfoEntity.getCircleInfo().getCircle_image().getPic_url(),
+                        mCircleInfoEntity.getCircleInfo().getCircle_desc(), true, false);
                 break;
             case R.id.join_tv:
                 LoginHelper.getInstance().login(this, mPresenter.mDataManager, () -> mPresenter.joinCircle(mCircle_id));
@@ -589,7 +602,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
             intent.putExtra("theme_id", data.get(i).getTheme_id() + "");
             intent.putExtra("circle_id", mCircle_id);
             startActivity(intent);
-        }else {
+        } else {
             ToastUtils.showShort("加入圈子，方可查看~");
         }
     }
@@ -605,31 +618,34 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
         List<ThemeInfoEntity.ThemeInfoBean> data = baseQuickAdapter.getData();
         switch (view.getId()) {
             case R.id.item_more_iv://编辑
-                DialogUtils.showEditDialog(this, data.get(i), i, data, mPresenter, null, mCircleInfoEntity);
+                if (data.get(i).getTheme_image().size() > 0) {
+                    mPresenter.getThumb(data.get(i).getTheme_image().get(0).getPic_url(), data, i, true);
+                } else {
+                    mPresenter.getThumb(data.get(i).getHeadImage(), data, i, true);
+                }
                 break;
             case R.id.item_praise_iv://点赞
                 mPresenter.praise(data, i);
                 break;
             case R.id.item_comment_iv://评论 评论主题，commentid传空
-                DialogUtils.showCommentDialog(i ,data.get(i).getTheme_id(), "", i, data, "", "", this, mPresenter, null);
+                DialogUtils.showCommentDialog(i, data.get(i).getTheme_id(), "", i, data, "", "", this, mPresenter, null);
                 break;
             case R.id.item_share_iv://分享
                 if (data.get(i).getTheme_image().size() > 0) {
-                    mPresenter.getThumb(data.get(i).getTheme_image().get(0).getPic_url(), data, i);
+                    mPresenter.getThumb(data.get(i).getTheme_image().get(0).getPic_url(), data, i, false);
                 } else {
-                    mPresenter.getThumb(data.get(i).getHeadImage(), data, i);
+                    mPresenter.getThumb(data.get(i).getHeadImage(), data, i, false);
                 }
-
                 break;
             case R.id.more_tv://查看更多
             case R.id.content_more_tv:
-                if ("1".equals(mIsJoin)){
+                if ("1".equals(mIsJoin)) {
                     Intent intent = new Intent(this, TopticDetailActivity.class);
                     intent.putExtra("title", mCircleInfoEntity.getCircleInfo().getCircle_name());
                     intent.putExtra("theme_id", data.get(i).getTheme_id() + "");
                     intent.putExtra("circle_id", mCircle_id);
                     startActivity(intent);
-                }else {
+                } else {
                     ToastUtils.showShort("加入圈子，方可查看~");
                 }
                 break;
@@ -643,13 +659,18 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
     }
 
     @Override
-    public void handlerThumbSuccess(String thumb_url, List<ThemeInfoEntity.ThemeInfoBean> data, int i) {
+    public void handlerThumbSuccess(String thumb_url, List<ThemeInfoEntity.ThemeInfoBean> data, int i, boolean isEdit) {
         String mUrl = Constants.BASE_URL + "jtfwhgetopenid" + "?user_id=" + mPresenter.mDataManager.getUser().getUser_id() + "&theme_id=" + data.get(i).getTheme_id();
         String mEndUrl = Constants.END_URL + "&redirect_uri=" + URLEncoder.encode(mUrl) + "&response_type=code&scope=snsapi_userinfo&state=theme#wechat_redirect";
         themePath = mPath1 + "theme_id=" + data.get(i).getTheme_id() + "&circle_id=" + mCircle_id + "&num=1";
-        DialogUtils.showShareDialog(this, themePath, mEndUrl,
-                TextUtils.isEmpty(data.get(i).getTheme_content()) ? mCircleInfoEntity.getCircleInfo().getCircle_name() : data.get(i).getTheme_content(),
-                thumb_url, data.get(i).getTheme_content(), true);
+        if (isEdit){
+            showEditDialog(data.get(i), i, data, mCircleInfoEntity,themePath, mEndUrl,TextUtils.isEmpty(data.get(i).getTheme_content()) ? mCircleInfoEntity.getCircleInfo().getCircle_name() : data.get(i).getTheme_content(),
+                    thumb_url, data.get(i).getTheme_content(), true, true);
+        }else {
+            showShareDialog(themePath, mEndUrl,
+                    TextUtils.isEmpty(data.get(i).getTheme_content()) ? mCircleInfoEntity.getCircleInfo().getCircle_name() : data.get(i).getTheme_content(),
+                    thumb_url, data.get(i).getTheme_content(), true, true);
+        }
     }
 
     /**
@@ -662,7 +683,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
 
     /**
      * @param adapterPosition 列表position
-     * @param position 评论列表position
+     * @param position        评论列表position
      * @param data
      * @param contentBeanList
      */
@@ -806,9 +827,9 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
 
     @Override
     public void handlerTopOperateSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i) {
-        if (0 == data.getIs_top()){
+        if (0 == data.getIs_top()) {
             ToastUtils.showShort("主题置顶成功");
-        }else {
+        } else {
             ToastUtils.showShort("取消置顶成功");
         }
         onRefresh(mRefreshLayout);
@@ -875,10 +896,168 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
 
     @Override
     public void onCommentClick(int adapterPosition, CircleTopticAdapter.CommentAdapter adapter, View view, int position, List<ThemeInfoEntity.ThemeInfoBean> data) {
-        if (!String.valueOf(adapter.getData().get(position).getUser_id()).equals(mPresenter.mDataManager.getUser().getUser_id())){
-            DialogUtils.showCommentDialog(adapterPosition, adapter.getData().get(position).getTheme_id(),adapter.getData().get(position).getParentCommentId(),
-                    position, data, adapter.getData().get(position).getComment_id()+"", adapter.getData().get(position).getName(),
+        if (!String.valueOf(adapter.getData().get(position).getUser_id()).equals(mPresenter.mDataManager.getUser().getUser_id())) {
+            DialogUtils.showCommentDialog(adapterPosition, adapter.getData().get(position).getTheme_id(), adapter.getData().get(position).getParentCommentId(),
+                    position, data, adapter.getData().get(position).getComment_id() + "", adapter.getData().get(position).getName(),
                     this, mPresenter, null);
         }
+    }
+
+    private void showShareDialog(String url, String weburl, String title, String imgUrl,
+                                 String desc, boolean isSmall, boolean isVisible) {
+        if (mBottomSheetDialog == null) {
+            mBottomSheetDialog = new BottomSheetDialog(this, R.style.bottom_sheet_dialog);
+            mBottomSheetDialog.getWindow().getAttributes().windowAnimations =
+                    R.style.bottom_sheet_dialog;
+            mBottomSheetDialog.setCancelable(true);
+            mBottomSheetDialog.setCanceledOnTouchOutside(true);
+            mView = getLayoutInflater().inflate(R.layout.dialog_share_layout, null);
+            mBottomSheetDialog.setContentView(mView);
+            mBehavior = BottomSheetBehavior.from((View) mView.getParent());
+            mBehavior.setSkipCollapsed(true);
+//            int peekHeight = getResources().getDisplayMetrics().heightPixels;
+            //设置默认弹出高度为屏幕的0.4倍
+//            mBehavior.setPeekHeight((int)(0.4 * peekHeight));
+        }
+        mView.findViewById(R.id.discover_tv).setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        mBottomSheetDialog.show();
+        mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        mView.findViewById(R.id.wechat_tv).setOnClickListener(v -> {
+            if (isSmall) {
+                DialogUtils.shareSmallProgram(url, imgUrl, title, desc, TopticCircleActivity.this, SHARE_MEDIA.WEIXIN);
+            } else {
+                DialogUtils.shareWebUrl(weburl, title, imgUrl, desc, TopticCircleActivity.this, SHARE_MEDIA.WEIXIN);
+            }
+            mBottomSheetDialog.dismiss();
+        });
+        mView.findViewById(R.id.wechat_circle_tv).setOnClickListener(v -> {
+            DialogUtils.shareWebUrl(weburl, title, imgUrl, desc, TopticCircleActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
+            mBottomSheetDialog.dismiss();
+        });
+        mView.findViewById(R.id.discover_tv).setOnClickListener(v -> mBottomSheetDialog.dismiss());
+        mView.findViewById(R.id.cancle_tv).setOnClickListener(v -> mBottomSheetDialog.dismiss());
+    }
+
+    public void showEditDialog(ThemeInfoEntity.ThemeInfoBean data, int i,
+                               List<ThemeInfoEntity.ThemeInfoBean> list,
+                               CircleInfoEntity circleInfoEntity,
+                               String url, String weburl, String title, String imgUrl,
+                               String desc, boolean isSmall, boolean isVisible) {
+        if (mEditDialog == null) {
+            mEditDialog = new BottomSheetDialog(this, R.style.bottom_sheet_dialog);
+            mEditDialog.getWindow().getAttributes().windowAnimations =
+                    R.style.bottom_sheet_dialog;
+            mEditDialog.setCancelable(true);
+            mEditDialog.setCanceledOnTouchOutside(true);
+            mEditView = getLayoutInflater().inflate(R.layout.dialog_theme_edit, null);
+            mEditDialog.setContentView(mEditView);
+            mEditBehavior = BottomSheetBehavior.from((View) mEditView.getParent());
+            mEditBehavior.setSkipCollapsed(true);
+//            int peekHeight = getResources().getDisplayMetrics().heightPixels;
+            //设置默认弹出高度为屏幕的0.4倍
+//            mBehavior.setPeekHeight((int)(0.4 * peekHeight));
+            mItemList = new ArrayList<>();
+            RecyclerView recyclerView = mEditView.findViewById(R.id.recycler_view);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+            mAdapter = new EditDialogAdapter(R.layout.adapter_edit_dialog, mItemList, data);
+            recyclerView.setAdapter(mAdapter);
+        }
+        mEditView.findViewById(R.id.discover_tv).setVisibility(isVisible ? View.VISIBLE : View.GONE);
+
+        if (mPresenter.mDataManager.getUser().getUser_id().equals(circleInfoEntity.getCircleInfo().getUser_id() + "")) {//如果是圈主
+            if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
+                //如果是自己的主题----收藏、修改、置顶、加精、删除
+                mItemList.clear();
+                mItemList.add("收藏");
+                mItemList.add("修改");
+                mItemList.add("置顶");
+                mItemList.add("加精");
+                mItemList.add("删除");
+                mAdapter.setNewData(mItemList);
+            } else {
+                //不是自己的主题----收藏、置顶、加精、不喜欢、投诉
+                mItemList.clear();
+                mItemList.add("收藏");
+                mItemList.add("置顶");
+                mItemList.add("加精");
+                mItemList.add("不喜欢");
+                mItemList.add("投诉");
+                mAdapter.setNewData(mItemList);
+            }
+        } else {//如果是成员
+            if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
+                //如果是自己的主题----收藏、修改、删除
+                mItemList.clear();
+                mItemList.add("收藏");
+                mItemList.add("删除");
+                mItemList.add("修改");
+                mAdapter.setNewData(mItemList);
+            } else {
+                //不是自己的主题----收藏、不喜欢、投诉
+                mItemList.clear();
+                mItemList.add("收藏");
+                mItemList.add("不喜欢");
+                mItemList.add("投诉");
+                mAdapter.setNewData(mItemList);
+            }
+        }
+        mAdapter.setOnItemClickListener((adapter1, view, position) -> {
+            List<String> item = adapter1.getData();
+            switch (item.get(position)) {
+                case "收藏":
+                    mPresenter.collectTheme(data, i);
+                    mEditDialog.dismiss();
+                    break;
+                case "修改":
+                    if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
+                        Intent intent = new Intent(this, PublishActivity.class);
+                        intent.putExtra("themeInfo", data);
+                        intent.putExtra("circle_name", circleInfoEntity.getCircleInfo().getCircle_name());
+                        startActivity(intent);
+                    }
+                    mEditDialog.dismiss();
+                    break;
+                case "置顶":
+                    mPresenter.themeTopOperate(data, i);
+                    mEditDialog.dismiss();
+                    break;
+                case "加精":
+                    mPresenter.addChoiceness(data, i);
+                    mEditDialog.dismiss();
+                    break;
+                case "删除":
+                    if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
+                        DialogUtils.showDeleteDialog(data, i, list, this, mPresenter, null);
+                    }
+                    mEditDialog.dismiss();
+                    break;
+                case "不喜欢":
+                    mPresenter.userShieldRecord(data, i, list);
+                    mEditDialog.dismiss();
+                    break;
+                case "投诉":
+                    Intent intent = new Intent(this, ComplaintReasonActivity.class);
+                    intent.putExtra("data_id", data.getTheme_id() + "");
+                    startActivity(intent);
+                    mEditDialog.dismiss();
+                    break;
+            }
+        });
+        mEditDialog.show();
+        mEditBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        mEditView.findViewById(R.id.wechat_tv).setOnClickListener(v -> {
+            if (isSmall) {
+                DialogUtils.shareSmallProgram(url, imgUrl, title, desc, TopticCircleActivity.this, SHARE_MEDIA.WEIXIN);
+            } else {
+                DialogUtils.shareWebUrl(weburl, title, imgUrl, desc, TopticCircleActivity.this, SHARE_MEDIA.WEIXIN);
+            }
+            mEditDialog.dismiss();
+        });
+        mEditView.findViewById(R.id.wechat_circle_tv).setOnClickListener(v -> {
+            DialogUtils.shareWebUrl(weburl, title, imgUrl, desc, TopticCircleActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
+            mEditDialog.dismiss();
+        });
+        mEditView.findViewById(R.id.discover_tv).setOnClickListener(v -> mEditDialog.dismiss());
+        mEditView.findViewById(R.id.cancle_tv).setOnClickListener(v -> mEditDialog.dismiss());
     }
 }

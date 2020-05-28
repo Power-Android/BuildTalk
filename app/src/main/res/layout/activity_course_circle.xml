@@ -331,7 +331,7 @@
                 android:id="@+id/mc_tag_iv"
                 android:layout_width="@dimen/dp_11"
                 android:layout_height="@dimen/dp_11"
-                android:layout_below="@id/mc_formal_title_tv"
+                android:layout_below="@+id/mc_formal_title_tv"
                 android:layout_marginLeft="@dimen/dp_2"
                 android:layout_marginTop="@dimen/dp_7"
                 android:layout_toRightOf="@+id/mc_formal_name_tv"

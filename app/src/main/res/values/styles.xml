@@ -89,6 +89,8 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:backgroundDimAmount">0.6</item>
+        <item name="android:windowEnterAnimation">@anim/bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/bottom_out</item>
     </style>
 
     <style name="dialog" parent="@style/Theme.AppCompat.Dialog">
@@ -115,4 +117,146 @@
         </attr>
     </declare-styleable>
 
+    <!-- 腾讯短视频   -->
+    <style name="PickerActivityTheme" parent="PickerStyle">
+        <!--        &lt;!&ndash; 裁剪条&ndash;&gt;-->
+        <!--        <item name="editerCutViewColor">@color/colorLabelYellow</item>-->
+        <!--        <item name="editerCutSliderLeftIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerCutSliderRightIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerRotateIcon">@drawable/ugc_record_music</item>-->
+        <!--        &lt;!&ndash; 播放/暂停icon &ndash;&gt;-->
+        <!--        <item name="editerPlayIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerPauseIcon">@drawable/ugc_record_music</item>-->
+        <!--        &lt;!&ndash; 进度条&ndash;&gt;-->
+        <!--        <item name="editerCurrentProgressIcon">@drawable/ugc_record_music</item>-->
+        <!--        &lt;!&ndash;动态特效&ndash;&gt;-->
+        <!--        <item name="editerMotionUndoIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerMotionSoulOutIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerMotionSoulOutCoverColor">@color/edit_yellow</item>-->
+        <!--        <item name="editerMotionSplitScreenIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerMotionSplitScreenCoverColor">@color/edit_yellow</item>-->
+        <!--        <item name="editerMotionDarkDreamIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerMotionDarkDreamCoverColor">@color/edit_yellow</item>-->
+        <!--        <item name="editerMotionGhostIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerMotionGhostCoverColor">@color/edit_yellow</item>-->
+        <!--        <item name="editerMotionGhostShadowIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerMotionGhostShadowCoverColor">@color/edit_yellow</item>-->
+        <!--        <item name="editerMotionIllusionIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerMotionIllusionCoverColor">@color/edit_yellow</item>-->
+        <!--        <item name="editerMotionLightningIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerMotionLightningCoverColor">@color/edit_yellow</item>-->
+        <!--        <item name="editerMotionMirrorIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerMotionMirrorCoverColor">@color/edit_yellow</item>-->
+        <!--        <item name="editerMotionPhantomShadowIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerMotionPhantomShadowCoverColor">@color/edit_yellow</item>-->
+        <!--        <item name="editerMotionRockLightIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerMotionRockLightCoverColor">@color/edit_yellow</item>-->
+        <!--        <item name="editerMotionWinShadowIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerMotionWinShadowCoverColor">@color/edit_yellow</item>-->
+
+        <!--速度特效-->
+        <!--        <item name="editerTimeEffectNormalIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerTimeEffectSlowMotionIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerTimeEffectRepeatIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerTimeEffectReverseIcon">@drawable/ugc_record_music</item>-->
+
+        <!--        &lt;!&ndash;静态滤镜&ndash;&gt;-->
+        <!--        <item name="editerFilterOriginIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterNormalIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterYinghongIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterYunchangIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterChunzhenIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterBailanIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterYuanqiIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterChaotuoIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterXiangfenIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterLangmanIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterQingxinIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterWeimeiIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterFennenIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterHuaijiuIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterLandiaoIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterQingliangIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterRixiIcon">@drawable/ugc_record_music</item>-->
+
+        <!--        &lt;!&ndash; 贴纸 &ndash;&gt;-->
+        <!--        <item name="editerPasterDelIcon">@drawable/ugc_record_music</item>-->
+    </style>
+    <style name="EditerActivityTheme" parent="EditerStyle">
+        <!--        &lt;!&ndash; 裁剪条&ndash;&gt;-->
+        <!--        <item name="editerCutViewColor">@color/colorLabelYellow</item>-->
+        <!--        <item name="editerCutSliderLeftIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerCutSliderRightIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerRotateIcon">@drawable/ugc_record_music</item>-->
+        <!--        &lt;!&ndash; 播放/暂停icon &ndash;&gt;-->
+        <!--        <item name="editerPlayIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerPauseIcon">@drawable/ugc_record_music</item>-->
+        <!--        &lt;!&ndash; 进度条&ndash;&gt;-->
+        <!--        <item name="editerCurrentProgressIcon">@drawable/ugc_record_music</item>-->
+        <!--        &lt;!&ndash;动态特效&ndash;&gt;-->
+        <!--        <item name="editerMotionUndoIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerMotionSoulOutIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerMotionSoulOutCoverColor">@color/edit_yellow</item>-->
+        <!--        <item name="editerMotionSplitScreenIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerMotionSplitScreenCoverColor">@color/edit_yellow</item>-->
+        <!--        <item name="editerMotionDarkDreamIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerMotionDarkDreamCoverColor">@color/edit_yellow</item>-->
+        <!--        <item name="editerMotionGhostIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerMotionGhostCoverColor">@color/edit_yellow</item>-->
+        <!--        <item name="editerMotionGhostShadowIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerMotionGhostShadowCoverColor">@color/edit_yellow</item>-->
+        <!--        <item name="editerMotionIllusionIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerMotionIllusionCoverColor">@color/edit_yellow</item>-->
+        <!--        <item name="editerMotionLightningIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerMotionLightningCoverColor">@color/edit_yellow</item>-->
+        <!--        <item name="editerMotionMirrorIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerMotionMirrorCoverColor">@color/edit_yellow</item>-->
+        <!--        <item name="editerMotionPhantomShadowIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerMotionPhantomShadowCoverColor">@color/edit_yellow</item>-->
+        <!--        <item name="editerMotionRockLightIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerMotionRockLightCoverColor">@color/edit_yellow</item>-->
+        <!--        <item name="editerMotionWinShadowIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerMotionWinShadowCoverColor">@color/edit_yellow</item>-->
+
+        <!--速度特效-->
+        <!--        <item name="editerTimeEffectNormalIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerTimeEffectSlowMotionIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerTimeEffectRepeatIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerTimeEffectReverseIcon">@drawable/ugc_record_music</item>-->
+
+        <!--        &lt;!&ndash;静态滤镜&ndash;&gt;-->
+        <!--        <item name="editerFilterOriginIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterNormalIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterYinghongIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterYunchangIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterChunzhenIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterBailanIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterYuanqiIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterChaotuoIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterXiangfenIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterLangmanIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterQingxinIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterWeimeiIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterFennenIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterHuaijiuIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterLandiaoIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterQingliangIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="editerFilterRixiIcon">@drawable/ugc_record_music</item>-->
+
+        <!--        &lt;!&ndash; 贴纸 &ndash;&gt;-->
+        <!--        <item name="editerPasterDelIcon">@drawable/ugc_record_music</item>-->
+    </style>
+    <style name="PictureTransitionActivityStyle" parent="PictureTransitionStyle">
+        <!--        <item name="picLeftRightIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="picUpDownIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="picEnlargeIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="picNarrowIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="picRotateIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="picFadeInOutIcon">@drawable/ugc_record_music</item>-->
+    </style>
+
+    <style name="MixRecordActivityTheme" parent="MixRecordStyle">
+        <!--        <item name="countDownIcon">@drawable/ugc_record_music</item>-->
+        <!--        <item name="recordBeautyIcon">@drawable/ugc_record_music</item>-->
+    </style>
 </resources>

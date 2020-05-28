@@ -37,7 +37,7 @@
                 android:id="@+id/name_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/face_iv"
+                android:layout_below="@+id/face_iv"
                 android:text="@string/app_name"
                 android:layout_centerHorizontal="true"
                 android:textSize="@dimen/sp_15"
@@ -47,7 +47,7 @@
                 android:id="@+id/info_ll"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_60"
-                android:layout_below="@id/name_tv"
+                android:layout_below="@+id/name_tv"
                 android:layout_marginLeft="@dimen/common_margin"
                 android:layout_marginRight="@dimen/common_margin">
                 <LinearLayout

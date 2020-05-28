@@ -17,6 +17,13 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/tab_add"
+        android:enabled="true"
+        android:icon="@drawable/tab_add_icon"
+        app:showAsAction="ifRoom"
+        android:title="" />
+
+    <item
         android:id="@+id/tab_talk"
         android:enabled="true"
         android:icon="@drawable/selector_talk"

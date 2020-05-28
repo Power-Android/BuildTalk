@@ -222,7 +222,7 @@
                 android:layout_height="@dimen/dp_11"
                 android:src="@drawable/tag_icon"
                 android:layout_toRightOf="@+id/formal_name_tv"
-                android:layout_below="@id/formal_title_tv"
+                android:layout_below="@+id/formal_title_tv"
                 android:layout_marginTop="@dimen/dp_7"
                 android:layout_marginLeft="@dimen/dp_2"/>
             <TextView

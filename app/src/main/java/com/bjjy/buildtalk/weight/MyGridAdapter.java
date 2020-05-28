@@ -32,7 +32,8 @@ public class MyGridAdapter extends BaseAdapter {
         this.list = imgList;
         this.isDel = isDel;
         if (isDel){
-            imageWidth = (SizeUtils.getScreenWidth() - SizeUtils.dp2px(60)) / 3;
+            float dimension = App.getContext().getResources().getDimension(R.dimen.dp_50);
+            imageWidth = (SizeUtils.getScreenWidth() - (int)dimension) / 3;
         }else {
             float dimension = App.getContext().getResources().getDimension(R.dimen.dp_50);
             imageWidth = (SizeUtils.getScreenWidth() - (int)dimension) / 3;
@@ -50,12 +51,12 @@ public class MyGridAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return list.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override

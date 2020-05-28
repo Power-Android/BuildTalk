@@ -1,62 +1,84 @@
 package com.bjjy.buildtalk.ui.main;
 
-import android.app.ProgressDialog;
+import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
-import com.bjjy.buildtalk.core.event.PlayerEvent;
-import com.bjjy.buildtalk.core.receiver.Notifier;
-import com.bjjy.buildtalk.entity.ActivityEntity;
 import com.bjjy.buildtalk.ui.circle.CircleFragment;
 import com.bjjy.buildtalk.ui.circle.CourseCircleActivity;
+import com.bjjy.buildtalk.ui.circle.PublishActivity;
 import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
 import com.bjjy.buildtalk.ui.circle.TopticDetailActivity;
 import com.bjjy.buildtalk.ui.discover.DiscoverFragment;
 import com.bjjy.buildtalk.ui.discover.EveryTalkDetailActivity;
 import com.bjjy.buildtalk.ui.home.HomeFragment;
 import com.bjjy.buildtalk.ui.mine.MineFragment;
-import com.bjjy.buildtalk.ui.talk.TalkFragment;
-import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
-import com.mobile.auth.gatewayauth.PhoneNumberAuthHelper;
-import com.mobile.auth.gatewayauth.TokenResultListener;
-import com.mobile.auth.gatewayauth.model.TokenRet;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+import com.bjjy.buildtalk.videorecord.TCVideoRecordActivity;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import butterknife.BindView;
+import butterknife.OnClick;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class MainActivity extends BaseActivity<MainPresenter> implements MainContract.View {
 
     @BindView(R.id.fragment_group)
     FrameLayout mFragmentGroup;
-    @BindView(R.id.bottom_navigation_view)
-    BottomNavigationView mBottomNavigationView;
+    @BindView(R.id.home_iv)
+    ImageView mHomeIv;
+    @BindView(R.id.home_tv)
+    TextView mHomeTv;
+    @BindView(R.id.home_cl)
+    ConstraintLayout mHomeCl;
+    @BindView(R.id.circle_iv)
+    ImageView mCircleIv;
+    @BindView(R.id.circle_tv)
+    TextView mCircleTv;
+    @BindView(R.id.circle_cl)
+    ConstraintLayout mCircleCl;
+    @BindView(R.id.add_iv)
+    ImageView mAddIv;
+    @BindView(R.id.add_cl)
+    ConstraintLayout mAddCl;
+    @BindView(R.id.discover_iv)
+    ImageView mDiscoverIv;
+    @BindView(R.id.discover_tv)
+    TextView mDiscoverTv;
+    @BindView(R.id.discover_cl)
+    ConstraintLayout mDiscoverCl;
+    @BindView(R.id.mine_iv)
+    ImageView mMineIv;
+    @BindView(R.id.mine_tv)
+    TextView mMineTv;
+    @BindView(R.id.mine_cl)
+    ConstraintLayout mMineCl;
 
     private int mLastFgIndex = -1;
     private int mCurrentFgIndex = 0;
     private DiscoverFragment mDiscoverFragment;
     private CircleFragment mCircleFragment;
-//    private TalkFragment mTalkFragment;
+    //    private TalkFragment mTalkFragment;
     private MineFragment mMineFragment;
     private HomeFragment mHomeFragment;
     private Uri data;
     private long clickTime;
+    private long mLastClickPubTS = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,7 +102,6 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     @Override
     protected void initView() {
         showFragment(mCurrentFgIndex);
-        initNavigationView();
         String s = getIntent().getStringExtra("data");
         if (!TextUtils.isEmpty(s)) {
             data = Uri.parse(s);
@@ -94,25 +115,56 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         super.onResume();
     }
 
-    private void initNavigationView() {
-        mBottomNavigationView.setItemIconTintList(null);
-        mBottomNavigationView.setOnNavigationItemSelectedListener(menuItem -> {
-            switch (menuItem.getItemId()) {
-                case R.id.tab_discover:
-                    showFragment(Constants.TYPE_DISCOVER);
-                    break;
-                case R.id.tab_circle:
-                    showFragment(Constants.TYPE_CIRCLE);
-                    break;
-                case R.id.tab_talk:
-                    showFragment(Constants.TYPE_FIND);
-                    break;
-                case R.id.tab_mine:
-                    showFragment(Constants.TYPE_MINE);
-                    break;
-            }
-            return true;
-        });
+    @OnClick({R.id.home_cl, R.id.circle_cl, R.id.add_cl, R.id.discover_cl, R.id.mine_cl})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.home_cl:
+                showFragment(Constants.TYPE_DISCOVER);
+                break;
+            case R.id.circle_cl:
+                showFragment(Constants.TYPE_CIRCLE);
+                break;
+            case R.id.add_cl:
+                // 防止多次点击
+                if (System.currentTimeMillis() - mLastClickPubTS > 1000) {
+                    mLastClickPubTS = System.currentTimeMillis();
+                    new RxPermissions(this).request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            .subscribe(new Observer<Boolean>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onNext(Boolean aBoolean) {
+                                    if (aBoolean){
+                                        Intent intent = new Intent(MainActivity.this, PublishActivity.class);
+                                        intent.putExtra("publish_type", "2");
+                                        startActivity(intent);
+                                    }else {
+                                        ToastUtils.showShort("权限被拒绝");
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+
+                                }
+
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
+                }
+                break;
+            case R.id.discover_cl:
+                showFragment(Constants.TYPE_FIND);
+                break;
+            case R.id.mine_cl:
+                showFragment(Constants.TYPE_MINE);
+                break;
+        }
     }
 
     @Override
@@ -121,7 +173,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         setIntent(intent);
         int index = getIntent().getIntExtra("mCurrentFgIndex", -2);
         if (index == 0)
-            mBottomNavigationView.setSelectedItemId(R.id.tab_discover);
+            showFragment(0);
     }
 
     private void showFragment(int index) {
@@ -131,6 +183,14 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         mLastFgIndex = index;
         switch (index) {
             case Constants.TYPE_DISCOVER:
+                mHomeIv.setImageResource(R.drawable.home_sel);
+                mHomeTv.setTextColor(getResources().getColor(R.color.blue_mid));
+                mCircleIv.setImageResource(R.drawable.circle_def);
+                mCircleTv.setTextColor(getResources().getColor(R.color.text_color6));
+                mDiscoverIv.setImageResource(R.drawable.discover_def);
+                mDiscoverTv.setTextColor(getResources().getColor(R.color.text_color6));
+                mMineIv.setImageResource(R.drawable.mine_def);
+                mMineTv.setTextColor(getResources().getColor(R.color.text_color6));
                 if (mDiscoverFragment == null) {
                     mDiscoverFragment = DiscoverFragment.newInstance();
                     transaction.add(R.id.fragment_group, mDiscoverFragment);
@@ -138,6 +198,14 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                 transaction.show(mDiscoverFragment);
                 break;
             case Constants.TYPE_CIRCLE:
+                mHomeIv.setImageResource(R.drawable.home_del);
+                mHomeTv.setTextColor(getResources().getColor(R.color.text_color6));
+                mCircleIv.setImageResource(R.drawable.circle_sel);
+                mCircleTv.setTextColor(getResources().getColor(R.color.blue_mid));
+                mDiscoverIv.setImageResource(R.drawable.discover_def);
+                mDiscoverTv.setTextColor(getResources().getColor(R.color.text_color6));
+                mMineIv.setImageResource(R.drawable.mine_def);
+                mMineTv.setTextColor(getResources().getColor(R.color.text_color6));
                 if (mCircleFragment == null) {
                     mCircleFragment = CircleFragment.newInstance();
                     transaction.add(R.id.fragment_group, mCircleFragment);
@@ -145,6 +213,14 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                 transaction.show(mCircleFragment);
                 break;
             case Constants.TYPE_FIND:
+                mHomeIv.setImageResource(R.drawable.home_del);
+                mHomeTv.setTextColor(getResources().getColor(R.color.text_color6));
+                mCircleIv.setImageResource(R.drawable.circle_def);
+                mCircleTv.setTextColor(getResources().getColor(R.color.text_color6));
+                mDiscoverIv.setImageResource(R.drawable.discover_sel);
+                mDiscoverTv.setTextColor(getResources().getColor(R.color.blue_mid));
+                mMineIv.setImageResource(R.drawable.mine_def);
+                mMineTv.setTextColor(getResources().getColor(R.color.text_color6));
                 if (mHomeFragment == null) {
                     mHomeFragment = HomeFragment.getInstance();
                     transaction.add(R.id.fragment_group, mHomeFragment);
@@ -152,6 +228,14 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                 transaction.show(mHomeFragment);
                 break;
             case Constants.TYPE_MINE:
+                mHomeIv.setImageResource(R.drawable.home_del);
+                mHomeTv.setTextColor(getResources().getColor(R.color.text_color6));
+                mCircleIv.setImageResource(R.drawable.circle_def);
+                mCircleTv.setTextColor(getResources().getColor(R.color.text_color6));
+                mDiscoverIv.setImageResource(R.drawable.discover_def);
+                mDiscoverTv.setTextColor(getResources().getColor(R.color.text_color6));
+                mMineIv.setImageResource(R.drawable.mine_sel);
+                mMineTv.setTextColor(getResources().getColor(R.color.blue_mid));
                 if (mMineFragment == null) {
                     mMineFragment = MineFragment.newInstance();
                     transaction.add(R.id.fragment_group, mMineFragment);

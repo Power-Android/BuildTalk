@@ -1,9 +1,14 @@
 package com.bjjy.buildtalk.adapter;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 
 import com.bjjy.buildtalk.R;
@@ -13,6 +18,7 @@ import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.DiscoverEntity;
 import com.bjjy.buildtalk.entity.DissertationEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
+import com.bjjy.buildtalk.entity.SongsEntity;
 import com.bjjy.buildtalk.ui.circle.CourseCircleActivity;
 import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
 import com.bjjy.buildtalk.ui.discover.DiscoverFragment;
@@ -47,7 +53,7 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
 
     private List<BannerEntity> mBannerEntities = new ArrayList<>();
     private List<String> mBannerImageList = new ArrayList<>();
-    private List<EveryTalkEntity> mEveryTalkEntities = new ArrayList<>();
+    private List<SongsEntity> songsEntities = new ArrayList<>();
     private CourseEntity mTopticEntity;
     private List<CourseEntity.CircleInfoBean> mTopticEntities = new ArrayList<>();
     private CourseEntity mCourseEntity;
@@ -55,6 +61,7 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
     private List<DissertationEntity> dissertationEntities = new ArrayList<>();
     private Intent mIntent;
     private OnChildRecyclerItemClickListener mOnChildRecyclerItemClickListener;
+    private String title;
 
     /**
      * Same as QuickAdapter#QuickAdapter(Context,int) but with
@@ -71,11 +78,11 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
         addItemType(BODY_PROJECT, R.layout.discover_body_project_layout);
     }
 
-    public interface OnChildRecyclerItemClickListener{
+    public interface OnChildRecyclerItemClickListener {
         void onEveryTalkItemClick(BaseQuickAdapter adapter, View view, int position);
     }
 
-    public void setOnChildRecyclerItemClickListener(OnChildRecyclerItemClickListener onChildRecyclerItemClickListener){
+    public void setOnChildRecyclerItemClickListener(OnChildRecyclerItemClickListener onChildRecyclerItemClickListener) {
         this.mOnChildRecyclerItemClickListener = onChildRecyclerItemClickListener;
     }
 
@@ -85,22 +92,22 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
             case BODY_BANNER:
                 Banner banner = helper.getView(R.id.banner);
                 banner.setOnBannerListener(position -> {
-                    switch (mBannerEntities.get(position).getType_id()){
+                    switch (mBannerEntities.get(position).getType_id()) {
                         case 1:
-                            if ("1".equals(mBannerEntities.get(position).getCircle_type())){
+                            if ("1".equals(mBannerEntities.get(position).getCircle_type())) {
                                 Intent intent = new Intent(mContext, TopticCircleActivity.class);
-                                intent.putExtra("circle_id", mBannerEntities.get(position).getData_id()+"");
+                                intent.putExtra("circle_id", mBannerEntities.get(position).getData_id() + "");
                                 mContext.startActivity(intent);
-                            }else {
+                            } else {
                                 Intent intent = new Intent(mContext, CourseCircleActivity.class);
-                                intent.putExtra("circle_id", mBannerEntities.get(position).getData_id()+"");
+                                intent.putExtra("circle_id", mBannerEntities.get(position).getData_id() + "");
                                 mContext.startActivity(intent);
                             }
                             break;
                         case 2:
                             mIntent = new Intent(mContext, EveryTalkDetailActivity.class);
-                            mIntent.putExtra("article_id",mBannerEntities.get(position).getData_id()+"");
-                            mIntent.putExtra("type","article");
+                            mIntent.putExtra("article_id", mBannerEntities.get(position).getData_id() + "");
+                            mIntent.putExtra("type", "article");
                             mContext.startActivity(mIntent);
                             break;
                         case 3:
@@ -110,7 +117,7 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
                             break;
                         case 4:
                             mIntent = new Intent(mContext, DissertationActivity.class);
-                            mIntent.putExtra("id",mBannerEntities.get(position).getData_id()+"");
+                            mIntent.putExtra("id", mBannerEntities.get(position).getData_id() + "");
                             mContext.startActivity(mIntent);
                             break;
                         case 5:
@@ -124,18 +131,30 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
                 banner.setImages(mBannerImageList).setImageLoader(new GlideUtils()).start();
                 break;
             case BODY_EVERYDAY_TALK:
-                RecyclerView et_RecyclerView = helper.getView(R.id.et_recyclerView);
-                et_RecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-                EveryTalkAdapter everyTalkAdapter = new EveryTalkAdapter(R.layout.adapter_every_talk, mEveryTalkEntities);
-                et_RecyclerView.setAdapter(everyTalkAdapter);
-                helper.addOnClickListener(R.id.et_all_tv);
-                everyTalkAdapter.setOnItemClickListener((adapter, view, position) -> {
-                    Intent intent = new Intent(mContext, EveryTalkDetailActivity.class);
-                    intent.putExtra("article_id",mEveryTalkEntities.get(position).getArticle_id()+"");
-                    mContext.startActivity(intent);
-                });
-                everyTalkAdapter.setOnItemChildClickListener((adapter, view, position) ->
-                        mOnChildRecyclerItemClickListener.onEveryTalkItemClick(adapter, view, position));
+                helper.addOnClickListener(R.id.bg_iv)
+                        .addOnClickListener(R.id.talk_play_iv);
+                if (TextUtils.isEmpty(title)){
+                    if (songsEntities.size() > 0){
+                        String article_title = songsEntities.get(0).getArticle_title();
+                        SpannableString spannableString = new SpannableString(article_title);
+                        ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#FF8F8F8F"));
+                        spannableString.setSpan(colorSpan,0,article_title.indexOf("期")+1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                        helper.setText(R.id.content_tv,spannableString);
+                    }
+                }else {
+                    SpannableString spannableString = new SpannableString(title);
+                    ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#FF8F8F8F"));
+                    spannableString.setSpan(colorSpan,0,title.indexOf("期")+1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                    helper.setText(R.id.content_tv,spannableString);
+                }
+
+//                everyTalkAdapter.setOnItemClickListener((adapter, view, position) -> {
+//                    Intent intent = new Intent(mContext, EveryTalkDetailActivity.class);
+//                    intent.putExtra("article_id", mEveryTalkEntities.get(position).getArticle_id() + "");
+//                    mContext.startActivity(intent);
+//                });
+//                everyTalkAdapter.setOnItemChildClickListener((adapter, view, position) ->
+//                        mOnChildRecyclerItemClickListener.onEveryTalkItemClick(adapter, view, position));
                 break;
             case BODY_HOT_TOPTIC:
                 RecyclerView toptic_RecyclerView = helper.getView(R.id.toptic_recyclerView);
@@ -146,7 +165,7 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
                         .addOnClickListener(R.id.toptic_change_ll);
                 topticAdapter.setOnItemClickListener((adapter, view, position) -> {
                     Intent intent = new Intent(mContext, TopticCircleActivity.class);
-                    intent.putExtra("circle_id", mTopticEntity.getCircleInfo().get(position).getCircle_id()+"");
+                    intent.putExtra("circle_id", mTopticEntity.getCircleInfo().get(position).getCircle_id() + "");
                     mContext.startActivity(intent);
                 });
                 break;
@@ -173,7 +192,7 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
                 projectAdapter.setOnItemClickListener((adapter, view, position) -> {
                     List<DissertationEntity> data = adapter.getData();
                     Intent intent = new Intent(mContext, DissertationActivity.class);
-                    intent.putExtra("id", data.get(position).getDissertation_id()+"");
+                    intent.putExtra("id", data.get(position).getDissertation_id() + "");
                     mContext.startActivity(intent);
                 });
                 helper.addOnClickListener(R.id.project_all_tv);
@@ -187,8 +206,8 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
         notifyDataSetChanged();
     }
 
-    public void setEveryTalkEntities(List<EveryTalkEntity> everyTalkEntities) {
-        this.mEveryTalkEntities = everyTalkEntities;
+    public void setEveryTalkEntities(List<SongsEntity> songsEntities) {
+        this.songsEntities = songsEntities;
         notifyDataSetChanged();
     }
 
@@ -208,6 +227,11 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
 
     public void setDissertationEntities(List<DissertationEntity> dissertationEntities) {
         this.dissertationEntities = dissertationEntities;
+        notifyDataSetChanged();
+    }
+
+    public void setMediaTitle(String title){
+        this.title = title;
         notifyDataSetChanged();
     }
 

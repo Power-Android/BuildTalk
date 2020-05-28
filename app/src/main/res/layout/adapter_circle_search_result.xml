@@ -40,7 +40,7 @@
         android:text="圈主：张鸣"
         android:textColor="@color/text_mid"
         android:textSize="@dimen/sp_11"
-        android:layout_below="@id/item_title_tv"
+        android:layout_below="@+id/item_title_tv"
         android:layout_toRightOf="@+id/view1"
         android:layout_marginLeft="@dimen/dp_20"
         android:layout_marginTop="@dimen/dp_5"/>

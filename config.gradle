@@ -7,7 +7,6 @@ ext {
             targetSdkVersion            : 27,
             versionCode                 : 20304,
             versionName                 : "2.3.4",
-            renderscriptTargetApi       : 21
     ]
 
     version = [
@@ -91,6 +90,7 @@ ext {
             "wechatPay"                             : "com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+",
             "bugly-upgrade"                         : "com.tencent.bugly:crashreport_upgrade:latest.release",
             "buhly-crashreport"                     : "com.tencent.bugly:nativecrashreport:latest.release",
+            "ali_oss"                               : "com.aliyun.dpa:oss-android-sdk:2.9.3",
 
             //ui test
             "espresso-core"                         : "com.android.support.test.espresso:espresso-core:3.0.2",

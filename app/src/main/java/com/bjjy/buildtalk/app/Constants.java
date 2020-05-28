@@ -108,6 +108,7 @@ public class Constants {
     public static final int SONG_PROGRESS = 5;//播放进度
     public static final int SONG_COMPLETION = 6;//播放完成
     public static final int SONG_ISTALK = 7;//判断是否是首页每日一谈的音频,用来改变图标
+    public static final String SONG_ID = "song_id";//首页关闭播放器时记录的id
 
 
 }

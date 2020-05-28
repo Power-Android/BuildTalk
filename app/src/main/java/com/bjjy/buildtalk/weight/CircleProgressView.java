@@ -55,7 +55,7 @@ public class CircleProgressView extends View {
         mBgPaint.setAntiAlias(true);
         mBgPaint.setStrokeWidth(mProgressWidth);
         mBgPaint.setStyle(Paint.Style.STROKE);
-        mBgPaint.setColor(Color.parseColor("#ffffff"));
+        mBgPaint.setColor(Color.parseColor("#EAECF2"));
         mBgPaint.setStrokeCap(Paint.Cap.ROUND);
 
         //进度圆弧
