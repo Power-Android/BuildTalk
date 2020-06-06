@@ -33,6 +33,7 @@ import com.tencent.qcloud.ugckit.module.record.VideoRecordSDK;
 import com.tencent.qcloud.ugckit.module.record.interfaces.IRecordButton;
 import com.tencent.qcloud.ugckit.module.record.interfaces.IRecordMusicPannel;
 import com.tencent.qcloud.ugckit.module.record.interfaces.IRecordRightLayout;
+import com.tencent.qcloud.ugckit.module.record.interfaces.IVideoRecordKit;
 import com.tencent.qcloud.ugckit.utils.DialogUtil;
 import com.tencent.qcloud.ugckit.utils.LogReport;
 import com.tencent.qcloud.ugckit.utils.TelephonyUtil;
@@ -42,20 +43,17 @@ import com.tencent.ugc.TXVideoEditConstants;
 import com.tencent.ugc.TXVideoInfoReader;
 
 public class UGCKitVideoRecord extends AbsVideoRecordUI implements
-        IRecordRightLayout.OnItemClickListener,
         IRecordButton.OnRecordButtonListener,
-        SoundEffectsPannel.SoundEffectsSettingPannelListener,
-        IRecordMusicPannel.MusicChangeListener,
         ScrollFilterView.OnRecordFilterListener,
         VideoRecordSDK.OnVideoRecordListener {
 
     private static final String TAG = "UGCKitVideoRecord";
     private OnRecordListener mOnRecordListener;
-    private OnMusicChooseListener mOnMusicListener;
     private FragmentActivity mActivity;
     private ProgressFragmentUtil mProgressFragmentUtil;
     private ProgressDialogUtil mProgressDialogUtil;
     private UGCBeautyKit mUGCBeautyKit;
+    private boolean mEnable;
 
     public UGCKitVideoRecord(Context context) {
         super(context);
@@ -87,49 +85,24 @@ public class UGCKitVideoRecord extends AbsVideoRecordUI implements
 
             @Override
             public void onDraftTotal(long duration) {
-                getRecordRightLayout().setMusicIconEnable(false);
-                getRecordRightLayout().setAspectIconEnable(false);
 
-                float second = duration / 1000f;
-                boolean enable = second >= UGCKitRecordConfig.getInstance().mMinDuration / 1000;
-                getTitleBar().setVisible(enable, ITitleBarLayout.POSITION.RIGHT);
             }
         });
 
         VideoRecordSDK.getInstance().setVideoRecordListener(this);
         // 点击"下一步"
-        getTitleBar().setVisible(false, ITitleBarLayout.POSITION.RIGHT);
-        getTitleBar().setOnRightClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mProgressDialogUtil.showProgressDialog();
-
-                VideoRecordSDK.getInstance().stopRecord();
-            }
-        });
-
-        // 点击"右侧工具栏"（包括"美颜"，"音乐"，"音效"）
-        getRecordRightLayout().setOnItemClickListener(this);
+//        getTitleBar().setVisible(false, ITitleBarLayout.POSITION.RIGHT);
+//        getTitleBar().setOnRightClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mProgressDialogUtil.showProgressDialog();
+//
+//                VideoRecordSDK.getInstance().stopRecord();
+//            }
+//        });
 
         // 点击"录制按钮"（包括"拍照"，"单击拍"，"按住拍"）
         getRecordBottomLayout().setOnRecordButtonListener(this);
-        getRecordBottomLayout().setOnDeleteLastPartListener(new RecordBottomLayout.OnDeleteLastPartListener() {
-            @Override
-            public void onUpdateTitle(boolean enable) {
-                getTitleBar().setVisible(enable, ITitleBarLayout.POSITION.RIGHT);
-            }
-
-            @Override
-            public void onReRecord() {
-                getRecordRightLayout().setMusicIconEnable(true);
-                getRecordRightLayout().setAspectIconEnable(true);
-            }
-        });
-
-        // 设置"音乐面板"监听器
-        getRecordMusicPannel().setOnMusicChangeListener(this);
-        // 设置"音效面板"监听器
-        getSoundEffectPannel().setSoundEffectsSettingPannelListener(this);
 
         getScrollFilterView().setOnRecordFilterListener(this);
 
@@ -166,7 +139,7 @@ public class UGCKitVideoRecord extends AbsVideoRecordUI implements
 
     @Override
     public void setOnMusicChooseListener(OnMusicChooseListener listener) {
-        mOnMusicListener = listener;
+
     }
 
     @Override
@@ -181,7 +154,8 @@ public class UGCKitVideoRecord extends AbsVideoRecordUI implements
         TelephonyUtil.getInstance().uninitPhoneListener();
 
         getRecordBottomLayout().getRecordButton().pauseRecordAnim();
-        getRecordBottomLayout().closeTorch();
+        //关闭闪光灯
+        closeTorch();
         // 停止录制预览界面
         VideoRecordSDK.getInstance().stopCameraPreview();
         // 暂停录制
@@ -218,23 +192,6 @@ public class UGCKitVideoRecord extends AbsVideoRecordUI implements
         if (musicInfo != null) {
             Log.d(TAG, "music name:" + musicInfo.name + ", path:" + musicInfo.path);
         }
-        getRecordBottomLayout().setVisibility(View.INVISIBLE);
-        getRecordRightLayout().setVisibility(View.INVISIBLE);
-
-        TXUGCRecord record = VideoRecordSDK.getInstance().getRecorder();
-        if (record != null) {
-            long duration = record.setBGM(musicInfo.path);
-            musicInfo.duration = duration;
-            Log.d(TAG, "music duration:" + musicInfo.duration);
-        }
-        // 设置音乐信息
-        RecordMusicManager.getInstance().setRecordMusicInfo(musicInfo);
-        // 更新音乐Pannel
-        getRecordMusicPannel().setMusicInfo(musicInfo);
-        getRecordMusicPannel().setVisibility(View.VISIBLE);
-
-        // 音乐试听
-        RecordMusicManager.getInstance().startPreviewMusic();
     }
 
     @Override
@@ -296,13 +253,7 @@ public class UGCKitVideoRecord extends AbsVideoRecordUI implements
      */
     @Override
     public void onRecordStart() {
-        getRecordRightLayout().setVisibility(View.INVISIBLE);
         getRecordBottomLayout().startRecord();
-        // 开始录制后不能再选择音乐
-        getRecordRightLayout().setMusicIconEnable(false);
-        // 开始录制后不能切换屏比
-        getRecordRightLayout().setAspectIconEnable(false);
-
         // 开始/继续录制
         int retCode = VideoRecordSDK.getInstance().startRecord();
         if (retCode == VideoRecordSDK.START_RECORD_FAIL) { //点击开始录制失败，录制按钮状态变为暂停
@@ -325,13 +276,15 @@ public class UGCKitVideoRecord extends AbsVideoRecordUI implements
     @Override
     public void onRecordPause() {
         Log.d(TAG, "onRecordPause");
-        getRecordRightLayout().setVisibility(View.VISIBLE);
         getRecordBottomLayout().pauseRecord();
 
         VideoRecordSDK.getInstance().pauseRecord();
         RecordMusicManager.getInstance().pauseMusic();
-
         AudioFocusManager.getInstance().abandonAudioFocus();
+        if (mProgressDialogUtil != null && mEnable) {
+            mProgressDialogUtil.showProgressDialog();
+            VideoRecordSDK.getInstance().stopRecord();
+        }
     }
 
     /**
@@ -339,14 +292,7 @@ public class UGCKitVideoRecord extends AbsVideoRecordUI implements
      */
     @Override
     public void onTakePhoto() {
-        PhotoSoundPlayer.playPhotoSound();
 
-        VideoRecordSDK.getInstance().takePhoto(new RecordModeView.OnSnapListener() {
-            @Override
-            public void onSnap(Bitmap bitmap) {
-                getSnapshotView().showSnapshotAnim(bitmap);
-            }
-        });
     }
 
     @Override
@@ -355,175 +301,9 @@ public class UGCKitVideoRecord extends AbsVideoRecordUI implements
     }
 
     @Override
-    public void onShowBeautyPanel() {
-        // 隐藏底部工具栏
-        getRecordBottomLayout().setVisibility(View.GONE);
-        // 隐藏右侧工具栏
-        getRecordRightLayout().setVisibility(View.GONE);
-        // 显示美颜Pannel
-        getBeautyPanel().setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * 点击工具栏按钮"音乐"
-     */
-    @Override
-    public void onShowMusicPanel() {
-        boolean isChooseMusicFlag = RecordMusicManager.getInstance().isChooseMusic();
-        if (isChooseMusicFlag) {
-            // 隐藏底部工具栏
-            getRecordBottomLayout().setVisibility(View.GONE);
-            // 隐藏右侧工具栏
-            getRecordRightLayout().setVisibility(View.GONE);
-            // 显示音乐Pannel
-            getRecordMusicPannel().setVisibility(View.VISIBLE);
-
-            RecordMusicManager.getInstance().startMusic();
-        } else {
-            if (mOnMusicListener != null) {
-                mOnMusicListener.onChooseMusic(UGCKitRecordConfig.getInstance().musicInfo.position);
-            }
-        }
-    }
-
-    @Override
-    public void onShowSoundEffectPanel() {
-        // 隐藏底部工具栏
-        getRecordBottomLayout().setVisibility(View.GONE);
-        // 隐藏右侧工具栏
-        getRecordRightLayout().setVisibility(View.GONE);
-        // 显示音效Pannel
-        getSoundEffectPannel().setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void onAspectSelect(int aspectType) {
-        UGCKitRecordConfig.getInstance().mAspectRatio = aspectType;
-        VideoRecordSDK.getInstance().updateAspectRatio();
-    }
-
-    /************************************   音效Pannel回调接口 Begin  ********************************************/
-    @Override
-    public void onMicVolumeChanged(float volume) {
-        TXUGCRecord record = VideoRecordSDK.getInstance().getRecorder();
-        if (record != null) {
-            record.setMicVolume(volume);
-        }
-    }
-
-    @Override
-    public void onClickVoiceChanger(int type) {
-        TXUGCRecord record = VideoRecordSDK.getInstance().getRecorder();
-        if (record != null) {
-            record.setVoiceChangerType(type);
-        }
-    }
-
-    @Override
-    public void onClickReverb(int type) {
-        TXUGCRecord record = VideoRecordSDK.getInstance().getRecorder();
-        if (record != null) {
-            record.setReverb(type);
-        }
-    }
-
-    /************************************   音效Pannel回调接口 End    ********************************************/
-
-    /************************************   音乐Pannel回调接口 Begin  ********************************************/
-    @Override
-    public void onMusicVolumChanged(float volume) {
-        TXUGCRecord record = VideoRecordSDK.getInstance().getRecorder();
-        if (record != null) {
-            record.setBGMVolume(volume);
-        }
-    }
-
-    /**
-     * 背景音乐裁剪
-     *
-     * @param startTime
-     * @param endTime
-     */
-    @Override
-    public void onMusicTimeChanged(long startTime, long endTime) {
-        MusicInfo musicInfo = RecordMusicManager.getInstance().getMusicInfo();
-        musicInfo.startTime = startTime;
-        musicInfo.endTime = endTime;
-
-        RecordMusicManager.getInstance().startPreviewMusic();
-    }
-
-    /**
-     * 点击"音乐Pannel"的确定</p>
-     * 1、关闭音乐Pannel</p>
-     * 2、停止音乐试听
-     */
-    @Override
-    public void onMusicSelect() {
-        getRecordBottomLayout().setVisibility(View.VISIBLE);
-        getRecordRightLayout().setVisibility(View.VISIBLE);
-        // 录制添加BGM后是录制不了人声的，而音效是针对人声有效的
-        getRecordRightLayout().setSoundEffectsEnabled(false);
-
-        getRecordMusicPannel().setVisibility(View.GONE);
-
-        // 停止音乐试听
-        RecordMusicManager.getInstance().stopPreviewMusic();
-    }
-
-    /**
-     * 点击"音乐Pannel"的切换音乐
-     */
-    @Override
-    public void onMusicReplace() {
-        if (mOnMusicListener != null) {
-            mOnMusicListener.onChooseMusic(UGCKitRecordConfig.getInstance().musicInfo.position);
-        }
-    }
-
-    /**
-     * 点击"音乐Pannel"删除背景音乐
-     */
-    @Override
-    public void onMusicDelete() {
-        showDeleteMusicDialog();
-    }
-
-    private void showDeleteMusicDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        AlertDialog alertDialog = builder.setTitle(getResources().getString(R.string.tips)).setCancelable(false).setMessage(R.string.delete_bgm_or_not)
-                .setPositiveButton(R.string.confirm_delete, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(@NonNull DialogInterface dialog, int which) {
-                        dialog.dismiss();
-
-                        RecordMusicManager.getInstance().deleteMusic();
-                        // 录制添加BGM后是录制不了人声的，而音效是针对人声有效的
-                        getRecordRightLayout().setSoundEffectIconEnable(true);
-
-//                        getRecordMusicPannel().setMusicName("");
-                        getRecordMusicPannel().setVisibility(View.GONE);
-                    }
-                })
-                .setNegativeButton(getResources().getString(R.string.btn_cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(@NonNull DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).create();
-        alertDialog.show();
-    }
-
-    /************************************   音乐Pannel回调接口 End    ********************************************/
-
-    @Override
     public void onSingleClick(float x, float y) {
         getBeautyPanel().setVisibility(View.GONE);
-        getRecordMusicPannel().setVisibility(View.GONE);
-        getSoundEffectPannel().setVisibility(View.GONE);
-
         getRecordBottomLayout().setVisibility(View.VISIBLE);
-        getRecordRightLayout().setVisibility(View.VISIBLE);
         TXUGCRecord record = VideoRecordSDK.getInstance().getRecorder();
         if (record != null) {
             record.setFocusPosition(x, y);
@@ -535,8 +315,7 @@ public class UGCKitVideoRecord extends AbsVideoRecordUI implements
         getRecordBottomLayout().updateProgress(milliSecond);
 
         float second = milliSecond / 1000f;
-        boolean enable = second >= UGCKitRecordConfig.getInstance().mMinDuration / 1000;
-        getTitleBar().setVisible(enable, ITitleBarLayout.POSITION.RIGHT);
+        mEnable = second >= UGCKitRecordConfig.getInstance().mMinDuration / 1000;
     }
 
     @Override
@@ -550,6 +329,7 @@ public class UGCKitVideoRecord extends AbsVideoRecordUI implements
 
         if (result.retCode >= 0) {
             mProgressDialogUtil.dismissProgressDialog();
+            mProgressDialogUtil = null;
             boolean editFlag = UGCKitRecordConfig.getInstance().mIsNeedEdit;
             if (editFlag) {
                 // 录制后需要进行编辑，预处理产生视频缩略图
@@ -636,9 +416,7 @@ public class UGCKitVideoRecord extends AbsVideoRecordUI implements
         // 初始化最大/最小视频录制时长
         getRecordBottomLayout().initDuration();
         // 设置默认的录制模式
-        getRecordBottomLayout().getRecordButton().setCurrentRecordMode(UGCKitRecordConfig.getInstance().mRecordMode);
-        // 设置视频比例UI
-        getRecordRightLayout().setAspect(config.mAspectRatio);
+//        getRecordBottomLayout().getRecordButton().setCurrentRecordMode(UGCKitRecordConfig.getInstance().mRecordMode);
     }
 
     @Override

@@ -9,6 +9,7 @@ import com.alibaba.sdk.android.oss.callback.OSSCompletedCallback;
 import com.alibaba.sdk.android.oss.internal.OSSAsyncTask;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
+import com.bjjy.buildtalk.adapter.PublishCircleAdapter;
 import com.bjjy.buildtalk.app.AliOSS;
 import com.bjjy.buildtalk.app.App;
 import com.bjjy.buildtalk.app.Constants;
@@ -50,7 +51,8 @@ public class PublishPresenter extends BasePresenter<PublishContarct.View> {
 
     }
 
-    public void publishImages(String circle_id, int theme_id, String theme_content, boolean isEdit, boolean isChecked, List<ThemeImageBean> list, String publish_type) {
+    public void publishImages(String circle_id, int theme_id, String theme_content, boolean isEdit,
+                              boolean isChecked, List<ThemeImageBean> list, String publish_type) {
         if (list.size() > 0){
             upLoadImages(circle_id, theme_id, theme_content, isEdit, list, isChecked, publish_type);
         }else {
@@ -58,15 +60,20 @@ public class PublishPresenter extends BasePresenter<PublishContarct.View> {
         }
     }
 
-    private void publish(String circle_id, int theme_id, String theme_content, String picUrl, boolean isEdit, boolean isChecked, String publish_type) {
+    private void publish(String circle_id, int theme_id, String theme_content, String picUrl,
+                         boolean isEdit, boolean isChecked, String publish_type) {
         if (!isEdit){
-            newTheme(circle_id, theme_content, picUrl, null, null, isChecked, publish_type);
+            newTheme(circle_id, theme_content, picUrl, null, null, isChecked, publish_type,
+                    null, null, null, null, null, null);
         }else {
-            editTheme(circle_id, theme_id, theme_content, picUrl, null, null, isChecked, publish_type);
+            editTheme(circle_id, theme_id, theme_content, picUrl, null, null, isChecked, publish_type,
+                    null, null, null, null, null, null);
         }
     }
 
-    private void newTheme(String circle_id, String theme_content, String picUrl, String pdfUrl, String pdfName, boolean isChecked, String publish_type) {
+    private void newTheme(String circle_id, String theme_content, String picUrl, String pdfUrl, String pdfName,
+                          boolean isChecked, String publish_type, String tx_videoId, String theme_video,
+                          String coverURL, String video_height, String video_width, String videoDuration) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
         paramas.put(Constants.TIMESTAMP, timestamp);
@@ -75,13 +82,25 @@ public class PublishPresenter extends BasePresenter<PublishContarct.View> {
         paramas.put("circle_id", TextUtils.isEmpty(circle_id) ? "0" : circle_id);
         paramas.put("theme_content", theme_content);
         paramas.put("publish_type", !TextUtils.isEmpty(publish_type) ? "2" : "1");
-        paramas.put("is_find", isChecked ? "1" : "0");//是否同步到发现
+        if (!TextUtils.isEmpty(publish_type)){
+            paramas.put("is_find", "1");
+        }else {
+            paramas.put("is_find", isChecked ? "1" : "0");//是否同步到发现
+        }
         if (!TextUtils.isEmpty(picUrl)){
             paramas.put("theme_image", picUrl);
         }
         if (!TextUtils.isEmpty(pdfUrl)){
             paramas.put("theme_pdf", pdfUrl);
             paramas.put("pdf_name", pdfName);
+        }
+        if (!TextUtils.isEmpty(tx_videoId)){
+            paramas.put("tx_videoId", tx_videoId);
+            paramas.put("theme_video", theme_video);
+            paramas.put("coverURL", coverURL);
+            paramas.put("video_height", video_height);
+            paramas.put("video_width", video_width);
+            paramas.put("video_duration", videoDuration);
         }
         String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
 
@@ -106,7 +125,10 @@ public class PublishPresenter extends BasePresenter<PublishContarct.View> {
                 }));
     }
 
-    private void editTheme(String circle_id, int theme_id, String theme_content, String picUrl, String pdfUrl, String pdfName, boolean isChecked, String publish_type) {
+    private void editTheme(String circle_id, int theme_id, String theme_content, String picUrl, String pdfUrl,
+                           String pdfName, boolean isChecked, String publish_type, String tx_videoId,
+                           String theme_video, String coverURL, String video_height, String video_width,
+                           String videoDuration) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
         paramas.put(Constants.TIMESTAMP, timestamp);
@@ -229,15 +251,31 @@ public class PublishPresenter extends BasePresenter<PublishContarct.View> {
         task.waitUntilFinished(); // 可以等待直到任务完成
     }
 
-    private void publishPdf(String circle_id, int theme_id, String theme_content, boolean isEdit, String pdfUrl, String pdfName, boolean isChecked, String publish_type) {
+    private void publishPdf(String circle_id, int theme_id, String theme_content, boolean isEdit, String pdfUrl,
+                            String pdfName, boolean isChecked, String publish_type) {
         if (!isEdit){
-            newTheme(circle_id, theme_content, null, pdfUrl, pdfName, isChecked, publish_type);
+            newTheme(circle_id, theme_content, null, pdfUrl, pdfName, isChecked, publish_type,
+                    null, null, null, null, null, null);
         }else {
-            editTheme(circle_id, theme_id, theme_content, null, pdfUrl, pdfName, isChecked, publish_type);
+            editTheme(circle_id, theme_id, theme_content, null, pdfUrl, pdfName, isChecked, publish_type,
+                    null, null, null, null, null, null);
         }
     }
 
-    public void upLoadImages(String circle_id, int theme_id, String theme_content, boolean isEdit, List<ThemeImageBean> list, boolean isChecked, String publish_type){
+    public void video(String circle_id, int theme_id, String theme_content, boolean isEdit, boolean checked,
+                      String publish_type, String videoId, String videoURL, String coverURL, String videoWith,
+                      String videoHeight, String videoDuration) {
+        if (!isEdit){
+            newTheme(circle_id, theme_content, null, null, null, checked, publish_type,
+                    videoId, videoURL, coverURL, videoHeight, videoWith, videoDuration);
+        }else {
+            editTheme(circle_id, theme_id, theme_content, null, null, null, checked, publish_type,
+                    videoId, videoURL, coverURL, videoHeight, videoWith, videoDuration);
+        }
+    }
+
+    public void upLoadImages(String circle_id, int theme_id, String theme_content, boolean isEdit,
+                             List<ThemeImageBean> list, boolean isChecked, String publish_type){
         if (AliOSS.ossClient == null) {
             AliOSS.init(App.getContext());
         }
@@ -247,7 +285,8 @@ public class PublishPresenter extends BasePresenter<PublishContarct.View> {
         ossUpload(circle_id, theme_id, theme_content, isEdit, list, isChecked, publish_type);
     }
 
-    private void ossUpload(String circle_id, int theme_id, String theme_content, boolean isEdit, List<ThemeImageBean> urls, boolean isChecked, String publish_type) {
+    private void ossUpload(String circle_id, int theme_id, String theme_content, boolean isEdit,
+                           List<ThemeImageBean> urls, boolean isChecked, String publish_type) {
         if (urls.size() <= 0) {
             // 文件全部上传完毕，这里编写上传结束的逻辑，如果要在主线程操作，最好用Handler或runOnUiThead做对应逻辑
             LogUtils.e("全部上传完毕");
@@ -305,5 +344,48 @@ public class PublishPresenter extends BasePresenter<PublishContarct.View> {
                 });
         // task.cancel(); // 可以取消任务
          task.waitUntilFinished(); // 可以等待直到任务完成
+    }
+
+    public void getSign() {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+        headers.put(Constants.PASS_ID, Constants.HEADER_PASSID);
+
+        addSubscribe(mDataManager.getClientUploadSign(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<String>(mView, true, false) {
+                    @Override
+                    public void onSuccess(String sign) {
+                        mView.handlerSignSuccess(sign);
+                    }
+                }));
+    }
+
+    public void circleList(PublishCircleAdapter adapter) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.chooseCircle(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<List<IEntity>>(mView, true, false) {
+                    @Override
+                    public void onSuccess(List<IEntity> iEntities) {
+                        mView.handlerCircleListSuccess(iEntities, adapter);
+                    }
+                }));
     }
 }

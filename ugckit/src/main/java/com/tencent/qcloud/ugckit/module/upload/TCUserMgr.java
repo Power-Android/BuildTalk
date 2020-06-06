@@ -9,17 +9,22 @@ import android.text.TextUtils;
 import com.tencent.liteav.basic.log.TXCLog;
 
 import com.tencent.qcloud.ugckit.UGCKitImpl;
+import com.tencent.qcloud.ugckit.utils.Constants;
+import com.tencent.qcloud.ugckit.utils.HeaderUtils;
 import com.tencent.qcloud.ugckit.utils.LogReport;
 import com.tencent.qcloud.ugckit.utils.TCUtils;
 import com.tencent.qcloud.ugckit.UGCKitConstants;
 import com.tencent.qcloud.ugckit.R;
 
+import com.tencent.qcloud.ugckit.utils.TimeUtils;
 import com.tencent.rtmp.TXLog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
@@ -330,11 +335,30 @@ public class TCUserMgr {
 
     public void getVodSig(final Callback callback) {
         try {
-            JSONObject body = new JSONObject();
-            request("/get_vod_sign", body, new HttpCallback("get_vod_sign", callback));
+            requestSig("getClientUploadSign", new HttpCallback("getClientUploadSign", callback));
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void requestSig(String cmd, okhttp3.Callback callback) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+        headers.put(Constants.PASS_ID, Constants.HEADER_PASSID);
+
+        Request request = new Request.Builder()
+                .url(Constants.DEBUG_URL + cmd)
+                .addHeader(Constants.TIMESTAMP, timestamp)
+                .addHeader(Constants.PASS_ID, Constants.HEADER_PASSID)
+                .addHeader(Constants.SIGN, sign)
+                .post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), timestamp))
+                .build();
+        mHttpClient.newCall(request).enqueue(callback);
     }
 
     public void fetchUserInfo(@Nullable final Callback callback) {

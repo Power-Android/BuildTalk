@@ -21,6 +21,42 @@ public class IEntity implements Serializable{
     private String name;
     private String id;
     private String valid_date;
+    private String user_id;
+    private String circle_id;
+    private String circle_name;
+    private boolean isChecked;
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+
+    public String getCircle_id() {
+        return circle_id;
+    }
+
+    public void setCircle_id(String circle_id) {
+        this.circle_id = circle_id;
+    }
+
+    public String getCircle_name() {
+        return circle_name;
+    }
+
+    public void setCircle_name(String circle_name) {
+        this.circle_name = circle_name;
+    }
 
     public String getValid_date() {
         return valid_date;

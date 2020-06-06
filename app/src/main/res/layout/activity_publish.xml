@@ -63,6 +63,68 @@
                 android:visibility="gone"
                 android:layout_margin="@dimen/common_margin"
                 android:background="@color/white"/>
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/video_cl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:layout_marginLeft="@dimen/common_margin">
+                <TextView
+                    android:id="@+id/upload_progress_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_mid"
+                    android:textSize="@dimen/sp_11"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+                <com.tencent.rtmp.ui.TXCloudVideoView
+                    android:id="@+id/video_view"
+                    android:layout_width="@dimen/dp_160"
+                    android:layout_height="@dimen/dp_210"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:background="@color/half_black"
+                    app:layout_constraintTop_toBottomOf="@+id/upload_progress_tv"
+                    app:layout_constraintStart_toStartOf="parent"/>
+                <ImageView
+                    android:id="@+id/cover_iv"
+                    android:layout_width="@dimen/dp_160"
+                    android:layout_height="@dimen/dp_210"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintTop_toTopOf="@+id/video_view"
+                    app:layout_constraintStart_toStartOf="@+id/video_view"
+                    app:layout_constraintEnd_toEndOf="@+id/video_view"
+                    app:layout_constraintBottom_toBottomOf="@+id/video_view"/>
+                <ImageView
+                    android:id="@+id/play_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/video_play_icon"
+                    app:layout_constraintTop_toTopOf="@+id/cover_iv"
+                    app:layout_constraintBottom_toBottomOf="@+id/cover_iv"
+                    app:layout_constraintStart_toStartOf="@+id/cover_iv"
+                    app:layout_constraintEnd_toEndOf="@+id/cover_iv"/>
+                <ProgressBar
+                    android:id="@+id/progressbar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="@dimen/dp_158"
+                    android:layout_height="@dimen/dp_1_5"
+                    android:progressDrawable="@drawable/default_progress"
+                    app:layout_constraintStart_toStartOf="@+id/cover_iv"
+                    app:layout_constraintTop_toTopOf="@+id/cover_iv"/>
+                <ImageView
+                    android:id="@+id/delete_video_iv"
+                    android:layout_width="@dimen/dp_26"
+                    android:layout_height="@dimen/dp_26"
+                    android:src="@drawable/pic_delete_icon"
+                    android:layout_marginTop="@dimen/dp_2"
+                    android:paddingLeft="@dimen/dp_10"
+                    android:paddingBottom="@dimen/dp_10"
+                    app:layout_constraintTop_toTopOf="@+id/cover_iv"
+                    app:layout_constraintEnd_toEndOf="@id/cover_iv"/>
+            </android.support.constraint.ConstraintLayout>
+
 
             <RelativeLayout
                 android:layout_width="match_parent"

@@ -5,6 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
+    android:id="@+id/normalView"
     tools:context=".ui.video.ShortVideoActivity">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
@@ -12,9 +14,10 @@
         android:layout_height="match_parent" />
     <ImageView
         android:id="@+id/back_iv"
-        android:layout_width="@dimen/dp_55"
-        android:layout_height="@dimen/dp_55"
+        android:layout_width="@dimen/dp_50"
+        android:layout_height="@dimen/dp_50"
         android:padding="@dimen/common_margin"
+        android:layout_marginTop="@dimen/dp_20"
         android:src="@drawable/arrow_left_white_icon"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>

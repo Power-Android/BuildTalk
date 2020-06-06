@@ -2,8 +2,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval"
     android:useLevel="false">
-
-    <solid android:color="@color/recordButtonClickShotBackgroundColor" />
+    <solid android:color="#E4E4E4" />
     <size
         android:width="65dp"
         android:height="65dp" />

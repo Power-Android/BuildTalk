@@ -197,18 +197,18 @@ public interface IVideoRecordKit {
      * 1、使用标准速度进行视频录制<br>
      * 2、关闭录制速度面板
      */
-    void disableRecordSpeed();
+//    void disableRecordSpeed();
 
     /**
      * 禁用拍照功能<br>
      * 不显示拍照界面
      */
-    void disableTakePhoto();
+//    void disableTakePhoto();
 
     /**
      * 禁用长按录制
      */
-    void disableLongPressRecord();
+//    void disableLongPressRecord();
 
     /**
      * 禁用背景音乐功能<br>
@@ -219,7 +219,7 @@ public interface IVideoRecordKit {
      *
      * @see RecordMusicPannel
      */
-    void disableRecordMusic();
+//    void disableRecordMusic();
 
     /**
      * 禁用音效功能<br>
@@ -228,17 +228,17 @@ public interface IVideoRecordKit {
      *
      * @see SoundEffectsPannel
      */
-    void disableRecordSoundEffect();
+//    void disableRecordSoundEffect();
 
     /**
      * 禁用屏比功能<br>
      * 默认使用全屏进行视频录制
      */
-    void disableAspect();
+//    void disableAspect();
 
     /**
      * 禁用美颜功能
      */
-    void disableBeauty();
+//    void disableBeauty();
 
 }

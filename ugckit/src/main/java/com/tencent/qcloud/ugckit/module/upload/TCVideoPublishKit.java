@@ -36,7 +36,7 @@ import com.tencent.qcloud.ugckit.UGCKitVideoPublish;
  * UGCKit视频发布模块<br>
  * 1、设置待发布视频的路径和封面 {@link #setPublishPath(String, String)}<br>
  * 2、设置发布视频的监听器{@link #setOnPublishListener(OnPublishListener)} <br>
- * 3、当发布视频完成，{@link OnPublishListener#onPublishCompleted()} 被调用 <br>
+ * 3、当发布视频完成，{@link OnPublishListener#onPublishCompleted(String, String, String)} 被调用 <br>
  * 4、当视频发布被取消，{@link OnPublishListener#onPublishCanceled()} 被调用 <br>
  * <p>
  * 可选功能：<br>
@@ -52,6 +52,12 @@ import com.tencent.qcloud.ugckit.UGCKitVideoPublish;
  * @see UGCKitVideoPublish
  */
 public interface TCVideoPublishKit {
+
+    /**
+     * 获取签名并上传视频
+     */
+    void sign_publishVideo();
+
     /**
      * 设置发布视频的路径和封面<br>
      * 注意：请检查路径是否正确
@@ -80,8 +86,11 @@ public interface TCVideoPublishKit {
     interface OnPublishListener {
         /**
          * 视频发布完成
+         * @param videoId
+         * @param videoURL
+         * @param coverURL
          */
-        void onPublishCompleted();
+        void onPublishCompleted(String videoId, String videoURL, String coverURL);
 
         /**
          * 视频发布取消

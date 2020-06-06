@@ -39,33 +39,6 @@ public interface IRecordButton {
     }
 
     /**
-     * 设置当前拍摄模式
-     *
-     * @param recordMode
-     */
-    void setCurrentRecordMode(int recordMode);
-
-    /**
-     * "拍照按钮"外圈颜色
-     */
-    void setPhotoOutterColor(@ColorRes int color);
-
-    /**
-     * "拍照按钮"内圈颜色
-     */
-    void setPhotoInnerColor(@ColorRes int color);
-
-    /**
-     * "单击拍摄"外圈颜色
-     */
-    void setClickRecordOutterColor(@ColorRes int color);
-
-    /**
-     * "单击拍摄"内圈颜色
-     */
-    void setClickRecordInnerColor(@ColorRes int color);
-
-    /**
      * "按住拍摄"外圈颜色
      */
     void setTouchRecordOutterColor(@ColorRes int color);
@@ -75,8 +48,4 @@ public interface IRecordButton {
      */
     void setTouchRecordInnerColor(@ColorRes int color);
 
-    /**
-     * 暂停按钮Icon
-     */
-    void setPauseIconResource(@DrawableRes int resid);
 }

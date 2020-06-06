@@ -6,8 +6,8 @@
     android:paddingTop="@dimen/common_margin">
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/item_face_iv"
-        android:layout_width="@dimen/dp_20"
-        android:layout_height="@dimen/dp_20"
+        android:layout_width="@dimen/dp_30"
+        android:layout_height="@dimen/dp_30"
         android:scaleType="centerCrop"
         android:layout_marginLeft="@dimen/dp_15"
         android:src="@drawable/test_course"/>
@@ -50,16 +50,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:gravity="center"
         android:layout_marginRight="@dimen/common_margin">
 
         <LinearLayout
             android:id="@+id/item_praise_ll"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="center">
             <ImageView
                 android:id="@+id/item_praise_iv"
-                android:layout_width="@dimen/dp_12"
-                android:layout_height="@dimen/dp_12"
+                android:layout_width="@dimen/dp_16"
+                android:layout_height="@dimen/dp_16"
                 android:src="@drawable/praise_def"
                 android:layout_marginRight="@dimen/dp_6"/>
             <TextView
@@ -67,16 +69,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
+                android:paddingBottom="@dimen/dp_2"
                 android:textColor="@color/text_light"
-                android:textSize="@dimen/sp_9" />
+                android:textSize="@dimen/sp_13" />
         </LinearLayout>
         <ImageView
             android:id="@+id/item_delete_iv"
-            android:layout_width="@dimen/dp_12"
-            android:layout_height="@dimen/dp_12"
-            android:visibility="gone"
+            android:layout_width="@dimen/dp_15"
+            android:layout_height="@dimen/dp_15"
+            android:visibility="visible"
             android:layout_marginLeft="@dimen/dp_15"
-            android:src="@drawable/delete_icon" />
+            android:src="@drawable/delete_comment_icon" />
 
     </LinearLayout>
 
@@ -97,7 +100,7 @@
         android:id="@+id/comment_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/dp_45"
+        android:paddingLeft="@dimen/dp_55"
         android:layout_marginTop="@dimen/dp_5"
         android:layout_below="@+id/item_content_tv"/>
     <View

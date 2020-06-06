@@ -73,7 +73,7 @@
             app:layout_constraintTop_toTopOf="@+id/item_face_iv" />
         <android.support.constraint.ConstraintLayout
             android:id="@+id/item_atten_cl"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/dp_60"
             android:layout_height="@dimen/dp_24"
             android:paddingStart="@dimen/dp_8"
             android:paddingEnd="@dimen/dp_8"

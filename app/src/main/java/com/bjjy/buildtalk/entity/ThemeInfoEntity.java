@@ -93,14 +93,368 @@ public class ThemeInfoEntity implements Serializable {
         private String is_author;
         private List<ThemeImageBean> theme_image;
         private List<ThemePdfBean> theme_pdf;
+        private List<ThemeVideoBean> theme_video;
         private List<CommentContentBean> comment_content;
         private List<PariseNickNameBean> parise_nickName;
+        private ParentThemeInfoBean parent_themeInfo;
         private int page;
         private int page_count;
         private int countCommentNum;
         private int themeCountParise;
         private int is_top;
         private int countParise;
+        private int parent_isDelete;
+        private int is_find;
+        private int reprint_themeId;
+        private int parent_themeId;
+        private String circle_name;
+        private int is_attention;
+        private int parent_userId;
+        private int parent_name;
+
+        public int getIs_find() {
+            return is_find;
+        }
+
+        public void setIs_find(int is_find) {
+            this.is_find = is_find;
+        }
+
+        public int getReprint_themeId() {
+            return reprint_themeId;
+        }
+
+        public void setReprint_themeId(int reprint_themeId) {
+            this.reprint_themeId = reprint_themeId;
+        }
+
+        public int getParent_themeId() {
+            return parent_themeId;
+        }
+
+        public void setParent_themeId(int parent_themeId) {
+            this.parent_themeId = parent_themeId;
+        }
+
+        public String getCircle_name() {
+            return circle_name;
+        }
+
+        public void setCircle_name(String circle_name) {
+            this.circle_name = circle_name;
+        }
+
+        public int getIs_attention() {
+            return is_attention;
+        }
+
+        public void setIs_attention(int is_attention) {
+            this.is_attention = is_attention;
+        }
+
+        public int getParent_userId() {
+            return parent_userId;
+        }
+
+        public void setParent_userId(int parent_userId) {
+            this.parent_userId = parent_userId;
+        }
+
+        public int getParent_name() {
+            return parent_name;
+        }
+
+        public void setParent_name(int parent_name) {
+            this.parent_name = parent_name;
+        }
+
+        public int getParent_isDelete() {
+            return parent_isDelete;
+        }
+
+        public void setParent_isDelete(int parent_isDelete) {
+            this.parent_isDelete = parent_isDelete;
+        }
+
+        public ParentThemeInfoBean getParent_themeInfo() {
+            return parent_themeInfo;
+        }
+
+        public void setParent_themeInfo(ParentThemeInfoBean parent_themeInfo) {
+            this.parent_themeInfo = parent_themeInfo;
+        }
+
+        public static class ParentThemeInfoBean implements Serializable {
+            /**
+             * theme_id : 1148
+             * theme_content :
+             * theme_image : []
+             * theme_pdf : [{"pdf_id":38,"pdf_url":"https://ciip-dev.oss-cn-beijing.aliyuncs.com/JianTanApp_iOS/themePDFs/0_2311590513062.pdf","pdf_name":"港姐.pdf"}]
+             * theme_video : []
+             * publish_time : 2020-05-26 17:09:45
+             * user_id : 231
+             * circle_id : 0
+             * is_choiceness : 0
+             * source : ios
+             * is_top : 0
+             * top_time : 0
+             * is_find : 1
+             * reprint_themeId : 0
+             * parent_themeId : 1148
+             * countParise : 0
+             * is_retract : 1
+             * name : 李佳
+             * headImage : https://www.51jiantan.com/static/image/157501144912826.png
+             * is_circleMaster : 0
+             * is_parise : 0
+             * is_collect : 0
+             * is_author : 1
+             */
+
+            private int theme_id;
+            private String theme_content;
+            private String publish_time;
+            private int user_id;
+            private int circle_id;
+            private int is_choiceness;
+            private String source;
+            private int is_top;
+            private int top_time;
+            private int is_find;
+            private int reprint_themeId;
+            private int parent_themeId;
+            private int countParise;
+            private int is_retract;
+            private String name;
+            private String headImage;
+            private int is_circleMaster;
+            private int is_parise;
+            private int is_collect;
+            private int is_author;
+            private List<ThemeImageBean> theme_image;
+            private List<com.bjjy.buildtalk.entity.ThemePdfBean> theme_pdf;
+            private List<ThemeVideoBean> theme_video;
+
+            public int getTheme_id() {
+                return theme_id;
+            }
+
+            public void setTheme_id(int theme_id) {
+                this.theme_id = theme_id;
+            }
+
+            public String getTheme_content() {
+                return theme_content;
+            }
+
+            public void setTheme_content(String theme_content) {
+                this.theme_content = theme_content;
+            }
+
+            public String getPublish_time() {
+                return publish_time;
+            }
+
+            public void setPublish_time(String publish_time) {
+                this.publish_time = publish_time;
+            }
+
+            public int getUser_id() {
+                return user_id;
+            }
+
+            public void setUser_id(int user_id) {
+                this.user_id = user_id;
+            }
+
+            public int getCircle_id() {
+                return circle_id;
+            }
+
+            public void setCircle_id(int circle_id) {
+                this.circle_id = circle_id;
+            }
+
+            public int getIs_choiceness() {
+                return is_choiceness;
+            }
+
+            public void setIs_choiceness(int is_choiceness) {
+                this.is_choiceness = is_choiceness;
+            }
+
+            public String getSource() {
+                return source;
+            }
+
+            public void setSource(String source) {
+                this.source = source;
+            }
+
+            public int getIs_top() {
+                return is_top;
+            }
+
+            public void setIs_top(int is_top) {
+                this.is_top = is_top;
+            }
+
+            public int getTop_time() {
+                return top_time;
+            }
+
+            public void setTop_time(int top_time) {
+                this.top_time = top_time;
+            }
+
+            public int getIs_find() {
+                return is_find;
+            }
+
+            public void setIs_find(int is_find) {
+                this.is_find = is_find;
+            }
+
+            public int getReprint_themeId() {
+                return reprint_themeId;
+            }
+
+            public void setReprint_themeId(int reprint_themeId) {
+                this.reprint_themeId = reprint_themeId;
+            }
+
+            public int getParent_themeId() {
+                return parent_themeId;
+            }
+
+            public void setParent_themeId(int parent_themeId) {
+                this.parent_themeId = parent_themeId;
+            }
+
+            public int getCountParise() {
+                return countParise;
+            }
+
+            public void setCountParise(int countParise) {
+                this.countParise = countParise;
+            }
+
+            public int getIs_retract() {
+                return is_retract;
+            }
+
+            public void setIs_retract(int is_retract) {
+                this.is_retract = is_retract;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            public String getHeadImage() {
+                return headImage;
+            }
+
+            public void setHeadImage(String headImage) {
+                this.headImage = headImage;
+            }
+
+            public int getIs_circleMaster() {
+                return is_circleMaster;
+            }
+
+            public void setIs_circleMaster(int is_circleMaster) {
+                this.is_circleMaster = is_circleMaster;
+            }
+
+            public int getIs_parise() {
+                return is_parise;
+            }
+
+            public void setIs_parise(int is_parise) {
+                this.is_parise = is_parise;
+            }
+
+            public int getIs_collect() {
+                return is_collect;
+            }
+
+            public void setIs_collect(int is_collect) {
+                this.is_collect = is_collect;
+            }
+
+            public int getIs_author() {
+                return is_author;
+            }
+
+            public void setIs_author(int is_author) {
+                this.is_author = is_author;
+            }
+
+            public List<ThemeImageBean> getTheme_image() {
+                return theme_image;
+            }
+
+            public void setTheme_image(List<ThemeImageBean> theme_image) {
+                this.theme_image = theme_image;
+            }
+
+            public List<com.bjjy.buildtalk.entity.ThemePdfBean> getTheme_pdf() {
+                return theme_pdf;
+            }
+
+            public void setTheme_pdf(List<com.bjjy.buildtalk.entity.ThemePdfBean> theme_pdf) {
+                this.theme_pdf = theme_pdf;
+            }
+
+            public List<ThemeVideoBean> getTheme_video() {
+                return theme_video;
+            }
+
+            public void setTheme_video(List<ThemeVideoBean> theme_video) {
+                this.theme_video = theme_video;
+            }
+
+            public static class ThemePdfBean {
+                /**
+                 * pdf_id : 38
+                 * pdf_url : https://ciip-dev.oss-cn-beijing.aliyuncs.com/JianTanApp_iOS/themePDFs/0_2311590513062.pdf
+                 * pdf_name : 港姐.pdf
+                 */
+
+                private int pdf_id;
+                private String pdf_url;
+                private String pdf_name;
+
+                public int getPdf_id() {
+                    return pdf_id;
+                }
+
+                public void setPdf_id(int pdf_id) {
+                    this.pdf_id = pdf_id;
+                }
+
+                public String getPdf_url() {
+                    return pdf_url;
+                }
+
+                public void setPdf_url(String pdf_url) {
+                    this.pdf_url = pdf_url;
+                }
+
+                public String getPdf_name() {
+                    return pdf_name;
+                }
+
+                public void setPdf_name(String pdf_name) {
+                    this.pdf_name = pdf_name;
+                }
+            }
+        }
 
         public int getCountParise() {
             return countParise;
@@ -284,6 +638,14 @@ public class ThemeInfoEntity implements Serializable {
 
         public void setTheme_pdf(List<ThemePdfBean> theme_pdf) {
             this.theme_pdf = theme_pdf;
+        }
+
+        public List<ThemeVideoBean> getTheme_video() {
+            return theme_video;
+        }
+
+        public void setTheme_video(List<ThemeVideoBean> theme_video) {
+            this.theme_video = theme_video;
         }
 
         public List<CommentContentBean> getComment_content() {

@@ -39,6 +39,10 @@ android {
         doNotStrip "*/x86/libYTCommon.so"
         doNotStrip "*/arm64-v8a/libYTCommon.so"
     }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
 }
 
 dependencies {

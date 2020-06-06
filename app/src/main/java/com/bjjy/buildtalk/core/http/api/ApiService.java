@@ -38,8 +38,10 @@ import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.SaveRecordEntity;
 import com.bjjy.buildtalk.entity.SearchCircleInfoEntity;
 import com.bjjy.buildtalk.entity.SearchResultEntity;
+import com.bjjy.buildtalk.entity.ShortVideoEntity;
 import com.bjjy.buildtalk.entity.SongsEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
+import com.bjjy.buildtalk.entity.ThemeVideoBean;
 import com.bjjy.buildtalk.entity.VersionRecordEntity;
 
 import java.io.File;
@@ -673,11 +675,31 @@ public interface ApiService {
     @FormUrlEncoded
     Observable<BaseResponse<DisrOrAttenEntity>> searchFindTheme(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
+    /**
+     * @return 获取腾讯签名
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("getClientUploadSign")
+    @FormUrlEncoded
+    Observable<BaseResponse<String>> getClientUploadSign(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
 
+    /**
+     * @return 选择圈子
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("chooseCircle")
+    @FormUrlEncoded
+    Observable<BaseResponse<List<IEntity>>> chooseCircle(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
 
-
+    /**
+     * @return 视频播放列表
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("searchVideoTheme")
+    @FormUrlEncoded
+    Observable<BaseResponse<ShortVideoEntity>> searchVideoTheme(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
 
 }

@@ -19,9 +19,12 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
+import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
+
+import com.bjjy.buildtalk.utils.LogUtils;
 
 
 /**
@@ -36,7 +39,7 @@ import android.view.View;
 public class PagerLayoutManager extends LinearLayoutManager {
 
     private RecyclerView mRecyclerView;
-    private ScrollPageHelper mPagerSnapHelper;
+    private PagerSnapHelper mPagerSnapHelper;
     private OnPagerListener mOnViewPagerListener;
     private static final int HORIZONTAL = OrientationHelper.HORIZONTAL;
     private static final int VERTICAL = OrientationHelper.VERTICAL;
@@ -62,17 +65,7 @@ public class PagerLayoutManager extends LinearLayoutManager {
      * 初始化操作
      */
     private void init() {
-        switch (mOrientation){
-            case HORIZONTAL:
-                mPagerSnapHelper = new ScrollPageHelper(Gravity.START,false);
-                break;
-            case VERTICAL:
-                mPagerSnapHelper = new ScrollPageHelper(Gravity.TOP,false);
-                break;
-            default:
-                mPagerSnapHelper = new ScrollPageHelper(Gravity.TOP,false);
-                break;
-        }
+        mPagerSnapHelper = new PagerSnapHelper();
     }
 
     /**
@@ -86,9 +79,6 @@ public class PagerLayoutManager extends LinearLayoutManager {
         }
         super.onAttachedToWindow(recyclerView);
         this.mRecyclerView = recyclerView;
-        if (mPagerSnapHelper==null){
-            init();
-        }
         try {
             //attachToRecyclerView源码上的方法可能会抛出IllegalStateException异常，这里手动捕获一下
             RecyclerView.OnFlingListener onFlingListener = mRecyclerView.getOnFlingListener();
@@ -139,7 +129,7 @@ public class PagerLayoutManager extends LinearLayoutManager {
                 int childCount = getChildCount();
                 if (mOnViewPagerListener != null && childCount == 1) {
                     mOnViewPagerListener.onPageSelected(positionIdle,
-                            positionIdle == childCount - 1);
+                            positionIdle == getItemCount() - 1);
                 }
                 break;
             case RecyclerView.SCROLL_STATE_DRAGGING:

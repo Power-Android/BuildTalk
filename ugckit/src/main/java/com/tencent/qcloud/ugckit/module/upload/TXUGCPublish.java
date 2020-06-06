@@ -102,18 +102,15 @@ public class TXUGCPublish {
             @Override
             public void onSucess(final String fileId, final String playUrl, final String coverUrl) {
                 if (mHandler != null) {
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (mListener != null) {
-                                TXUGCPublishTypeDef.TXPublishResult result = new TXUGCPublishTypeDef.TXPublishResult();
-                                result.retCode = TXUGCPublishTypeDef.PUBLISH_RESULT_OK;
-                                result.descMsg = "publish success";
-                                result.videoId = fileId;
-                                result.videoURL = playUrl;
-                                result.coverURL = coverUrl;
-                                mListener.onPublishComplete(result);
-                            }
+                    mHandler.post(() -> {
+                        if (mListener != null) {
+                            TXUGCPublishTypeDef.TXPublishResult result = new TXUGCPublishTypeDef.TXPublishResult();
+                            result.retCode = TXUGCPublishTypeDef.PUBLISH_RESULT_OK;
+                            result.descMsg = "publish success";
+                            result.videoId = fileId;
+                            result.videoURL = playUrl;
+                            result.coverURL = coverUrl;
+                            mListener.onPublishComplete(result);
                         }
                     });
                 }
@@ -124,15 +121,12 @@ public class TXUGCPublish {
             @Override
             public void onFailed(final int errCode, final String errMsg) {
                 if (mHandler != null) {
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (mListener != null) {
-                                TXUGCPublishTypeDef.TXPublishResult result = new TXUGCPublishTypeDef.TXPublishResult();
-                                result.retCode = errCode;
-                                result.descMsg = errMsg;
-                                mListener.onPublishComplete(result);
-                            }
+                    mHandler.post(() -> {
+                        if (mListener != null) {
+                            TXUGCPublishTypeDef.TXPublishResult result = new TXUGCPublishTypeDef.TXPublishResult();
+                            result.retCode = errCode;
+                            result.descMsg = errMsg;
+                            mListener.onPublishComplete(result);
                         }
                     });
                 }

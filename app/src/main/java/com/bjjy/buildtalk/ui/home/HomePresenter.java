@@ -1,12 +1,16 @@
 package com.bjjy.buildtalk.ui.home;
 
+import com.bjjy.buildtalk.R;
+import com.bjjy.buildtalk.app.App;
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.presenter.BasePresenter;
 import com.bjjy.buildtalk.base.presenter.IPresenter;
+import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.core.rx.BaseObserver;
 import com.bjjy.buildtalk.core.rx.RxUtils;
 import com.bjjy.buildtalk.entity.DisrOrAttenEntity;
 import com.bjjy.buildtalk.entity.IEntity;
+import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.utils.HeaderUtils;
 import com.bjjy.buildtalk.utils.TimeUtils;
@@ -106,6 +110,63 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
                     @Override
                     public void onSuccess(String thumb_url) {
                         mView.handlerThumbSuccess(thumb_url, data, i, isEdit);
+                    }
+                }));
+    }
+
+    public void praise(List<DisrOrAttenEntity.ThemeInfoBean> mList, int position) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        paramas.put(Constants.SOURCE, Constants.ANDROID);
+        paramas.put("data_id", mList.get(position).getTheme_id()+"");
+        paramas.put("type_id", "1");
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.themeParise(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<PraiseEntity>(mView, false) {
+                    @Override
+                    public void onSuccess(PraiseEntity praiseEntity) {
+                        mView.handlerPraiseSuccess(mList,position,praiseEntity);
+                    }
+                }));
+    }
+
+    public void attenUser(List<DisrOrAttenEntity.ThemeInfoBean> data, int position) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put("examine_user", mDataManager.getUser().getUser_id());
+        paramas.put(Constants.USER_ID, String.valueOf(data.get(position).getUser_id()));
+        paramas.put(Constants.SOURCE, Constants.ANDROID);
+        paramas.put(App.getContext().getString(R.string.TIMESTAMP), timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(App.getContext().getString(R.string.TIMESTAMP), timestamp);
+        headers.put(App.getContext().getString(R.string.SIGN), sign);
+
+        addSubscribe(mDataManager.attention(headers,paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<IEntity>(mView,false){
+                    @Override
+                    public void onSuccess(IEntity iEntity) {
+//                        mView.handlerUserDetail(detailEntity);
+                    }
+
+                    @Override
+                    public void onNext(BaseResponse<IEntity> baseResponse) {
+                        super.onNext(baseResponse);
+                        if (baseResponse.getErrorCode() == 1){
+                            mView.handlerAttentUser(baseResponse, data, position);
+                        }
                     }
                 }));
     }

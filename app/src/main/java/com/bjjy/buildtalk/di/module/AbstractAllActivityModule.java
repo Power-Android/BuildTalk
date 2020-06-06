@@ -50,6 +50,7 @@ import com.bjjy.buildtalk.di.module.activity.TopticDetailActivityMudule;
 import com.bjjy.buildtalk.di.module.activity.TopticListActivityModule;
 import com.bjjy.buildtalk.di.module.activity.TransactionActivityModule;
 import com.bjjy.buildtalk.di.module.activity.VersionRecordActivityModule;
+import com.bjjy.buildtalk.di.module.activity.VideoPublishActivityModule;
 import com.bjjy.buildtalk.di.module.activity.ViewpagerActivityModule;
 import com.bjjy.buildtalk.di.module.activity.WalletActivityModule;
 import com.bjjy.buildtalk.ui.circle.CircleAgreementActvity;
@@ -72,6 +73,7 @@ import com.bjjy.buildtalk.ui.discover.DissertationListActivity;
 import com.bjjy.buildtalk.ui.discover.EveryTalkDetailActivity;
 import com.bjjy.buildtalk.ui.discover.EveryTalkListActivity;
 import com.bjjy.buildtalk.ui.discover.TopticListActivity;
+import com.bjjy.buildtalk.ui.home.VideoPublishActivity;
 import com.bjjy.buildtalk.ui.main.GuideActivity;
 import com.bjjy.buildtalk.ui.main.LoginActivity;
 import com.bjjy.buildtalk.ui.main.MainActivity;
@@ -254,4 +256,7 @@ public abstract class AbstractAllActivityModule {
 
     @ContributesAndroidInjector(modules = ShortVideoActivityModule.class)
     abstract ShortVideoActivity mShortVideoActivity();
+
+    @ContributesAndroidInjector(modules = VideoPublishActivityModule.class)
+    abstract VideoPublishActivity mVideoPublishActivity();
 }

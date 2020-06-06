@@ -106,7 +106,7 @@ public class UGCKitVideoPublish extends RelativeLayout implements TCVideoPublish
         mTvProgress = (TextView) findViewById(R.id.tv_progress);
         mImageViewBg = (ImageView) findViewById(R.id.bg_iv);
 
-        publishVideo();
+//        publishVideo();
     }
 
     /**
@@ -139,7 +139,7 @@ public class UGCKitVideoPublish extends RelativeLayout implements TCVideoPublish
             public void onSuccess(@NonNull JSONObject data) {
                 try {
                     mCosSignature = data.getString("signature");
-                    startPublish();
+//                    startPublish();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -162,12 +162,12 @@ public class UGCKitVideoPublish extends RelativeLayout implements TCVideoPublish
     /**
      * Step2:开始发布视频（子线程）
      */
-    private void startPublish() {
+    public void startPublish(String mCosSignature) {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
                 if (mVideoPublish == null) {
-                    mVideoPublish = new TXUGCPublish(UGCKitImpl.getAppContext(), TCUserMgr.getInstance().getUserId());
+                    mVideoPublish = new TXUGCPublish(UGCKitImpl.getAppContext(), mCosSignature);
                 }
                 /**
                  * 设置视频发布监听器
@@ -196,6 +196,12 @@ public class UGCKitVideoPublish extends RelativeLayout implements TCVideoPublish
     /************************************************************************/
     /*****                     UGCKit外部接口调用                         *****/
     /************************************************************************/
+
+    @Override
+    public void sign_publishVideo() {
+
+    }
+
     @Override
     public void setPublishPath(String videoPath, String coverPath) {
         mVideoPath = videoPath;
@@ -331,52 +337,52 @@ public class UGCKitVideoPublish extends RelativeLayout implements TCVideoPublish
      * @param coverURL
      */
     private void UploadUGCVideo(final String videoId, final String videoURL, final String coverURL) {
-        String title = null; //TODO:传入本地视频文件名称
-        if (TextUtils.isEmpty(title)) {
-            title = "小视频";
+        if (mOnPublishListener != null) {
+            mOnPublishListener.onPublishCompleted(videoId, videoURL, coverURL);
         }
-        try {
-            JSONObject body = new JSONObject().put("file_id", videoId)
-                    .put("title", title)
-                    .put("frontcover", coverURL)
-                    .put("location", "未知")
-                    .put("play_url", videoURL);
-            TCUserMgr.getInstance().request("/upload_ugc", body, new TCUserMgr.HttpCallback("upload_ugc", new TCUserMgr.Callback() {
-                @Override
-                public void onSuccess(JSONObject data) {
-                    /**
-                     * ELK上报：发布视频到服务器
-                     */
-                    LogReport.getInstance().uploadLogs(LogReport.ELK_ACTION_VIDEO_UPLOAD_SERVER, TCUserMgr.SUCCESS_CODE, "UploadUGCVideo Sucess");
-
-                    BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            EventBus.getDefault().post(UGCKitConstants.EVENT_MSG_PUBLISH_DONE);
-
-                            if (mOnPublishListener != null) {
-                                mOnPublishListener.onPublishCompleted();
-                            }
-                        }
-                    });
-                }
-
-                @Override
-                public void onFailure(int code, final String msg) {
-                    /**
-                     * ELK上报：发布视频到服务器
-                     */
-                    LogReport.getInstance().uploadLogs(LogReport.ELK_ACTION_VIDEO_UPLOAD_SERVER, code, msg);
-                }
-            }));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        String title = null; //TODO:传入本地视频文件名称
+//        if (TextUtils.isEmpty(title)) {
+//            title = "小视频";
+//        }
+//        try {
+//            JSONObject body = new JSONObject().put("file_id", videoId)
+//                    .put("title", title)
+//                    .put("frontcover", coverURL)
+//                    .put("location", "未知")
+//                    .put("play_url", videoURL);
+//            TCUserMgr.getInstance().request("/upload_ugc", body, new TCUserMgr.HttpCallback("upload_ugc", new TCUserMgr.Callback() {
+//                @Override
+//                public void onSuccess(JSONObject data) {
+//                    /**
+//                     * ELK上报：发布视频到服务器
+//                     */
+//                    LogReport.getInstance().uploadLogs(LogReport.ELK_ACTION_VIDEO_UPLOAD_SERVER, TCUserMgr.SUCCESS_CODE, "UploadUGCVideo Sucess");
+//
+//                    BackgroundTasks.getInstance().runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            EventBus.getDefault().post(UGCKitConstants.EVENT_MSG_PUBLISH_DONE);
+//
+//
+//                        }
+//                    });
+//                }
+//
+//                @Override
+//                public void onFailure(int code, final String msg) {
+//                    /**
+//                     * ELK上报：发布视频到服务器
+//                     */
+//                    LogReport.getInstance().uploadLogs(LogReport.ELK_ACTION_VIDEO_UPLOAD_SERVER, code, msg);
+//                }
+//            }));
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void release() {
         NetworkUtil.getInstance(UGCKitImpl.getAppContext()).unregisterNetChangeReceiver();
-
         deleteCache();
     }
 

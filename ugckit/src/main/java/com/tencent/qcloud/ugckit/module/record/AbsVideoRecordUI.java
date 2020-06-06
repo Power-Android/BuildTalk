@@ -1,7 +1,10 @@
 package com.tencent.qcloud.ugckit.module.record;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.tencent.liteav.demo.beauty.BeautyPanel;
@@ -10,21 +13,32 @@ import com.tencent.qcloud.ugckit.R;
 import com.tencent.qcloud.ugckit.component.TitleBarLayout;
 
 import com.tencent.qcloud.ugckit.module.record.interfaces.IVideoRecordKit;
+import com.tencent.qcloud.ugckit.utils.UIAttributeUtil;
 import com.tencent.rtmp.ui.TXCloudVideoView;
+import com.tencent.ugc.TXUGCRecord;
 
-public abstract class AbsVideoRecordUI extends RelativeLayout implements IVideoRecordKit {
-
-    private TitleBarLayout mTitleBar;
+public abstract class AbsVideoRecordUI extends RelativeLayout implements IVideoRecordKit, View.OnClickListener {
+    private Activity mActivity;
     private TXCloudVideoView mVideoView;
     private ScrollFilterView mScrollFilterView;
-
-    private RecordRightLayout mRecordRightLayout;
     private RecordBottomLayout mRecordBottomLayout;
-
     private BeautyPanel mBeautyPanel;
-    private RecordMusicPannel mRecordMusicPannel;
-    private SoundEffectsPannel mSoundEffectsPannel;
-    private ImageSnapShotView mImageSnapShotView;
+    private ImageView mIvClose;
+    // 切换摄像头
+    private ImageView mIv_switch_camera;
+    // 闪光灯
+    private ImageView mIv_torch;
+    /**
+     * 是否前置摄像头UI判断
+     */
+    private boolean mFrontCameraFlag = false;
+    /**
+     * 是否打开闪光灯UI判断
+     */
+    private boolean mIsTorchOpenFlag;
+    private int mTorchOnImage;
+    private int mTorchOffImage;
+    private int mTorchDisableImage;
 
     public AbsVideoRecordUI(Context context) {
         super(context);
@@ -43,25 +57,43 @@ public abstract class AbsVideoRecordUI extends RelativeLayout implements IVideoR
 
     private void initViews() {
         inflate(getContext(), R.layout.video_rec_layout, this);
+        mActivity = (Activity) getContext();
 
-        mTitleBar = (TitleBarLayout) findViewById(R.id.titleBar_layout);
         mVideoView = (TXCloudVideoView) findViewById(R.id.video_view);
-
-        mRecordRightLayout = (RecordRightLayout) findViewById(R.id.record_right_layout);
         mRecordBottomLayout = (RecordBottomLayout) findViewById(R.id.record_bottom_layout);
-
         mBeautyPanel = (BeautyPanel) findViewById(R.id.beauty_pannel);
         mScrollFilterView = (ScrollFilterView) findViewById(R.id.scrollFilterView);
         mScrollFilterView.setBeautyPannel(mBeautyPanel);
+        mIvClose = findViewById(R.id.iv_close);
+        mIv_switch_camera = findViewById(R.id.iv_switch_camera);
+        mIv_torch = findViewById(R.id.iv_torch);
 
-        mRecordMusicPannel = (RecordMusicPannel) findViewById(R.id.record_music_pannel);
-        mSoundEffectsPannel = (SoundEffectsPannel) findViewById(R.id.sound_effect_pannel);
+        mIv_switch_camera.setOnClickListener(this);
+        mIv_torch.setOnClickListener(this);
 
-        mImageSnapShotView = (ImageSnapShotView) findViewById(R.id.image_snapshot_view);
+        mTorchDisableImage = UIAttributeUtil.getResResources(mActivity, R.attr.recordTorchDisableIcon, R.drawable.ugc_torch_disable);
+        mTorchOffImage = UIAttributeUtil.getResResources(mActivity, R.attr.recordTorchOffIcon, R.drawable.selector_torch_close);
+        mTorchOnImage = UIAttributeUtil.getResResources(mActivity, R.attr.recordTorchOnIcon, R.drawable.selector_torch_open);
+
+        if (mFrontCameraFlag) {
+            mIv_torch.setVisibility(View.GONE);
+            mIv_torch.setImageResource(mTorchDisableImage);
+        } else {
+            mIv_torch.setVisibility(View.VISIBLE);
+            mIv_torch.setImageResource(mTorchOffImage);
+        }
     }
 
-    public TitleBarLayout getTitleBar() {
-        return mTitleBar;
+    public ImageView getCloseIv() {
+        return mIvClose;
+    }
+
+    public ImageView getSwitchCamera() {
+        return mIv_switch_camera;
+    }
+
+    public ImageView getTorchIv() {
+        return mIv_torch;
     }
 
     public TXCloudVideoView getRecordVideoView() {
@@ -72,14 +104,6 @@ public abstract class AbsVideoRecordUI extends RelativeLayout implements IVideoR
         return mScrollFilterView;
     }
 
-    public ImageSnapShotView getSnapshotView() {
-        return mImageSnapShotView;
-    }
-
-    public RecordRightLayout getRecordRightLayout() {
-        return mRecordRightLayout;
-    }
-
     public RecordBottomLayout getRecordBottomLayout() {
         return mRecordBottomLayout;
     }
@@ -88,47 +112,70 @@ public abstract class AbsVideoRecordUI extends RelativeLayout implements IVideoR
         return mBeautyPanel;
     }
 
-    public RecordMusicPannel getRecordMusicPannel() {
-        return mRecordMusicPannel;
-    }
-
-    public SoundEffectsPannel getSoundEffectPannel() {
-        return mSoundEffectsPannel;
-    }
-
     @Override
-    public void disableRecordSpeed() {
-        mRecordBottomLayout.disableRecordSpeed();
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.iv_torch) {
+            toggleTorch();
+        } else if (id == R.id.iv_switch_camera) {
+            switchCamera();
+        }
     }
 
-    @Override
-    public void disableTakePhoto() {
-        mRecordBottomLayout.disableTakePhoto();
+    /**
+     * 切换前后摄像头
+     */
+    private void switchCamera() {
+        mFrontCameraFlag = !mFrontCameraFlag;
+        mIsTorchOpenFlag = false;
+        if (mFrontCameraFlag) {
+            mIv_torch.setVisibility(View.GONE);
+            mIv_torch.setImageResource(mTorchDisableImage);
+        } else {
+            mIv_torch.setVisibility(View.VISIBLE);
+            mIv_torch.setImageResource(mTorchOffImage);
+        }
+        TXUGCRecord record = VideoRecordSDK.getInstance().getRecorder();
+        if (record != null) {
+            record.switchCamera(mFrontCameraFlag);
+        }
     }
 
-    @Override
-    public void disableLongPressRecord() {
-        mRecordBottomLayout.disableLongPressRecord();
+    /**
+     * 切换闪光灯开/关
+     */
+    private void toggleTorch() {
+        mIsTorchOpenFlag = !mIsTorchOpenFlag;
+        if (mIsTorchOpenFlag) {
+            mIv_torch.setImageResource(mTorchOnImage);
+
+            TXUGCRecord record = VideoRecordSDK.getInstance().getRecorder();
+            if (record != null) {
+                record.toggleTorch(true);
+            }
+        } else {
+            mIv_torch.setImageResource(mTorchOffImage);
+            TXUGCRecord record = VideoRecordSDK.getInstance().getRecorder();
+            if (record != null) {
+                record.toggleTorch(false);
+            }
+        }
     }
 
-    @Override
-    public void disableRecordMusic() {
-        mRecordRightLayout.disableRecordMusic();
-    }
-
-    @Override
-    public void disableRecordSoundEffect() {
-        mRecordRightLayout.disableRecordSoundEffect();
-    }
-
-    @Override
-    public void disableAspect() {
-        mRecordRightLayout.disableAspect();
-    }
-
-    @Override
-    public void disableBeauty() {
-        mRecordRightLayout.disableBeauty();
+    /**
+     * 设置闪光灯的状态为关闭
+     */
+    public void closeTorch() {
+        if (mIsTorchOpenFlag) {
+            mIsTorchOpenFlag = false;
+            if (mFrontCameraFlag) {
+                mIv_torch.setVisibility(View.GONE);
+                mIv_torch.setImageResource(mTorchDisableImage);
+            } else {
+                mIv_torch.setImageResource(mTorchOffImage);
+                mIv_torch.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
 }

@@ -8,7 +8,6 @@ import android.view.WindowManager;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.ui.circle.PublishActivity;
-import com.bjjy.buildtalk.ui.main.MainActivity;
 import com.tencent.qcloud.ugckit.UGCKitConstants;
 import com.tencent.qcloud.ugckit.UGCKitVideoPublish;
 import com.tencent.qcloud.ugckit.module.upload.TCVideoPublishKit;
@@ -42,24 +41,24 @@ public class TCVideoPublisherActivity extends Activity {
         /**
          * 设置发布视频的监听器
          */
-        mUGCKitVideoPublish.setOnPublishListener(new TCVideoPublishKit.OnPublishListener() {
-
-            @Override
-            public void onPublishCompleted() {
-                /**
-                 * 发布完成，返回主界面
-                 */
-                backToMainActivity();
-            }
-
-            @Override
-            public void onPublishCanceled() {
-                /**
-                 * 发布取消，退出发布页面
-                 */
-                finish();
-            }
-        });
+//        mUGCKitVideoPublish.setOnPublishListener(new TCVideoPublishKit.OnPublishListener() {
+//
+//            @Override
+//            public void onPublishCompleted(String videoId, String videoURL, String coverURL) {
+//                /**
+//                 * 发布完成，返回主界面
+//                 */
+//                backToMainActivity();
+//            }
+//
+//            @Override
+//            public void onPublishCanceled() {
+//                /**
+//                 * 发布取消，退出发布页面
+//                 */
+//                finish();
+//            }
+//        });
     }
 
     private void initWindowParam() {

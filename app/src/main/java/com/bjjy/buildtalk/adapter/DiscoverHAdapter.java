@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
@@ -21,6 +22,7 @@ import com.bjjy.buildtalk.entity.PdfInfoEntity;
 import com.bjjy.buildtalk.entity.ThemeImageBean;
 import com.bjjy.buildtalk.entity.ThemePdfBean;
 import com.bjjy.buildtalk.ui.circle.PDFViewerActivity;
+import com.bjjy.buildtalk.ui.circle.TopticDetailActivity;
 import com.bjjy.buildtalk.utils.AllUtils;
 import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.SpanUtils;
@@ -70,6 +72,11 @@ public class DiscoverHAdapter extends BaseQuickAdapter<DisrOrAttenEntity.ThemeIn
                 LogUtils.e("收回操作，不真正触发收回操作");
             } else {
                 LogUtils.e("展开操作，不真正触发展开操作");
+                Intent intent = new Intent(mContext, TopticDetailActivity.class);
+                intent.putExtra("title", item.getName());
+                intent.putExtra("theme_id", item.getTheme_id() + "");
+                intent.putExtra("circle_id", item.getCircle_id());
+                mContext.startActivity(intent);
             }
         }, false);
 
@@ -86,10 +93,14 @@ public class DiscoverHAdapter extends BaseQuickAdapter<DisrOrAttenEntity.ThemeIn
                         item.getParent_themeInfo().getTheme_image().size() > 0)
                 .setGone(R.id.item_vertical_cl, !isDelete &&
                         item.getParent_themeInfo().getTheme_video().size() > 0 &&
-                        Integer.parseInt(item.getParent_themeInfo().getTheme_video().get(0).getVideo_height()) >
+                        !TextUtils.isEmpty(item.getParent_themeInfo().getTheme_video().get(0).getVideo_height()) &&
+                        !TextUtils.isEmpty(item.getParent_themeInfo().getTheme_video().get(0).getVideo_width()) &&
+                        Integer.parseInt(item.getParent_themeInfo().getTheme_video().get(0).getVideo_height()) >=
                                 Integer.parseInt(item.getParent_themeInfo().getTheme_video().get(0).getVideo_width()))
                 .setGone(R.id.item_horizontal_cl, !isDelete &&
                         item.getParent_themeInfo().getTheme_video().size() > 0 &&
+                        !TextUtils.isEmpty(item.getParent_themeInfo().getTheme_video().get(0).getVideo_height()) &&
+                        !TextUtils.isEmpty(item.getParent_themeInfo().getTheme_video().get(0).getVideo_width()) &&
                         Integer.parseInt(item.getParent_themeInfo().getTheme_video().get(0).getVideo_height()) <
                                 Integer.parseInt(item.getParent_themeInfo().getTheme_video().get(0).getVideo_width()))
                 .setGone(R.id.item_pdf_recycler_view, !isDelete &&
@@ -100,40 +111,41 @@ public class DiscoverHAdapter extends BaseQuickAdapter<DisrOrAttenEntity.ThemeIn
                 .addOnClickListener(R.id.item_from_tv)
                 .addOnClickListener(R.id.item_atten_cl)
                 .addOnClickListener(R.id.item_more_iv)
+                .addOnClickListener(R.id.item_vertical_video_view)
+                .addOnClickListener(R.id.item_horizontal_video_view)
                 .addOnClickListener(R.id.item_praise_ll)
                 .addOnClickListener(R.id.item_record_ll)
                 .addOnClickListener(R.id.item_share_ll);
         //是否关注
-        if (0 == item.getIs_attention()){
-            helper.getView(R.id.item_atten_cl)
-                    .setBackground(mContext.getResources().getDrawable(R.drawable.shape_orange_13radius));
-            ((ImageView)helper.getView(R.id.item_atten_iv)).setImageResource(R.drawable.attention_sel);
-            ((TextView)helper.getView(R.id.item_atten_tv)).setText("关注");
-            ((TextView)helper.getView(R.id.item_atten_tv))
-                    .setTextColor(mContext.getResources().getColor(R.color.oranger3));
-        }else if (1 == item.getIs_attention()){
-            helper.getView(R.id.item_atten_cl)
-                    .setBackground(mContext.getResources().getDrawable(R.drawable.shape_gray_13radius));
-            ((ImageView)helper.getView(R.id.item_atten_iv)).setImageResource(R.drawable.attention_def);
-            ((TextView)helper.getView(R.id.item_atten_tv)).setText("已关注");
-            ((TextView)helper.getView(R.id.item_atten_tv))
-                    .setTextColor(mContext.getResources().getColor(R.color.text_color6));
-        }else {
+        ConstraintLayout attenCl = helper.getView(R.id.item_atten_cl);
+        ImageView attenIv =  helper.getView(R.id.item_atten_iv);
+        TextView attenTv =  helper.getView(R.id.item_atten_tv);
+        if (0 == item.getIs_attention()) {
+            attenIv.setImageResource(R.drawable.attention_sel);
+            attenTv.setText("关注");
+            attenTv.setTextColor(mContext.getResources().getColor(R.color.oranger3));
+            attenCl.setBackground(mContext.getResources().getDrawable(R.drawable.shape_orange_13radius));
+        } else if (1 == item.getIs_attention()) {
+            attenIv.setImageResource(R.drawable.attention_def);
+            attenTv.setText("已关注");
+            attenTv.setTextColor(mContext.getResources().getColor(R.color.text_color6));
+            attenCl.setBackground(mContext.getResources().getDrawable(R.drawable.shape_gray_13radius));
+        } else if (2 == item.getIs_attention()){
             helper.setVisible(R.id.item_atten_cl, false);
         }
         //是否点赞
-        if (0 == item.getIs_parise()){
-            ((ImageView)helper.getView(R.id.item_praise_iv)).setImageResource(R.drawable.praise_def);
-        }else {
-            ((ImageView)helper.getView(R.id.item_praise_iv)).setImageResource(R.drawable.praise_sel);
+        if (1 == item.getIs_parise()) {
+            helper.setImageResource(R.id.item_praise_iv, R.drawable.praise_sel);
+        } else {
+            helper.setImageResource(R.id.item_praise_iv, R.drawable.praise_def);
         }
 
-        if (isDelete){//该主题被删除，直接return
+        if (isDelete) {//该主题被删除，直接return
             return;
         }
 
         //图片
-        if (item.getParent_themeInfo().getTheme_image().size() > 0){
+        if (item.getParent_themeInfo().getTheme_image().size() > 0) {
             MultiImageView multiImageView = helper.getView(R.id.item_grid_view);
             List<DisrOrAttenEntity.ThemeInfoBean.ThemeImageBeanX> themeImageBeanList =
                     item.getParent_themeInfo().getTheme_image();
@@ -147,47 +159,52 @@ public class DiscoverHAdapter extends BaseQuickAdapter<DisrOrAttenEntity.ThemeIn
         }
 
         //PDF
-        if (item.getParent_themeInfo().getTheme_pdf().size() > 0){
+        if (item.getParent_themeInfo().getTheme_pdf().size() > 0) {
             List<DisrOrAttenEntity.ThemeInfoBean.ParentThemeInfoBean.ThemePdfBean> theme_pdf =
                     item.getParent_themeInfo().getTheme_pdf();
             List<PdfInfoEntity> list1 = new ArrayList<>();
             for (int i = 0; i < theme_pdf.size(); i++) {
-                list1.add(new PdfInfoEntity(theme_pdf.get(i).getPdf_name(),theme_pdf.get(i).getPdf_url()));
+                list1.add(new PdfInfoEntity(theme_pdf.get(i).getPdf_name(), theme_pdf.get(i).getPdf_url()));
             }
             RecyclerView pdf_recyclerView = helper.getView(R.id.item_pdf_recycler_view);
             pdf_recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
             PdfVewAdapter pdfVewAdapter = new PdfVewAdapter(R.layout.adapter_pdf_view, list1);
             pdf_recyclerView.setAdapter(pdfVewAdapter);
             pdfVewAdapter.setOnItemClickListener((adapter, view, position) -> {
-                List<PdfInfoEntity> data =  adapter.getData();
+                List<PdfInfoEntity> data = adapter.getData();
                 Intent intent = new Intent(mContext, PDFViewerActivity.class);
                 intent.putExtra("data", data.get(position));
-                intent.putExtra("theme_id", item.getTheme_id()+"");
+                intent.putExtra("theme_id", item.getTheme_id() + "");
                 intent.putExtra("isCollect", 0 == item.getIs_collect());
                 mContext.startActivity(intent);
             });
         }
 
         //视频
-        if (item.getParent_themeInfo().getTheme_video().size() > 0){
+        if (item.getParent_themeInfo().getTheme_video().size() > 0) {
             String videoWidth = item.getParent_themeInfo().getTheme_video().get(0).getVideo_width();
             String videoHeight = item.getParent_themeInfo().getTheme_video().get(0).getVideo_height();
-            if (TextUtils.isEmpty(videoWidth) || TextUtils.isEmpty(videoHeight)){
+            String video_duration = item.getParent_themeInfo().getTheme_video().get(0).getVideo_duration();
+            float duration = 0f;
+            if (!TextUtils.isEmpty(video_duration)){
+                duration = Float.parseFloat(video_duration);
+            }
+            if (TextUtils.isEmpty(videoWidth) || TextUtils.isEmpty(videoHeight)) {
                 helper.setGone(R.id.item_vertical_cl, true);
                 Glide.with(mContext).load(R.color.black).into((ImageView) helper.getView(R.id.item_vertical_video_view));
-            }else {
-                if (Integer.parseInt(videoWidth) >= Integer.parseInt(videoHeight)){
+            } else {
+                if (Integer.parseInt(videoWidth) > Integer.parseInt(videoHeight)) {
                     Glide.with(mContext)
                             .load(item.getParent_themeInfo().getTheme_video().get(0).getCoverURL())
                             .into((ImageView) helper.getView(R.id.item_horizontal_video_view));
-                    helper.setText(R.id.item_horizontal_time,
-                            item.getParent_themeInfo().getTheme_video().get(0).getVideo_duration());
-                }else {
+                    helper.setText(R.id.item_horizontal_time, TextUtils.isEmpty(video_duration) ?
+                            "" : TimeUtils.stringForTime((int) duration));
+                } else {
                     Glide.with(mContext)
                             .load(item.getParent_themeInfo().getTheme_video().get(0).getCoverURL())
                             .into((ImageView) helper.getView(R.id.item_vertical_video_view));
-                    helper.setText(R.id.item_vertical_time,
-                            item.getParent_themeInfo().getTheme_video().get(0).getVideo_duration());
+                    helper.setText(R.id.item_vertical_time, TextUtils.isEmpty(video_duration) ?
+                            "" : TimeUtils.stringForTime((int) duration));
                 }
             }
         }

@@ -2,7 +2,9 @@ package com.bjjy.buildtalk.ui.circle;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
@@ -28,6 +30,7 @@ import com.bjjy.buildtalk.adapter.PdfVewAdapter;
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.core.event.RefreshEvent;
+import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.entity.CommentContentBean;
 import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.PariseNickNameBean;
@@ -36,10 +39,12 @@ import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.ThemeImageBean;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.entity.ThemePdfBean;
+import com.bjjy.buildtalk.entity.ThemeVideoBean;
 import com.bjjy.buildtalk.utils.AllUtils;
 import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.LoginHelper;
+import com.bjjy.buildtalk.utils.SpanUtils;
 import com.bjjy.buildtalk.utils.StatusBarUtils;
 import com.bjjy.buildtalk.utils.StringUtils;
 import com.bjjy.buildtalk.utils.TimeUtils;
@@ -62,6 +67,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -71,14 +77,14 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
     TextView mToolbarTitle;
     @BindView(R.id.toolbar_left_back)
     ImageView mToolbarBack;
+    @BindView(R.id.toolbar_right_search)
+    ImageView mToolBarRightIv;
     @BindView(R.id.item_face_iv)
     CircleImageView mItemFaceIv;
     @BindView(R.id.item_name_tv)
     TextView mItemNameTv;
     @BindView(R.id.item_job_tv)
     TextView mItemJobTv;
-    @BindView(R.id.item_more_iv)
-    ImageView mItemMoreIv;
     @BindView(R.id.item_time_tv)
     TextView mItemTimeTv;
     @BindView(R.id.item_content_tv)
@@ -112,13 +118,38 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
     @BindView(R.id.praise_ll)
     LinearLayout mPraiseLl;
     @BindView(R.id.share_iv)
-    ImageView mShareIv;
+    TextView mShareIv;
     @BindView(R.id.include_toolbar)
     RelativeLayout mIncludeToolbar;
     @BindView(R.id.record_ll)
     LinearLayout mRecordLl;
+    @BindView(R.id.record_bottom_ll)
+    LinearLayout mRecordBottomLl;
     @BindView(R.id.emptyView)
     NestedScrollView mEmptyView;
+    @BindView(R.id.from_tv)
+    TextView mFromTv;
+    @BindView(R.id.from_tv1)
+    TextView mFromTv1;
+    @BindView(R.id.item_atten_iv)
+    ImageView mItemAttenIv;
+    @BindView(R.id.item_atten_tv)
+    TextView mItemAttenTv;
+    @BindView(R.id.item_atten_cl)
+    ConstraintLayout mItemAttenCl;
+    @BindView(R.id.item_vertical_video_view)
+    ImageView mItemVerticalVideoView;
+    @BindView(R.id.item_vertical_time)
+    TextView mItemVerticalTime;
+    @BindView(R.id.item_vertical_cl)
+    ConstraintLayout mItemVerticalCl;
+    @BindView(R.id.item_horizontal_video_view)
+    ImageView mItemHorizontalVideoView;
+    @BindView(R.id.item_horizontal_time)
+    TextView mItemHorizontalTime;
+    @BindView(R.id.item_horizontal_cl)
+    ConstraintLayout mItemHorizontalCl;
+
     private String mTheme_id;
     private ThemeInfoEntity.ThemeInfoBean themeInfoEntity;
     private int page = 1;
@@ -167,9 +198,11 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
         mCircle_id = getIntent().getStringExtra("circle_id");
         mToolbarBack.setOnClickListener(v -> finish());
         mToolbarTitle.setText(mTitle);
+        mToolBarRightIv.setImageResource(R.drawable.title_more_icon);
+        mToolBarRightIv.setVisibility(View.VISIBLE);
         KeyboardUtils.registerSoftInputChangedListener(this, height -> {
             if (height <= 0) {
-                mRecordLl.setVisibility(View.VISIBLE);
+                mRecordBottomLl.setVisibility(View.VISIBLE);
                 isGone = false;
             }
         });
@@ -192,7 +225,7 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mCommentAdapter = new CommentAdapter(R.layout.adapter_circle_detail_comment, mComment_content);
         mRecyclerView.setAdapter(mCommentAdapter);
-        ((SimpleItemAnimator)mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+        ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         mCommentAdapter.setOnItemChildClickListener(this);
         mCommentAdapter.setCommentClickListener(this);
     }
@@ -205,43 +238,99 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
         Glide.with(this).load(themeInfoEntity.getHeadImage()).into(mItemFaceIv);
         mItemNameTv.setText(themeInfoEntity.getName());
         mThemeCountParise = themeInfoEntity.getThemeCountParise();
+        changeAttentionStatus();
         if ("1".equals(themeInfoEntity.getIs_circleMaster())) {
             mItemJobTv.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             mItemJobTv.setVisibility(View.GONE);
         }
         mItemTimeTv.setText(TimeUtils.getFriendlyTimeSpanByNow(themeInfoEntity.getPublish_time()));
         mItemContentTv.setText(themeInfoEntity.getTheme_content());
-
-        if (themeInfoEntity.getTheme_pdf().size() > 0){
-            mItemGridView.setVisibility(View.GONE);
-            mPdfRecyclerView.setVisibility(View.VISIBLE);
+        if (themeInfoEntity.getReprint_themeId() == 0) {
+            mFromTv.setVisibility(View.GONE);
+            mFromTv1.setVisibility(View.GONE);
+        } else {
+            if (themeInfoEntity.getIs_find() == 0) {
+                mFromTv.setText("转自 @" + themeInfoEntity.getParent_name());
+                SpanUtils.with(mFromTv1)
+                        .append("转自圈子 ")
+                        .setForegroundColor(getResources().getColor(R.color.text_color6))
+                        .append(themeInfoEntity.getCircle_name())
+                        .setForegroundColor(getResources().getColor(R.color.blue_mid))
+                        .create();
+            } else {
+                SpanUtils.with(mFromTv1)
+                        .append("转自发现 ")
+                        .setForegroundColor(getResources().getColor(R.color.text_color6))
+                        .create();
+            }
+            mFromTv.setVisibility(View.VISIBLE);
+            mFromTv1.setVisibility(View.VISIBLE);
         }
 
         List<ThemeImageBean> themeImageBeanList = themeInfoEntity.getTheme_image();
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < themeImageBeanList.size(); i++) {
-            list.add(themeImageBeanList.get(i).getPic_url());
+        if (themeImageBeanList.size() > 0){
+            List<String> list = new ArrayList<>();
+            for (int i = 0; i < themeImageBeanList.size(); i++) {
+                list.add(themeImageBeanList.get(i).getPic_url());
+            }
+            mItemGridView.setList(list);
+            mItemGridView.setVisibility(View.VISIBLE);
+            mItemGridView.setOnItemClickListener((view, position, imageViews) ->
+                    AllUtils.startImagePage(this, list, Arrays.asList(imageViews), position));
         }
-        mItemGridView.setList(list);
-        mItemGridView.setOnItemClickListener((view, position, imageViews) -> AllUtils.startImagePage(this, list, Arrays.asList(imageViews), position));
 
         List<ThemePdfBean> theme_pdf = themeInfoEntity.getTheme_pdf();
-        List<PdfInfoEntity> list1 = new ArrayList<>();
-        for (int i = 0; i < theme_pdf.size(); i++) {
-            list1.add(new PdfInfoEntity(theme_pdf.get(i).getPdf_name(),theme_pdf.get(i).getPdf_url()));
+        if (theme_pdf.size() > 0){
+            List<PdfInfoEntity> list1 = new ArrayList<>();
+            for (int i = 0; i < theme_pdf.size(); i++) {
+                list1.add(new PdfInfoEntity(theme_pdf.get(i).getPdf_name(), theme_pdf.get(i).getPdf_url()));
+            }
+            mPdfRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            PdfVewAdapter pdfVewAdapter = new PdfVewAdapter(R.layout.adapter_pdf_view, list1);
+            mPdfRecyclerView.setAdapter(pdfVewAdapter);
+            mPdfRecyclerView.setVisibility(View.VISIBLE);
+            pdfVewAdapter.setOnItemClickListener((adapter, view, position) -> {
+                List<PdfInfoEntity> data = adapter.getData();
+                Intent intent = new Intent(TopticDetailActivity.this, PDFViewerActivity.class);
+                intent.putExtra("data", data.get(position));
+                intent.putExtra("theme_id", themeInfoEntity.getTheme_id() + "");
+                intent.putExtra("isCollect", 0 == themeInfoEntity.getIs_collect());
+                startActivity(intent);
+            });
         }
-        mPdfRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        PdfVewAdapter pdfVewAdapter = new PdfVewAdapter(R.layout.adapter_pdf_view, list1);
-        mPdfRecyclerView.setAdapter(pdfVewAdapter);
-        pdfVewAdapter.setOnItemClickListener((adapter, view, position) -> {
-            List<PdfInfoEntity> data =  adapter.getData();
-            Intent intent = new Intent(TopticDetailActivity.this, PDFViewerActivity.class);
-            intent.putExtra("data", data.get(position));
-            intent.putExtra("theme_id", themeInfoEntity.getTheme_id()+"");
-            intent.putExtra("isCollect", 0 == themeInfoEntity.getIs_collect());
-            startActivity(intent);
-        });
+
+        List<ThemeVideoBean> theme_video = themeInfoEntity.getTheme_video();
+        if (theme_video.size() > 0){
+            String videoWidth = theme_video.get(0).getVideo_width();
+            String videoHeight = theme_video.get(0).getVideo_height();
+            String video_duration = theme_video.get(0).getVideo_duration();
+            float duration = 0f;
+            if (!TextUtils.isEmpty(video_duration)){
+                duration = Float.parseFloat(video_duration);
+            }
+            if (TextUtils.isEmpty(videoWidth) || TextUtils.isEmpty(videoHeight)) {
+                mItemVerticalCl.setVisibility(View.VISIBLE);
+                Glide.with(this).load(R.color.black).into(mItemVerticalVideoView);
+            } else {
+                if (Integer.parseInt(videoWidth) > Integer.parseInt(videoHeight)) {
+                    mItemHorizontalCl.setVisibility(View.VISIBLE);
+                    Glide.with(this)
+                            .load(theme_video.get(0).getCoverURL())
+                            .into(mItemHorizontalVideoView);
+                    mItemHorizontalTime.setText(TextUtils.isEmpty(video_duration) ?
+                            "" : TimeUtils.stringForTime((int) duration));
+                } else {
+                    mItemVerticalCl.setVisibility(View.VISIBLE);
+                    Glide.with(this)
+                            .load(theme_video.get(0).getCoverURL())
+                            .into(mItemVerticalVideoView);
+                    mItemVerticalTime.setText(TextUtils.isEmpty(video_duration) ?
+                            "" : TimeUtils.stringForTime((int) duration));
+                }
+            }
+        }
+
 
         List<PariseNickNameBean> praiseList = themeInfoEntity.getParise_nickName();
         if (praiseList.size() > 0) {
@@ -256,7 +345,23 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
         } else {
             mPraiseIv.setImageResource(R.drawable.praise_def);
         }
-        mPraiseTv.setText(themeInfoEntity.getThemeCountParise() + "赞");
+        mPraiseTv.setText(themeInfoEntity.getThemeCountParise() + "");
+    }
+
+    private void changeAttentionStatus() {
+        if (0 == themeInfoEntity.getIs_attention()) {
+            mItemAttenIv.setImageResource(R.drawable.attention_sel);
+            mItemAttenTv.setText("关注");
+            mItemAttenTv.setTextColor(getResources().getColor(R.color.oranger3));
+            mItemAttenCl.setBackground(getResources().getDrawable(R.drawable.shape_orange_13radius));
+        } else if (1 == themeInfoEntity.getIs_attention()) {
+            mItemAttenIv.setImageResource(R.drawable.attention_def);
+            mItemAttenTv.setText("已关注");
+            mItemAttenTv.setTextColor(getResources().getColor(R.color.text_color6));
+            mItemAttenCl.setBackground(getResources().getDrawable(R.drawable.shape_gray_13radius));
+        } else if (2 == themeInfoEntity.getIs_attention()) {
+            mItemAttenCl.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -286,10 +391,10 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
                     ToastUtils.showShort("请输入评论内容");
                     return false;
                 }
-                mPresenter.publishComment(mRecordEt.getText().toString().trim(), themeInfoEntity.getTheme_id(), mComment_id == 0 ? "" :mComment_id+"", mParentCommentId);
+                mPresenter.publishComment(mRecordEt.getText().toString().trim(), themeInfoEntity.getTheme_id(), mComment_id == 0 ? "" : mComment_id + "", mParentCommentId);
                 mRecordEt.clearFocus();
                 mRecordEt.getText().clear();
-                mRecordLl.setVisibility(View.VISIBLE);
+                mRecordBottomLl.setVisibility(View.VISIBLE);
                 isGone = !isGone;
                 KeyboardUtils.hideSoftInput(this);
             }
@@ -297,10 +402,11 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
         });
     }
 
-    @OnClick({R.id.item_more_iv, R.id.praise_ll, R.id.share_iv, R.id.record_ll})
+    @OnClick({R.id.toolbar_right_search, R.id.praise_ll, R.id.share_iv, R.id.record_ll, R.id.wechat_iv,
+            R.id.wechat_circle_iv, R.id.item_atten_cl})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.item_more_iv:
+            case R.id.toolbar_right_search:
                 if (themeInfoEntity != null)
                     LoginHelper.getInstance().login(this, mPresenter.mDataManager, () -> showEditDialog(themeInfoEntity));
                 break;
@@ -310,10 +416,10 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
                 }
                 break;
             case R.id.share_iv:
-                if (themeInfoEntity != null){
-                    if (themeInfoEntity.getTheme_image().size() > 0){
+                if (themeInfoEntity != null) {
+                    if (themeInfoEntity.getTheme_image().size() > 0) {
                         mPresenter.getThumb(themeInfoEntity.getTheme_image().get(0).getPic_url(), themeInfoEntity);
-                    }else {
+                    } else {
                         mPresenter.getThumb(themeInfoEntity.getHeadImage(), themeInfoEntity);
                     }
                 }
@@ -321,7 +427,7 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
             case R.id.record_ll:
                 LoginHelper.getInstance().login(this, mPresenter.mDataManager, () -> {
                     if (!isGone) {
-                        mRecordLl.setVisibility(View.GONE);
+                        mRecordBottomLl.setVisibility(View.GONE);
                         mRecordEt.setFocusable(true);
                         mRecordEt.setFocusableInTouchMode(true);
                         mRecordEt.requestFocus();
@@ -331,7 +437,30 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
                         isGone = !isGone;
                     }
                 });
+            case R.id.wechat_iv:
+            case R.id.wechat_circle_iv:
+                if (themeInfoEntity != null) {
+                    if (themeInfoEntity.getTheme_image().size() > 0) {
+                        mPresenter.getThumb(themeInfoEntity.getTheme_image().get(0).getPic_url(), themeInfoEntity);
+                    } else {
+                        mPresenter.getThumb(themeInfoEntity.getHeadImage(), themeInfoEntity);
+                    }
+                }
+                break;
+            case R.id.item_atten_cl:
+                mPresenter.attenUser(themeInfoEntity);
+                break;
         }
+    }
+
+    @Override
+    public void handlerAttentUser(BaseResponse<IEntity> baseResponse, ThemeInfoEntity.ThemeInfoBean themeInfoEntity) {
+        if (TextUtils.equals("关注成功", baseResponse.getErrorMsg())) {
+            themeInfoEntity.setIs_attention(1);
+        } else {
+            themeInfoEntity.setIs_attention(0);
+        }
+        changeAttentionStatus();
     }
 
     @Override
@@ -353,6 +482,7 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
         mCollect_tv = mEditDailog.getView(R.id.collect_tv);
         TextView edit_tv = mEditDailog.getView(R.id.edit_tv);
         TextView delete_tv = mEditDailog.getView(R.id.delete_tv);
+        TextView jinghua_tv = mEditDailog.getView(R.id.jinghua_tv);
 
         if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
             mCollect_tv.setVisibility(View.GONE);
@@ -363,7 +493,6 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
             edit_tv.setVisibility(View.GONE);
             delete_tv.setVisibility(View.GONE);
         }
-
         if (1 == data.getIs_collect()) {
             Drawable drawable = getResources().getDrawable(R.drawable.collect_sel_icon);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
@@ -373,8 +502,23 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             mCollect_tv.setCompoundDrawables(null, drawable, null, null);
         }
+        if (1 == data.getIs_choiceness()) {
+            Drawable drawable = getResources().getDrawable(R.drawable.qxjiajing_icon);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            jinghua_tv.setCompoundDrawables(null, drawable, null, null);
+            jinghua_tv.setText("取消精华");
+        } else {
+            Drawable drawable = getResources().getDrawable(R.drawable.jiajing_icon);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            jinghua_tv.setCompoundDrawables(null, drawable, null, null);
+            jinghua_tv.setText("加精");
+        }
         mCollect_tv.setOnClickListener(v -> {
             mPresenter.collectTheme(data);
+            mEditDailog.dismiss();
+        });
+        jinghua_tv.setOnClickListener(v -> {
+            mPresenter.addChoiceness(data);
             mEditDailog.dismiss();
         });
         edit_tv.setOnClickListener(v -> {
@@ -430,6 +574,19 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
             mCollect_tv.setCompoundDrawables(null, drawable, null, null);
             ToastUtils.showCollect("取消收藏", getResources().getDrawable(R.drawable.collect_cancle_icon));
         }
+        EventBus.getDefault().post(new RefreshEvent(Constants.TOPTIC_REFRESH_ALL));
+    }
+
+    @Override
+    public void handlerChoicenessSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data) {
+        if (1 == themeInfoEntity.getIs_choiceness()) {
+            themeInfoEntity.setIs_choiceness(0);
+            ToastUtils.showShort("取消精华成功");
+        } else {
+            themeInfoEntity.setIs_choiceness(1);
+            ToastUtils.showShort("主题加精成功");
+        }
+        EventBus.getDefault().post(new RefreshEvent(Constants.TOPTIC_REFRESH_ALL));
     }
 
     @Override
@@ -469,9 +626,9 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
                 showDeleteDialog(mComment_content, i);
                 break;
             case R.id.item_content_tv:
-                if (!String.valueOf(mComment_content.get(i).getUser_id()).equals(mPresenter.mDataManager.getUser().getUser_id())){
+                if (!String.valueOf(mComment_content.get(i).getUser_id()).equals(mPresenter.mDataManager.getUser().getUser_id())) {
                     if (!isGone) {
-                        mRecordLl.setVisibility(View.GONE);
+                        mRecordBottomLl.setVisibility(View.GONE);
                         mRecordEt.setFocusable(true);
                         mRecordEt.setFocusableInTouchMode(true);
                         mRecordEt.requestFocus();
@@ -512,13 +669,13 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
                 themeInfoEntity.setIs_parise(1);
                 mPraiseIv.setImageResource(R.drawable.praise_sel);
                 mThemeCountParise++;
-                mPraiseTv.setText(mThemeCountParise + "赞");
+                mPraiseTv.setText(mThemeCountParise + "");
             } else {
                 themeInfoEntity.setIs_parise(0);
                 mPraiseIv.setImageResource(R.drawable.praise_def);
                 if (mThemeCountParise > 0) {
                     mThemeCountParise--;
-                    mPraiseTv.setText(mThemeCountParise + "赞");
+                    mPraiseTv.setText(mThemeCountParise + "");
                 }
             }
             List<PariseNickNameBean> praiseList = praiseEntity.getNickName();
@@ -563,9 +720,9 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
 
     @Override
     public void onCommentClick(int adapterPosition, DetailCommentAdapter adapter, View view, int position) {
-        if (!String.valueOf(adapter.getData().get(position).getUser_id()).equals(mPresenter.mDataManager.getUser().getUser_id())){
+        if (!String.valueOf(adapter.getData().get(position).getUser_id()).equals(mPresenter.mDataManager.getUser().getUser_id())) {
             if (!isGone) {
-                mRecordLl.setVisibility(View.GONE);
+                mRecordBottomLl.setVisibility(View.GONE);
                 mRecordEt.setFocusable(true);
                 mRecordEt.setFocusableInTouchMode(true);
                 mRecordEt.requestFocus();
@@ -580,7 +737,7 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
     }
 
     private void showShareDialog(String url, String weburl, String title, String imgUrl, String desc,
-                                 boolean isSmall, boolean isVisible){
+                                 boolean isSmall, boolean isVisible) {
         if (mBottomSheetDialog == null) {
             mBottomSheetDialog = new BottomSheetDialog(this, R.style.bottom_sheet_dialog);
             mBottomSheetDialog.getWindow().getAttributes().windowAnimations =

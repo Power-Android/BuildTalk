@@ -97,7 +97,7 @@ public class MixRecordBottomLayout extends RelativeLayout implements View.OnClic
         mRecordModeView.setOnRecordModeListener(new RecordModeView.OnRecordModeListener() {
             @Override
             public void onRecordModeSelect(int currentMode) {
-                mRecordButton.setCurrentRecordMode(currentMode);
+//                mRecordButton.setCurrentRecordMode(currentMode);
             }
         });
     }

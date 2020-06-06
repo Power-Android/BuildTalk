@@ -46,7 +46,7 @@
                             android:layout_height="@dimen/dp_30"
                             android:layout_marginLeft="@dimen/common_margin"
                             android:layout_marginTop="@dimen/dp_20"
-                            android:src="@drawable/test_course" />
+                            android:src="@drawable/moren_face" />
 
                         <TextView
                             android:id="@+id/item_name_tv"
@@ -66,6 +66,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignTop="@+id/item_face_iv"
                             android:layout_marginLeft="@dimen/dp_5"
+                            android:layout_marginTop="@dimen/dp_1"
                             android:layout_toRightOf="@+id/item_name_tv"
                             android:background="@drawable/shape_orange_1radius"
                             android:includeFontPadding="false"
@@ -77,18 +78,40 @@
                             android:textColor="@color/white"
                             android:textSize="@dimen/sp_10" />
 
-                        <ImageView
-                            android:id="@+id/item_more_iv"
-                            android:layout_width="@dimen/dp_30"
-                            android:layout_height="@dimen/dp_20"
-                            android:layout_alignTop="@+id/item_face_iv"
+                        <android.support.constraint.ConstraintLayout
+                            android:id="@+id/item_atten_cl"
+                            android:layout_width="@dimen/dp_60"
+                            android:layout_height="@dimen/dp_24"
+                            android:paddingStart="@dimen/dp_8"
+                            android:paddingEnd="@dimen/dp_8"
+                            android:visibility="visible"
                             android:layout_alignParentRight="true"
-                            android:layout_marginRight="@dimen/dp_5"
-                            android:paddingLeft="@dimen/dp_10"
-                            android:paddingRight="@dimen/dp_10"
-                            android:paddingBottom="@dimen/dp_10"
-                            android:src="@drawable/item_more_icon"
-                            android:visibility="invisible" />
+                            android:layout_alignTop="@+id/item_face_iv"
+                            android:background="@drawable/shape_orange_13radius"
+                            android:layout_marginRight="@dimen/dp_15">
+                            <ImageView
+                                android:id="@+id/item_atten_iv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/attention_sel"
+                                android:layout_marginEnd="@dimen/dp_2"
+                                app:layout_constraintHorizontal_chainStyle="spread"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintEnd_toStartOf="@+id/item_atten_tv"/>
+                            <TextView
+                                android:id="@+id/item_atten_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="关注"
+                                android:textSize="@dimen/sp_11"
+                                android:textColor="@color/oranger3"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toEndOf="@+id/item_atten_iv"
+                                app:layout_constraintEnd_toEndOf="parent"/>
+                        </android.support.constraint.ConstraintLayout>
 
                         <TextView
                             android:id="@+id/item_time_tv"
@@ -103,6 +126,17 @@
                             android:textSize="@dimen/sp_9" />
 
                         <TextView
+                            android:id="@+id/from_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/blue_mid"
+                            android:textSize="@dimen/sp_9"
+                            android:includeFontPadding="false"
+                            android:layout_marginLeft="@dimen/dp_5"
+                            android:layout_alignBottom="@+id/item_face_iv"
+                            android:layout_toRightOf="@+id/item_time_tv"/>
+
+                        <TextView
                             android:id="@+id/item_content_tv"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -112,7 +146,6 @@
                             android:layout_marginRight="@dimen/dp_15"
                             android:layout_toRightOf="@+id/item_face_iv"
                             android:autoLink="web"
-                            android:text="今年流行的几种装修材料"
                             android:textColor="@color/text_drak"
                             android:textIsSelectable="true"
                             android:textSize="@dimen/sp_15" />
@@ -140,10 +173,11 @@
                                 android:id="@+id/item_grid_view"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/dp_5"
+                                android:visibility="gone"
+                                android:layout_marginLeft="@dimen/dp_10"
                                 android:layout_marginTop="@dimen/dp_5"
                                 android:layout_marginRight="@dimen/dp_15"
-                                android:layout_marginBottom="@dimen/dp_10"
+                                android:layout_marginBottom="@dimen/dp_5"
                                 android:background="@color/white" />
 
                             <android.support.v7.widget.RecyclerView
@@ -152,11 +186,72 @@
                                 android:layout_height="wrap_content"
                                 android:visibility="gone"
                                 android:focusable="false"
-                                android:layout_marginLeft="@dimen/dp_5"
+                                android:layout_marginLeft="@dimen/dp_10"
                                 android:layout_marginTop="@dimen/dp_5"
                                 android:layout_marginRight="@dimen/dp_15"
-                                android:layout_marginBottom="@dimen/dp_10"
+                                android:layout_marginBottom="@dimen/dp_5"
                                 android:background="@color/white" />
+
+                            <android.support.constraint.ConstraintLayout
+                                android:id="@+id/item_vertical_cl"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:visibility="gone"
+                                android:layout_marginBottom="@dimen/dp_5"
+                                android:layout_marginLeft="@dimen/dp_10"
+                                android:layout_marginTop="@dimen/dp_5">
+                                <ImageView
+                                    android:id="@+id/item_vertical_video_view"
+                                    android:layout_width="@dimen/dp_201"
+                                    android:layout_height="@dimen/dp_268"
+                                    android:background="@color/black"
+                                    android:scaleType="centerCrop"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent"/>
+                                <TextView
+                                    android:id="@+id/item_vertical_time"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0:13"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/sp_11"
+                                    android:layout_marginEnd="@dimen/dp_10"
+                                    android:layout_marginBottom="@dimen/dp_10"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"/>
+                            </android.support.constraint.ConstraintLayout>
+
+                            <android.support.constraint.ConstraintLayout
+                                android:id="@+id/item_horizontal_cl"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:visibility="gone"
+                                android:layout_marginTop="@dimen/dp_5"
+                                android:layout_marginStart="@dimen/dp_10"
+                                android:layout_marginBottom="@dimen/dp_5"
+                                android:layout_marginEnd="@dimen/common_margin">
+                                <ImageView
+                                    android:id="@+id/item_horizontal_video_view"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="@dimen/dp_170"
+                                    android:background="@color/black"
+                                    android:scaleType="centerCrop"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent"/>
+                                <TextView
+                                    android:id="@+id/item_horizontal_time"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0:13"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/sp_11"
+                                    android:layout_marginEnd="@dimen/dp_10"
+                                    android:layout_marginBottom="@dimen/dp_10"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"/>
+                            </android.support.constraint.ConstraintLayout>
+
                         </RelativeLayout>
 
                         <LinearLayout
@@ -164,14 +259,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/view1"
-                            android:layout_marginLeft="@dimen/dp_45"
+                            android:layout_toRightOf="@+id/item_face_iv"
+                            android:layout_marginLeft="@dimen/dp_10"
                             android:layout_marginTop="@dimen/dp_10"
                             android:layout_marginRight="@dimen/dp_15">
 
                             <ImageView
                                 android:layout_width="@dimen/dp_15"
                                 android:layout_height="@dimen/dp_15"
-                                android:layout_marginLeft="@dimen/dp_10"
                                 android:src="@drawable/praise_gray_icon" />
 
                             <TextView
@@ -183,7 +278,54 @@
                                 android:textColor="@color/text_light"
                                 android:textSize="@dimen/sp_11" />
                         </LinearLayout>
+                        <TextView
+                            android:id="@+id/from_tv1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/sp_11"
+                            android:textColor="@color/blue_mid"
+                            android:layout_below="@+id/praise_rl"
+                            android:layout_toRightOf="@+id/item_face_iv"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:singleLine="true"
+                            android:layout_marginTop="@dimen/dp_15"
+                            android:paddingBottom="@dimen/dp_10"
+                            android:layout_marginRight="@dimen/common_margin"/>
 
+                        <android.support.constraint.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/from_tv1"
+                            android:layout_toRightOf="@+id/item_face_iv">
+                            <TextView
+                                android:id="@+id/share_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="分享到"
+                                android:textSize="@dimen/sp_11"
+                                android:textColor="@color/text_color6"
+                                android:layout_marginStart="@dimen/dp_10"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+                            <ImageView
+                                android:id="@+id/wechat_iv"
+                                android:layout_width="@dimen/dp_40"
+                                android:layout_height="@dimen/dp_40"
+                                android:padding="@dimen/dp_10"
+                                android:layout_marginLeft="@dimen/dp_5"
+                                android:src="@drawable/umeng_socialize_wechat"
+                                app:layout_constraintStart_toEndOf="@+id/share_tv"
+                                app:layout_constraintTop_toTopOf="parent"/>
+                            <ImageView
+                                android:id="@+id/wechat_circle_iv"
+                                android:layout_width="@dimen/dp_40"
+                                android:layout_height="@dimen/dp_40"
+                                android:padding="@dimen/dp_10"
+                                android:src="@drawable/umeng_socialize_wxcircle"
+                                app:layout_constraintStart_toEndOf="@+id/wechat_iv"
+                                app:layout_constraintTop_toTopOf="parent"/>
+                        </android.support.constraint.ConstraintLayout>
                     </RelativeLayout>
 
                 </RelativeLayout>
@@ -283,87 +425,97 @@
         android:layout_height="@dimen/dp_44"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        android:background="@color/white">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_3"
-            android:background="@color/background" />
+        android:gravity="center_vertical"
+        android:background="#F5F6F8">
 
         <EditText
             android:id="@+id/record_et"
-            android:layout_width="@dimen/dp_230"
-            android:layout_height="@dimen/dp_33"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/dp_15"
             android:layout_marginTop="@dimen/dp_3"
             android:background="@drawable/shape_record_5radius"
             android:imeOptions="actionSend"
             android:inputType="text"
             android:maxLength="60"
+            android:paddingLeft="@dimen/common_margin"
+            android:hint="说点什么..."
             android:textColor="@color/text_mid"
             android:textColorHint="@color/text_mid"
-            android:textSize="@dimen/sp_11" />
-
+            android:textSize="@dimen/sp_13" />
         <LinearLayout
-            android:id="@+id/record_ll"
-            android:layout_width="@dimen/dp_230"
-            android:layout_height="@dimen/dp_33"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/dp_15"
-            android:layout_marginTop="@dimen/dp_3"
-            android:background="@drawable/shape_record_5radius"
-            android:gravity="center">
+            android:id="@+id/record_bottom_ll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#F5F6F8"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:id="@+id/praise_ll"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/record_icon"
-                android:drawablePadding="@dimen/dp_5"
+                <ImageView
+                    android:id="@+id/praise_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/praise_def" />
+
+                <TextView
+                    android:id="@+id/praise_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_5"
+                    android:textColor="@color/text_mid"
+                    android:text="0"
+                    android:textSize="@dimen/sp_13" />
+            </LinearLayout>
+            <View
+                android:layout_width="@dimen/dp_0_5"
+                android:layout_height="@dimen/dp_24"
+                android:background="@color/border5"
+                android:layout_gravity="center_vertical"/>
+            <LinearLayout
+                android:id="@+id/record_ll"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/record_icon"
+                    android:drawablePadding="@dimen/dp_5"
+                    android:gravity="center"
+                    android:text="评论"
+                    android:textColor="@color/text_mid"
+                    android:textSize="@dimen/sp_13" />
+            </LinearLayout>
+            <View
+                android:layout_width="@dimen/dp_0_5"
+                android:layout_height="@dimen/dp_24"
+                android:background="@color/border5"
+                android:layout_gravity="center_vertical"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="评论"
-                android:textColor="@color/text_mid"
-                android:textSize="@dimen/sp_11" />
+                android:layout_weight="1">
+                <TextView
+                    android:id="@+id/share_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:drawablePadding="@dimen/dp_5"
+                    android:textColor="@color/text_mid"
+                    android:textSize="@dimen/sp_13"
+                    android:text="分享"
+                    android:drawableLeft="@drawable/share_icon" />
+            </LinearLayout>
+
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/praise_ll"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="@dimen/dp_3"
-            android:layout_toRightOf="@+id/record_et"
-            android:gravity="center"
-            android:paddingLeft="@dimen/dp_20"
-            android:paddingRight="@dimen/dp_20">
-
-            <ImageView
-                android:id="@+id/praise_iv"
-                android:layout_width="@dimen/dp_15"
-                android:layout_height="@dimen/dp_15"
-                android:src="@drawable/praise_def" />
-
-            <TextView
-                android:id="@+id/praise_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_5"
-                android:text="0赞"
-                android:textSize="@dimen/sp_11" />
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/share_iv"
-            android:layout_width="@dimen/dp_50"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="@dimen/dp_3"
-            android:paddingLeft="@dimen/dp_15"
-            android:paddingTop="@dimen/dp_11"
-            android:paddingRight="@dimen/dp_15"
-            android:paddingBottom="@dimen/dp_11"
-            android:src="@drawable/share_icon" />
 
     </RelativeLayout>
 

@@ -12,11 +12,14 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
+import com.bjjy.buildtalk.ui.circle.PublishActivity;
+import com.bjjy.buildtalk.ui.home.VideoPublishActivity;
 import com.bjjy.buildtalk.ui.main.MainActivity;
 import com.bjjy.buildtalk.videopublish.TCVideoPublisherActivity;
 import com.tencent.qcloud.ugckit.UGCKitConstants;
 import com.tencent.qcloud.ugckit.UGCKitVideoEdit;
 import com.tencent.qcloud.ugckit.basic.UGCKitResult;
+import com.tencent.qcloud.ugckit.module.PlayerManagerKit;
 import com.tencent.qcloud.ugckit.module.editer.IVideoEditKit;
 import com.tencent.qcloud.ugckit.module.editer.UGCKitEditConfig;
 import com.tencent.qcloud.ugckit.module.effect.VideoEditerSDK;
@@ -134,7 +137,7 @@ public class TCVideoEditerActivity extends FragmentActivity implements View.OnCl
         }
         long duration = VideoEditerSDK.getInstance().getVideoDuration();
         if (ugcKitResult.isPublish) {
-            Intent intent = new Intent(getApplicationContext(), TCVideoPublisherActivity.class);
+            Intent intent = new Intent(getApplicationContext(), PublishActivity.class);
             intent.putExtra(UGCKitConstants.VIDEO_PATH, ugcKitResult.outputPath);
             if (!TextUtils.isEmpty(ugcKitResult.coverPath)) {
                 intent.putExtra(UGCKitConstants.VIDEO_COVERPATH, ugcKitResult.coverPath);

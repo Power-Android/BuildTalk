@@ -27,6 +27,7 @@ import com.bjjy.buildtalk.ui.discover.EveryTalkDetailActivity;
 import com.bjjy.buildtalk.ui.home.HomeFragment;
 import com.bjjy.buildtalk.ui.mine.MineFragment;
 import com.bjjy.buildtalk.utils.LogUtils;
+import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bjjy.buildtalk.videorecord.TCVideoRecordActivity;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -128,34 +129,35 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                 // 防止多次点击
                 if (System.currentTimeMillis() - mLastClickPubTS > 1000) {
                     mLastClickPubTS = System.currentTimeMillis();
-                    new RxPermissions(this).request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                            .subscribe(new Observer<Boolean>() {
-                                @Override
-                                public void onSubscribe(Disposable d) {
+                    LoginHelper.login(this, mPresenter.mDataManager, () ->
+                            new RxPermissions(MainActivity.this).request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                    .subscribe(new Observer<Boolean>() {
+                                        @Override
+                                        public void onSubscribe(Disposable d) {
 
-                                }
+                                        }
 
-                                @Override
-                                public void onNext(Boolean aBoolean) {
-                                    if (aBoolean){
-                                        Intent intent = new Intent(MainActivity.this, PublishActivity.class);
-                                        intent.putExtra("publish_type", "2");
-                                        startActivity(intent);
-                                    }else {
-                                        ToastUtils.showShort("权限被拒绝");
-                                    }
-                                }
+                                        @Override
+                                        public void onNext(Boolean aBoolean) {
+                                            if (aBoolean) {
+                                                Intent intent = new Intent(MainActivity.this, PublishActivity.class);
+                                                intent.putExtra("publish_type", "2");
+                                                startActivity(intent);
+                                            } else {
+                                                ToastUtils.showShort("权限被拒绝");
+                                            }
+                                        }
 
-                                @Override
-                                public void onError(Throwable e) {
+                                        @Override
+                                        public void onError(Throwable e) {
 
-                                }
+                                        }
 
-                                @Override
-                                public void onComplete() {
+                                        @Override
+                                        public void onComplete() {
 
-                                }
-                            });
+                                        }
+                                    }));
                 }
                 break;
             case R.id.discover_cl:

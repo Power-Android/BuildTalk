@@ -39,8 +39,10 @@ import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.SaveRecordEntity;
 import com.bjjy.buildtalk.entity.SearchCircleInfoEntity;
 import com.bjjy.buildtalk.entity.SearchResultEntity;
+import com.bjjy.buildtalk.entity.ShortVideoEntity;
 import com.bjjy.buildtalk.entity.SongsEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
+import com.bjjy.buildtalk.entity.ThemeVideoBean;
 import com.bjjy.buildtalk.entity.VersionRecordEntity;
 
 import java.io.File;
@@ -450,5 +452,20 @@ public class HttpHelperImpl implements HttpHelper {
     @Override
     public Observable<BaseResponse<DisrOrAttenEntity>> searchFindTheme(Map<String, String> headers, Map<String, String> params) {
         return mApiService.searchFindTheme(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<String>> getClientUploadSign(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.getClientUploadSign(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<List<IEntity>>> chooseCircle(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.chooseCircle(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<ShortVideoEntity>> searchVideoTheme(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.searchVideoTheme(headers, params);
     }
 }

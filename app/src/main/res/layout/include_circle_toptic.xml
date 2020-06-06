@@ -16,20 +16,20 @@
             android:layout_width="@dimen/dp_35"
             android:layout_height="@dimen/dp_35"
             android:src="@drawable/praise_def"
-            android:padding="@dimen/dp_10" />
+            android:padding="@dimen/dp_6" />
         <ImageView
             android:id="@+id/item_comment_iv"
             android:layout_width="@dimen/dp_35"
             android:layout_height="@dimen/dp_35"
             android:src="@drawable/record_icon"
-            android:padding="@dimen/dp_10"
+            android:padding="@dimen/dp_6"
             android:layout_centerInParent="true"/>
         <ImageView
             android:id="@+id/item_share_iv"
             android:layout_width="@dimen/dp_35"
             android:layout_height="@dimen/dp_35"
             android:src="@drawable/share_icon"
-            android:padding="@dimen/dp_10"
+            android:padding="@dimen/dp_6"
             android:layout_alignParentRight="true"/>
     </RelativeLayout>
     <LinearLayout

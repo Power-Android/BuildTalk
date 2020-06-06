@@ -72,7 +72,7 @@ public class UGCKitVideoMixRecord extends AbsVideoTripleMixRecordUI implements I
         VideoRecordSDK.getInstance().setVideoRecordListener(this);
 
         // 设置默认的录制模式
-        getFollowRecordBottomLayout().getRecordButton().setCurrentRecordMode(UGCKitRecordConfig.getInstance().mRecordMode);
+//        getFollowRecordBottomLayout().getRecordButton().setCurrentRecordMode(UGCKitRecordConfig.getInstance().mRecordMode);
 
 
         // 点击"右侧工具栏"（包括"美颜"，"倒计时"）

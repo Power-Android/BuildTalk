@@ -8,6 +8,10 @@
         android:id="@+id/video_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+    <ImageView
+        android:id="@+id/cover_iv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
     <TextView
         android:id="@+id/item_from_tv"
         android:layout_width="match_parent"
@@ -24,8 +28,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_0_5"
         android:layout_gravity="center"
-        android:max="100"
-        android:progress="20"
         android:progressDrawable="@drawable/video_progressbar_bg"
         app:layout_constraintBottom_toTopOf="@+id/item_from_tv"/>
     <TextView
@@ -39,19 +41,23 @@
         android:layout_marginBottom="@dimen/dp_10"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/progress_bar_h"/>
-    <TextView
+    <com.ctetin.expandabletextviewlibrary.ExpandableTextView
         android:id="@+id/item_content_tv"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="五一特别分享专栏\n【跟着笑楠长建识】征信系征信系征信系"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_15"
-        android:maxLines="2"
-        android:ellipsize="end"
+        app:ep_contract_color="@color/blue_mid"
+        app:ep_max_line="2"
+        app:ep_expand_text="全文"
+        app:ep_expand_color="@color/blue_mid"
         android:layout_marginStart="@dimen/common_margin"
         android:layout_marginBottom="@dimen/common_margin"
+        android:layout_marginEnd="@dimen/common_margin"
         app:layout_constraintBottom_toTopOf="@+id/item_time_tv"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/item_share_tv"/>
     <TextView
         android:id="@+id/item_name_tv"
         android:layout_width="wrap_content"
@@ -146,4 +152,15 @@
         app:layout_constraintTop_toTopOf="@+id/item_face_iv"
         app:layout_constraintStart_toStartOf="@+id/item_face_iv"
         app:layout_constraintEnd_toEndOf="@+id/item_face_iv" />
+    <ImageView
+        android:id="@+id/play_iv"
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_40"
+        android:src="@drawable/ic_play_normal"
+        android:alpha="0.5"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 </android.support.constraint.ConstraintLayout>

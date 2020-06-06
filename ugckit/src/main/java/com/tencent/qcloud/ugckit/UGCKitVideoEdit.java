@@ -71,7 +71,10 @@ public class UGCKitVideoEdit extends AbsVideoEditUI {
         getTitleBar().setOnRightClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPublishDialog();
+//                showPublishDialog();
+                //直接跳转
+                VideoEditerSDK.getInstance().setPublishFlag(true);
+                startGenerate();
             }
         });
         // 监听电话
@@ -287,13 +290,9 @@ public class UGCKitVideoEdit extends AbsVideoEditUI {
     }
 
     private void startGenerate() {
-        mProgressFragmentUtil.showLoadingProgress(new ProgressFragmentUtil.IProgressListener() {
-            @Override
-            public void onStop() {
-                PlayerManagerKit.getInstance().restartPlay();
-
-                stopGenerate();
-            }
+        mProgressFragmentUtil.showLoadingProgress(() -> {
+            PlayerManagerKit.getInstance().restartPlay();
+            stopGenerate();
         });
         PlayerManagerKit.getInstance().stopPlay();
 

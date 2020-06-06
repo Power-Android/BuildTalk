@@ -61,6 +61,8 @@ public class CircleTopticAdapter extends BaseMultiItemQuickAdapter<ThemeInfoEnti
 
     @Override
     protected void convert(BaseViewHolder helper, ThemeInfoEntity.ThemeInfoBean item) {
+        ThemeInfoEntity.ThemeInfoBean.ParentThemeInfoBean item_parent = item.getParent_themeInfo();
+        boolean isDelete = item.getParent_isDelete() == 1;
         switch (item.getItemType()){
             case BODY_NOMAL:
                 Glide.with(mContext).load(item.getHeadImage()).into((ImageView) helper.getView(R.id.item_face_iv));
@@ -71,13 +73,25 @@ public class CircleTopticAdapter extends BaseMultiItemQuickAdapter<ThemeInfoEnti
                         .setGone(R.id.column_rl, "1".equals(isJoin))
                         .setGone(R.id.praise_rl, "1".equals(isJoin))
                         .setGone(R.id.comment_rl, "1".equals(isJoin))
+                        .setGone(R.id.item_vertical_cl, !isDelete &&
+                                item.getParent_themeInfo().getTheme_video().size() > 0 &&
+                                !TextUtils.isEmpty(item.getParent_themeInfo().getTheme_video().get(0).getVideo_height()) &&
+                                !TextUtils.isEmpty(item.getParent_themeInfo().getTheme_video().get(0).getVideo_width()) &&
+                                Integer.parseInt(item.getParent_themeInfo().getTheme_video().get(0).getVideo_height()) >=
+                                        Integer.parseInt(item.getParent_themeInfo().getTheme_video().get(0).getVideo_width()))
+                        .setGone(R.id.item_horizontal_cl, !isDelete &&
+                                item.getParent_themeInfo().getTheme_video().size() > 0 &&
+                                !TextUtils.isEmpty(item.getParent_themeInfo().getTheme_video().get(0).getVideo_height()) &&
+                                !TextUtils.isEmpty(item.getParent_themeInfo().getTheme_video().get(0).getVideo_width()) &&
+                                Integer.parseInt(item.getParent_themeInfo().getTheme_video().get(0).getVideo_height()) <
+                                        Integer.parseInt(item.getParent_themeInfo().getTheme_video().get(0).getVideo_width()))
                         .setGone(R.id.item_top_iv, 1 == item.getIs_top())
                         .setVisible(R.id.item_shouqi_iv, 1 == item.getIs_top())
                         .setGone(R.id.item_grid_view, item.getTheme_image().size() > 0)
                         .setGone(R.id.pdf_rl, item.getTheme_pdf().size() > 0)
                         .setVisible(R.id.item_share_iv, item.getTheme_pdf().size() <= 0)
                         .setText(R.id.item_time_tv, TimeUtils.getFriendlyTimeSpanByNow(item.getPublish_time()))
-                        .setText(R.id.item_content_tv, item.getTheme_content())
+                        .setText(R.id.item_content_tv, item_parent.getTheme_content())
                         .addOnClickListener(R.id.item_face_iv)
                         .addOnClickListener(R.id.item_more_iv)
                         .addOnClickListener(R.id.item_praise_iv)
@@ -103,31 +117,66 @@ public class CircleTopticAdapter extends BaseMultiItemQuickAdapter<ThemeInfoEnti
                     }
                 });
 
-                List<ThemeImageBean> themeImageBeanList = item.getTheme_image();
-                List<String> list = new ArrayList<>();
-                for (int i = 0; i < themeImageBeanList.size(); i++) {
-                    list.add(themeImageBeanList.get(i).getPic_url());
-                }
-                multiImageView.setList(list);
-                multiImageView.setOnItemClickListener((view, position, imageViews) -> AllUtils.startImagePage(mActivity, list, Arrays.asList(imageViews), position));
+                List<ThemeImageBean> themeImageBeanList = item_parent.getTheme_image();
+                if (themeImageBeanList != null && themeImageBeanList.size() > 0){
+                    List<String> list = new ArrayList<>();
+                    for (int i = 0; i < themeImageBeanList.size(); i++) {
+                        list.add(themeImageBeanList.get(i).getPic_url());
+                    }
+                    multiImageView.setList(list);
+                    multiImageView.setOnItemClickListener((view, position, imageViews) -> AllUtils.startImagePage(mActivity, list, Arrays.asList(imageViews), position));
 
-                List<ThemePdfBean> theme_pdf = item.getTheme_pdf();
-                List<PdfInfoEntity> list1 = new ArrayList<>();
-                for (int i = 0; i < theme_pdf.size(); i++) {
-                    list1.add(new PdfInfoEntity(theme_pdf.get(i).getPdf_name(),theme_pdf.get(i).getPdf_url()));
                 }
-                RecyclerView pdf_recyclerView = helper.getView(R.id.pdf_recyclerView);
-                pdf_recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-                PdfVewAdapter pdfVewAdapter = new PdfVewAdapter(R.layout.adapter_pdf_view, list1);
-                pdf_recyclerView.setAdapter(pdfVewAdapter);
-                pdfVewAdapter.setOnItemClickListener((adapter, view, position) -> {
-                    List<PdfInfoEntity> data =  adapter.getData();
-                    Intent intent = new Intent(mContext, PDFViewerActivity.class);
-                    intent.putExtra("data", data.get(position));
-                    intent.putExtra("theme_id", item.getTheme_id()+"");
-                    intent.putExtra("isCollect", 0 == item.getIs_collect());
-                    mContext.startActivity(intent);
-                });
+
+                List<ThemePdfBean> theme_pdf = item_parent.getTheme_pdf();
+                if(theme_pdf != null && theme_pdf.size() > 0){
+                    List<PdfInfoEntity> list1 = new ArrayList<>();
+                    for (int i = 0; i < theme_pdf.size(); i++) {
+                        list1.add(new PdfInfoEntity(theme_pdf.get(i).getPdf_name(),theme_pdf.get(i).getPdf_url()));
+                    }
+                    RecyclerView pdf_recyclerView = helper.getView(R.id.pdf_recyclerView);
+                    pdf_recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+                    PdfVewAdapter pdfVewAdapter = new PdfVewAdapter(R.layout.adapter_pdf_view, list1);
+                    pdf_recyclerView.setAdapter(pdfVewAdapter);
+                    pdfVewAdapter.setOnItemClickListener((adapter, view, position) -> {
+                        List<PdfInfoEntity> data =  adapter.getData();
+                        Intent intent = new Intent(mContext, PDFViewerActivity.class);
+                        intent.putExtra("data", data.get(position));
+                        intent.putExtra("theme_id", item.getTheme_id()+"");
+                        intent.putExtra("isCollect", 0 == item.getIs_collect());
+                        mContext.startActivity(intent);
+                    });
+                }
+
+                //视频
+                if (item.getParent_themeInfo().getTheme_video() != null && item.getParent_themeInfo().getTheme_video().size() > 0) {
+                    String videoWidth = item.getParent_themeInfo().getTheme_video().get(0).getVideo_width();
+                    String videoHeight = item.getParent_themeInfo().getTheme_video().get(0).getVideo_height();
+                    String video_duration = item.getParent_themeInfo().getTheme_video().get(0).getVideo_duration();
+                    float duration = 0f;
+                    if (!TextUtils.isEmpty(video_duration)){
+                        duration = Float.parseFloat(video_duration);
+                    }
+                    if (TextUtils.isEmpty(videoWidth) || TextUtils.isEmpty(videoHeight)) {
+                        helper.setGone(R.id.item_vertical_cl, true);
+                        Glide.with(mContext).load(R.color.black).into((ImageView) helper.getView(R.id.item_vertical_video_view));
+                    } else {
+                        if (Integer.parseInt(videoWidth) > Integer.parseInt(videoHeight)) {
+                            Glide.with(mContext)
+                                    .load(item.getParent_themeInfo().getTheme_video().get(0).getCoverURL())
+                                    .into((ImageView) helper.getView(R.id.item_horizontal_video_view));
+                            helper.setText(R.id.item_horizontal_time, TextUtils.isEmpty(video_duration) ?
+                                    "" : TimeUtils.stringForTime((int) duration));
+                        } else {
+                            Glide.with(mContext)
+                                    .load(item.getParent_themeInfo().getTheme_video().get(0).getCoverURL())
+                                    .into((ImageView) helper.getView(R.id.item_vertical_video_view));
+                            helper.setText(R.id.item_vertical_time, TextUtils.isEmpty(video_duration) ?
+                                    "" : TimeUtils.stringForTime((int) duration));
+                        }
+                    }
+                }
+
                 if (1 == item.getIs_parise()) {
                     helper.setImageResource(R.id.item_praise_iv, R.drawable.praise_sel);
                 } else {

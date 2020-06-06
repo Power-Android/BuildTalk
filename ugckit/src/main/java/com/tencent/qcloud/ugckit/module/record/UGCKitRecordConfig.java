@@ -32,11 +32,11 @@ public class UGCKitRecordConfig {
     /**
      * 录制最短时间（以毫秒为单位）
      */
-    public int mMinDuration = 2 * 1000;
+    public int mMinDuration = 5 * 1000;
     /**
      * 录制最长时间（以毫秒为单位）
      */
-    public int mMaxDuration = 16 * 1000;
+    public int mMaxDuration = 60 * 1000;
     /**
      * 录制方向
      */
@@ -55,7 +55,7 @@ public class UGCKitRecordConfig {
     /**
      * 是否前置摄像头
      */
-    public boolean mFrontCamera = true;
+    public boolean mFrontCamera = false;
 
     /**
      * 开启手动聚焦；自动聚焦设置为false
@@ -70,7 +70,7 @@ public class UGCKitRecordConfig {
     /**
      * 录制模式
      */
-    public int mRecordMode = RecordModeView.RECORD_MODE_CLICK;
+    public int mRecordMode = RecordModeView.RECORD_MODE_LONG_TOUCH;
 
     /**
      * 美颜参数
@@ -93,12 +93,12 @@ public class UGCKitRecordConfig {
         mResolution = TXRecordCommon.VIDEO_RESOLUTION_720_1280;
         mGOP = 3;
         mFPS = 20;
-        mMinDuration = 2 * 1000;
-        mMaxDuration = 16 * 1000;
+        mMinDuration = 5 * 1000;
+        mMaxDuration = 50 * 1000;
         mHomeOrientation = TXLiveConstants.VIDEO_ANGLE_HOME_DOWN;
         mRenderRotation = TXLiveConstants.RENDER_ROTATION_PORTRAIT;
         mRecordSpeed = TXRecordCommon.RECORD_SPEED_NORMAL;
-        mFrontCamera = true;
+        mFrontCamera = false;
         mTouchFocus = false;
         mAspectRatio = TXRecordCommon.VIDEO_ASPECT_RATIO_9_16;
         mRecordMode = RecordModeView.RECORD_MODE_CLICK;

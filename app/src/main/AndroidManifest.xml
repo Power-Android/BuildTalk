@@ -25,7 +25,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.video.ShortVideoActivity" />
+        <activity android:name=".ui.home.VideoPublishActivity" />
+        <activity android:name=".ui.video.ShortVideoActivity"
+            android:screenOrientation="portrait"/>
 
         <service android:name=".core.service.PlayerService" />
 
@@ -223,6 +225,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.circle.PublishActivity"
+            android:launchMode="singleTask"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity

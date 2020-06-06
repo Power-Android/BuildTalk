@@ -178,6 +178,7 @@ public class MineFragment extends BaseFragment<MinePresenter> implements MineCon
                         startActivity(intent);
                     }
                 });
+                break;
             case R.id.update_master_tv:
                 mUser = mPresenter.mDataManager.getUser();
                 if (TextUtils.equals("1",mUser.getUser_type())){
