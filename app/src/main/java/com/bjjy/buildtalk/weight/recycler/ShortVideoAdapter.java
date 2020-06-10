@@ -5,11 +5,9 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
-import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.ShortVideoEntity;
 import com.bjjy.buildtalk.ui.circle.TopticDetailActivity;
 import com.bjjy.buildtalk.utils.LogUtils;
@@ -21,12 +19,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.ctetin.expandabletextviewlibrary.ExpandableTextView;
 import com.ctetin.expandabletextviewlibrary.app.StatusType;
-import com.tencent.rtmp.TXVodPlayer;
-import com.tencent.rtmp.ui.TXCloudVideoView;
 
 import java.util.List;
-
-import static com.tencent.rtmp.TXLiveConstants.RENDER_MODE_ADJUST_RESOLUTION;
 
 /**
  * @author power
@@ -63,16 +57,16 @@ public class ShortVideoAdapter extends BaseQuickAdapter<ShortVideoEntity.ThemeIn
                 .into((ImageView) helper.getView(R.id.item_face_iv));
         TextView praiseTv = helper.getView(R.id.item_praise_tv);
         TextView collectTv = helper.getView(R.id.item_collect_tv);
-        if (0 == info.getIs_parise()) {
-            Drawable defDrawable = mContext.getResources().getDrawable(R.drawable.video_prise_def_icon);
+        if (1 == item.getIs_parise()) {
+            Drawable defDrawable = mContext.getResources().getDrawable(R.drawable.video_praise_sel_icon);
             defDrawable.setBounds(0, 0, defDrawable.getMinimumWidth(), defDrawable.getMinimumHeight());
             praiseTv.setCompoundDrawables(null, defDrawable, null, null);
         } else {
-            Drawable selDrawable = mContext.getResources().getDrawable(R.drawable.video_praise_sel_icon);
+            Drawable selDrawable = mContext.getResources().getDrawable(R.drawable.video_prise_def_icon);
             selDrawable.setBounds(0, 0, selDrawable.getMinimumWidth(), selDrawable.getMinimumHeight());
             praiseTv.setCompoundDrawables(null, selDrawable, null, null);
         }
-        if (0 == info.getIs_collect()){
+        if (0 == item.getIs_collect()){
             Drawable defDrawable = mContext.getResources().getDrawable(R.drawable.video_collect_icon);
             defDrawable.setBounds(0, 0, defDrawable.getMinimumWidth(), defDrawable.getMinimumHeight());
             collectTv.setCompoundDrawables(null, defDrawable, null, null);
@@ -101,7 +95,20 @@ public class ShortVideoAdapter extends BaseQuickAdapter<ShortVideoEntity.ThemeIn
                 .setText(R.id.item_name_tv, "@" + item.getName())
                 .setVisible(R.id.item_tag_iv, 1 == item.getIs_author())
                 .setText(R.id.item_time_tv, TimeUtils.getFriendlyTimeSpanByNow(item.getPublish_time()))
-                .setText(R.id.item_from_tv, !TextUtils.isEmpty(item.getCircle_name()) ? "来自圈子 " + item.getCircle_name() : "");
+                .setText(R.id.item_from_tv, !TextUtils.isEmpty(item.getCircle_name()) ?
+                        "来自圈子 " + item.getCircle_name() : "")
+                .setVisible(R.id.item_atten_iv, item.getIs_attention() == 0)
+                .addOnClickListener(R.id.item_atten_iv)
+                .addOnClickListener(R.id.item_praise_tv)
+                .addOnClickListener(R.id.item_comment_tv)
+                .addOnClickListener(R.id.item_collect_tv)
+                .addOnClickListener(R.id.item_share_tv)
+                .addOnClickListener(R.id.item_name_tv)
+                .addOnClickListener(R.id.item_face_iv)
+                .addOnClickListener(R.id.item_more_iv)
+                .addOnClickListener(R.id.item_from_tv)
+                .addOnClickListener(R.id.play_iv)
+                .addOnClickListener(R.id.video_view);
 
     }
 }

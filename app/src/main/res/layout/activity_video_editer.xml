@@ -11,7 +11,6 @@
         android:layout_height="match_parent" />
 
     <include
-        android:id="@+id/video_edit_layout"
         layout="@layout/video_cutt_kit"
         android:layout_width="match_parent"
         android:layout_height="100dp"

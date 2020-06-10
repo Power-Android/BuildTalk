@@ -83,6 +83,7 @@ public class Constants {
     public static final String KNOWLEDGE_PAGER = "knowledge_pager";
     public static final String WX_PAGER = "wx_pager";
     public static final String TAG_DEFAULT = "tag_default";
+    public static final String VIDEO_REFRESH = "video_refresh";
 
     /**
      * constants

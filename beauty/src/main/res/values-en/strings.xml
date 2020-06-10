@@ -1,19 +1,9 @@
 <resources>
 
-    <string name="beauty_setting_pannel_style">Style</string>
-    <string name="beauty_setting_pannel_beauty">Beauty</string>
-    <string name="beauty_setting_pannel_filter">Filter</string>
-    <string name="beauty_setting_pannel_dynamic_effect">Dynamic effect</string>
-    <string name="beauty_setting_pannel_key">Blend Pic</string>
-    <string name="beauty_setting_pannel_green_screen">Green screen</string>
-    <string name="beauty_setting_pannel_facebeauty">Face beauty</string>
-    <string name="beauty_setting_pannel_gesture">Gesture</string>
-
     <string name="beauty_pannel_style_smooth">Beauty(Smooth)</string>
     <string name="beauty_pannel_style_natural">Beauty(Natural)</string>
     <string name="beauty_pannel_style_pitu">Beauty(PS)</string>
 
-    <string name="beauty_setting_pannel_beauty_beauty">Beauty</string>
     <string name="beauty_pannel_white">White</string>
     <string name="beauty_pannel_ruddy">Ruddy</string>
     <string name="beauty_pannel_bigeye">Big eyes</string>

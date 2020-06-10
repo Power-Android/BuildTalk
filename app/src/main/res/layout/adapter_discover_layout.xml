@@ -116,6 +116,10 @@
             app:ep_max_line="5"
             app:ep_expand_text="全文"
             app:ep_expand_color="@color/blue_mid"
+            app:ep_need_mention="false"
+            app:ep_need_link="false"
+            app:ep_need_convert_url="true"
+            app:ep_link_color="@color/blue_mid"
             app:layout_constraintTop_toBottomOf="@+id/item_time_tv"
             app:layout_constraintStart_toStartOf="@+id/item_name_tv"
             app:layout_constraintEnd_toEndOf="parent"/>

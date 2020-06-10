@@ -27,6 +27,8 @@ public class HomeContract {
         void handlerPraiseSuccess(List<DisrOrAttenEntity.ThemeInfoBean> mList, int position, PraiseEntity praiseEntity);
 
         void handlerAttentUser(BaseResponse<IEntity> baseResponse, List<DisrOrAttenEntity.ThemeInfoBean> data, int position);
+
+        void handlerCollectSuccess(IEntity iEntity, DisrOrAttenEntity.ThemeInfoBean data, int i);
     }
 
     interface Presenter extends IPresenter<View>{

@@ -6,7 +6,6 @@
 
 
     <LinearLayout
-        android:id="@+id/bgm_ll_main_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -21,19 +20,16 @@
         android:visibility="gone">
 
         <RelativeLayout
-            android:id="@+id/bgm_rl_bgm_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp">
 
             <ImageView
-                android:id="@+id/bgm_iv_music_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true" />
 
             <RelativeLayout
-                android:id="@+id/bgm_rl_delete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -50,7 +46,6 @@
                     android:layout_marginRight="5dp" />
 
                 <TextView
-                    android:id="@+id/bgm_tv_delete"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -99,7 +94,6 @@
             android:orientation="horizontal">
 
             <com.tencent.qcloud.ugckit.component.seekbar.TCReversalSeekBar
-                android:id="@+id/bgm_sb_voice"
                 android:layout_width="0dp"
                 android:layout_height="15dp"
                 android:layout_marginEnd="12dp"
@@ -126,12 +120,10 @@
         android:orientation="vertical">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/chose_rv_music"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
         <RelativeLayout
-            android:id="@+id/chose_rl_empty"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
@@ -146,7 +138,6 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/chose_rl_loading_music"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
@@ -154,7 +145,6 @@
             android:visibility="gone">
 
             <ProgressBar
-                android:id="@+id/chose_progress_bar"
                 style="@style/Widget.AppCompat.ProgressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

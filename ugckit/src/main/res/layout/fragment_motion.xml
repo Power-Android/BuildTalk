@@ -21,7 +21,6 @@
         android:paddingBottom="18dp">
 
         <HorizontalScrollView
-            android:id="@+id/rl_voicechanger"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="none">

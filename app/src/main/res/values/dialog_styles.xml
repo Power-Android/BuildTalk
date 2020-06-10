@@ -45,33 +45,13 @@
         <item name="android:windowExitAnimation">@anim/bottom_out</item>
     </style>
     <!--dialog 从上往下弹出动画-->
-    <style name="Top_Bottom_aniamtion">
-        <item name="android:windowEnterAnimation">@anim/top_in</item>
-        <item name="android:windowExitAnimation">@anim/top_out</item>
-    </style>
     <!--dialog 从左往右弹出动画-->
-    <style name="Left_Right_aniamtion">
-        <item name="android:windowEnterAnimation">@anim/left_in</item>
-        <item name="android:windowExitAnimation">@anim/left_out</item>
-    </style>
 
     <!--dialog 从右往左弹出动画-->
-    <style name="Right_Left_aniamtion">
-        <item name="android:windowEnterAnimation">@anim/right_in</item>
-        <item name="android:windowExitAnimation">@anim/right_out</item>
-    </style>
 
     <!--dialog 透明弹出动画-->
-    <style name="Alpah_aniamtion">
-        <item name="android:windowEnterAnimation">@anim/alpha_in</item>
-        <item name="android:windowExitAnimation">@anim/alpha_out</item>
-    </style>
 
     <!--dialog 缩放弹出动画-->
-    <style name="Scale_aniamtion">
-        <item name="android:windowEnterAnimation">@anim/scale_in</item>
-        <item name="android:windowExitAnimation">@anim/scale_out</item>
-    </style>
 
     <!--dialog 仿ios正常-->
     <style name="nomal_aniamtion">
@@ -86,18 +66,5 @@
     </style>
 
     <!--自定义popupwindow动画-->
-    <style name="AnimDown" parent="@android:style/Animation">
-        <item name="android:windowEnterAnimation">@anim/push_scale_in</item>
-        <item name="android:windowExitAnimation">@anim/push_scale_out</item>
-    </style>
-
-    <style name="input_view_style" parent="dialog_style">
-        <item name="android:windowFullscreen">true</item>
-    </style>
-
-    <style name="popu_anim">
-        <item name="android:windowEnterAnimation">@anim/popu_in</item>
-        <item name="android:windowExitAnimation">@anim/popu_out</item>
-    </style>
 
 </resources>

@@ -42,7 +42,6 @@ import com.bjjy.buildtalk.entity.SearchResultEntity;
 import com.bjjy.buildtalk.entity.ShortVideoEntity;
 import com.bjjy.buildtalk.entity.SongsEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
-import com.bjjy.buildtalk.entity.ThemeVideoBean;
 import com.bjjy.buildtalk.entity.VersionRecordEntity;
 
 import java.io.File;
@@ -467,5 +466,15 @@ public class HttpHelperImpl implements HttpHelper {
     @Override
     public Observable<BaseResponse<ShortVideoEntity>> searchVideoTheme(Map<String, String> headers, Map<String, String> params) {
         return mApiService.searchVideoTheme(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> themeVideoBrowse(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.themeVideoBrowse(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<DisrOrAttenEntity>> findThemeSearch(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.findThemeSearch(headers, params);
     }
 }

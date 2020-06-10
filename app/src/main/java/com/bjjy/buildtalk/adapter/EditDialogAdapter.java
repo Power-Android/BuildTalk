@@ -2,7 +2,6 @@ package com.bjjy.buildtalk.adapter;
 
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
-import android.view.View;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
@@ -22,7 +21,7 @@ import java.util.List;
 public class EditDialogAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
 
     private ThemeInfoEntity.ThemeInfoBean mThemeInfoBean;
-    private DisrOrAttenEntity.ThemeInfoBean.ParentThemeInfoBean mThemeInfoBean1;
+    private DisrOrAttenEntity.ThemeInfoBean mThemeInfoBean1;
     private Drawable mDrawable;
 
     public EditDialogAdapter(int layoutResId, @Nullable List<String> data, ThemeInfoEntity.ThemeInfoBean themeInfoBean) {
@@ -30,7 +29,7 @@ public class EditDialogAdapter extends BaseQuickAdapter<String, BaseViewHolder> 
         mThemeInfoBean = themeInfoBean;
     }
 
-    public EditDialogAdapter(int layoutResId, @Nullable List<String> data, DisrOrAttenEntity.ThemeInfoBean.ParentThemeInfoBean themeInfoBean) {
+    public EditDialogAdapter(int layoutResId, @Nullable List<String> data, DisrOrAttenEntity.ThemeInfoBean themeInfoBean) {
         super(layoutResId, data);
         mThemeInfoBean1 = themeInfoBean;
     }

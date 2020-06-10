@@ -48,7 +48,6 @@
             android:textSize="@dimen/sp_10" />
 
         <TextView
-            android:id="@+id/item_top_tv"
             android:layout_width="@dimen/dp_25"
             android:layout_height="@dimen/dp_14"
             android:layout_alignTop="@+id/item_face_iv"

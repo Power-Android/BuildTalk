@@ -2,7 +2,6 @@ package com.bjjy.buildtalk.ui.circle;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
@@ -67,7 +66,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -416,6 +414,8 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
                 }
                 break;
             case R.id.share_iv:
+            case R.id.wechat_iv:
+            case R.id.wechat_circle_iv:
                 if (themeInfoEntity != null) {
                     if (themeInfoEntity.getTheme_image().size() > 0) {
                         mPresenter.getThumb(themeInfoEntity.getTheme_image().get(0).getPic_url(), themeInfoEntity);
@@ -437,15 +437,6 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
                         isGone = !isGone;
                     }
                 });
-            case R.id.wechat_iv:
-            case R.id.wechat_circle_iv:
-                if (themeInfoEntity != null) {
-                    if (themeInfoEntity.getTheme_image().size() > 0) {
-                        mPresenter.getThumb(themeInfoEntity.getTheme_image().get(0).getPic_url(), themeInfoEntity);
-                    } else {
-                        mPresenter.getThumb(themeInfoEntity.getHeadImage(), themeInfoEntity);
-                    }
-                }
                 break;
             case R.id.item_atten_cl:
                 mPresenter.attenUser(themeInfoEntity);
@@ -626,7 +617,8 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
                 showDeleteDialog(mComment_content, i);
                 break;
             case R.id.item_content_tv:
-                if (!String.valueOf(mComment_content.get(i).getUser_id()).equals(mPresenter.mDataManager.getUser().getUser_id())) {
+                if (!String.valueOf(mComment_content.get(i).getUser_id())
+                        .equals(mPresenter.mDataManager.getUser().getUser_id())) {
                     if (!isGone) {
                         mRecordBottomLl.setVisibility(View.GONE);
                         mRecordEt.setFocusable(true);

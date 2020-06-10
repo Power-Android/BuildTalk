@@ -23,6 +23,7 @@ import com.bjjy.buildtalk.adapter.DiscoverHAdapter;
 import com.bjjy.buildtalk.adapter.EditDialogAdapter;
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.fragment.BaseFragment;
+import com.bjjy.buildtalk.core.event.RefreshEvent;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.entity.DisrOrAttenEntity;
 import com.bjjy.buildtalk.entity.IEntity;
@@ -49,6 +50,10 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerInd
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.SimplePagerTitleView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -97,6 +102,12 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
     private TextView mDSearch_tv;
     private TextView mASearch_tv;
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void event(RefreshEvent refreshEvent){
+        if (TextUtils.equals(Constants.VIDEO_REFRESH, refreshEvent.getMsg())){
+            onRefresh(mRefreshLayout);
+        }
+    }
 
     public static HomeFragment getInstance() {
         return new HomeFragment();
@@ -109,6 +120,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
 
     @Override
     protected void initView() {
+        EventBus.getDefault().register(this);
         initIndicator();
     }
 
@@ -181,6 +193,17 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
         mAttentionHAdapter.setOnItemChildClickListener(this);
 
         mRefreshLayout.setOnRefreshLoadMoreListener(this);
+
+        d_headerView.setOnClickListener(v -> {
+            Intent intent = new Intent(mContext, DisSearchActivity.class);
+            intent.putExtra("type_id", "1");
+            startActivity(intent);
+        });
+        a_headerView.setOnClickListener(v -> {
+            Intent intent = new Intent(mContext, DisSearchActivity.class);
+            intent.putExtra("type_id", "2");
+            startActivity(intent);
+        });
     }
 
     @Override
@@ -367,11 +390,11 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
             showEditDialog(data.get(i), i, data, data.get(i).getParent_themeInfo(), themePath, mEndUrl,
                     TextUtils.isEmpty(data.get(i).getTheme_content()) ?
                             data.get(i).getParent_themeInfo().getTheme_content() : data.get(i).getTheme_content(),
-                    thumb_url, data.get(i).getTheme_content(), true, true);
+                    thumb_url, data.get(i).getTheme_content(), true, false);
         } else {
             showShareDialog(themePath, mEndUrl, TextUtils.isEmpty(data.get(i).getTheme_content()) ?
                             data.get(i).getParent_themeInfo().getName() : data.get(i).getTheme_content(),
-                    thumb_url, data.get(i).getTheme_content(), true, true);
+                    thumb_url, data.get(i).getTheme_content(), true, false);
         }
     }
 
@@ -392,6 +415,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
 //            mBehavior.setPeekHeight((int)(0.4 * peekHeight));
         }
         mView.findViewById(R.id.discover_tv).setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        mView.findViewById(R.id.circle_tv).setVisibility(isVisible ? View.GONE : View.VISIBLE);
         mBottomSheetDialog.show();
         mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         mView.findViewById(R.id.wechat_tv).setOnClickListener(v -> {
@@ -407,6 +431,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
             mBottomSheetDialog.dismiss();
         });
         mView.findViewById(R.id.discover_tv).setOnClickListener(v -> mBottomSheetDialog.dismiss());
+        mView.findViewById(R.id.circle_tv).setOnClickListener(v -> mBottomSheetDialog.dismiss());
         mView.findViewById(R.id.cancle_tv).setOnClickListener(v -> mBottomSheetDialog.dismiss());
     }
 
@@ -431,10 +456,11 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
             RecyclerView recyclerView = mEditView.findViewById(R.id.recycler_view);
             recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL,
                     false));
-            mAdapter = new EditDialogAdapter(R.layout.adapter_edit_dialog, mItemList, data.getParent_themeInfo());
+            mAdapter = new EditDialogAdapter(R.layout.adapter_edit_dialog, mItemList, data);
             recyclerView.setAdapter(mAdapter);
         }
         mEditView.findViewById(R.id.discover_tv).setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        mEditView.findViewById(R.id.circle_tv).setVisibility(isVisible ? View.GONE : View.VISIBLE);
 
         if (mPresenter.mDataManager.getUser().getUser_id().equals(circleInfoEntity.getUser_id() + "")) {//如果是圈主
             if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
@@ -477,7 +503,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
             List<String> item = adapter1.getData();
             switch (item.get(position)) {
                 case "收藏":
-//                    mPresenter.collectTheme(data, i);
+                    mPresenter.collectTheme(data, i);
                     mEditDialog.dismiss();
                     break;
                 case "修改":
@@ -530,12 +556,46 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
             mEditDialog.dismiss();
         });
         mEditView.findViewById(R.id.discover_tv).setOnClickListener(v -> mEditDialog.dismiss());
+        mEditView.findViewById(R.id.circle_tv).setOnClickListener(v -> mEditDialog.dismiss());
         mEditView.findViewById(R.id.cancle_tv).setOnClickListener(v -> mEditDialog.dismiss());
+    }
+
+    @Override
+    public void handlerCollectSuccess(IEntity iEntity, DisrOrAttenEntity.ThemeInfoBean data, int i) {
+        if (0 == data.getIs_collect()) {
+            data.setIs_collect(1);
+            ToastUtils.showCollect("收藏成功", getResources().getDrawable(R.drawable.collect_success_icon));
+        } else {
+            data.setIs_collect(0);
+            ToastUtils.showCollect("取消收藏", getResources().getDrawable(R.drawable.collect_cancle_icon));
+        }
+        if (mViewpager.getCurrentItem() == 1) {//发现列表
+            mDiscoverHAdapter.notifyItemChanged(i);
+            //如果点赞的这条主题是精华，那么刷新精华列表数据
+            if (data.getIs_choiceness() == 1) {
+                refreshChoiceness();
+            }
+        } else {//精华列表,局部刷新主题数据
+            mAttentionHAdapter.notifyItemChanged(i);
+            int theme_id = data.getTheme_id();
+            List<DisrOrAttenEntity.ThemeInfoBean> topticAdapterData = mDiscoverHAdapter.getData();
+            for (int j = 0; j < topticAdapterData.size(); j++) {
+                if (theme_id == topticAdapterData.get(j).getTheme_id()) {
+                    if (0 == topticAdapterData.get(j).getIs_collect()) {
+                        topticAdapterData.get(j).setIs_collect(1);
+                    } else {
+                        topticAdapterData.get(j).setIs_collect(0);
+                    }
+                    mDiscoverHAdapter.notifyItemChanged(j);
+                }
+            }
+        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        EventBus.getDefault().unregister(mContext);
     }
 }

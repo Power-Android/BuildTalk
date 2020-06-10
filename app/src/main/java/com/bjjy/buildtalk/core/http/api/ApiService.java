@@ -41,7 +41,6 @@ import com.bjjy.buildtalk.entity.SearchResultEntity;
 import com.bjjy.buildtalk.entity.ShortVideoEntity;
 import com.bjjy.buildtalk.entity.SongsEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
-import com.bjjy.buildtalk.entity.ThemeVideoBean;
 import com.bjjy.buildtalk.entity.VersionRecordEntity;
 
 import java.io.File;
@@ -701,5 +700,20 @@ public interface ApiService {
     @FormUrlEncoded
     Observable<BaseResponse<ShortVideoEntity>> searchVideoTheme(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
+    /**
+     * @return 视频主题浏览记录
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("themeVideoBrowse")
+    @FormUrlEncoded
+    Observable<BaseResponse<IEntity>> themeVideoBrowse(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 发现页/关注页搜索
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("findThemeSearch")
+    @FormUrlEncoded
+    Observable<BaseResponse<DisrOrAttenEntity>> findThemeSearch(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
 }

@@ -44,7 +44,6 @@
                 android:textColor="@color/text_drak"
                 android:layout_marginTop="@dimen/dp_5"/>
             <LinearLayout
-                android:id="@+id/info_ll"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_60"
                 android:layout_below="@+id/name_tv"

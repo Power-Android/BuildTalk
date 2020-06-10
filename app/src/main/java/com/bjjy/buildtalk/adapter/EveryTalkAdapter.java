@@ -1,13 +1,11 @@
 package com.bjjy.buildtalk.adapter;
 
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
@@ -31,7 +29,7 @@ public class EveryTalkAdapter extends BaseQuickAdapter<EveryTalkEntity,BaseViewH
 
     @Override
     protected void convert(BaseViewHolder helper, EveryTalkEntity item) {
-        TextView textView = helper.getView(R.id.period_tv);
+//        TextView textView = helper.getView(R.id.period_tv);
         ImageView imageView = helper.getView(R.id.item_img_iv);
         String article_title = item.getArticle_title();
         if (item.isChecked()){
@@ -42,7 +40,7 @@ public class EveryTalkAdapter extends BaseQuickAdapter<EveryTalkEntity,BaseViewH
         SpannableString spannableString = new SpannableString(article_title);
         ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#FF8F8F8F"));
         spannableString.setSpan(colorSpan,0,article_title.indexOf("期")+1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-        helper.setText(R.id.period_tv,spannableString);
+//        helper.setText(R.id.period_tv,spannableString);
         helper.addOnClickListener(R.id.item_img_iv);
 
     }

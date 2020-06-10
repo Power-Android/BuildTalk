@@ -1,18 +1,9 @@
 <resources>
-    <string name="beauty_setting_pannel_style">风格</string>
-    <string name="beauty_setting_pannel_beauty">美颜</string>
-    <string name="beauty_setting_pannel_filter">滤镜</string>
-    <string name="beauty_setting_pannel_dynamic_effect">动效</string>
-    <string name="beauty_setting_pannel_key">抠背</string>
-    <string name="beauty_setting_pannel_green_screen">绿幕</string>
-    <string name="beauty_setting_pannel_facebeauty">美妆</string>
-    <string name="beauty_setting_pannel_gesture">手势</string>
 
     <string name="beauty_pannel_style_smooth">美颜(光滑)</string>
     <string name="beauty_pannel_style_natural">美颜(自然)</string>
     <string name="beauty_pannel_style_pitu">美颜(天天P图)</string>
 
-    <string name="beauty_setting_pannel_beauty_beauty">美颜</string>
     <string name="beauty_pannel_white">美白</string>
     <string name="beauty_pannel_ruddy">红润</string>
     <string name="beauty_pannel_bigeye">大眼</string>

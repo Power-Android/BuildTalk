@@ -43,7 +43,6 @@ import com.bjjy.buildtalk.entity.SearchResultEntity;
 import com.bjjy.buildtalk.entity.ShortVideoEntity;
 import com.bjjy.buildtalk.entity.SongsEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
-import com.bjjy.buildtalk.entity.ThemeVideoBean;
 import com.bjjy.buildtalk.entity.VersionRecordEntity;
 
 import java.io.File;
@@ -614,5 +613,15 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     @Override
     public Observable<BaseResponse<ShortVideoEntity>> searchVideoTheme(Map<String, String> headers, Map<String, String> params) {
         return mHttpHelper.searchVideoTheme(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<IEntity>> themeVideoBrowse(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.themeVideoBrowse(headers, params);
+    }
+
+    @Override
+    public Observable<BaseResponse<DisrOrAttenEntity>> findThemeSearch(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.findThemeSearch(headers, params);
     }
 }
