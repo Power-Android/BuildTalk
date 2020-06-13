@@ -10,9 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
-import com.bjjy.buildtalk.entity.DisrOrAttenEntity;
-import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.PdfInfoEntity;
+import com.bjjy.buildtalk.entity.ThemeImageBean;
+import com.bjjy.buildtalk.entity.ThemeInfoEntity;
+import com.bjjy.buildtalk.entity.ThemePdfBean;
 import com.bjjy.buildtalk.ui.circle.PDFViewerActivity;
 import com.bjjy.buildtalk.ui.circle.TopticDetailActivity;
 import com.bjjy.buildtalk.utils.AllUtils;
@@ -36,14 +37,16 @@ import java.util.List;
  * @project BuildTalk
  * @description:
  */
-public class AttentionHAdapter extends BaseQuickAdapter<DisrOrAttenEntity.ThemeInfoBean, BaseViewHolder> {
+public class AttentionHAdapter extends BaseQuickAdapter<ThemeInfoEntity.ThemeInfoBean, BaseViewHolder> {
+    private String mUser_id;
 
-    public AttentionHAdapter(int layoutResId, @Nullable List<DisrOrAttenEntity.ThemeInfoBean> data) {
+    public AttentionHAdapter(int layoutResId, @Nullable List<ThemeInfoEntity.ThemeInfoBean> data, String user_id) {
         super(layoutResId, data);
+        mUser_id = user_id;
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, DisrOrAttenEntity.ThemeInfoBean item) {
+    protected void convert(BaseViewHolder helper, ThemeInfoEntity.ThemeInfoBean item) {
         boolean isDelete = item.getParent_isDelete() == 1;
 
         Glide.with(mContext)
@@ -68,13 +71,13 @@ public class AttentionHAdapter extends BaseQuickAdapter<DisrOrAttenEntity.ThemeI
         }, false);
 
         helper.setText(R.id.item_name_tv, item.getName())
-                .setVisible(R.id.item_tag_iv, 1 == item.getIs_circleMaster())
+                .setVisible(R.id.item_tag_iv, "1".equals(item.getIs_circleMaster()))
                 .setText(R.id.item_time_tv, TimeUtils.getFriendlyTimeSpanByNow(item.getPublish_time()))
                 .setVisible(R.id.item_from_tv, 0 != item.getReprint_themeId())
                 .setGone(R.id.item_content_tv, isDelete ||
                         !TextUtils.isEmpty(item.getParent_themeInfo().getTheme_content()))
                 .setText(R.id.item_from_tv, isDelete ? "" :
-                        "  转自 " + (item.getUser_id() == item.getParent_themeInfo().getUser_id() ?
+                        "  转自 " + (TextUtils.isEmpty(mUser_id) ? "" : mUser_id.equals(item.getParent_themeInfo().getUser_id() + "") ?
                                 "我" : "@" + item.getParent_themeInfo().getName()))
                 .setGone(R.id.item_grid_view, !isDelete &&
                         item.getParent_themeInfo().getTheme_image().size() > 0)
@@ -135,8 +138,7 @@ public class AttentionHAdapter extends BaseQuickAdapter<DisrOrAttenEntity.ThemeI
         //图片
         if (item.getParent_themeInfo().getTheme_image().size() > 0){
             MultiImageView multiImageView = helper.getView(R.id.item_grid_view);
-            List<DisrOrAttenEntity.ThemeInfoBean.ThemeImageBeanX> themeImageBeanList =
-                    item.getParent_themeInfo().getTheme_image();
+            List<ThemeImageBean> themeImageBeanList = item.getParent_themeInfo().getTheme_image();
             List<String> list = new ArrayList<>();
             for (int i = 0; i < themeImageBeanList.size(); i++) {
                 list.add(themeImageBeanList.get(i).getPic_url());
@@ -148,8 +150,7 @@ public class AttentionHAdapter extends BaseQuickAdapter<DisrOrAttenEntity.ThemeI
 
         //PDF
         if (item.getParent_themeInfo().getTheme_pdf().size() > 0){
-            List<DisrOrAttenEntity.ThemeInfoBean.ParentThemeInfoBean.ThemePdfBean> theme_pdf =
-                    item.getParent_themeInfo().getTheme_pdf();
+            List<ThemePdfBean> theme_pdf = item.getParent_themeInfo().getTheme_pdf();
             List<PdfInfoEntity> list1 = new ArrayList<>();
             for (int i = 0; i < theme_pdf.size(); i++) {
                 list1.add(new PdfInfoEntity(theme_pdf.get(i).getPdf_name(),theme_pdf.get(i).getPdf_url()));

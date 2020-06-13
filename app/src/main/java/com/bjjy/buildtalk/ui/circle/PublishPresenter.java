@@ -135,14 +135,33 @@ public class PublishPresenter extends BasePresenter<PublishContarct.View> {
         paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
         paramas.put("theme_id", theme_id+"");
         paramas.put("theme_content", theme_content);
-        paramas.put("publish_type", !TextUtils.isEmpty(publish_type) ? "2" : "1");
-        paramas.put("is_find", isChecked ? "1" : "0");//是否同步到发现
+//        paramas.put("publish_type", !TextUtils.isEmpty(publish_type) ? "2" : "1");
         if (!TextUtils.isEmpty(picUrl)){
             paramas.put("theme_image", picUrl);
         }
         if (!TextUtils.isEmpty(pdfUrl)){
             paramas.put("theme_pdf", pdfUrl);
             paramas.put("pdf_name", pdfName);
+        }
+//        if (!TextUtils.isEmpty(publish_type)){
+//            paramas.put("is_find", "1");
+//        }else {
+//            paramas.put("is_find", isChecked ? "1" : "0");//是否同步到发现
+//        }
+        if (!TextUtils.isEmpty(picUrl)){
+            paramas.put("theme_image", picUrl);
+        }
+        if (!TextUtils.isEmpty(pdfUrl)){
+            paramas.put("theme_pdf", pdfUrl);
+            paramas.put("pdf_name", pdfName);
+        }
+        if (!TextUtils.isEmpty(tx_videoId)){
+            paramas.put("tx_videoId", tx_videoId);
+            paramas.put("theme_video", theme_video);
+            paramas.put("coverURL", TextUtils.isEmpty(coverURL) ? "" : coverURL);
+            paramas.put("video_height", TextUtils.isEmpty(video_height) ? "" : video_height);
+            paramas.put("video_width", TextUtils.isEmpty(video_width) ? "" : video_width);
+            paramas.put("video_duration", TextUtils.isEmpty(videoDuration) ? "" : videoDuration);
         }
         String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
 

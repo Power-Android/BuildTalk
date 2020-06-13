@@ -18,7 +18,6 @@ import com.bjjy.buildtalk.entity.CollectEntity;
 import com.bjjy.buildtalk.entity.CommentSuccessEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.CourseListEntity;
-import com.bjjy.buildtalk.entity.DisrOrAttenEntity;
 import com.bjjy.buildtalk.entity.DissertationDetailEntity;
 import com.bjjy.buildtalk.entity.DissertationEntity;
 import com.bjjy.buildtalk.entity.DissertationListEntity;
@@ -672,7 +671,7 @@ public interface ApiService {
     @Headers(Constants.HEADER_PASSID)
     @POST("searchFindTheme")
     @FormUrlEncoded
-    Observable<BaseResponse<DisrOrAttenEntity>> searchFindTheme(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+    Observable<BaseResponse<ThemeInfoEntity>> searchFindTheme(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
     /**
      * @return 获取腾讯签名
@@ -714,6 +713,6 @@ public interface ApiService {
     @Headers(Constants.HEADER_PASSID)
     @POST("findThemeSearch")
     @FormUrlEncoded
-    Observable<BaseResponse<DisrOrAttenEntity>> findThemeSearch(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+    Observable<BaseResponse<ThemeInfoEntity>> findThemeSearch(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
 }

@@ -7,7 +7,6 @@ import com.bjjy.buildtalk.base.presenter.BasePresenter;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.core.rx.BaseObserver;
 import com.bjjy.buildtalk.core.rx.RxUtils;
-import com.bjjy.buildtalk.entity.DisrOrAttenEntity;
 import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
@@ -54,9 +53,9 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
         addSubscribe(mDataManager.searchFindTheme(headers, paramas)
                 .compose(RxUtils.SchedulerTransformer())
                 .filter(response -> mView != null)
-                .subscribeWith(new BaseObserver<DisrOrAttenEntity>(mView, false) {
+                .subscribeWith(new BaseObserver<ThemeInfoEntity>(mView, false) {
                     @Override
-                    public void onSuccess(DisrOrAttenEntity disrOrAttenEntity) {
+                    public void onSuccess(ThemeInfoEntity disrOrAttenEntity) {
                         mView.handlerDiscover(disrOrAttenEntity);
                     }
                 }));
@@ -83,15 +82,15 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
         addSubscribe(mDataManager.searchFindTheme(headers, paramas)
                 .compose(RxUtils.SchedulerTransformer())
                 .filter(response -> mView != null)
-                .subscribeWith(new BaseObserver<DisrOrAttenEntity>(mView, false) {
+                .subscribeWith(new BaseObserver<ThemeInfoEntity>(mView, false) {
                     @Override
-                    public void onSuccess(DisrOrAttenEntity disrOrAttenEntity) {
+                    public void onSuccess(ThemeInfoEntity disrOrAttenEntity) {
                         mView.handlerAttention(disrOrAttenEntity);
                     }
                 }));
     }
 
-    public void getThumb(String pic_url, List<DisrOrAttenEntity.ThemeInfoBean> data, int i, boolean isEdit) {
+    public void getThumb(String pic_url, List<ThemeInfoEntity.ThemeInfoBean> data, int i, boolean isEdit) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
         paramas.put("pic_url", pic_url);
@@ -113,7 +112,7 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
                 }));
     }
 
-    public void praise(List<DisrOrAttenEntity.ThemeInfoBean> mList, int position) {
+    public void praise(List<ThemeInfoEntity.ThemeInfoBean> mList, int position) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
         paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
@@ -138,7 +137,7 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
                 }));
     }
 
-    public void attenUser(List<DisrOrAttenEntity.ThemeInfoBean> data, int position) {
+    public void attenUser(List<ThemeInfoEntity.ThemeInfoBean> data, int position) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
         paramas.put("examine_user", mDataManager.getUser().getUser_id());
@@ -170,7 +169,7 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
                 }));
     }
 
-    public void collectTheme(DisrOrAttenEntity.ThemeInfoBean data, int i) {
+    public void collectTheme(ThemeInfoEntity.ThemeInfoBean data, int i) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
         paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
@@ -190,6 +189,52 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
                     @Override
                     public void onSuccess(IEntity iEntity) {
                         mView.handlerCollectSuccess(iEntity,data, i);
+                    }
+                }));
+    }
+
+    public void deleteTheme(ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        paramas.put("theme_id", data.getTheme_id()+"");
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.deleteTheme(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<IEntity>(mView, false) {
+                    @Override
+                    public void onSuccess(IEntity iEntity) {
+                        mView.handlerDeleteSuccess(iEntity,data, i, list);
+                    }
+                }));
+    }
+
+    public void userShieldRecord(ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        paramas.put("data_id", data.getTheme_id()+"");
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.userShieldRecord(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<IEntity>(mView, false) {
+                    @Override
+                    public void onSuccess(IEntity iEntity) {
+                        mView.handleruserShieldRecordSuccess(iEntity,data, i, list);
                     }
                 }));
     }

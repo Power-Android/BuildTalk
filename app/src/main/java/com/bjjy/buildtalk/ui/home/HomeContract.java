@@ -3,9 +3,9 @@ package com.bjjy.buildtalk.ui.home;
 import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.base.view.IView;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
-import com.bjjy.buildtalk.entity.DisrOrAttenEntity;
 import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.PraiseEntity;
+import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 
 import java.util.List;
 
@@ -18,17 +18,21 @@ import java.util.List;
 public class HomeContract {
     interface View extends IView{
 
-        void handlerDiscover(DisrOrAttenEntity disrOrAttenEntity);
+        void handlerDiscover(ThemeInfoEntity disrOrAttenEntity);
 
-        void handlerAttention(DisrOrAttenEntity disrOrAttenEntity);
+        void handlerAttention(ThemeInfoEntity disrOrAttenEntity);
 
-        void handlerThumbSuccess(String thumb_url, List<DisrOrAttenEntity.ThemeInfoBean> data, int position, boolean isEdit);
+        void handlerThumbSuccess(String thumb_url, List<ThemeInfoEntity.ThemeInfoBean> data, int position, boolean isEdit);
 
-        void handlerPraiseSuccess(List<DisrOrAttenEntity.ThemeInfoBean> mList, int position, PraiseEntity praiseEntity);
+        void handlerPraiseSuccess(List<ThemeInfoEntity.ThemeInfoBean> mList, int position, PraiseEntity praiseEntity);
 
-        void handlerAttentUser(BaseResponse<IEntity> baseResponse, List<DisrOrAttenEntity.ThemeInfoBean> data, int position);
+        void handlerAttentUser(BaseResponse<IEntity> baseResponse, List<ThemeInfoEntity.ThemeInfoBean> data, int position);
 
-        void handlerCollectSuccess(IEntity iEntity, DisrOrAttenEntity.ThemeInfoBean data, int i);
+        void handlerCollectSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i);
+
+        void handlerDeleteSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list);
+
+        void handleruserShieldRecordSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list);
     }
 
     interface Presenter extends IPresenter<View>{

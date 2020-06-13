@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -25,14 +26,17 @@ import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.fragment.BaseFragment;
 import com.bjjy.buildtalk.core.event.RefreshEvent;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
-import com.bjjy.buildtalk.entity.DisrOrAttenEntity;
 import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.PraiseEntity;
+import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.ui.circle.ComplaintReasonActivity;
+import com.bjjy.buildtalk.ui.circle.PublishActivity;
 import com.bjjy.buildtalk.ui.circle.TopticDetailActivity;
 import com.bjjy.buildtalk.ui.video.ShortVideoActivity;
 import com.bjjy.buildtalk.utils.DialogUtils;
+import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
+import com.bjjy.buildtalk.weight.BaseDialog;
 import com.bjjy.buildtalk.weight.MyViewPagerAdapter;
 import com.bjjy.buildtalk.weight.ScaleTransitionPagerTitleView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -83,8 +87,8 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
     View attentionView, discoverView;
     private RecyclerView mAttentionRv;
     private RecyclerView mDiscoverRv;
-    private List<DisrOrAttenEntity.ThemeInfoBean> mDisList = new ArrayList<>();
-    private List<DisrOrAttenEntity.ThemeInfoBean> mAtenList = new ArrayList<>();
+    private List<ThemeInfoEntity.ThemeInfoBean> mDisList = new ArrayList<>();
+    private List<ThemeInfoEntity.ThemeInfoBean> mAtenList = new ArrayList<>();
     private DiscoverHAdapter mDiscoverHAdapter;
     private AttentionHAdapter mAttentionHAdapter;
     private int disPage = 1;
@@ -101,10 +105,14 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
     private EditDialogAdapter mAdapter;
     private TextView mDSearch_tv;
     private TextView mASearch_tv;
+    private BaseDialog mDeleteDialog;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void event(RefreshEvent refreshEvent){
         if (TextUtils.equals(Constants.VIDEO_REFRESH, refreshEvent.getMsg())){
+            onRefresh(mRefreshLayout);
+        }
+        if (TextUtils.equals(refreshEvent.getMsg(), Constants.TOPTIC_REFRESH)) {
             onRefresh(mRefreshLayout);
         }
     }
@@ -173,7 +181,8 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
         mViewpager.setCurrentItem(1);
 
         mDiscoverRv.setLayoutManager(new LinearLayoutManager(mContext));
-        mDiscoverHAdapter = new DiscoverHAdapter(R.layout.adapter_discover_layout, mDisList);
+        mDiscoverHAdapter = new DiscoverHAdapter(R.layout.adapter_discover_layout, mDisList,
+                mPresenter.mDataManager.getUser().getUser_id());
         View d_headerView = LayoutInflater.from(mContext).inflate(R.layout.adapter_header_layout,
                 null, false);
         mDiscoverHAdapter.addHeaderView(d_headerView);
@@ -183,7 +192,8 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
         mDiscoverHAdapter.setOnItemChildClickListener(this);
         mDSearch_tv = d_headerView.findViewById(R.id.search_tv);
         mAttentionRv.setLayoutManager(new LinearLayoutManager(mContext));
-        mAttentionHAdapter = new AttentionHAdapter(R.layout.adapter_attention_layout, mAtenList);
+        mAttentionHAdapter = new AttentionHAdapter(R.layout.adapter_attention_layout, mAtenList,
+                mPresenter.mDataManager.getUser().getUser_id());
         View a_headerView = LayoutInflater.from(mContext).inflate(R.layout.adapter_header_layout,
                 null, false);
         mAttentionHAdapter.addHeaderView(a_headerView);
@@ -214,7 +224,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
     }
 
     @Override
-    public void handlerDiscover(DisrOrAttenEntity disrOrAttenEntity) {
+    public void handlerDiscover(ThemeInfoEntity disrOrAttenEntity) {
         mDisList = disrOrAttenEntity.getThemeInfo();
         if (disPage == 1) {
             mDSearch_tv.setText("大家都在搜“" + disrOrAttenEntity.getTop_keyword() + "”");
@@ -225,7 +235,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
     }
 
     @Override
-    public void handlerAttention(DisrOrAttenEntity disrOrAttenEntity) {
+    public void handlerAttention(ThemeInfoEntity disrOrAttenEntity) {
         mAtenList = disrOrAttenEntity.getThemeInfo();
         if (attenPage == 1) {
             mASearch_tv.setText("大家都在搜“" + disrOrAttenEntity.getTop_keyword() + "”");
@@ -260,7 +270,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        List<DisrOrAttenEntity.ThemeInfoBean> mList = adapter.getData();
+        List<ThemeInfoEntity.ThemeInfoBean> mList = adapter.getData();
         Intent intent = new Intent(mContext, TopticDetailActivity.class);
         intent.putExtra("title", mList.get(position).getName());
         intent.putExtra("theme_id", mList.get(position).getTheme_id() + "");
@@ -270,7 +280,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
 
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-        List<DisrOrAttenEntity.ThemeInfoBean> mList = adapter.getData();
+        List<ThemeInfoEntity.ThemeInfoBean> mList = adapter.getData();
         switch (view.getId()) {
             case R.id.item_face_iv://个人主页
             case R.id.item_from_tv:
@@ -324,20 +334,24 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
     }
 
     @Override
-    public void handlerAttentUser(BaseResponse<IEntity> baseResponse, List<DisrOrAttenEntity.ThemeInfoBean> data,
+    public void handlerAttentUser(BaseResponse<IEntity> baseResponse, List<ThemeInfoEntity.ThemeInfoBean> data,
                                   int position) {
-        if (TextUtils.equals("关注成功", baseResponse.getErrorMsg())){
-            data.get(position).setIs_attention(1);
-        }else {
-            data.get(position).setIs_attention(0);
+        for (int i = 0; i < data.size(); i++) {
+            if (data.get(position).getUser_id() == data.get(i).getUser_id()){
+                if (TextUtils.equals("关注成功", baseResponse.getErrorMsg())){
+                    data.get(i).setIs_attention(1);
+                }else {
+                    data.get(i).setIs_attention(0);
+                }
+            }
         }
         if (mViewpager.getCurrentItem() == 1){
-            mDiscoverHAdapter.notifyItemChanged(position + 1);
+            mDiscoverHAdapter.notifyDataSetChanged();
         }
     }
 
     @Override
-    public void handlerPraiseSuccess(List<DisrOrAttenEntity.ThemeInfoBean> data, int i, PraiseEntity praiseEntity) {
+    public void handlerPraiseSuccess(List<ThemeInfoEntity.ThemeInfoBean> data, int i, PraiseEntity praiseEntity) {
         if (data.get(i).getIs_parise() == 0) {
             data.get(i).setIs_parise(1);
         } else {
@@ -354,7 +368,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
         } else {//关注列表,局部刷新发现数据
             mAttentionHAdapter.notifyItemChanged(i + 1);
             int theme_id = data.get(i).getTheme_id();
-            List<DisrOrAttenEntity.ThemeInfoBean> topticAdapterData = mDiscoverHAdapter.getData();
+            List<ThemeInfoEntity.ThemeInfoBean> topticAdapterData = mDiscoverHAdapter.getData();
             for (int j = 0; j < topticAdapterData.size(); j++) {
                 if (theme_id == topticAdapterData.get(j).getTheme_id()) {
                     if (topticAdapterData.get(j).getIs_parise() == 0) {
@@ -379,7 +393,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
     }
 
     @Override
-    public void handlerThumbSuccess(String thumb_url, List<DisrOrAttenEntity.ThemeInfoBean> data,
+    public void handlerThumbSuccess(String thumb_url, List<ThemeInfoEntity.ThemeInfoBean> data,
                                     int i, boolean isEdit) {
         String mUrl = Constants.BASE_URL + "jtfwhgetopenid" + "?user_id=" +
                 mPresenter.mDataManager.getUser().getUser_id() + "&theme_id=" + data.get(i).getTheme_id();
@@ -435,8 +449,8 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
         mView.findViewById(R.id.cancle_tv).setOnClickListener(v -> mBottomSheetDialog.dismiss());
     }
 
-    public void showEditDialog(DisrOrAttenEntity.ThemeInfoBean data, int i, List<DisrOrAttenEntity.ThemeInfoBean> list,
-                               DisrOrAttenEntity.ThemeInfoBean.ParentThemeInfoBean circleInfoEntity, String url,
+    public void showEditDialog(ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list,
+                               ThemeInfoEntity.ThemeInfoBean.ParentThemeInfoBean circleInfoEntity, String url,
                                String weburl, String title, String imgUrl,
                                String desc, boolean isSmall, boolean isVisible) {
         if (mEditDialog == null) {
@@ -463,27 +477,24 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
         mEditView.findViewById(R.id.circle_tv).setVisibility(isVisible ? View.GONE : View.VISIBLE);
 
         if (mPresenter.mDataManager.getUser().getUser_id().equals(circleInfoEntity.getUser_id() + "")) {//如果是圈主
-            if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
+            LogUtils.e(mPresenter.mDataManager.getUser().getUser_id() + "");
+            if (mPresenter.mDataManager.getUser().getUser_id().equals(String.valueOf(data.getUser_id()))) {
                 //如果是自己的主题----收藏、修改、置顶、加精、删除
                 mItemList.clear();
                 mItemList.add("收藏");
                 mItemList.add("修改");
-                mItemList.add("置顶");
-                mItemList.add("加精");
                 mItemList.add("删除");
                 mAdapter.setNewData(mItemList);
             } else {
                 //不是自己的主题----收藏、置顶、加精、不喜欢、投诉
                 mItemList.clear();
                 mItemList.add("收藏");
-                mItemList.add("置顶");
-                mItemList.add("加精");
                 mItemList.add("不喜欢");
                 mItemList.add("投诉");
                 mAdapter.setNewData(mItemList);
             }
         } else {//如果是成员
-            if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
+            if (mPresenter.mDataManager.getUser().getUser_id().equals(String.valueOf(data.getUser_id()))) {
                 //如果是自己的主题----收藏、修改、删除
                 mItemList.clear();
                 mItemList.add("收藏");
@@ -507,30 +518,24 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
                     mEditDialog.dismiss();
                     break;
                 case "修改":
-//                    if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
-//                        Intent intent = new Intent(mContext, PublishActivity.class);
-//                        intent.putExtra("themeInfo", data);
-//                        intent.putExtra("circle_name", circleInfoEntity.get());
-//                        startActivity(intent);
-//                    }
-                    mEditDialog.dismiss();
-                    break;
-                case "置顶":
-//                    mPresenter.themeTopOperate(data, i);
-                    mEditDialog.dismiss();
-                    break;
-                case "加精":
-//                    mPresenter.addChoiceness(data, i);
+                    if (mPresenter.mDataManager.getUser().getUser_id().equals(String.valueOf(data.getUser_id()))) {
+                        Intent intent = new Intent(mContext, PublishActivity.class);
+                        intent.putExtra("themeInfo", data);
+                        intent.putExtra("publish_type", "2");
+                        intent.putExtra("circle_name", data.getName());
+                        intent.putExtra("circle_id", data.getCircle_id());
+                        startActivity(intent);
+                    }
                     mEditDialog.dismiss();
                     break;
                 case "删除":
-//                    if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
-//                        DialogUtils.showDeleteDialog(data, i, list, mContext, mPresenter, null);
-//                    }
+                    if (mPresenter.mDataManager.getUser().getUser_id().equals(String.valueOf(data.getUser_id()))) {
+                        showDeleteDialog(data, i, list);
+                    }
                     mEditDialog.dismiss();
                     break;
                 case "不喜欢":
-//                    mPresenter.userShieldRecord(data, i, list);
+                    mPresenter.userShieldRecord(data, i, list);
                     mEditDialog.dismiss();
                     break;
                 case "投诉":
@@ -561,7 +566,69 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
     }
 
     @Override
-    public void handlerCollectSuccess(IEntity iEntity, DisrOrAttenEntity.ThemeInfoBean data, int i) {
+    public void handleruserShieldRecordSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list) {
+        list.remove(i);
+        if (mViewpager.getCurrentItem() == 1){
+            mDiscoverHAdapter.notifyItemChanged(i + 1);
+            //如果点赞的这条主题是关注的人，那么刷新关注列表数据
+            if (data.getIs_attention() == 1) {
+                refreshChoiceness();
+            }
+        }else {
+            mAttentionHAdapter.notifyItemChanged(i + 1);
+            int theme_id = data.getTheme_id();
+            List<ThemeInfoEntity.ThemeInfoBean> topticAdapterData = mDiscoverHAdapter.getData();
+            for (int j = 0; j < topticAdapterData.size(); j++) {
+                if (theme_id == topticAdapterData.get(j).getTheme_id()) {
+                    topticAdapterData.remove(j);
+                    mDiscoverHAdapter.notifyItemChanged(j + 1);
+                }
+            }
+        }
+    }
+
+    private void showDeleteDialog(ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list) {
+        mDeleteDialog = new BaseDialog.Builder(mContext)
+                .setGravity(Gravity.CENTER)
+                .setAnimation(R.style.nomal_aniamtion)
+                .setViewId(R.layout.dialog_quit_layout)
+                .setWidthHeightdp((int) getResources().getDimension(R.dimen.dp_275), (int) getResources().getDimension(R.dimen.dp_138))
+                .isOnTouchCanceled(true)
+                .addViewOnClickListener(R.id.cancle_tv, v -> mDeleteDialog.dismiss())
+                .addViewOnClickListener(R.id.query_tv, v -> {
+                    mPresenter.deleteTheme(data, i, list);
+                    mDeleteDialog.dismiss();
+                })
+                .builder();
+        TextView textView = mDeleteDialog.getView(R.id.text);
+        textView.setText("确定删除此条评论？");
+        mDeleteDialog.show();
+    }
+
+    @Override
+    public void handlerDeleteSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list) {
+        list.remove(i);
+        if (mViewpager.getCurrentItem() == 1){
+            mDiscoverHAdapter.notifyItemChanged(i + 1);
+            //如果点赞的这条主题是关注的人，那么刷新关注列表数据
+            if (data.getIs_attention() == 1) {
+                refreshChoiceness();
+            }
+        }else {
+            mAttentionHAdapter.notifyItemChanged(i + 1);
+            int theme_id = data.getTheme_id();
+            List<ThemeInfoEntity.ThemeInfoBean> topticAdapterData = mDiscoverHAdapter.getData();
+            for (int j = 0; j < topticAdapterData.size(); j++) {
+                if (theme_id == topticAdapterData.get(j).getTheme_id()) {
+                    topticAdapterData.remove(j);
+                    mDiscoverHAdapter.notifyItemChanged(j + 1);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void handlerCollectSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i) {
         if (0 == data.getIs_collect()) {
             data.setIs_collect(1);
             ToastUtils.showCollect("收藏成功", getResources().getDrawable(R.drawable.collect_success_icon));
@@ -571,14 +638,14 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
         }
         if (mViewpager.getCurrentItem() == 1) {//发现列表
             mDiscoverHAdapter.notifyItemChanged(i);
-            //如果点赞的这条主题是精华，那么刷新精华列表数据
-            if (data.getIs_choiceness() == 1) {
+            //如果点赞的这条主题是关注的人，那么刷新关注列表数据
+            if (data.getIs_attention() == 1) {
                 refreshChoiceness();
             }
         } else {//精华列表,局部刷新主题数据
             mAttentionHAdapter.notifyItemChanged(i);
             int theme_id = data.getTheme_id();
-            List<DisrOrAttenEntity.ThemeInfoBean> topticAdapterData = mDiscoverHAdapter.getData();
+            List<ThemeInfoEntity.ThemeInfoBean> topticAdapterData = mDiscoverHAdapter.getData();
             for (int j = 0; j < topticAdapterData.size(); j++) {
                 if (theme_id == topticAdapterData.get(j).getTheme_id()) {
                     if (0 == topticAdapterData.get(j).getIs_collect()) {

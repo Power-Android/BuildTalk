@@ -8,10 +8,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.DiscoverHAdapter;
@@ -19,14 +21,15 @@ import com.bjjy.buildtalk.adapter.EditDialogAdapter;
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
-import com.bjjy.buildtalk.entity.DisrOrAttenEntity;
 import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.PraiseEntity;
+import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.ui.circle.ComplaintReasonActivity;
 import com.bjjy.buildtalk.ui.circle.TopticDetailActivity;
 import com.bjjy.buildtalk.ui.video.ShortVideoActivity;
 import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
+import com.bjjy.buildtalk.weight.BaseDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -53,7 +56,7 @@ public class DisSearchActivity extends BaseActivity<DisSearchPresenter> implemen
     private String mType_id;
     private int page = 1;
     private DiscoverHAdapter mDiscoverHAdapter;
-    private List<DisrOrAttenEntity.ThemeInfoBean> mList;
+    private List<ThemeInfoEntity.ThemeInfoBean> mList;
 
     private String mPath = "pages/sub_circle/pages/subjectDetails/subjectDetails?";
     private String themePath;//主题拼接完成url
@@ -65,6 +68,7 @@ public class DisSearchActivity extends BaseActivity<DisSearchPresenter> implemen
     private View mEditView;
     private List<String> mItemList;
     private EditDialogAdapter mAdapter;
+    private BaseDialog mDeleteDialog;
 
     @Override
     protected int getLayoutId() {
@@ -76,7 +80,7 @@ public class DisSearchActivity extends BaseActivity<DisSearchPresenter> implemen
         mType_id = getIntent().getStringExtra("type_id");
         mRefreshLayout.setOnRefreshLoadMoreListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mDiscoverHAdapter = new DiscoverHAdapter(R.layout.adapter_discover_layout, mList);
+        mDiscoverHAdapter = new DiscoverHAdapter(R.layout.adapter_discover_layout, mList, mPresenter.mDataManager.getUser().getUser_id());
         mRecyclerView.setAdapter(mDiscoverHAdapter);
         ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         mDiscoverHAdapter.setOnItemClickListener(this);
@@ -86,8 +90,8 @@ public class DisSearchActivity extends BaseActivity<DisSearchPresenter> implemen
     @Override
     protected void initEventAndData() {
         mSearchEt.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_SEARCH){
-                if (TextUtils.isEmpty(mSearchEt.getText().toString())){
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                if (TextUtils.isEmpty(mSearchEt.getText().toString())) {
                     ToastUtils.showShort("请输入搜索内容");
                     return false;
                 }
@@ -103,11 +107,11 @@ public class DisSearchActivity extends BaseActivity<DisSearchPresenter> implemen
     }
 
     @Override
-    public void handlerSearch(DisrOrAttenEntity disrOrAttenEntity) {
-        List<DisrOrAttenEntity.ThemeInfoBean> themeInfo = disrOrAttenEntity.getThemeInfo();
-        if (page == 1){
+    public void handlerSearch(ThemeInfoEntity disrOrAttenEntity) {
+        List<ThemeInfoEntity.ThemeInfoBean> themeInfo = disrOrAttenEntity.getThemeInfo();
+        if (page == 1) {
             mDiscoverHAdapter.setNewData(themeInfo);
-        }else {
+        } else {
             mDiscoverHAdapter.addData(themeInfo);
         }
     }
@@ -127,7 +131,7 @@ public class DisSearchActivity extends BaseActivity<DisSearchPresenter> implemen
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        List<DisrOrAttenEntity.ThemeInfoBean> mList = adapter.getData();
+        List<ThemeInfoEntity.ThemeInfoBean> mList = adapter.getData();
         Intent intent = new Intent(this, TopticDetailActivity.class);
         intent.putExtra("title", mList.get(position).getName());
         intent.putExtra("theme_id", mList.get(position).getTheme_id() + "");
@@ -137,7 +141,7 @@ public class DisSearchActivity extends BaseActivity<DisSearchPresenter> implemen
 
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-        List<DisrOrAttenEntity.ThemeInfoBean> mList = adapter.getData();
+        List<ThemeInfoEntity.ThemeInfoBean> mList = adapter.getData();
         switch (view.getId()) {
             case R.id.item_face_iv://个人主页
             case R.id.item_from_tv:
@@ -191,18 +195,18 @@ public class DisSearchActivity extends BaseActivity<DisSearchPresenter> implemen
     }
 
     @Override
-    public void handlerAttentUser(BaseResponse<IEntity> baseResponse, List<DisrOrAttenEntity.ThemeInfoBean> data,
+    public void handlerAttentUser(BaseResponse<IEntity> baseResponse, List<ThemeInfoEntity.ThemeInfoBean> data,
                                   int position) {
-        if (TextUtils.equals("关注成功", baseResponse.getErrorMsg())){
+        if (TextUtils.equals("关注成功", baseResponse.getErrorMsg())) {
             data.get(position).setIs_attention(1);
-        }else {
+        } else {
             data.get(position).setIs_attention(0);
         }
         mDiscoverHAdapter.notifyItemChanged(position);
     }
 
     @Override
-    public void handlerPraiseSuccess(List<DisrOrAttenEntity.ThemeInfoBean> data, int i, PraiseEntity praiseEntity) {
+    public void handlerPraiseSuccess(List<ThemeInfoEntity.ThemeInfoBean> data, int i, PraiseEntity praiseEntity) {
         if (data.get(i).getIs_parise() == 0) {
             data.get(i).setIs_parise(1);
         } else {
@@ -210,11 +214,11 @@ public class DisSearchActivity extends BaseActivity<DisSearchPresenter> implemen
         }
         data.get(i).setParise_nickName(praiseEntity.getNickName());
         data.get(i).setCountParise(praiseEntity.getCountpraise());
-            mDiscoverHAdapter.notifyItemChanged(i + 1);
+        mDiscoverHAdapter.notifyItemChanged(i + 1);
     }
 
     @Override
-    public void handlerThumbSuccess(String thumb_url, List<DisrOrAttenEntity.ThemeInfoBean> data,
+    public void handlerThumbSuccess(String thumb_url, List<ThemeInfoEntity.ThemeInfoBean> data,
                                     int i, boolean isEdit) {
         String mUrl = Constants.BASE_URL + "jtfwhgetopenid" + "?user_id=" +
                 mPresenter.mDataManager.getUser().getUser_id() + "&theme_id=" + data.get(i).getTheme_id();
@@ -270,8 +274,8 @@ public class DisSearchActivity extends BaseActivity<DisSearchPresenter> implemen
         mView.findViewById(R.id.cancle_tv).setOnClickListener(v -> mBottomSheetDialog.dismiss());
     }
 
-    public void showEditDialog(DisrOrAttenEntity.ThemeInfoBean data, int i, List<DisrOrAttenEntity.ThemeInfoBean> list,
-                               DisrOrAttenEntity.ThemeInfoBean.ParentThemeInfoBean circleInfoEntity, String url,
+    public void showEditDialog(ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list,
+                               ThemeInfoEntity.ThemeInfoBean.ParentThemeInfoBean circleInfoEntity, String url,
                                String weburl, String title, String imgUrl,
                                String desc, boolean isSmall, boolean isVisible) {
         if (mEditDialog == null) {
@@ -303,16 +307,12 @@ public class DisSearchActivity extends BaseActivity<DisSearchPresenter> implemen
                 mItemList.clear();
                 mItemList.add("收藏");
                 mItemList.add("修改");
-                mItemList.add("置顶");
-                mItemList.add("加精");
                 mItemList.add("删除");
                 mAdapter.setNewData(mItemList);
             } else {
                 //不是自己的主题----收藏、置顶、加精、不喜欢、投诉
                 mItemList.clear();
                 mItemList.add("收藏");
-                mItemList.add("置顶");
-                mItemList.add("加精");
                 mItemList.add("不喜欢");
                 mItemList.add("投诉");
                 mAdapter.setNewData(mItemList);
@@ -338,7 +338,7 @@ public class DisSearchActivity extends BaseActivity<DisSearchPresenter> implemen
             List<String> item = adapter1.getData();
             switch (item.get(position)) {
                 case "收藏":
-//                    mPresenter.collectTheme(data, i);
+                    mPresenter.collectTheme(data, i);
                     mEditDialog.dismiss();
                     break;
                 case "修改":
@@ -350,22 +350,14 @@ public class DisSearchActivity extends BaseActivity<DisSearchPresenter> implemen
 //                    }
                     mEditDialog.dismiss();
                     break;
-                case "置顶":
-//                    mPresenter.themeTopOperate(data, i);
-                    mEditDialog.dismiss();
-                    break;
-                case "加精":
-//                    mPresenter.addChoiceness(data, i);
-                    mEditDialog.dismiss();
-                    break;
                 case "删除":
-//                    if (mPresenter.mDataManager.getUser().getUser_id().equals(data.getUser_id())) {
-//                        DialogUtils.showDeleteDialog(data, i, list, mContext, mPresenter, null);
-//                    }
+                    if (mPresenter.mDataManager.getUser().getUser_id().equals(String.valueOf(data.getUser_id()))) {
+                        showDeleteDialog(data, i, list);
+                    }
                     mEditDialog.dismiss();
                     break;
                 case "不喜欢":
-//                    mPresenter.userShieldRecord(data, i, list);
+                    mPresenter.userShieldRecord(data, i, list);
                     mEditDialog.dismiss();
                     break;
                 case "投诉":
@@ -394,4 +386,47 @@ public class DisSearchActivity extends BaseActivity<DisSearchPresenter> implemen
         mEditView.findViewById(R.id.circle_tv).setOnClickListener(v -> mEditDialog.dismiss());
         mEditView.findViewById(R.id.cancle_tv).setOnClickListener(v -> mEditDialog.dismiss());
     }
+
+    @Override
+    public void handleruserShieldRecordSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list) {
+        list.remove(i);
+        mDiscoverHAdapter.notifyItemChanged(i);
+    }
+
+    private void showDeleteDialog(ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list) {
+        mDeleteDialog = new BaseDialog.Builder(this)
+                .setGravity(Gravity.CENTER)
+                .setAnimation(R.style.nomal_aniamtion)
+                .setViewId(R.layout.dialog_quit_layout)
+                .setWidthHeightdp((int) getResources().getDimension(R.dimen.dp_275), (int) getResources().getDimension(R.dimen.dp_138))
+                .isOnTouchCanceled(true)
+                .addViewOnClickListener(R.id.cancle_tv, v -> mDeleteDialog.dismiss())
+                .addViewOnClickListener(R.id.query_tv, v -> {
+                    mPresenter.deleteTheme(data, i, list);
+                    mDeleteDialog.dismiss();
+                })
+                .builder();
+        TextView textView = mDeleteDialog.getView(R.id.text);
+        textView.setText("确定删除此条评论？");
+        mDeleteDialog.show();
+    }
+
+    @Override
+    public void handlerDeleteSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list) {
+        list.remove(i);
+        mDiscoverHAdapter.notifyItemChanged(i);
+    }
+
+    @Override
+    public void handlerCollectSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i) {
+        if (0 == data.getIs_collect()) {
+            data.setIs_collect(1);
+            ToastUtils.showCollect("收藏成功", getResources().getDrawable(R.drawable.collect_success_icon));
+        } else {
+            data.setIs_collect(0);
+            ToastUtils.showCollect("取消收藏", getResources().getDrawable(R.drawable.collect_cancle_icon));
+        }
+        mDiscoverHAdapter.notifyItemChanged(i);
+    }
+
 }

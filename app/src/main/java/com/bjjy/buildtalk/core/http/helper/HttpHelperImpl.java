@@ -449,7 +449,7 @@ public class HttpHelperImpl implements HttpHelper {
     }
 
     @Override
-    public Observable<BaseResponse<DisrOrAttenEntity>> searchFindTheme(Map<String, String> headers, Map<String, String> params) {
+    public Observable<BaseResponse<ThemeInfoEntity>> searchFindTheme(Map<String, String> headers, Map<String, String> params) {
         return mApiService.searchFindTheme(headers, params);
     }
 
@@ -474,7 +474,7 @@ public class HttpHelperImpl implements HttpHelper {
     }
 
     @Override
-    public Observable<BaseResponse<DisrOrAttenEntity>> findThemeSearch(Map<String, String> headers, Map<String, String> params) {
+    public Observable<BaseResponse<ThemeInfoEntity>> findThemeSearch(Map<String, String> headers, Map<String, String> params) {
         return mApiService.findThemeSearch(headers, params);
     }
 }

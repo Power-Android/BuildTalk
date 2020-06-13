@@ -114,6 +114,7 @@
                     app:layout_constraintStart_toStartOf="@+id/cover_iv"
                     app:layout_constraintTop_toTopOf="@+id/cover_iv"/>
                 <ImageView
+                    android:id="@+id/video_delete_iv"
                     android:layout_width="@dimen/dp_26"
                     android:layout_height="@dimen/dp_26"
                     android:src="@drawable/pic_delete_icon"

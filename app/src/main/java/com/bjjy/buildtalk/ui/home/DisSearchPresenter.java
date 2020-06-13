@@ -7,9 +7,9 @@ import com.bjjy.buildtalk.base.presenter.BasePresenter;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.core.rx.BaseObserver;
 import com.bjjy.buildtalk.core.rx.RxUtils;
-import com.bjjy.buildtalk.entity.DisrOrAttenEntity;
 import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.PraiseEntity;
+import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.utils.HeaderUtils;
 import com.bjjy.buildtalk.utils.TimeUtils;
 
@@ -55,15 +55,15 @@ public class DisSearchPresenter extends BasePresenter<DisSearchContract.View> im
         addSubscribe(mDataManager.findThemeSearch(headers, paramas)
                 .compose(RxUtils.SchedulerTransformer())
                 .filter(response -> mView != null)
-                .subscribeWith(new BaseObserver<DisrOrAttenEntity>(mView, true, true) {
+                .subscribeWith(new BaseObserver<ThemeInfoEntity>(mView, true, true) {
                     @Override
-                    public void onSuccess(DisrOrAttenEntity disrOrAttenEntity) {
+                    public void onSuccess(ThemeInfoEntity disrOrAttenEntity) {
                         mView.handlerSearch(disrOrAttenEntity);
                     }
                 }));
     }
 
-    public void getThumb(String pic_url, List<DisrOrAttenEntity.ThemeInfoBean> data, int i, boolean isEdit) {
+    public void getThumb(String pic_url, List<ThemeInfoEntity.ThemeInfoBean> data, int i, boolean isEdit) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
         paramas.put("pic_url", pic_url);
@@ -85,7 +85,7 @@ public class DisSearchPresenter extends BasePresenter<DisSearchContract.View> im
                 }));
     }
 
-    public void praise(List<DisrOrAttenEntity.ThemeInfoBean> mList, int position) {
+    public void praise(List<ThemeInfoEntity.ThemeInfoBean> mList, int position) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
         paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
@@ -110,7 +110,7 @@ public class DisSearchPresenter extends BasePresenter<DisSearchContract.View> im
                 }));
     }
 
-    public void attenUser(List<DisrOrAttenEntity.ThemeInfoBean> data, int position) {
+    public void attenUser(List<ThemeInfoEntity.ThemeInfoBean> data, int position) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
         paramas.put("examine_user", mDataManager.getUser().getUser_id());
@@ -141,4 +141,75 @@ public class DisSearchPresenter extends BasePresenter<DisSearchContract.View> im
                     }
                 }));
     }
+
+    public void collectTheme(ThemeInfoEntity.ThemeInfoBean data, int i) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        paramas.put("theme_id", data.getTheme_id()+"");
+        paramas.put(Constants.SOURCE, Constants.ANDROID);
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.collectTheme(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<IEntity>(mView, false) {
+                    @Override
+                    public void onSuccess(IEntity iEntity) {
+                        mView.handlerCollectSuccess(iEntity,data, i);
+                    }
+                }));
+    }
+
+    public void deleteTheme(ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        paramas.put("theme_id", data.getTheme_id()+"");
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.deleteTheme(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<IEntity>(mView, false) {
+                    @Override
+                    public void onSuccess(IEntity iEntity) {
+                        mView.handlerDeleteSuccess(iEntity,data, i, list);
+                    }
+                }));
+    }
+
+    public void userShieldRecord(ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        paramas.put("data_id", data.getTheme_id()+"");
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.userShieldRecord(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<IEntity>(mView, false) {
+                    @Override
+                    public void onSuccess(IEntity iEntity) {
+                        mView.handleruserShieldRecordSuccess(iEntity,data, i, list);
+                    }
+                }));
+    }
+
 }

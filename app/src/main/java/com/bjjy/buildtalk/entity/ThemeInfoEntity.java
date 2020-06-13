@@ -22,7 +22,16 @@ public class ThemeInfoEntity implements Serializable {
     private String page;
     private int page_count;
     private String countTheme;
+    private String top_keyword;
     private List<ThemeInfoBean> themeInfo;
+
+    public String getTop_keyword() {
+        return top_keyword;
+    }
+
+    public void setTop_keyword(String top_keyword) {
+        this.top_keyword = top_keyword;
+    }
 
     public String getCountTheme() {
         return countTheme;
@@ -111,6 +120,15 @@ public class ThemeInfoEntity implements Serializable {
         private int is_attention;
         private int parent_userId;
         private int parent_name;
+        private int countComment;
+
+        public int getCountComment() {
+            return countComment;
+        }
+
+        public void setCountComment(int countComment) {
+            this.countComment = countComment;
+        }
 
         public int getIs_find() {
             return is_find;

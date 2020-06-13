@@ -20,7 +20,6 @@ import com.bjjy.buildtalk.entity.CollectEntity;
 import com.bjjy.buildtalk.entity.CommentSuccessEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.CourseListEntity;
-import com.bjjy.buildtalk.entity.DisrOrAttenEntity;
 import com.bjjy.buildtalk.entity.DissertationDetailEntity;
 import com.bjjy.buildtalk.entity.DissertationEntity;
 import com.bjjy.buildtalk.entity.DissertationListEntity;
@@ -596,7 +595,7 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     }
 
     @Override
-    public Observable<BaseResponse<DisrOrAttenEntity>> searchFindTheme(Map<String, String> headers, Map<String, String> params) {
+    public Observable<BaseResponse<ThemeInfoEntity>> searchFindTheme(Map<String, String> headers, Map<String, String> params) {
         return mHttpHelper.searchFindTheme(headers, params);
     }
 
@@ -621,7 +620,7 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     }
 
     @Override
-    public Observable<BaseResponse<DisrOrAttenEntity>> findThemeSearch(Map<String, String> headers, Map<String, String> params) {
+    public Observable<BaseResponse<ThemeInfoEntity>> findThemeSearch(Map<String, String> headers, Map<String, String> params) {
         return mHttpHelper.findThemeSearch(headers, params);
     }
 }
