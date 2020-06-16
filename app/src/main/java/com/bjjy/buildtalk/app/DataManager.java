@@ -623,4 +623,9 @@ public class DataManager implements HttpHelper, DbHelper, PreferenceHelper {
     public Observable<BaseResponse<ThemeInfoEntity>> findThemeSearch(Map<String, String> headers, Map<String, String> params) {
         return mHttpHelper.findThemeSearch(headers, params);
     }
+
+    @Override
+    public Observable<BaseResponse<List<ThemeInfoEntity.ThemeInfoBean>>> searchChoicenessTheme(Map<String, String> headers, Map<String, String> params) {
+        return mHttpHelper.searchChoicenessTheme(headers, params);
+    }
 }

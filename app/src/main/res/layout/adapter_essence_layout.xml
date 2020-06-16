@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <TextView
+        android:id="@+id/item_content_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="【跟着笑楠长建识】征信系列五连发（一）
+征信系统有广义和狭义之分，广义上指覆盖全社会环境各个体系的信用系统…"
+        android:maxLines="3"
+        android:ellipsize="end"
+        android:textSize="@dimen/sp_13"
+        android:textColor="@color/text_color7"
+        android:layout_marginTop="@dimen/common_margin"
+        android:layout_marginEnd="@dimen/common_margin"
+        android:layout_marginStart="@dimen/common_margin"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/item_img_iv"/>
+    <ImageView
+        android:id="@+id/item_img_iv"
+        android:layout_width="@dimen/dp_50"
+        android:layout_height="@dimen/dp_50"
+        android:src="@drawable/test_toptic"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toTopOf="@+id/item_content_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/common_margin"/>
+    <TextView
+        android:id="@+id/item_title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="笑楠 | 聊建筑人听的懂的经济学"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:textSize="@dimen/sp_11"
+        android:textColor="@color/text_color6"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginStart="@dimen/common_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/item_content_tv"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_1"
+        android:layout_marginTop="@dimen/common_margin"
+        android:background="@color/background"
+        app:layout_constraintTop_toBottomOf="@+id/item_title_tv"/>
+</android.support.constraint.ConstraintLayout>

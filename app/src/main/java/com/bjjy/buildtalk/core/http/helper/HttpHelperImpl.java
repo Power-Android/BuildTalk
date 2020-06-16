@@ -477,4 +477,9 @@ public class HttpHelperImpl implements HttpHelper {
     public Observable<BaseResponse<ThemeInfoEntity>> findThemeSearch(Map<String, String> headers, Map<String, String> params) {
         return mApiService.findThemeSearch(headers, params);
     }
+
+    @Override
+    public Observable<BaseResponse<List<ThemeInfoEntity.ThemeInfoBean>>> searchChoicenessTheme(Map<String, String> headers, Map<String, String> params) {
+        return mApiService.searchChoicenessTheme(headers, params);
+    }
 }

@@ -69,6 +69,15 @@ public class CourseEntity implements Serializable {
         private String countCourse;
         private String course_money;
         private String countUser;
+        private int is_buy;
+
+        public int getIs_buy() {
+            return is_buy;
+        }
+
+        public void setIs_buy(int is_buy) {
+            this.is_buy = is_buy;
+        }
 
         public String getCourse_money() {
             return course_money;

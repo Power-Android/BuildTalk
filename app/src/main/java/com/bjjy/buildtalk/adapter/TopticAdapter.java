@@ -26,8 +26,7 @@ public class TopticAdapter extends BaseQuickAdapter<CourseEntity.CircleInfoBean,
     @Override
     protected void convert(BaseViewHolder helper, CourseEntity.CircleInfoBean item) {
         Glide.with(mContext).load(item.getCircle_image().getPic_url()).into((ImageView) helper.getView(R.id.toptic_iv));
-        helper.setText(R.id.item_title_tv,item.getCircle_name())
-                .setText(R.id.item_name_tv,item.getName());
-        helper.setGone(R.id.item_tag_iv, 1 == item.getIs_author() ? true : false);
+        helper.setText(R.id.item_title_tv,item.getCircle_name());
+//        helper.setGone(R.id.item_tag_iv, 1 == item.getIs_author() ? true : false);
     }
 }

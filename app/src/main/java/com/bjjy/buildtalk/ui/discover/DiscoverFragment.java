@@ -1,52 +1,37 @@
 package com.bjjy.buildtalk.ui.discover;
 
 import android.animation.ObjectAnimator;
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.DiscoverAdapter;
-import com.bjjy.buildtalk.adapter.EveryTalkAdapter;
-import com.bjjy.buildtalk.app.Constants;
-import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.base.fragment.BaseFragment;
 import com.bjjy.buildtalk.core.event.PlayerEvent;
-import com.bjjy.buildtalk.core.service.PlayerService;
+import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.entity.ActivityEntity;
 import com.bjjy.buildtalk.entity.BannerEntity;
 import com.bjjy.buildtalk.entity.CourseEntity;
 import com.bjjy.buildtalk.entity.DiscoverEntity;
 import com.bjjy.buildtalk.entity.DissertationEntity;
 import com.bjjy.buildtalk.entity.EveryTalkEntity;
+import com.bjjy.buildtalk.entity.IEntity;
+import com.bjjy.buildtalk.entity.MasterListEntity;
 import com.bjjy.buildtalk.entity.SongsEntity;
-import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
+import com.bjjy.buildtalk.entity.ThemeInfoEntity;
+import com.bjjy.buildtalk.ui.talk.MasterListActivity;
 import com.bjjy.buildtalk.utils.AnimatorUtils;
 import com.bjjy.buildtalk.utils.DialogUtils;
-import com.bjjy.buildtalk.utils.LogUtils;
-import com.bjjy.buildtalk.utils.PlayerHelper;
-import com.bjjy.buildtalk.weight.BaseDialog;
-import com.bjjy.buildtalk.weight.CircleProgressView;
 import com.bjjy.buildtalk.weight.player.PlayerWindowManager;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -88,6 +73,7 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
     private List<DiscoverEntity> discoverEntityList = new ArrayList<>();
     private DiscoverAdapter mDiscoverAdapter;
     public static int HOT_TOPTIC_PAGE = 1;
+    public static int MASTER_PAGE = 1;
     public static int COURSE_PAGE = 1;
     private ImageView mTalkPlayIv;
     private ObjectAnimator mAnimator;
@@ -167,7 +153,9 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
         mPresenter.discoverEveryTalk();
         mPresenter.discoverToptic();
         mPresenter.discoverCourse();
-        mPresenter.discoverDissertation();
+//        mPresenter.discoverDissertation();
+        mPresenter.discoverAuthor();
+        mPresenter.discoverEssence();
 //        }
     }
 
@@ -203,6 +191,16 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
     @Override
     public void handlerDissertation(List<DissertationEntity> dissertationEntities) {
         mDiscoverAdapter.setDissertationEntities(dissertationEntities);
+    }
+
+    @Override
+    public void handlerAuthor(MasterListEntity masterListEntity) {
+        mDiscoverAdapter.setAuthorEntities(masterListEntity.getMasterInfo());
+    }
+
+    @Override
+    public void handlerEssence(List<ThemeInfoEntity.ThemeInfoBean> themeInfoBeanList) {
+        mDiscoverAdapter.setEssenceEntities(themeInfoBeanList);
     }
 
     @Override
@@ -255,10 +253,7 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
                     }
                 }
                 break;
-            case R.id.toptic_all_tv://热门话题圈----查看全部
-                startActivity(new Intent(mContext, TopticListActivity.class));
-                break;
-            case R.id.toptic_change_ll://热门话题圈----换一换
+            case R.id.toptic_change_rl://热门话题圈----查看全部
                 ImageView topticChangeIv = view.findViewById(R.id.toptic_change_iv);
                 AnimatorUtils.setRotateAnimation(topticChangeIv);
                 view.setClickable(false);
@@ -271,25 +266,49 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
             case R.id.course_all_tv://精品课程----查看全部
                 startActivity(new Intent(mContext, CourseListActivity.class));
                 break;
-            case R.id.course_change_ll://精品课程----换一换
-                ImageView courseChangeIv = view.findViewById(R.id.course_change_iv);
-                AnimatorUtils.setRotateAnimation(courseChangeIv);
+//            case R.id.course_change_ll://精品课程----换一换
+//                ImageView courseChangeIv = view.findViewById(R.id.course_change_iv);
+//                AnimatorUtils.setRotateAnimation(courseChangeIv);
+//                view.setClickable(false);
+//                new Handler().postDelayed(() -> {
+//                    COURSE_PAGE++;
+//                    mPresenter.discoverCourse();
+//                    view.setClickable(true);
+//                }, 1000);
+//                break;
+            case R.id.project_all_tv://精彩专题----查看全部
+                startActivity(new Intent(mContext, DissertationListActivity.class));
+                break;
+            case R.id.master_change_rl://大咖---换一换
+                ImageView masterChangeIv = view.findViewById(R.id.master_change_iv);
+                AnimatorUtils.setRotateAnimation(masterChangeIv);
                 view.setClickable(false);
                 new Handler().postDelayed(() -> {
-                    COURSE_PAGE++;
-                    mPresenter.discoverCourse();
+                    MASTER_PAGE++;
+                    mPresenter.discoverAuthor();
                     view.setClickable(true);
                 }, 1000);
                 break;
-            case R.id.project_all_tv://精彩专题----查看全部
-                startActivity(new Intent(mContext, DissertationListActivity.class));
+            case R.id.master_more_tv://大咖--查看全部
+                startActivity(new Intent(mContext, MasterListActivity.class));
                 break;
         }
     }
 
     @Override
-    public void onEveryTalkItemClick(BaseQuickAdapter adapter, View view, int position) {
+    public void onMasterItemClick(BaseQuickAdapter adapter, View view, int position) {
+        List<MasterListEntity.MasterInfoBean> data = adapter.getData();
+        mPresenter.attention(data.get(position).getUser_id(), data, position);
+    }
 
+    @Override
+    public void handlerAttrntion(BaseResponse<IEntity> baseResponse, List<MasterListEntity.MasterInfoBean> mList, int i) {
+        if (TextUtils.equals("关注成功", baseResponse.getErrorMsg())) {
+            mList.get(i).setIs_attention(1);
+        } else {
+            mList.get(i).setIs_attention(0);
+        }
+        mDiscoverAdapter.setFocus(i);
     }
 
     @Override

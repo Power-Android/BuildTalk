@@ -69,6 +69,15 @@ public class MasterListEntity implements Serializable {
         private String master_pic;
         private int user_id;
         private List<String> sign;
+        private int is_attention;
+
+        public int getIs_attention() {
+            return is_attention;
+        }
+
+        public void setIs_attention(int is_attention) {
+            this.is_attention = is_attention;
+        }
 
         public int getAuthor_id() {
             return author_id;

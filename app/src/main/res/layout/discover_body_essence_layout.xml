@@ -15,36 +15,32 @@
         android:layout_marginTop="@dimen/dp_10">
 
         <TextView
+            android:id="@+id/view3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dp_15"
+            android:layout_toRightOf="@+id/icon1"
             android:includeFontPadding="false"
-            android:text="行业好课"
+            android:text="精华主题"
             android:textColor="@color/text_drak"
             android:textSize="@dimen/sp_16"
             android:textStyle="bold" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:background="@color/background"
+            android:layout_below="@+id/view3"
+            android:layout_marginTop="@dimen/dp_10"/>
 
-        <TextView
-            android:id="@+id/course_all_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/common_margin"
-            android:includeFontPadding="false"
-            android:text="全部"
-            android:textColor="@color/text_mid"
-            android:textSize="@dimen/sp_13" />
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/course_recyclerview"
+        android:id="@+id/essence_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/view1"
         android:layout_marginBottom="@dimen/dp_8"
-        android:layout_marginLeft="@dimen/dp_7_5"
-        android:layout_marginRight="@dimen/dp_7_5"
         android:layout_marginTop="@dimen/dp_10"
         android:overScrollMode="never" />
 
