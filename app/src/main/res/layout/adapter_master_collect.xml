@@ -12,6 +12,14 @@
         android:layout_marginLeft="@dimen/common_margin"
         android:layout_marginTop="@dimen/dp_20"
         android:src="@drawable/test_toptic"/>
+    <ImageView
+        android:id="@+id/item_play_iv"
+        android:layout_width="@dimen/dp_20"
+        android:layout_height="@dimen/dp_20"
+        android:src="@drawable/video_play_icon"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/dp_45"
+        android:layout_marginStart="@dimen/dp_40"/>
     <TextView
         android:id="@+id/item_content_tv"
         android:layout_width="wrap_content"

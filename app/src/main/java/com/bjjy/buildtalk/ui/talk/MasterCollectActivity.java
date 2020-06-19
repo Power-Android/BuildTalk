@@ -75,7 +75,9 @@ public class MasterCollectActivity extends BaseActivity<MasterCollectPresenter> 
         mPage_count = collectEntity.getPage_count();
         mList = collectEntity.getMyCollectInfo();
         for (int i = 0; i < mList.size(); i++) {
-            if (mList.get(i).getTheme_image().size() > 0 || mList.get(i).getTheme_pdf().size() > 0){
+            if (mList.get(i).getTheme_image().size() > 0 ||
+                    mList.get(i).getTheme_pdf().size() > 0 ||
+                    mList.get(i).getTheme_video().size() > 0){
                 mList.get(i).setItemType(MaseterCollectAdapter.BODY_IMAGE);
             }else {
                 mList.get(i).setItemType(MaseterCollectAdapter.BODY_TEXT);

@@ -130,7 +130,7 @@ public class DiscoverPresenter extends BasePresenter<DiscoverContract.View> impl
             HOT_TOPTIC_PAGE = 1;
             paramas.put("page",HOT_TOPTIC_PAGE+"");
         }
-        paramas.put(App.getContext().getString(R.string.PAGE_SIZE),"3");
+        paramas.put(App.getContext().getString(R.string.PAGE_SIZE),"9");
         paramas.put("isIndex","1");
         paramas.put(App.getContext().getString(R.string.TIMESTAMP), timestamp);
         String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));

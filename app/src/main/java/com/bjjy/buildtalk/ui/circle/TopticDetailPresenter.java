@@ -16,6 +16,7 @@ import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.utils.HeaderUtils;
 import com.bjjy.buildtalk.utils.TimeUtils;
+import com.bjjy.buildtalk.utils.ToastUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -280,6 +281,31 @@ public class TopticDetailPresenter extends BasePresenter<TopticDetailContract.Vi
                     @Override
                     public void onSuccess(IEntity iEntity) {
                         mView.handlerChoicenessSuccess(iEntity,data);
+                    }
+                }));
+    }
+
+    public void shareTheme(int theme_id, String circle_id) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        paramas.put("theme_id", theme_id+"");
+        paramas.put("circle_id", circle_id+"");
+        paramas.put(Constants.SOURCE, Constants.ANDROID);
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.shareTheme(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<IEntity>(mView, false) {
+                    @Override
+                    public void onSuccess(IEntity iEntity) {
+                        ToastUtils.showShort("转发成功");
                     }
                 }));
     }

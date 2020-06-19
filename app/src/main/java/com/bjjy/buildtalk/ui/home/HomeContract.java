@@ -1,5 +1,6 @@
 package com.bjjy.buildtalk.ui.home;
 
+import com.bjjy.buildtalk.adapter.PublishCircleAdapter;
 import com.bjjy.buildtalk.base.presenter.IPresenter;
 import com.bjjy.buildtalk.base.view.IView;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
@@ -33,6 +34,8 @@ public class HomeContract {
         void handlerDeleteSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list);
 
         void handleruserShieldRecordSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list);
+
+        void handlerCircleListSuccess(List<IEntity> iEntities, PublishCircleAdapter circleAdapter);
     }
 
     interface Presenter extends IPresenter<View>{

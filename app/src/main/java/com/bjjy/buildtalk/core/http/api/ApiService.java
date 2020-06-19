@@ -716,12 +716,20 @@ public interface ApiService {
     Observable<BaseResponse<ThemeInfoEntity>> findThemeSearch(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
     /**
-     * @return 选择圈子
+     * @return 首页精华主题
      */
     @Headers(Constants.HEADER_PASSID)
     @POST("searchChoicenessTheme")
     @FormUrlEncoded
     Observable<BaseResponse<List<ThemeInfoEntity.ThemeInfoBean>>> searchChoicenessTheme(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
+    /**
+     * @return 转发至圈子/发现
+     */
+    @Headers(Constants.HEADER_PASSID)
+    @POST("shareTheme")
+    @FormUrlEncoded
+    Observable<BaseResponse<IEntity>> shareTheme(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
 
 }

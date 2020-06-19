@@ -485,7 +485,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
                 circlePath = mPath + "circle_id=" + mCircle_id + "&num=1";
                 showShareDialog(circlePath, mEndUrl, mCircleInfoEntity.getCircleInfo().getCircle_name(),
                         mCircleInfoEntity.getCircleInfo().getCircle_image().getPic_url(),
-                        mCircleInfoEntity.getCircleInfo().getCircle_desc(), true, false);
+                        mCircleInfoEntity.getCircleInfo().getCircle_desc(), true, false, -1, null);
                 break;
             case R.id.join_tv:
                 LoginHelper.getInstance().login(this, mPresenter.mDataManager, () -> mPresenter.joinCircle(mCircle_id));
@@ -665,11 +665,13 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
         themePath = mPath1 + "theme_id=" + data.get(i).getTheme_id() + "&circle_id=" + mCircle_id + "&num=1";
         if (isEdit){
             showEditDialog(data.get(i), i, data, mCircleInfoEntity,themePath, mEndUrl,TextUtils.isEmpty(data.get(i).getTheme_content()) ? mCircleInfoEntity.getCircleInfo().getCircle_name() : data.get(i).getTheme_content(),
-                    thumb_url, data.get(i).getTheme_content(), true, true);
+                    thumb_url, data.get(i).getTheme_content(), true, true,
+                    data.get(i).getTheme_id(), mCircle_id);
         }else {
             showShareDialog(themePath, mEndUrl,
                     TextUtils.isEmpty(data.get(i).getTheme_content()) ? mCircleInfoEntity.getCircleInfo().getCircle_name() : data.get(i).getTheme_content(),
-                    thumb_url, data.get(i).getTheme_content(), true, true);
+                    thumb_url, data.get(i).getTheme_content(), true, true,
+                    data.get(i).getTheme_id(), mCircle_id);
         }
     }
 
@@ -904,7 +906,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
     }
 
     private void showShareDialog(String url, String weburl, String title, String imgUrl,
-                                 String desc, boolean isSmall, boolean isVisible) {
+                                 String desc, boolean isSmall, boolean isVisible, int theme_id, String circle_id) {
         if (mBottomSheetDialog == null) {
             mBottomSheetDialog = new BottomSheetDialog(this, R.style.bottom_sheet_dialog);
             mBottomSheetDialog.getWindow().getAttributes().windowAnimations =
@@ -934,7 +936,11 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
             DialogUtils.shareWebUrl(weburl, title, imgUrl, desc, TopticCircleActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
             mBottomSheetDialog.dismiss();
         });
-        mView.findViewById(R.id.discover_tv).setOnClickListener(v -> mBottomSheetDialog.dismiss());
+        mView.findViewById(R.id.discover_tv).setOnClickListener(v ->{
+            mPresenter.shareTheme(theme_id, "0");
+            EventBus.getDefault().post(new RefreshEvent(Constants.VIDEO_REFRESH));
+            mBottomSheetDialog.dismiss();
+        });
         mView.findViewById(R.id.cancle_tv).setOnClickListener(v -> mBottomSheetDialog.dismiss());
     }
 
@@ -942,7 +948,7 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
                                List<ThemeInfoEntity.ThemeInfoBean> list,
                                CircleInfoEntity circleInfoEntity,
                                String url, String weburl, String title, String imgUrl,
-                               String desc, boolean isSmall, boolean isVisible) {
+                               String desc, boolean isSmall, boolean isVisible, int theme_id, String circle_id) {
         if (mEditDialog == null) {
             mEditDialog = new BottomSheetDialog(this, R.style.bottom_sheet_dialog);
             mEditDialog.getWindow().getAttributes().windowAnimations =
@@ -1057,7 +1063,11 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
             DialogUtils.shareWebUrl(weburl, title, imgUrl, desc, TopticCircleActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
             mEditDialog.dismiss();
         });
-        mEditView.findViewById(R.id.discover_tv).setOnClickListener(v -> mEditDialog.dismiss());
+        mEditView.findViewById(R.id.discover_tv).setOnClickListener(v -> {
+            mPresenter.shareTheme(theme_id, "0");
+            EventBus.getDefault().post(new RefreshEvent(Constants.VIDEO_REFRESH));
+            mEditDialog.dismiss();
+        });
         mEditView.findViewById(R.id.cancle_tv).setOnClickListener(v -> mEditDialog.dismiss());
     }
 }

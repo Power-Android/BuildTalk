@@ -1,7 +1,6 @@
 package com.bjjy.buildtalk.utils;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -10,7 +9,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,16 +25,12 @@ import com.bjjy.buildtalk.core.event.RefreshEvent;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.core.rx.BaseObserver;
 import com.bjjy.buildtalk.core.rx.RxUtils;
-import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.ui.main.LoginActivity;
 import com.bjjy.buildtalk.ui.main.PhoneLoginActivity;
 import com.bjjy.buildtalk.ui.mine.EditBindPhoneActivity;
 import com.bjjy.buildtalk.weight.BaseDialog;
-import com.bjjy.buildtalk.weight.player.PlayerWindowManager;
 import com.mobile.auth.gatewayauth.AuthRegisterViewConfig;
-import com.mobile.auth.gatewayauth.AuthRegisterXmlConfig;
 import com.mobile.auth.gatewayauth.AuthUIConfig;
-import com.mobile.auth.gatewayauth.CustomInterface;
 import com.mobile.auth.gatewayauth.PhoneNumberAuthHelper;
 import com.mobile.auth.gatewayauth.TokenResultListener;
 import com.mobile.auth.gatewayauth.model.TokenRet;
@@ -208,6 +202,7 @@ public class LoginHelper{
                         .setLogBtnBackgroundPath("login_btn_bg")
                         .setLogBtnMarginLeftAndRight(SizeUtils.px2dp(resources.getDimension(R.dimen.dp_40)))
                         .setLogBtnText("本机号码一键登录")
+                        .setLogBtnBackgroundPath("shape_white_25radius")
                         .setLogBtnTextColor(resources.getColor(R.color.blue2))
                         .setLogBtnTextSize(SizeUtils.px2dp(resources.getDimension(R.dimen.sp_15)))
                         .setLogBtnOffsetY(SizeUtils.px2dp(resources.getDimension(R.dimen.dp_220)))

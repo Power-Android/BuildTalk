@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.AttentionHAdapter;
 import com.bjjy.buildtalk.adapter.DiscoverHAdapter;
 import com.bjjy.buildtalk.adapter.EditDialogAdapter;
+import com.bjjy.buildtalk.adapter.PublishCircleAdapter;
 import com.bjjy.buildtalk.app.Constants;
 import com.bjjy.buildtalk.base.fragment.BaseFragment;
 import com.bjjy.buildtalk.core.event.RefreshEvent;
@@ -32,6 +34,8 @@ import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.ui.circle.ComplaintReasonActivity;
 import com.bjjy.buildtalk.ui.circle.PublishActivity;
 import com.bjjy.buildtalk.ui.circle.TopticDetailActivity;
+import com.bjjy.buildtalk.ui.talk.CircleManDetailActivity;
+import com.bjjy.buildtalk.ui.talk.MasterDetailActivity;
 import com.bjjy.buildtalk.ui.video.ShortVideoActivity;
 import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.LogUtils;
@@ -106,6 +110,9 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
     private TextView mDSearch_tv;
     private TextView mASearch_tv;
     private BaseDialog mDeleteDialog;
+    private BaseDialog mCircleDialog;
+    private List<IEntity> mList;
+    private PublishCircleAdapter mCircleAdapter;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void event(RefreshEvent refreshEvent){
@@ -283,7 +290,26 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
         List<ThemeInfoEntity.ThemeInfoBean> mList = adapter.getData();
         switch (view.getId()) {
             case R.id.item_face_iv://个人主页
+                if (mList.get(position).getIs_author().equals("1")) {
+                    Intent intent = new Intent(mContext, MasterDetailActivity.class);
+                    intent.putExtra("user_id", mList.get(position).getUser_id() + "");
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(mContext, CircleManDetailActivity.class);
+                    intent.putExtra("user_id", mList.get(position).getUser_id() + "");
+                    startActivity(intent);
+                }
+                break;
             case R.id.item_from_tv:
+                if (mList.get(position).getParent_themeInfo().getIs_author() == 1) {
+                    Intent intent = new Intent(mContext, MasterDetailActivity.class);
+                    intent.putExtra("user_id", mList.get(position).getParent_themeInfo().getUser_id() + "");
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(mContext, CircleManDetailActivity.class);
+                    intent.putExtra("user_id", mList.get(position).getParent_themeInfo().getUser_id() + "");
+                    startActivity(intent);
+                }
                 break;
             case R.id.item_atten_cl://关注
                 mPresenter.attenUser(mList, position);
@@ -404,16 +430,18 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
             showEditDialog(data.get(i), i, data, data.get(i).getParent_themeInfo(), themePath, mEndUrl,
                     TextUtils.isEmpty(data.get(i).getTheme_content()) ?
                             data.get(i).getParent_themeInfo().getTheme_content() : data.get(i).getTheme_content(),
-                    thumb_url, data.get(i).getTheme_content(), true, false);
+                    thumb_url, data.get(i).getTheme_content(), true, false, data.get(i).getTheme_id(),
+                    data.get(i).getCircle_id());
         } else {
             showShareDialog(themePath, mEndUrl, TextUtils.isEmpty(data.get(i).getTheme_content()) ?
                             data.get(i).getParent_themeInfo().getName() : data.get(i).getTheme_content(),
-                    thumb_url, data.get(i).getTheme_content(), true, false);
+                    thumb_url, data.get(i).getTheme_content(), true, false, data.get(i).getTheme_id(),
+                    data.get(i).getCircle_id());
         }
     }
 
     private void showShareDialog(String url, String weburl, String title, String imgUrl,
-                                 String desc, boolean isSmall, boolean isVisible) {
+                                 String desc, boolean isSmall, boolean isVisible, int theme_id, int circle_id) {
         if (mBottomSheetDialog == null) {
             mBottomSheetDialog = new BottomSheetDialog(mContext, R.style.bottom_sheet_dialog);
             mBottomSheetDialog.getWindow().getAttributes().windowAnimations =
@@ -444,15 +472,65 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
             DialogUtils.shareWebUrl(weburl, title, imgUrl, desc, getActivity(), SHARE_MEDIA.WEIXIN_CIRCLE);
             mBottomSheetDialog.dismiss();
         });
-        mView.findViewById(R.id.discover_tv).setOnClickListener(v -> mBottomSheetDialog.dismiss());
-        mView.findViewById(R.id.circle_tv).setOnClickListener(v -> mBottomSheetDialog.dismiss());
+        mView.findViewById(R.id.discover_tv).setOnClickListener(v -> {
+            mPresenter.shareTheme(theme_id, circle_id+"");
+            mBottomSheetDialog.dismiss();
+        });
+        mView.findViewById(R.id.circle_tv).setOnClickListener(v -> {
+            showCircleDialog(theme_id);
+            mBottomSheetDialog.dismiss();
+        });
         mView.findViewById(R.id.cancle_tv).setOnClickListener(v -> mBottomSheetDialog.dismiss());
+    }
+
+    private void showCircleDialog(int theme_id) {
+        if (mCircleDialog == null){
+            mCircleDialog = new BaseDialog.Builder(mContext)
+                    .setViewId(R.layout.dialog_publish_circle_layout)
+                    .setStyle(R.style.AppTheme)
+                    //设置显示位置
+                    .setGravity(Gravity.CENTER)
+                    //设置动画
+                    .setAnimation(R.style.Bottom_Top_aniamtion)
+                    //设置dialog的宽高
+                    .setWidthHeightpx(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                    //设置触摸dialog外围是否关闭
+                    .isOnTouchCanceled(true)
+                    .addViewOnClickListener(R.id.cancle_tv, v -> mCircleDialog.dismiss())
+                    .builder();
+            List<IEntity> mList = new ArrayList<>();
+            RecyclerView recyclerView = mCircleDialog.getView(R.id.recycler_view);
+            recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+            mCircleAdapter = new PublishCircleAdapter(R.layout.adapter_publish_circle, mList);
+            recyclerView.setAdapter(mCircleAdapter);
+            mPresenter.circleList(mCircleAdapter);
+        }
+
+        mCircleAdapter.setOnItemClickListener((adapter1, view, position) -> {
+            List<IEntity> data = adapter1.getData();
+            for (int i = 0; i < data.size(); i++) {
+                data.get(i).setChecked(false);
+            }
+            String circle_id = data.get(position).getCircle_id();
+            data.get(position).setChecked(true);
+            adapter1.notifyDataSetChanged();
+            mPresenter.shareTheme(theme_id, circle_id);
+
+            mCircleDialog.dismiss();
+        });
+
+        mCircleDialog.show();
+    }
+
+    @Override
+    public void handlerCircleListSuccess(List<IEntity> iEntities, PublishCircleAdapter circleAdapter) {
+        circleAdapter.setNewData(iEntities);
     }
 
     public void showEditDialog(ThemeInfoEntity.ThemeInfoBean data, int i, List<ThemeInfoEntity.ThemeInfoBean> list,
                                ThemeInfoEntity.ThemeInfoBean.ParentThemeInfoBean circleInfoEntity, String url,
                                String weburl, String title, String imgUrl,
-                               String desc, boolean isSmall, boolean isVisible) {
+                               String desc, boolean isSmall, boolean isVisible, int theme_id, int circle_id) {
         if (mEditDialog == null) {
             mEditDialog = new BottomSheetDialog(mContext, R.style.bottom_sheet_dialog);
             mEditDialog.getWindow().getAttributes().windowAnimations =
@@ -561,7 +639,10 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
             mEditDialog.dismiss();
         });
         mEditView.findViewById(R.id.discover_tv).setOnClickListener(v -> mEditDialog.dismiss());
-        mEditView.findViewById(R.id.circle_tv).setOnClickListener(v -> mEditDialog.dismiss());
+        mEditView.findViewById(R.id.circle_tv).setOnClickListener(v -> {
+            showCircleDialog(theme_id);
+            mEditDialog.dismiss();
+        });
         mEditView.findViewById(R.id.cancle_tv).setOnClickListener(v -> mEditDialog.dismiss());
     }
 

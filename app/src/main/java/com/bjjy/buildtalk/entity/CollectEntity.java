@@ -73,7 +73,7 @@ public class CollectEntity implements Serializable {
         private int theme_status;
         private List<ThemeImageBean> theme_image;
         private List<ThemePdfBean> theme_pdf;
-
+        private List<ThemeVideoBean> theme_video;
         private int itemType;
 
         public MyCollectInfoBean(int itemType) {
@@ -175,6 +175,14 @@ public class CollectEntity implements Serializable {
 
         public void setTheme_pdf(List<ThemePdfBean> theme_pdf) {
             this.theme_pdf = theme_pdf;
+        }
+
+        public List<ThemeVideoBean> getTheme_video() {
+            return theme_video;
+        }
+
+        public void setTheme_video(List<ThemeVideoBean> theme_video) {
+            this.theme_video = theme_video;
         }
 
         public static class ThemeImageBean {

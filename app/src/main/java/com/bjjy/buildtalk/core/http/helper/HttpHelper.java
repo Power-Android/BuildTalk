@@ -225,4 +225,6 @@ public interface HttpHelper {
 
     Observable<BaseResponse<List<ThemeInfoEntity.ThemeInfoBean>>> searchChoicenessTheme(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
 
+    Observable<BaseResponse<IEntity>> shareTheme(@HeaderMap Map<String, String> headers, @FieldMap Map<String, String> params);
+
 }

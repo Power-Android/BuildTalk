@@ -39,6 +39,7 @@ import com.bjjy.buildtalk.entity.ThemeImageBean;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.entity.ThemePdfBean;
 import com.bjjy.buildtalk.entity.ThemeVideoBean;
+import com.bjjy.buildtalk.ui.video.ShortVideoActivity;
 import com.bjjy.buildtalk.utils.AllUtils;
 import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
@@ -318,6 +319,13 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
                             .into(mItemHorizontalVideoView);
                     mItemHorizontalTime.setText(TextUtils.isEmpty(video_duration) ?
                             "" : TimeUtils.stringForTime((int) duration));
+                    mItemHorizontalCl.setOnClickListener(v -> {
+                        Intent intent = new Intent(TopticDetailActivity.this, ShortVideoActivity.class);
+                        intent.putExtra("type_id", "1");
+                        intent.putExtra("theme_id", mTheme_id);
+                        intent.putExtra("user_id", themeInfoEntity.getUser_id());
+                        startActivity(intent);
+                    });
                 } else {
                     mItemVerticalCl.setVisibility(View.VISIBLE);
                     Glide.with(this)
@@ -325,6 +333,13 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
                             .into(mItemVerticalVideoView);
                     mItemVerticalTime.setText(TextUtils.isEmpty(video_duration) ?
                             "" : TimeUtils.stringForTime((int) duration));
+                    mItemVerticalCl.setOnClickListener(v -> {
+                        Intent intent = new Intent(TopticDetailActivity.this, ShortVideoActivity.class);
+                        intent.putExtra("type_id", "1");
+                        intent.putExtra("theme_id", mTheme_id);
+                        intent.putExtra("user_id", themeInfoEntity.getUser_id());
+                        startActivity(intent);
+                    });
                 }
             }
         }
@@ -406,7 +421,7 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
         switch (view.getId()) {
             case R.id.toolbar_right_search:
                 if (themeInfoEntity != null)
-                    LoginHelper.getInstance().login(this, mPresenter.mDataManager, () -> showEditDialog(themeInfoEntity));
+                    LoginHelper.getInstance().login(this, mPresenter.mDataManager, () -> showEditDialog(themeInfoEntity, mTheme_id));
                 break;
             case R.id.praise_ll:
                 if (themeInfoEntity != null) {
@@ -459,10 +474,10 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
         themePath = mPath1 + "theme_id=" + themeInfoEntity.getTheme_id() + "&circle_id=" + mCircle_id + "&num=1";
         showShareDialog(themePath, mEndUrl,
                 TextUtils.isEmpty(themeInfoEntity.getTheme_content()) ? mTitle : themeInfoEntity.getTheme_content(),
-                thumb_url, themeInfoEntity.getTheme_content(), true, true);
+                thumb_url, themeInfoEntity.getTheme_content(), true, true, themeInfoEntity.getTheme_id());
     }
 
-    private void showEditDialog(ThemeInfoEntity.ThemeInfoBean data) {
+    private void showEditDialog(ThemeInfoEntity.ThemeInfoBean data, String theme_id) {
         mEditDailog = new BaseDialog.Builder(this)
                 .setGravity(Gravity.BOTTOM)
                 .setViewId(R.layout.dialog_theme_edit1)
@@ -729,7 +744,7 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
     }
 
     private void showShareDialog(String url, String weburl, String title, String imgUrl, String desc,
-                                 boolean isSmall, boolean isVisible) {
+                                 boolean isSmall, boolean isVisible, int theme_id) {
         if (mBottomSheetDialog == null) {
             mBottomSheetDialog = new BottomSheetDialog(this, R.style.bottom_sheet_dialog);
             mBottomSheetDialog.getWindow().getAttributes().windowAnimations =
@@ -759,7 +774,11 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
             DialogUtils.shareWebUrl(weburl, title, imgUrl, desc, TopticDetailActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
             mBottomSheetDialog.dismiss();
         });
-        mView.findViewById(R.id.discover_tv).setOnClickListener(v -> mBottomSheetDialog.dismiss());
+        mView.findViewById(R.id.discover_tv).setOnClickListener(v ->{
+            mPresenter.shareTheme(theme_id, "0");
+            EventBus.getDefault().post(new RefreshEvent(Constants.VIDEO_REFRESH));
+            mBottomSheetDialog.dismiss();
+        });
         mView.findViewById(R.id.cancle_tv).setOnClickListener(v -> mBottomSheetDialog.dismiss());
     }
 }
