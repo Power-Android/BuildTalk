@@ -53,6 +53,8 @@ public class DisSearchActivity extends BaseActivity<DisSearchPresenter> implemen
     RecyclerView mRecyclerView;
     @BindView(R.id.refresh_Layout)
     SmartRefreshLayout mRefreshLayout;
+    @BindView(R.id.toolbar_title)
+    TextView mToolBarTitle;
     private String mType_id;
     private int page = 1;
     private DiscoverHAdapter mDiscoverHAdapter;
@@ -78,6 +80,7 @@ public class DisSearchActivity extends BaseActivity<DisSearchPresenter> implemen
     @Override
     protected void initView() {
         mType_id = getIntent().getStringExtra("type_id");
+        mToolBarTitle.setText("搜索主题");
         mRefreshLayout.setOnRefreshLoadMoreListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mDiscoverHAdapter = new DiscoverHAdapter(R.layout.adapter_discover_layout, mList, mPresenter.mDataManager.getUser().getUser_id());

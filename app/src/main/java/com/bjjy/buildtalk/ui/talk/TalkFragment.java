@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.bjjy.buildtalk.R;
 import com.bjjy.buildtalk.adapter.TalkAdapter;
 import com.bjjy.buildtalk.app.Constants;
-import com.bjjy.buildtalk.base.fragment.BaseFragment;
+import com.bjjy.buildtalk.base.activity.BaseActivity;
 import com.bjjy.buildtalk.core.event.RefreshEvent;
 import com.bjjy.buildtalk.core.http.response.BaseResponse;
 import com.bjjy.buildtalk.entity.CircleMasterEntity;
@@ -45,7 +45,7 @@ import butterknife.BindView;
  * @project BuildTalk
  * @description:
  */
-public class TalkFragment extends BaseFragment<TalkPresnter> implements TalkContract.View, OnRefreshListener, BaseQuickAdapter.OnItemChildClickListener {
+public class TalkFragment extends BaseActivity<TalkPresnter> implements TalkContract.View, OnRefreshListener, BaseQuickAdapter.OnItemChildClickListener {
 
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
@@ -86,15 +86,15 @@ public class TalkFragment extends BaseFragment<TalkPresnter> implements TalkCont
         mToolbarBack.setVisibility(View.GONE);
         mToolbarTitle.setText(R.string.talk);
         mRefreshLayout.setOnRefreshListener(this);
-        mTalkRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        mTalkRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mTalkAdapter = new TalkAdapter(mTalkEntityList);
         mTalkRecyclerView.setAdapter(mTalkAdapter);
-        View headerView = LayoutInflater.from(mContext).inflate(R.layout.talk_header_view, null);
+        View headerView = LayoutInflater.from(this).inflate(R.layout.talk_header_view, null);
         mTalkAdapter.addHeaderView(headerView);
-        headerView.setOnClickListener(v -> startActivity(new Intent(mContext, TalkSearchActivity.class)));
+        headerView.setOnClickListener(v -> startActivity(new Intent(this, TalkSearchActivity.class)));
         mTalkAdapter.setOnItemChildClickListener(this);
         mTalkAdapter.setOnFocusClickListener((baseQuickAdapter, view, i) -> {
-            LoginHelper.getInstance().login(mContext, mPresenter.mDataManager, (LoginHelper.CallBack) () -> {
+            LoginHelper.getInstance().login(this, mPresenter.mDataManager, (LoginHelper.CallBack) () -> {
                 List<CircleMasterEntity> mList = baseQuickAdapter.getData();
                 mPresenter.attention(mList.get(i).getUser_id(), mList, i);
             });
@@ -146,7 +146,7 @@ public class TalkFragment extends BaseFragment<TalkPresnter> implements TalkCont
     public void onItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int position) {
         switch (view.getId()) {
             case R.id.master_all_tv://行业大咖-查看全部
-                startActivity(new Intent(mContext, MasterListActivity.class));
+                startActivity(new Intent(this, MasterListActivity.class));
                 break;
             case R.id.master_change_ll://行业大咖-换一换
                 ImageView masterChangeIv = view.findViewById(R.id.master_change_iv);
@@ -159,7 +159,7 @@ public class TalkFragment extends BaseFragment<TalkPresnter> implements TalkCont
                 }, 2000);
                 break;
             case R.id.circle_all_tv://人气圈主-查看全部
-                startActivity(new Intent(mContext, CircleListActivity.class));
+                startActivity(new Intent(this, CircleListActivity.class));
                 break;
         }
     }

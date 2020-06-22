@@ -30,6 +30,7 @@ import com.bjjy.buildtalk.entity.MasterListEntity;
 import com.bjjy.buildtalk.entity.SongsEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.ui.talk.MasterListActivity;
+import com.bjjy.buildtalk.ui.talk.TalkFragment;
 import com.bjjy.buildtalk.utils.AnimatorUtils;
 import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.weight.player.PlayerWindowManager;
@@ -221,6 +222,30 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
         switch (view.getId()) {
+            case R.id.toptic_jump_tv:
+                startActivity(new Intent(mContext, TopticListActivity.class));
+                break;
+            case R.id.class_jump_tv:
+            case R.id.course_all_tv://精品课程----查看全部
+                startActivity(new Intent(mContext, CourseListActivity.class));
+                break;
+            case R.id.talk_jump_tv:
+                startActivity(new Intent(mContext, TalkFragment.class));
+                break;
+            case R.id.dissertation_jump_tv:
+                //            case R.id.course_change_ll://精品课程----换一换
+//                ImageView courseChangeIv = view.findViewById(R.id.course_change_iv);
+//                AnimatorUtils.setRotateAnimation(courseChangeIv);
+//                view.setClickable(false);
+//                new Handler().postDelayed(() -> {
+//                    COURSE_PAGE++;
+//                    mPresenter.discoverCourse();
+//                    view.setClickable(true);
+//                }, 1000);
+//                break;
+            case R.id.project_all_tv://精彩专题----查看全部
+                startActivity(new Intent(mContext, DissertationListActivity.class));
+                break;
             case R.id.bg_iv://每日一谈----查看全部
                 startActivity(new Intent(mContext, EveryTalkListActivity.class));
                 break;
@@ -262,22 +287,6 @@ public class DiscoverFragment extends BaseFragment<DiscoverPresenter> implements
                     mPresenter.discoverToptic();
                     view.setClickable(true);
                 }, 1000);
-                break;
-            case R.id.course_all_tv://精品课程----查看全部
-                startActivity(new Intent(mContext, CourseListActivity.class));
-                break;
-//            case R.id.course_change_ll://精品课程----换一换
-//                ImageView courseChangeIv = view.findViewById(R.id.course_change_iv);
-//                AnimatorUtils.setRotateAnimation(courseChangeIv);
-//                view.setClickable(false);
-//                new Handler().postDelayed(() -> {
-//                    COURSE_PAGE++;
-//                    mPresenter.discoverCourse();
-//                    view.setClickable(true);
-//                }, 1000);
-//                break;
-            case R.id.project_all_tv://精彩专题----查看全部
-                startActivity(new Intent(mContext, DissertationListActivity.class));
                 break;
             case R.id.master_change_rl://大咖---换一换
                 ImageView masterChangeIv = view.findViewById(R.id.master_change_iv);

@@ -93,6 +93,10 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
     protected void convert(BaseViewHolder helper, DiscoverEntity item) {
         switch (item.getItemType()) {
             case BODY_BANNER:
+                helper.addOnClickListener(R.id.toptic_jump_tv)
+                        .addOnClickListener(R.id.class_jump_tv)
+                        .addOnClickListener(R.id.talk_jump_tv)
+                        .addOnClickListener(R.id.dissertation_jump_tv);
                 Banner banner = helper.getView(R.id.banner);
                 banner.setOnBannerListener(position -> {
                     switch (mBannerEntities.get(position).getType_id()) {

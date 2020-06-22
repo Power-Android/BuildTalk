@@ -7,14 +7,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 
 import com.tencent.qcloud.ugckit.R;
 import com.tencent.qcloud.ugckit.component.progressbar.NumberProgressBar;
@@ -133,7 +131,8 @@ public class VideoWorkProgressFragment extends DialogFragment {
         if (getFragmentManager() != null && isAdded()) {
             getFragmentManager().beginTransaction().remove(this).commitAllowingStateLoss();
         }
-        mPbLoading.setProgress(0);
+        if (mPbLoading != null)
+            mPbLoading.setProgress(0);
     }
 
     public void setCanCancel(boolean canCancel) {

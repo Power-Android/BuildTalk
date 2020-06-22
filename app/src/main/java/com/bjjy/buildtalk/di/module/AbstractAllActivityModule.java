@@ -45,6 +45,7 @@ import com.bjjy.buildtalk.di.module.activity.SetPictureActivityModule;
 import com.bjjy.buildtalk.di.module.activity.SettingActivityModule;
 import com.bjjy.buildtalk.di.module.activity.ShortVideoActivityModule;
 import com.bjjy.buildtalk.di.module.activity.SplashActivtyModule;
+import com.bjjy.buildtalk.di.module.activity.TalkFragmentModule;
 import com.bjjy.buildtalk.di.module.activity.TalkSearchActivityModule;
 import com.bjjy.buildtalk.di.module.activity.TopticCircleActivityModule;
 import com.bjjy.buildtalk.di.module.activity.TopticDetailActivityMudule;
@@ -103,6 +104,7 @@ import com.bjjy.buildtalk.ui.talk.MasterCircleActivity;
 import com.bjjy.buildtalk.ui.talk.MasterCollectActivity;
 import com.bjjy.buildtalk.ui.talk.MasterDetailActivity;
 import com.bjjy.buildtalk.ui.talk.MasterListActivity;
+import com.bjjy.buildtalk.ui.talk.TalkFragment;
 import com.bjjy.buildtalk.ui.talk.TalkSearchActivity;
 import com.bjjy.buildtalk.ui.video.ShortVideoActivity;
 
@@ -264,4 +266,7 @@ public abstract class AbstractAllActivityModule {
 
     @ContributesAndroidInjector(modules = DisSearchActivityModule.class)
     abstract DisSearchActivity mDisSearchActivity();
+
+    @ContributesAndroidInjector(modules = TalkFragmentModule.class)
+    abstract TalkFragment mTalkFragment();
 }

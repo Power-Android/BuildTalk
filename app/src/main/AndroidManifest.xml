@@ -140,6 +140,9 @@
             android:name=".ui.main.GuideActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.talk.TalkFragment"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.discover.EveryTalkListActivity"
             android:screenOrientation="portrait" />
         <activity
