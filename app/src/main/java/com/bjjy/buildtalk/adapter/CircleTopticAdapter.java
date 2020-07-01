@@ -5,7 +5,12 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.URLSpan;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
@@ -33,6 +38,8 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author power
@@ -73,13 +80,13 @@ public class CircleTopticAdapter extends BaseMultiItemQuickAdapter<ThemeInfoEnti
                         .setGone(R.id.column_rl, "1".equals(isJoin))
                         .setGone(R.id.praise_rl, "1".equals(isJoin))
                         .setGone(R.id.comment_rl, "1".equals(isJoin))
-                        .setGone(R.id.item_vertical_cl, !isDelete &&
+                        .setGone(R.id.item_vertical_cl, !isDelete && item.getParent_themeInfo() != null &&
                                 item.getParent_themeInfo().getTheme_video().size() > 0 &&
                                 !TextUtils.isEmpty(item.getParent_themeInfo().getTheme_video().get(0).getVideo_height()) &&
                                 !TextUtils.isEmpty(item.getParent_themeInfo().getTheme_video().get(0).getVideo_width()) &&
                                 Integer.parseInt(item.getParent_themeInfo().getTheme_video().get(0).getVideo_height()) >=
                                         Integer.parseInt(item.getParent_themeInfo().getTheme_video().get(0).getVideo_width()))
-                        .setGone(R.id.item_horizontal_cl, !isDelete &&
+                        .setGone(R.id.item_horizontal_cl, !isDelete && item.getParent_themeInfo() != null &&
                                 item.getParent_themeInfo().getTheme_video().size() > 0 &&
                                 !TextUtils.isEmpty(item.getParent_themeInfo().getTheme_video().get(0).getVideo_height()) &&
                                 !TextUtils.isEmpty(item.getParent_themeInfo().getTheme_video().get(0).getVideo_width()) &&
@@ -91,7 +98,6 @@ public class CircleTopticAdapter extends BaseMultiItemQuickAdapter<ThemeInfoEnti
                         .setGone(R.id.pdf_rl, item.getTheme_pdf().size() > 0)
                         .setVisible(R.id.item_share_iv, item.getTheme_pdf().size() <= 0)
                         .setText(R.id.item_time_tv, TimeUtils.getFriendlyTimeSpanByNow(item.getPublish_time()))
-                        .setText(R.id.item_content_tv, item_parent.getTheme_content())
                         .addOnClickListener(R.id.item_face_iv)
                         .addOnClickListener(R.id.item_more_iv)
                         .addOnClickListener(R.id.item_praise_iv)
@@ -102,6 +108,7 @@ public class CircleTopticAdapter extends BaseMultiItemQuickAdapter<ThemeInfoEnti
                         .addOnClickListener(R.id.more_tv);
                 MultiImageView multiImageView = helper.getView(R.id.item_grid_view);
                 TextView itemCotentTv = helper.getView(R.id.item_content_tv);
+                setContentHttpPattern(item_parent != null ? item_parent.getTheme_content() : "", itemCotentTv);
                 TextView contentMoreTv = helper.getView(R.id.content_more_tv);
                 itemCotentTv.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                     @Override
@@ -116,7 +123,9 @@ public class CircleTopticAdapter extends BaseMultiItemQuickAdapter<ThemeInfoEnti
                         return true;
                     }
                 });
-
+                if (item_parent == null){
+                    return;
+                }
                 List<ThemeImageBean> themeImageBeanList = item_parent.getTheme_image();
                 if (themeImageBeanList != null && themeImageBeanList.size() > 0){
                     List<String> list = new ArrayList<>();
@@ -259,6 +268,24 @@ public class CircleTopticAdapter extends BaseMultiItemQuickAdapter<ThemeInfoEnti
 
     public void setCommentClickListener(onCommentItemlistener commentClickListener){
         this.mOnCommentItemlistener = commentClickListener;
+    }
+
+    private void setContentHttpPattern(String string, TextView textView){
+        SpannableString sp = new SpannableString(string);
+        String urlPattern =
+                "((http[s]{0,1}|ftp)://[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)|(www.[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)";
+        Pattern pattern = Pattern.compile(urlPattern, Pattern.CASE_INSENSITIVE);
+        Matcher m = pattern.matcher(string);
+        int startPoint = 0;
+        while (m.find(startPoint)) {
+            int endPoint = m.end();
+            String hit = m.group();
+            ClickableSpan clickSpan = new URLSpan(hit);
+            sp.setSpan(clickSpan, endPoint - hit.length(), endPoint, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);//用Span替换对应长度的url
+            startPoint = endPoint;
+        }
+        textView.setText(sp);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
 }

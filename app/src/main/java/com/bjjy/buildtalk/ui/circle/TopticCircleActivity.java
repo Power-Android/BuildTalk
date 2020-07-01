@@ -1064,8 +1064,14 @@ public class TopticCircleActivity extends BaseActivity<TopticCirclePresenter> im
             mEditDialog.dismiss();
         });
         mEditView.findViewById(R.id.discover_tv).setOnClickListener(v -> {
-            mPresenter.shareTheme(theme_id, "0");
-            EventBus.getDefault().post(new RefreshEvent(Constants.VIDEO_REFRESH));
+            LoginHelper.login(this, mPresenter.mDataManager, () -> {
+                if (data.getUser_id().equals(mPresenter.mDataManager.getUser().getUser_id())){
+                    mPresenter.shareTheme(theme_id, "0");
+                    EventBus.getDefault().post(new RefreshEvent(Constants.VIDEO_REFRESH));
+                }else {
+                    ToastUtils.showShort("只有圈主可以公开至发现");
+                }
+            });
             mEditDialog.dismiss();
         });
         mEditView.findViewById(R.id.cancle_tv).setOnClickListener(v -> mEditDialog.dismiss());

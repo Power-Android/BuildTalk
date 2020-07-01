@@ -244,4 +244,28 @@ public class ShortVideoPresenter extends BasePresenter<ShortVideoContract.View> 
                     }
                 }));
     }
+
+    public void collectTheme(List<ShortVideoEntity.ThemeInfoBean> data, int position) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        paramas.put("theme_id", data.get(position).getTheme_id()+"");
+        paramas.put(Constants.SOURCE, Constants.ANDROID);
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.collectTheme(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<IEntity>(mView, false) {
+                    @Override
+                    public void onSuccess(IEntity iEntity) {
+                        mView.handlerCollectSuccess(iEntity,data, position);
+                    }
+                }));
+    }
 }

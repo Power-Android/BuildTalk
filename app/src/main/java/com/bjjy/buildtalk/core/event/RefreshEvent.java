@@ -9,6 +9,7 @@ package com.bjjy.buildtalk.core.event;
 public class RefreshEvent {
     private String str_msg;
     private int int_msg;
+    private int position;
 
     public RefreshEvent(String msg) {
         this.str_msg = msg;
@@ -16,6 +17,11 @@ public class RefreshEvent {
 
     public RefreshEvent(int msg) {
         this.int_msg = msg;
+    }
+
+    public RefreshEvent(String msg, int position){
+        this.str_msg = msg;
+        this.position = position;
     }
 
     public String getMsg() {
@@ -32,5 +38,13 @@ public class RefreshEvent {
 
     public void setInt_msg(int int_msg) {
         this.int_msg = int_msg;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 }

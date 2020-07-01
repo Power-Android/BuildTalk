@@ -121,6 +121,15 @@ public class ThemeInfoEntity implements Serializable {
         private int parent_userId;
         private int parent_name;
         private int countComment;
+        private int isJoin;
+
+        public int getIsJoin() {
+            return isJoin;
+        }
+
+        public void setIsJoin(int isJoin) {
+            this.isJoin = isJoin;
+        }
 
         public int getCountComment() {
             return countComment;

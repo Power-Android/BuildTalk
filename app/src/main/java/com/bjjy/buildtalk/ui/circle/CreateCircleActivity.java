@@ -92,7 +92,7 @@ public class CreateCircleActivity extends BaseActivity<CreateCirclePresenter> im
         mToolbarRightTitle.setOnClickListener(v -> {
             //常规方式
             long currTime = System.currentTimeMillis();
-            if (currTime - lastTime > 1000) {
+            if (currTime - lastTime > 2000) {
                 createCircle();
             }
             lastTime = currTime;

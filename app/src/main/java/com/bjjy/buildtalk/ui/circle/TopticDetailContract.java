@@ -39,6 +39,8 @@ public class TopticDetailContract {
         void handlerAttentUser(BaseResponse<IEntity> baseResponse, ThemeInfoEntity.ThemeInfoBean themeInfoEntity);
 
         void handlerChoicenessSuccess(IEntity iEntity, ThemeInfoEntity.ThemeInfoBean data);
+
+        void handlerJoinSuccess(IEntity iEntity, String type);
     }
 
     interface Presenter extends IPresenter<View>{

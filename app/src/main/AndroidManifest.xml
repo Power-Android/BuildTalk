@@ -240,7 +240,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.circle.TopticDetailActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            />
         <activity
             android:name=".ui.talk.CircleManDetailActivity"
             android:screenOrientation="portrait" />

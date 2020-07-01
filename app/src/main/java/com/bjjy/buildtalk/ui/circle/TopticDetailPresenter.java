@@ -309,4 +309,28 @@ public class TopticDetailPresenter extends BasePresenter<TopticDetailContract.Vi
                     }
                 }));
     }
+
+    public void joinCircle(String circle_id, String type) {
+        String timestamp = String.valueOf(TimeUtils.getNowSeconds());
+        Map<String, String> paramas = new HashMap<>();
+        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        paramas.put("circle_id", circle_id);
+        paramas.put(Constants.TIMESTAMP, timestamp);
+        paramas.put(Constants.SOURCE, Constants.ANDROID);
+        String sign = HeaderUtils.getSign(HeaderUtils.sortMapByKey(paramas, true));
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.TIMESTAMP, timestamp);
+        headers.put(Constants.SIGN, sign);
+
+        addSubscribe(mDataManager.joinCircle(headers, paramas)
+                .compose(RxUtils.SchedulerTransformer())
+                .filter(response -> mView != null)
+                .subscribeWith(new BaseObserver<IEntity>(mView, false) {
+                    @Override
+                    public void onSuccess(IEntity iEntity) {
+                        mView.handlerJoinSuccess(iEntity, type);
+                    }
+                }));
+    }
 }

@@ -50,7 +50,7 @@ public class DiscoverPresenter extends BasePresenter<DiscoverContract.View> impl
 
     public void discoverType(List<DiscoverEntity> discoverEntityList) {
         discoverEntityList.add(new DiscoverEntity(DiscoverAdapter.BODY_BANNER));
-//        discoverEntityList.add(new DiscoverEntity(DiscoverAdapter.BODY_EVERYDAY_TALK));
+        discoverEntityList.add(new DiscoverEntity(DiscoverAdapter.BODY_EVERYDAY_TALK));
         discoverEntityList.add(new DiscoverEntity(DiscoverAdapter.BODY_HOT_TOPTIC));
         discoverEntityList.add(new DiscoverEntity(DiscoverAdapter.BODY_COURSE));
 //        discoverEntityList.add(new DiscoverEntity(DiscoverAdapter.BODY_PROJECT));
@@ -254,7 +254,7 @@ public class DiscoverPresenter extends BasePresenter<DiscoverContract.View> impl
         Map<String, String> paramas = new HashMap<>();
         paramas.put("show", "3");
         paramas.put(Constants.PAGE, String.valueOf(MASTER_PAGE));
-        paramas.put(Constants.PAGE_SIZE, "3");
+        paramas.put(Constants.PAGE_SIZE, "9");
         if (mDataManager.getLoginStatus()){
             paramas.put("examine_user", mDataManager.getUser().getUser_id());
         }

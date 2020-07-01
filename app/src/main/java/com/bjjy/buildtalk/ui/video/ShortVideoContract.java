@@ -33,6 +33,8 @@ public class ShortVideoContract {
         void handlerDeleteComment(List<CommentContentBean> mComment_content, int i, int adapterPosition);
 
         void handlerCommentSuccess(List<CommentContentBean> commentInfo, int adapterPosition);
+
+        void handlerCollectSuccess(IEntity iEntity, List<ShortVideoEntity.ThemeInfoBean> data, int position);
     }
 
     interface Presenter extends IPresenter<View>{

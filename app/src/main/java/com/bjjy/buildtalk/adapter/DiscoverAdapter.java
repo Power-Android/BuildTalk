@@ -20,6 +20,7 @@ import com.bjjy.buildtalk.entity.SongsEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
 import com.bjjy.buildtalk.ui.circle.CourseCircleActivity;
 import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
+import com.bjjy.buildtalk.ui.circle.TopticDetailActivity;
 import com.bjjy.buildtalk.ui.discover.DissertationActivity;
 import com.bjjy.buildtalk.ui.discover.EveryTalkDetailActivity;
 import com.bjjy.buildtalk.ui.mine.AboutUsActivity;
@@ -229,13 +230,13 @@ public class DiscoverAdapter extends BaseMultiItemQuickAdapter<DiscoverEntity, B
                 essence_recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
                 EssenceAdapter essenceAdapter = new EssenceAdapter(R.layout.adapter_essence_layout, mEssenceList);
                 essence_recyclerView.setAdapter(essenceAdapter);
-                essenceAdapter.setOnItemClickListener(new OnItemClickListener() {
-                    @Override
-                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                        Intent intent = new Intent(mContext, TopticCircleActivity.class);
-                        intent.putExtra("circle_id", mEssenceList.get(position).getParent_themeInfo().getCircle_id()+"");
-                        mContext.startActivity(intent);
-                    }
+                essenceAdapter.setOnItemClickListener((adapter, view, position) -> {
+                    Intent intent = new Intent(mContext, TopticDetailActivity.class);
+                    intent.putExtra("title", mEssenceList.get(position).getParent_themeInfo().getName());
+                    intent.putExtra("theme_id", mEssenceList.get(position).getParent_themeInfo().getTheme_id()+"");
+                    intent.putExtra("circle_id", mEssenceList.get(position).getParent_themeInfo().getCircle_id()+"");
+                    intent.putExtra("home", "home");
+                    mContext.startActivity(intent);
                 });
                 break;
         }

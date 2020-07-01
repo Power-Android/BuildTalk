@@ -1,5 +1,6 @@
 package com.bjjy.buildtalk.ui.video;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -33,6 +34,10 @@ import com.bjjy.buildtalk.entity.IEntity;
 import com.bjjy.buildtalk.entity.PraiseEntity;
 import com.bjjy.buildtalk.entity.ShortVideoEntity;
 import com.bjjy.buildtalk.entity.ThemeInfoEntity;
+import com.bjjy.buildtalk.ui.circle.TopticCircleActivity;
+import com.bjjy.buildtalk.ui.talk.CircleManDetailActivity;
+import com.bjjy.buildtalk.ui.talk.MasterDetailActivity;
+import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.SizeUtils;
@@ -47,6 +52,7 @@ import com.tencent.rtmp.ITXVodPlayListener;
 import com.tencent.rtmp.TXLiveConstants;
 import com.tencent.rtmp.TXVodPlayer;
 import com.tencent.rtmp.ui.TXCloudVideoView;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -58,6 +64,7 @@ import butterknife.OnClick;
 
 import static com.tencent.rtmp.TXLiveConstants.PLAY_EVT_PLAY_BEGIN;
 import static com.tencent.rtmp.TXLiveConstants.PLAY_EVT_PLAY_PROGRESS;
+import static com.tencent.rtmp.TXLiveConstants.PLAY_EVT_VOD_PLAY_PREPARED;
 import static com.tencent.rtmp.TXLiveConstants.RENDER_MODE_ADJUST_RESOLUTION;
 
 public class ShortVideoActivity extends BaseActivity<ShortVideoPresenter> implements
@@ -89,6 +96,11 @@ public class ShortVideoActivity extends BaseActivity<ShortVideoPresenter> implem
     private String mTheme_id;
     private int mComment_id = 0;
     private String mParentCommentId = "";
+    private int mPosition;
+    BottomSheetDialog mBottomSheetDialog;
+    BottomSheetBehavior mBehavior;
+    private View mView;
+    private Intent mIntent;
 
     @Override
     protected int getLayoutId() {
@@ -152,6 +164,10 @@ public class ShortVideoActivity extends BaseActivity<ShortVideoPresenter> implem
                 finish();
                 break;
             case R.id.more_iv:
+                showShareDialog("","",mVideoAdapter.getData().get(mPosition).getTheme_content(),
+                        mVideoAdapter.getData().get(mPosition).getParent_themeInfo().getTheme_video().get(0).getCoverURL(),
+                        mVideoAdapter.getData().get(mPosition).getTheme_content(),true,false,
+                        mVideoAdapter.getData().get(mPosition).getTheme_id(),mVideoAdapter.getData().get(mPosition).getCircle_id()+"");
                 break;
         }
     }
@@ -181,6 +197,7 @@ public class ShortVideoActivity extends BaseActivity<ShortVideoPresenter> implem
     public void onPageSelected(int position, boolean isBottom) {
         LogUtils.e("OnPagerListener---onPageSelected--" + position + "-----" + isBottom +
                 "-----" + pagePosition);
+        mPosition = position;
         loadVideoInfo(position, false);
         if (isBottom && position != 0) {//如果是最后一个视频时，滑动view时会一直调用此方法，因此做个判断
             ToastUtils.showShort("没有更多视频了...");
@@ -220,6 +237,7 @@ public class ShortVideoActivity extends BaseActivity<ShortVideoPresenter> implem
                 .getViewByPosition(mRecyclerView, position, R.id.cover_iv);
         mPlayIv = (ImageView) mVideoAdapter.getViewByPosition(mRecyclerView, position, R.id.play_iv);
         mProgressBar = (ProgressBar) mVideoAdapter.getViewByPosition(mRecyclerView, position, R.id.progress_bar_h);
+        mVideoView.setRenderMode(TXLiveConstants.RENDER_MODE_FULL_FILL_SCREEN);
         mVideoPlayer = new TXVodPlayer(this);
         mVideoPlayer.setPlayerView(mVideoView);
         mVideoPlayer.setRenderMode(RENDER_MODE_ADJUST_RESOLUTION);
@@ -238,8 +256,10 @@ public class ShortVideoActivity extends BaseActivity<ShortVideoPresenter> implem
             @Override
             public void onPlayEvent(TXVodPlayer txVodPlayer, int event, Bundle param) {
                 switch (event) {
+                    case PLAY_EVT_VOD_PLAY_PREPARED:
+                        mVideoView.setVisibility(View.VISIBLE);
+                        break;
                     case PLAY_EVT_PLAY_BEGIN://视频准备开始
-                        mCoverIv.setVisibility(View.GONE);
                         break;
                     case PLAY_EVT_PLAY_PROGRESS://加载和播放进度-秒
                         // 加载进度, 单位是毫秒
@@ -296,15 +316,31 @@ public class ShortVideoActivity extends BaseActivity<ShortVideoPresenter> implem
                 showCommentDialog(data.get(position).getTheme_id(), commentPage, position);
                 break;
             case R.id.item_collect_tv://收藏
+                mPresenter.collectTheme(data, position);
                 break;
             case R.id.item_share_tv://分享
+            case R.id.item_more_iv://更多
+                showShareDialog("","",data.get(position).getTheme_content(),
+                        data.get(position).getParent_themeInfo().getTheme_video().get(0).getCoverURL(),
+                        data.get(position).getTheme_content(),true,false,
+                        data.get(position).getTheme_id(),data.get(position).getCircle_id()+"");
                 break;
             case R.id.item_name_tv://跳转到个人主页
             case R.id.item_face_iv:
-                break;
-            case R.id.item_more_iv://更多
+                if (data.get(position).getIs_author() == 1) {
+                    mIntent = new Intent(this, MasterDetailActivity.class);
+                    mIntent.putExtra("user_id", data.get(position).getUser_id() + "");
+                    startActivity(mIntent);
+                } else {
+                    mIntent = new Intent(this, CircleManDetailActivity.class);
+                    mIntent.putExtra("user_id", data.get(position).getUser_id() + "");
+                    startActivity(mIntent);
+                }
                 break;
             case R.id.item_from_tv://跳转到根视频圈子
+                mIntent = new Intent(this, TopticCircleActivity.class);
+                mIntent.putExtra("circle_id", data.get(position).getCircle_id()+"");
+                startActivity(mIntent);
                 break;
             case R.id.play_iv://继续播放
                 mVideoPlayer.resume();
@@ -320,6 +356,61 @@ public class ShortVideoActivity extends BaseActivity<ShortVideoPresenter> implem
                 }
                 break;
         }
+    }
+
+    @Override
+    public void handlerCollectSuccess(IEntity iEntity, List<ShortVideoEntity.ThemeInfoBean> data, int position) {
+        if (0 == data.get(position).getIs_collect()) {
+            data.get(position).setIs_collect(1);
+            data.get(position).setCountCollect(data.get(position).getCountCollect() + 1);
+            ToastUtils.showCollect("收藏成功", getResources().getDrawable(R.drawable.collect_success_icon));
+        } else {
+            data.get(position).setIs_collect(0);
+            if (data.get(position).getCountCollect() > 0){
+                data.get(position).setCountCollect(data.get(position).getCountCollect() - 1);
+            }
+            ToastUtils.showCollect("取消收藏", getResources().getDrawable(R.drawable.collect_cancle_icon));
+        }
+        mVideoAdapter.notifyItemChanged(position);
+    }
+
+    private void showShareDialog(String url, String weburl, String title, String imgUrl,
+                                 String desc, boolean isSmall, boolean isVisible, int theme_id, String circle_id) {
+        if (mBottomSheetDialog == null) {
+            mBottomSheetDialog = new BottomSheetDialog(this, R.style.bottom_sheet_dialog);
+            mBottomSheetDialog.getWindow().getAttributes().windowAnimations =
+                    R.style.bottom_sheet_dialog;
+            mBottomSheetDialog.setCancelable(true);
+            mBottomSheetDialog.setCanceledOnTouchOutside(true);
+            mView = getLayoutInflater().inflate(R.layout.dialog_share_layout, null);
+            mBottomSheetDialog.setContentView(mView);
+            mBehavior = BottomSheetBehavior.from((View) mView.getParent());
+            mBehavior.setSkipCollapsed(true);
+//            int peekHeight = getResources().getDisplayMetrics().heightPixels;
+            //设置默认弹出高度为屏幕的0.4倍
+//            mBehavior.setPeekHeight((int)(0.4 * peekHeight));
+        }
+        mView.findViewById(R.id.discover_tv).setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        mBottomSheetDialog.show();
+        mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        mView.findViewById(R.id.wechat_tv).setOnClickListener(v -> {
+            if (isSmall) {
+                DialogUtils.shareSmallProgram(url, imgUrl, title, desc, ShortVideoActivity.this, SHARE_MEDIA.WEIXIN);
+            } else {
+                DialogUtils.shareWebUrl(weburl, title, imgUrl, desc, ShortVideoActivity.this, SHARE_MEDIA.WEIXIN);
+            }
+            mBottomSheetDialog.dismiss();
+        });
+        mView.findViewById(R.id.wechat_circle_tv).setOnClickListener(v -> {
+            DialogUtils.shareWebUrl(weburl, title, imgUrl, desc, ShortVideoActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
+            mBottomSheetDialog.dismiss();
+        });
+        mView.findViewById(R.id.discover_tv).setOnClickListener(v ->{
+//            mPresenter.shareTheme(theme_id, "0");
+            EventBus.getDefault().post(new RefreshEvent(Constants.VIDEO_REFRESH));
+            mBottomSheetDialog.dismiss();
+        });
+        mView.findViewById(R.id.cancle_tv).setOnClickListener(v -> mBottomSheetDialog.dismiss());
     }
 
     @Override
@@ -531,7 +622,7 @@ public class ShortVideoActivity extends BaseActivity<ShortVideoPresenter> implem
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        EventBus.getDefault().post(new RefreshEvent(Constants.VIDEO_REFRESH));
+//        EventBus.getDefault().post(new RefreshEvent(Constants.VIDEO_REFRESH, mPosition));
     }
 
     @Override

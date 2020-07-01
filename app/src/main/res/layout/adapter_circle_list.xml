@@ -42,6 +42,7 @@
         android:layout_height="wrap_content"
         android:text="粉丝  "
         android:textSize="@dimen/sp_11"
+        android:textColor="@color/text_mid"
         android:layout_marginTop="@dimen/dp_5"
         android:layout_toRightOf="@+id/item_face_iv"
         android:layout_below="@+id/item_name_tv" />
@@ -70,6 +71,7 @@
         android:layout_height="wrap_content"
         android:text="主题"
         android:textSize="@dimen/sp_11"
+        android:textColor="@color/text_mid"
         android:layout_toRightOf="@+id/fenge_iv"
         android:layout_below="@+id/item_name_tv"
         android:layout_marginTop="@dimen/dp_5"

@@ -117,7 +117,17 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void event(RefreshEvent refreshEvent){
         if (TextUtils.equals(Constants.VIDEO_REFRESH, refreshEvent.getMsg())){
-            onRefresh(mRefreshLayout);
+            if (refreshEvent.getPosition() >= 0){
+                if (mViewpager != null){
+                    if (mViewpager.getCurrentItem() == 1){
+                        mDiscoverHAdapter.notifyItemChanged(refreshEvent.getPosition()+1);
+                    }else {
+                        mAttentionHAdapter.notifyItemChanged(refreshEvent.getPosition()+1);
+                    }
+                }
+            }else {
+                onRefresh(mRefreshLayout);
+            }
         }
         if (TextUtils.equals(refreshEvent.getMsg(), Constants.TOPTIC_REFRESH)) {
             onRefresh(mRefreshLayout);
@@ -153,7 +163,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
         mDiscoverRv = discoverView.findViewById(R.id.recycler_view);
 
         CommonNavigator commonNavigator = new CommonNavigator(mContext);
-        commonNavigator.setAdjustMode(true);
+//        commonNavigator.setAdjustMode(true);
         commonNavigator.setAdapter(new CommonNavigatorAdapter() {
             @Override
             public int getCount() {
@@ -334,6 +344,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
                 intent.putExtra("title", mList.get(position).getName());
                 intent.putExtra("theme_id", mList.get(position).getTheme_id() + "");
                 intent.putExtra("circle_id", mList.get(position).getCircle_id());
+                intent.putExtra("showEdit", true);
                 startActivity(intent);
                 break;
             case R.id.item_share_ll://分享
@@ -354,6 +365,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
                 intent1.putExtra("type_id", "1");
                 intent1.putExtra("theme_id", String.valueOf(mList.get(position).getTheme_id()));
                 intent1.putExtra("user_id", String.valueOf(mList.get(position).getUser_id()));
+                intent1.putExtra("position", position);
                 startActivity(intent1);
                 break;
         }
@@ -363,7 +375,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
     public void handlerAttentUser(BaseResponse<IEntity> baseResponse, List<ThemeInfoEntity.ThemeInfoBean> data,
                                   int position) {
         for (int i = 0; i < data.size(); i++) {
-            if (data.get(position).getUser_id() == data.get(i).getUser_id()){
+            if (data.get(position).getUser_id().equals(data.get(i).getUser_id())){
                 if (TextUtils.equals("关注成功", baseResponse.getErrorMsg())){
                     data.get(i).setIs_attention(1);
                 }else {
