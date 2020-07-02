@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.View;
@@ -29,7 +28,6 @@ import com.bjjy.buildtalk.ui.mine.MineFragment;
 import com.bjjy.buildtalk.utils.LogUtils;
 import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.ToastUtils;
-import com.bjjy.buildtalk.videorecord.TCVideoRecordActivity;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import butterknife.BindView;
@@ -129,7 +127,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                 // 防止多次点击
                 if (System.currentTimeMillis() - mLastClickPubTS > 1000) {
                     mLastClickPubTS = System.currentTimeMillis();
-                    LoginHelper.login(this, mPresenter.mDataManager, () ->
+                    LoginHelper.getInstance().login(this, mPresenter.mDataManager, () ->
                             new RxPermissions(MainActivity.this).request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                                     .subscribe(new Observer<Boolean>() {
                                         @Override

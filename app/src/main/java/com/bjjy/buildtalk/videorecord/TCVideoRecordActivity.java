@@ -9,13 +9,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.text.TextUtils;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.bjjy.buildtalk.R;
-import com.bjjy.buildtalk.ui.circle.PublishActivity;
 import com.bjjy.buildtalk.videoeditor.TCVideoEditerActivity;
 import com.tencent.qcloud.ugckit.UGCKitConstants;
 import com.tencent.qcloud.ugckit.UGCKitVideoRecord;
@@ -23,7 +20,6 @@ import com.tencent.qcloud.ugckit.basic.UGCKitResult;
 import com.tencent.qcloud.ugckit.module.effect.bgm.TCMusicActivity;
 import com.tencent.qcloud.ugckit.module.record.MusicInfo;
 import com.tencent.qcloud.ugckit.module.record.UGCKitRecordConfig;
-import com.tencent.qcloud.ugckit.module.record.interfaces.IRecordButton;
 import com.tencent.qcloud.ugckit.module.record.interfaces.IVideoRecordKit;
 import com.tencent.qcloud.ugckit.utils.ToastUtil;
 
@@ -70,13 +66,10 @@ public class TCVideoRecordActivity extends FragmentActivity implements ActivityC
                 }
             }
         });
-        mUGCKitVideoRecord.setOnMusicChooseListener(new IVideoRecordKit.OnMusicChooseListener() {
-            @Override
-            public void onChooseMusic(int position) {
-                Intent bgmIntent = new Intent(TCVideoRecordActivity.this, TCMusicActivity.class);
-                bgmIntent.putExtra(UGCKitConstants.MUSIC_POSITION, position);
-                startActivityForResult(bgmIntent, UGCKitConstants.ACTIVITY_MUSIC_REQUEST_CODE);
-            }
+        mUGCKitVideoRecord.setOnMusicChooseListener(position -> {
+            Intent bgmIntent = new Intent(TCVideoRecordActivity.this, TCMusicActivity.class);
+            bgmIntent.putExtra(UGCKitConstants.MUSIC_POSITION, position);
+            startActivityForResult(bgmIntent, UGCKitConstants.ACTIVITY_MUSIC_REQUEST_CODE);
         });
     }
 

@@ -6,7 +6,7 @@ public class UGCKitEditConfig {
     /**
      * 视频分辨率【默认为540P】
      */
-    public int resolution = TXVideoEditConstants.VIDEO_COMPRESSED_540P;
+    public int resolution = TXVideoEditConstants.VIDEO_COMPRESSED_720P;
     /**
      * 视频码率（Mbps）
      */
