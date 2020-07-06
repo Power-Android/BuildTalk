@@ -1,8 +1,6 @@
 package com.tencent.qcloud.ugckit.module.cut;
 
 import android.graphics.Bitmap;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DrawableRes;
 
 import com.tencent.ugc.TXVideoEditConstants;
 
@@ -21,7 +19,7 @@ public interface IVideoCutLayout {
     /**
      * 最大时长，默认16秒
      */
-    int MAX_DURATION = 16;
+    int MAX_DURATION = 300;
 
     /**
      * 设置视频信息

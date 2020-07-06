@@ -40,7 +40,9 @@ public class ShortVideoPresenter extends BasePresenter<ShortVideoContract.View> 
     public void getVideoList(String type_id, String theme_id, String user_id, int page) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
-        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        if (mDataManager.getLoginStatus()){
+            paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        }
         paramas.put("type_id", type_id);
         paramas.put("theme_id", theme_id);
         paramas.put(Constants.PAGE, String.valueOf(page));
@@ -123,7 +125,9 @@ public class ShortVideoPresenter extends BasePresenter<ShortVideoContract.View> 
     public void commentList(int theme_id, int commentPage, int adapterPosition) {
         String timestamp = String.valueOf(TimeUtils.getNowSeconds());
         Map<String, String> paramas = new HashMap<>();
-        paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        if (mDataManager.getLoginStatus()){
+            paramas.put(Constants.USER_ID, mDataManager.getUser().getUser_id());
+        }
         paramas.put("theme_id", String.valueOf(theme_id));
         paramas.put(Constants.PAGE, commentPage+"");
         paramas.put(Constants.PAGE_SIZE, "10");
@@ -137,7 +141,7 @@ public class ShortVideoPresenter extends BasePresenter<ShortVideoContract.View> 
         addSubscribe(mDataManager.commentPageHandle(headers, paramas)
                 .compose(RxUtils.SchedulerTransformer())
                 .filter(response -> mView != null)
-                .subscribeWith(new BaseObserver<ThemeInfoEntity.ThemeInfoBean>(mView, true) {
+                .subscribeWith(new BaseObserver<ThemeInfoEntity.ThemeInfoBean>(mView, false) {
                     @Override
                     public void onSuccess(ThemeInfoEntity.ThemeInfoBean themeInfoBean) {
                         mView.handlerCommentList(themeInfoBean, adapterPosition);

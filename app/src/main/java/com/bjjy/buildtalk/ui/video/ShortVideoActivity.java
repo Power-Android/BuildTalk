@@ -40,6 +40,7 @@ import com.bjjy.buildtalk.ui.talk.MasterDetailActivity;
 import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.KeyboardUtils;
 import com.bjjy.buildtalk.utils.LogUtils;
+import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.SizeUtils;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bjjy.buildtalk.weight.BaseDialog;
@@ -307,23 +308,23 @@ public class ShortVideoActivity extends BaseActivity<ShortVideoPresenter> implem
         List<ShortVideoEntity.ThemeInfoBean> data = mVideoAdapter.getData();
         switch (view.getId()) {
             case R.id.item_atten_iv://关注
-                mPresenter.attenUser(data, position);
+                LoginHelper.getInstance().login(this, mPresenter.mDataManager, () -> mPresenter.attenUser(data, position));
                 break;
             case R.id.item_praise_tv://点赞
-                mPresenter.praise(data, "1", position);
+                LoginHelper.getInstance().login(this, mPresenter.mDataManager, () -> mPresenter.praise(data, "1", position));
                 break;
             case R.id.item_comment_tv://留言
-                showCommentDialog(data.get(position).getTheme_id(), commentPage, position);
+                LoginHelper.getInstance().login(this, mPresenter.mDataManager, () -> showCommentDialog(data.get(position).getTheme_id(), commentPage, position));
                 break;
             case R.id.item_collect_tv://收藏
-                mPresenter.collectTheme(data, position);
+                LoginHelper.getInstance().login(this, mPresenter.mDataManager, () -> mPresenter.collectTheme(data, position));
                 break;
             case R.id.item_share_tv://分享
             case R.id.item_more_iv://更多
-                showShareDialog("","",data.get(position).getTheme_content(),
+                LoginHelper.getInstance().login(this, mPresenter.mDataManager, () -> showShareDialog("","",data.get(position).getTheme_content(),
                         data.get(position).getParent_themeInfo().getTheme_video().get(0).getCoverURL(),
                         data.get(position).getTheme_content(),true,false,
-                        data.get(position).getTheme_id(),data.get(position).getCircle_id()+"");
+                        data.get(position).getTheme_id(),data.get(position).getCircle_id()+""));
                 break;
             case R.id.item_name_tv://跳转到个人主页
             case R.id.item_face_iv:
@@ -472,21 +473,23 @@ public class ShortVideoActivity extends BaseActivity<ShortVideoPresenter> implem
             List<CommentContentBean> mComment_content = adapter.getData();
             switch (view.getId()) {
                 case R.id.item_praise_ll:
-                    mPresenter.praise1(mComment_content, "2", position);
+                    LoginHelper.getInstance().login(this, mPresenter.mDataManager, () -> mPresenter.praise1(mComment_content, "2", position));
                     break;
                 case R.id.item_delete_iv:
-                    showDeleteDialog(mComment_content, position, adapterPosition);
+                    LoginHelper.getInstance().login(this, mPresenter.mDataManager, () -> showDeleteDialog(mComment_content, position, adapterPosition));
                     break;
                 case R.id.item_content_tv:
-                    if (!String.valueOf(mComment_content.get(position).getUser_id())
-                            .equals(mPresenter.mDataManager.getUser().getUser_id())) {
-                        mComment_id = mComment_content.get(position).getComment_id();
-                        mParentCommentId = mComment_content.get(position).getParentCommentId();
-                        showSendDialog(mComment_content.get(position).getName(),
-                                mComment_content.get(position).getTheme_id() + "",
-                                mComment_content.get(position).getComment_id() + "",
-                                mComment_content.get(position).getParentCommentId(), adapterPosition);
-                    }
+                    LoginHelper.getInstance().login(this, mPresenter.mDataManager, () -> {
+                        if (!String.valueOf(mComment_content.get(position).getUser_id())
+                                .equals(mPresenter.mDataManager.getUser().getUser_id())) {
+                            mComment_id = mComment_content.get(position).getComment_id();
+                            mParentCommentId = mComment_content.get(position).getParentCommentId();
+                            showSendDialog(mComment_content.get(position).getName(),
+                                    mComment_content.get(position).getTheme_id() + "",
+                                    mComment_content.get(position).getComment_id() + "",
+                                    mComment_content.get(position).getParentCommentId(), adapterPosition);
+                        }
+                    });
                     break;
             }
         });

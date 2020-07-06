@@ -468,10 +468,10 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
                 break;
             case R.id.praise_ll:
                 if (themeInfoEntity != null) {
-                    if (themeInfoEntity.getIsJoin() == 1){
-                        LoginHelper.getInstance().login(this, mPresenter.mDataManager, () -> mPresenter.praise(themeInfoEntity.getTheme_id() + "", "1", null));
-                    }else {
+                    if (!TextUtils.isEmpty(mHome)){
                         showJoinDialog("share");
+                    }else {
+                        LoginHelper.getInstance().login(this, mPresenter.mDataManager, () -> mPresenter.praise(themeInfoEntity.getTheme_id() + "", "1", null));
                     }
                 }
                 break;
@@ -487,7 +487,9 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
                 }
                 break;
             case R.id.record_ll:
-                if (themeInfoEntity.getIsJoin() == 1){
+                if (!TextUtils.isEmpty(mHome)){
+                    showJoinDialog("record");
+                }else{
                     LoginHelper.getInstance().login(this, mPresenter.mDataManager, () -> {
                         if (!isGone) {
                             mRecordBottomLl.setVisibility(View.GONE);
@@ -500,10 +502,7 @@ public class TopticDetailActivity extends BaseActivity<TopticDetailPresenter> im
                             isGone = !isGone;
                         }
                     });
-                }else {
-                    showJoinDialog("record");
                 }
-
                 break;
             case R.id.item_atten_cl:
                 mPresenter.attenUser(themeInfoEntity);

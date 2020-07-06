@@ -36,7 +36,7 @@ public class UGCKitRecordConfig {
     /**
      * 录制最长时间（以毫秒为单位）
      */
-    public int mMaxDuration = 60 * 1000;
+    public int mMaxDuration = 30 * 1000;
     /**
      * 录制方向
      */

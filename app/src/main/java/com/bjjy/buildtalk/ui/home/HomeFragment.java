@@ -39,6 +39,7 @@ import com.bjjy.buildtalk.ui.talk.MasterDetailActivity;
 import com.bjjy.buildtalk.ui.video.ShortVideoActivity;
 import com.bjjy.buildtalk.utils.DialogUtils;
 import com.bjjy.buildtalk.utils.LogUtils;
+import com.bjjy.buildtalk.utils.LoginHelper;
 import com.bjjy.buildtalk.utils.ToastUtils;
 import com.bjjy.buildtalk.weight.BaseDialog;
 import com.bjjy.buildtalk.weight.MyViewPagerAdapter;
@@ -288,11 +289,13 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         List<ThemeInfoEntity.ThemeInfoBean> mList = adapter.getData();
-        Intent intent = new Intent(mContext, TopticDetailActivity.class);
-        intent.putExtra("title", mList.get(position).getName());
-        intent.putExtra("theme_id", mList.get(position).getTheme_id() + "");
-        intent.putExtra("circle_id", mList.get(position).getCircle_id());
-        startActivity(intent);
+        LoginHelper.getInstance().login(mContext, mPresenter.mDataManager, () -> {
+            Intent intent = new Intent(mContext, TopticDetailActivity.class);
+            intent.putExtra("title", mList.get(position).getName());
+            intent.putExtra("theme_id", mList.get(position).getTheme_id() + "");
+            intent.putExtra("circle_id", mList.get(position).getCircle_id());
+            startActivity(intent);
+        });
     }
 
     @Override
@@ -322,42 +325,48 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
                 }
                 break;
             case R.id.item_atten_cl://关注
-                mPresenter.attenUser(mList, position);
+                LoginHelper.getInstance().login(mContext, mPresenter.mDataManager, () -> mPresenter.attenUser(mList, position));
                 break;
             case R.id.item_more_iv://更多操作
-                if (1 == mList.get(position).getParent_isDelete()) {
-                    ToastUtils.showShort("原主题已被删除");
-                    return;
-                }
-                if (mList.get(position).getTheme_image().size() > 0) {
-                    mPresenter.getThumb(mList.get(position).getTheme_image().get(0).getPic_url(), mList,
-                            position, true);
-                } else {
-                    mPresenter.getThumb(mList.get(position).getHeadImage(), mList, position, true);
-                }
+                LoginHelper.getInstance().login(mContext, mPresenter.mDataManager, () -> {
+                    if (1 == mList.get(position).getParent_isDelete()) {
+                        ToastUtils.showShort("原主题已被删除");
+                        return;
+                    }
+                    if (mList.get(position).getTheme_image().size() > 0) {
+                        mPresenter.getThumb(mList.get(position).getTheme_image().get(0).getPic_url(), mList,
+                                position, true);
+                    } else {
+                        mPresenter.getThumb(mList.get(position).getHeadImage(), mList, position, true);
+                    }
+                });
                 break;
             case R.id.item_praise_ll://点赞
-                mPresenter.praise(mList, position);
+                LoginHelper.getInstance().login(mContext, mPresenter.mDataManager, () -> mPresenter.praise(mList, position));
                 break;
             case R.id.item_record_ll://进入详情
-                Intent intent = new Intent(mContext, TopticDetailActivity.class);
-                intent.putExtra("title", mList.get(position).getName());
-                intent.putExtra("theme_id", mList.get(position).getTheme_id() + "");
-                intent.putExtra("circle_id", mList.get(position).getCircle_id());
-                intent.putExtra("showEdit", true);
-                startActivity(intent);
+                LoginHelper.getInstance().login(mContext, mPresenter.mDataManager, () -> {
+                    Intent intent = new Intent(mContext, TopticDetailActivity.class);
+                    intent.putExtra("title", mList.get(position).getName());
+                    intent.putExtra("theme_id", mList.get(position).getTheme_id() + "");
+                    intent.putExtra("circle_id", mList.get(position).getCircle_id());
+                    intent.putExtra("showEdit", true);
+                    startActivity(intent);
+                });
                 break;
             case R.id.item_share_ll://分享
-                if (1 == mList.get(position).getParent_isDelete()) {
-                    ToastUtils.showShort("原主题已被删除");
-                    return;
-                }
-                if (mList.get(position).getTheme_image().size() > 0) {
-                    mPresenter.getThumb(mList.get(position).getTheme_image().get(0).getPic_url(), mList,
-                            position, false);
-                } else {
-                    mPresenter.getThumb(mList.get(position).getHeadImage(), mList, position, false);
-                }
+                LoginHelper.getInstance().login(mContext, mPresenter.mDataManager, () -> {
+                    if (1 == mList.get(position).getParent_isDelete()) {
+                        ToastUtils.showShort("原主题已被删除");
+                        return;
+                    }
+                    if (mList.get(position).getTheme_image().size() > 0) {
+                        mPresenter.getThumb(mList.get(position).getTheme_image().get(0).getPic_url(), mList,
+                                position, false);
+                    } else {
+                        mPresenter.getThumb(mList.get(position).getHeadImage(), mList, position, false);
+                    }
+                });
                 break;
             case R.id.item_vertical_video_view:
             case R.id.item_horizontal_video_view:
@@ -694,7 +703,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
                 })
                 .builder();
         TextView textView = mDeleteDialog.getView(R.id.text);
-        textView.setText("确定删除此条评论？");
+        textView.setText("确定删除该主题？");
         mDeleteDialog.show();
     }
 
